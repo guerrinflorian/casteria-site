@@ -178,6 +178,7 @@ code { font-family: "Fredoka", sans-serif; font-weight: 700; color: var(--ruban)
 /* les étapes */
 .etapes { counter-reset: e; display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; list-style: none; margin: 0; padding: 0; }
 .etapes.longue { grid-template-columns: repeat(2, 1fr); }
+.etapes.trois { grid-template-columns: repeat(3, 1fr); text-align: left; }
 .etapes li { counter-increment: e; position: relative; }
 .etapes .carte { height: 100%; padding-top: 30px; }
 .etapes li::before { content: counter(e); position: absolute; left: 18px; top: -18px; z-index: 2; width: 44px; height: 44px; display: grid; place-items: center; font-family: "Lilita One", sans-serif; font-size: 24px; color: #FFF4D6; background: var(--ruban); border: 3px solid var(--or); border-radius: 50%; box-shadow: 0 4px 0 #6E1A14; }
@@ -257,6 +258,8 @@ html.photo .heros { min-height: 880px; } html.photo .apparait { opacity: 1; tran
 .tableau.grand figcaption { font-size: 19px; }
 .apparait { opacity: 0; transform: translateY(34px); transition: opacity .8s ease, transform .8s cubic-bezier(.2, .8, .2, 1); transition-delay: var(--retard, 0s); }
 .apparait.de-gauche { transform: translateX(-50px); } .apparait.de-droite { transform: translateX(50px); } .apparait.grandit { transform: scale(.88); }
+/* sur un écran étroit, ce qui glisse de côté dépasserait de l'écran et élargirait toute la page : ça monte, comme le reste */
+@media (max-width: 960px) { .apparait.de-gauche, .apparait.de-droite { transform: translateY(34px); } }
 .apparait.vu { opacity: 1; transform: none; }
 
 @media (max-width: 960px) {
@@ -274,13 +277,15 @@ html.photo .heros { min-height: 880px; } html.photo .apparait { opacity: 1; tran
 @media (max-width: 620px) {
   .galerie { grid-template-columns: 1fr; gap: 22px; margin-top: 40px; }
   body { font-size: 17px; } section { padding: 64px 0; }
-  .cartes, .etapes, .etapes.longue, .astuces { grid-template-columns: 1fr; }
+  .cartes, .etapes, .etapes.longue, .etapes.trois, .astuces { grid-template-columns: 1fr; }
   .chiffres ul { grid-template-columns: repeat(2, 1fr); }
   .defile .va { display: none; }
-  .bouton.grand { font-size: 19px; white-space: normal; text-align: center; }
+  /* un bouton au texte long passe à la ligne plutôt que de dépasser de l'écran */
+  .bouton { white-space: normal; text-align: center; }
+  .bouton.grand { font-size: 19px; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .apparait { opacity: 1; transform: none; transition: none; }
+  .apparait, .apparait.de-gauche, .apparait.de-droite, .apparait.grandit { opacity: 1; transform: none; transition: none; }
   .heros .logo, .vitrine .credit, .descends, .braises i { animation: none; }
 }
