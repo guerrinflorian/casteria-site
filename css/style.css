@@ -671,3 +671,65 @@ html.photo .vitrine-tete.page .fond img, html.photo .page .vol img { animation: 
 .vitrine-tete .fond { inset: 0 0 auto 0; height: min(100%, 100svh); overflow: hidden; }
 .vitrine-tete .fond img, .vitrine-tete .fond video { max-height: 100svh; }
 body:has(.achat input:focus) .barre-jeu { display: none; }
+
+/* LE RESTE DE L'ACCUEIL : chaque section sa mise en page */
+/* L'AFFICHE (« l'inédit ») : la photo de l'arène d'un bord à l'autre, deux pancartes posées dessus, deux écrans penchés */
+.affiche { position: relative; isolation: isolate; overflow: hidden; display: grid; grid-template-columns: minmax(0, 1fr) 170px 170px minmax(0, 1fr); gap: 20px; align-items: center; padding: 38px 30px; min-height: min(84svh, 700px); border: 6px solid var(--bois-fonce); box-shadow: 0 0 0 3px var(--or-fonce), 0 22px 44px rgba(0, 0, 0, .5); }
+.affiche-fond { position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%; max-height: 100svh; object-fit: cover; }
+.affiche::before { content: ""; position: absolute; inset: 0; z-index: -1; background: radial-gradient(60% 70% at 50% 50%, rgba(20, 11, 30, .15), rgba(20, 11, 30, .62)); }
+.pancarte { color: var(--encre); transition: transform .35s cubic-bezier(.2, .8, .2, 1); }
+.pancarte.p1 { transform: rotate(-1.6deg); align-self: start; } .pancarte.p2 { transform: rotate(1.4deg); align-self: end; }
+.pancarte:hover { transform: rotate(0) scale(1.02); }
+.pancarte .num { color: var(--ruban); } .pancarte h3 { font-size: clamp(22px, 2.2vw, 29px); margin: 0 0 8px; } .pancarte p { font-size: 17px; margin: 0 0 8px; }
+.pancarte ul, .ardoise ul { margin: 8px 0 0; padding: 0; list-style: none; display: grid; gap: 6px; }
+.pancarte li, .ardoise li { padding-left: 26px; position: relative; font-size: 16px; }
+.pancarte li::before, .ardoise li::before { content: ""; position: absolute; left: 4px; top: .5em; width: 10px; height: 10px; background: var(--or); transform: rotate(45deg); }
+.ecran-penche { position: relative; aspect-ratio: 9 / 16; overflow: hidden; border: 5px solid var(--bois-fonce); box-shadow: 0 0 0 2px var(--or-clair), 0 16px 26px rgba(0, 0, 0, .6); background: var(--nuit); transition: transform .4s cubic-bezier(.2, .8, .2, 1); }
+.ecran-penche video { width: 100%; height: 100%; object-fit: cover; display: block; }
+.ecran-penche.e1 { transform: rotate(-5deg) translateY(26px); } .ecran-penche.e2 { transform: rotate(4deg) translateY(-26px); }
+.ecran-penche:hover { transform: rotate(0) scale(1.06); z-index: 3; }
+/* LES RIVAGES (« la mer », « ton île ») : une grande photo, une ardoise de nuit qui la chevauche, la vidéo dans un hublot */
+.rivage { position: relative; display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); align-items: center; margin: 0 0 96px; }
+.rivage:last-child { margin-bottom: 30px; }
+.rivage-photo { grid-column: 1; grid-row: 1; margin: 0; border: 6px solid #0A2233; box-shadow: 0 0 0 3px #8FE3FF, 0 20px 40px rgba(0, 0, 0, .45); transform: rotate(-1deg); }
+.rivage-photo img { display: block; width: 100%; height: auto; max-height: 76svh; object-fit: cover; }
+.ardoise { grid-column: 2; grid-row: 1; position: relative; z-index: 2; margin-left: -80px; padding: 26px 28px 28px; color: #EAF8FF; background: linear-gradient(160deg, #1B1028, #2A1740); border: 4px solid var(--or-fonce); box-shadow: 0 18px 34px rgba(0, 0, 0, .5); transform: rotate(.8deg); }
+.ardoise h3 { font-size: clamp(24px, 2.6vw, 34px); color: var(--or-clair); margin: 0 0 10px; } .ardoise p { margin: 0 0 8px; }
+.rivage.inverse { grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); }
+.rivage.inverse .rivage-photo { grid-column: 2; transform: rotate(1deg); } .rivage.inverse .ardoise { grid-column: 1; margin-left: 0; margin-right: -80px; transform: rotate(-.8deg); }
+.hublot { position: absolute; z-index: 3; left: 34px; bottom: -70px; width: 170px; height: 170px; border-radius: 50%; overflow: hidden; border: 8px solid #C9A227; box-shadow: 0 0 0 4px #0A2233, inset 0 0 0 3px rgba(0, 0, 0, .4), 0 14px 22px rgba(0, 0, 0, .55); background: #0A2233; animation: flotte 6s ease-in-out infinite; }
+.rivage.inverse .hublot { left: auto; right: 34px; animation-delay: -2.5s; }
+.hublot video { width: 100%; height: 100%; object-fit: cover; display: block; }
+/* LE CINÉMA : le carrousel des douze vidéos (css/carrousel.css) : un triangle sur celles qui attendent un clic */
+.cinema { max-width: var(--large); margin: 0 auto; }
+.cinema > .vue { background: var(--nuit-2); color: #F3E7FF; border-color: var(--or-fonce); cursor: pointer; }
+.cinema > .vue::after { content: ""; position: absolute; left: 50%; top: 42%; width: 0; height: 0; margin: -19px 0 0 -11px; border-left: 30px solid #fff; border-top: 19px solid transparent; border-bottom: 19px solid transparent; filter: drop-shadow(0 4px 8px rgba(0, 0, 0, .7)); pointer-events: none; transition: opacity .25s ease; }
+.cinema > .vue.joue::after { opacity: 0; }
+.cinema > .vue > figcaption strong { color: var(--or-clair); font-size: 15px; }
+/* TÉLÉCHARGER : le launcher penché, un familier perché ; les trois gestes en fil ; le quai */
+.launcher .cadre-bois.penche { position: relative; transform: rotate(-2deg); }
+.launcher .cadre-bois.penche.vu { transform: rotate(-2deg); }
+.launcher .perche { position: absolute; z-index: 2; right: -46px; top: -92px; width: 190px; height: auto; background: none; filter: drop-shadow(0 10px 8px rgba(58, 38, 20, .4)); animation: flotte 4.6s ease-in-out infinite; }
+.etapes.trois.fil { position: relative; gap: 34px; }
+.etapes.trois.fil::before { content: ""; position: absolute; left: 8%; right: 8%; top: 4px; border-top: 4px dashed var(--or); }
+.etapes.trois.fil li:nth-child(1) .carte { transform: rotate(-1.2deg); } .etapes.trois.fil li:nth-child(2) .carte { transform: rotate(.8deg) translateY(14px); } .etapes.trois.fil li:nth-child(3) .carte { transform: rotate(-.6deg); }
+.plateformes.quai { position: relative; isolation: isolate; margin: 96px 0 30px; padding: 34px 190px; background: linear-gradient(180deg, var(--nuit-2), var(--nuit)); border: 4px solid var(--bois-fonce); box-shadow: 0 0 0 3px var(--or-fonce), 0 18px 34px rgba(27, 16, 40, .35); }
+.plateformes.quai .quai-g, .plateformes.quai .quai-d { position: absolute; bottom: -18px; height: auto; pointer-events: none; filter: drop-shadow(0 12px 10px rgba(0, 0, 0, .5)); }
+.plateformes.quai .quai-g { left: -40px; width: 230px; } .plateformes.quai .quai-d { right: -50px; width: 250px; bottom: 30px; animation: flotte 6s ease-in-out infinite; }
+@media (max-width: 960px) {
+  .affiche { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); padding: 0 14px 22px; min-height: 0; gap: 14px; }
+  .affiche-fond { position: static; grid-column: 1 / -1; width: calc(100% + 28px); max-width: none; margin: 0 -14px; height: auto; aspect-ratio: 16 / 9; }
+  .affiche::before { background: var(--nuit-2); z-index: -3; }
+  .pancarte { grid-column: 1 / -1; } .pancarte.p1, .pancarte.p2 { transform: none; }
+  .ecran-penche.e1 { grid-row: 3; transform: rotate(-3deg); } .ecran-penche.e2 { grid-row: 3; transform: rotate(3deg); }
+  .rivage, .rivage.inverse { grid-template-columns: minmax(0, 1fr); margin-bottom: 110px; }
+  .rivage .rivage-photo, .rivage.inverse .rivage-photo { grid-column: 1; grid-row: 1; transform: none; }
+  .rivage .ardoise, .rivage.inverse .ardoise { grid-column: 1; grid-row: 2; margin: -36px 12px 0; transform: none; }
+  .hublot, .rivage.inverse .hublot { left: auto; right: 18px; bottom: -84px; width: 120px; height: 120px; }
+  .launcher .perche { right: -6px; top: -70px; width: 130px; }
+  .etapes.trois.fil::before { display: none; } .etapes.trois.fil li:nth-child(n) .carte { transform: none; }
+  .plateformes.quai { padding: 120px 16px 22px; margin-top: 60px; }
+  .plateformes.quai .quai-g { left: 6%; bottom: auto; top: -46px; width: 150px; } .plateformes.quai .quai-d { right: 4%; bottom: auto; top: -40px; width: 160px; }
+}
+html.photo .hublot, html.photo .launcher .perche, html.photo .plateformes.quai .quai-d { animation: none; }
+@media (prefers-reduced-motion: reduce) { .hublot, .launcher .perche, .plateformes.quai .quai-d { animation: none; } .pancarte, .ecran-penche { transition: none; } }

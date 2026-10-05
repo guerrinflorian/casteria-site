@@ -98,26 +98,19 @@
     auto.forEach(function (v) { cinema.observe(v) })
   } else auto.forEach(charger)
 
-  // la rangée de vidéos : un clic lance celle-là et arrête les autres ; les flèches font glisser la piste
-  var piste = document.querySelector('.piste')
-  if (piste) {
-    var tels = piste.querySelectorAll('.telephone')
-    tels.forEach(function (t) {
-      var v = t.querySelector('video')
-      function basculer() {
-        charger(v)
-        if (v.paused) {
-          tels.forEach(function (o) { var w = o.querySelector('video'); if (w !== v && w.src) { w.pause(); o.classList.remove('joue') } })
-          var p = v.play(); if (p && p.catch) p.catch(function () {}); t.classList.add('joue')
-        } else { v.pause(); t.classList.remove('joue') }
-      }
-      t.addEventListener('click', basculer)
-      t.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); basculer() } })
-    })
-    document.querySelectorAll('.defile .va').forEach(function (f) {
-      f.addEventListener('click', function () { piste.scrollBy({ left: (f.classList.contains('g') ? -1 : 1) * 292 * 2, behavior: calme ? 'auto' : 'smooth' }) })
-    })
-  }
+  // le carrousel de vidéos (css/carrousel.css) : un clic, ou Entrée, lance celle-là et arrête les autres
+  var clics = document.querySelectorAll('video[data-clic]')
+  Array.prototype.forEach.call(clics, function (v) {
+    function basculer() {
+      charger(v)
+      if (v.paused) {
+        Array.prototype.forEach.call(clics, function (w) { if (w !== v && w.src) { w.pause(); w.parentNode.classList.remove('joue') } })
+        var p = v.play(); if (p && p.catch) p.catch(function () {}); v.parentNode.classList.add('joue')
+      } else { v.pause(); v.parentNode.classList.remove('joue') }
+    }
+    v.addEventListener('click', basculer)
+    v.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); basculer() } })
+  })
 
   // les chiffres comptent jusqu'à leur valeur
   var chiffres = document.querySelectorAll('.chiffres b[data-n]')
