@@ -1,8 +1,11 @@
 // Les règles du site, vérifiées en une seconde : npm run verifier (code 0 : tout est bon)
 'use strict'
 const fs = require('fs'), path = require('path')
-const RACINE = path.join(__dirname, '..'), PAGES = ['index.html', 'commencer.html', 'boutique.html']
+const RACINE = path.join(__dirname, '..'), PAGES = ['index.html', 'commencer.html', 'boutique.html', '404.html']
 const LIENS_FIGES = 'https://github.com/guerrinflorian/casteria-mc/releases/'
+// le domaine du site : celui que outils/domaine.js a écrit dans robots.txt ; et le plan du site
+const lire = f => { try { return fs.readFileSync(path.join(RACINE, f), 'utf8') } catch (e) { return '' } }
+const DOMAINE = (lire('robots.txt').match(/^Sitemap: (https:\/\/[^/\s]+)\/sitemap\.xml$/m) || [])[1] || '', PLAN = lire('sitemap.xml')
 let fautes = 0
 const faute = (m) => { fautes++; console.log('  FAUTE : ' + m) }
 const TIRETS = [String.fromCharCode(0x2014), String.fromCharCode(0x2013)]
@@ -27,6 +30,7 @@ for (const page of PAGES) {
   const cites = new Set()
   for (const m of s.matchAll(/(?:src|href|poster|data-src)="([^"#?]+)[^"]*"/g)) cites.add(m[1])
   for (const c of cites) {
+    if (DOMAINE && c.startsWith(DOMAINE + '/')) { if (!fs.existsSync(path.join(RACINE, c.slice(DOMAINE.length)))) faute('une adresse du site qui n\'existe pas : ' + c); continue }
     if (/^https?:/.test(c)) { if (!c.startsWith(LIENS_FIGES)) faute('un lien vers ailleurs que la release du launcher : ' + c); continue }
     if (/^(mailto:|data:)/.test(c)) continue
     if (!fs.existsSync(path.join(RACINE, c))) faute('un fichier cité n\'existe pas : ' + c)
@@ -58,7 +62,30 @@ for (const page of PAGES) {
   }
   // une vidéo ne se charge jamais d'office
   for (const v of s.match(/<video\b[^>]*>/g) || []) if (!/preload="none"/.test(v) || /\ssrc="/.test(v)) faute('une vidéo se chargerait sans attendre : ' + v.slice(0, 70))
+  // LE RÉFÉRENCEMENT : chaque page dit son adresse complète (la même que dans sitemap.xml) et son image de partage.
+  // La page 404, elle, demande à rester hors de Google, et cite ses fichiers depuis la racine (elle s'affiche à toute adresse).
+  if (page === '404.html') {
+    if (!/<meta name="robots" content="noindex">/.test(s)) faute('la page 404 doit porter noindex')
+    if (/(?:src|href)="(?![/#]|https?:)/.test(s)) faute('la page 404 cite un fichier sans partir de la racine (« / »)')
+  } else if (DOMAINE) {
+    const adresse = DOMAINE + '/' + (page === 'index.html' ? '' : page)
+    if (!s.includes('<link rel="canonical" href="' + adresse + '">')) faute('l\'adresse de la page (canonical) devrait être ' + adresse)
+    if (!s.includes('<meta property="og:url" content="' + adresse + '">')) faute('og:url devrait être ' + adresse)
+    const image = (s.match(/<meta property="og:image" content="([^"]*)"/) || [])[1] || ''
+    if (!image.startsWith(DOMAINE + '/') || !fs.existsSync(path.join(RACINE, image.slice(DOMAINE.length)))) faute('l\'image de partage (og:image) doit être une adresse complète du site, vers un fichier qui existe')
+    if (!/<meta name="twitter:card" content="summary_large_image">/.test(s)) faute('la carte de partage (twitter:card) manque')
+    if (/<meta name="robots" content="[^"]*noindex/.test(s)) faute('la page demande à rester hors de Google (noindex)')
+    if (!PLAN.includes('<loc>' + adresse + '</loc>')) faute('sitemap.xml ne cite pas ' + adresse)
+  }
+  for (const m of s.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)) {
+    try { JSON.parse(m[1]) } catch (e) { faute('un bloc JSON-LD est mal écrit : ' + e.message) }
+    for (const a of m[1].match(/https:\/\/[^"/]+/g) || []) if (a !== DOMAINE && a !== 'https://schema.org') faute('une adresse d\'un autre domaine dans le bloc JSON-LD : ' + a)
+  }
 }
+// le domaine est écrit, et le plan du site cite les pages, rien de plus
+console.log('robots.txt, sitemap.xml')
+if (!DOMAINE) faute('le domaine manque : node outils/domaine.js https://ton-domaine.fr')
+else if ((PLAN.match(/<loc>/g) || []).length !== PAGES.length - 1) faute('sitemap.xml doit citer ' + (PAGES.length - 1) + ' pages (relance outils/domaine.js)')
 // les îlots de parchemin portent leur propre fond et leur encre (sinon, posés dans une section sombre, ils ne se lisent pas)
 {
   const css = fs.readFileSync(path.join(RACINE, 'css', 'style.css'), 'utf8')

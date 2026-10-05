@@ -1,0 +1,11 @@
+# Ce qui ne part pas en ligne : Vercel ne publie que les pages, css/, js/, assets/, robots.txt, sitemap.xml et favicon.ico.
+# Sans package.json, Vercel n'installe rien et ne construit rien : il sert les fichiers tels quels.
+README.md
+serveur.js
+outils
+package.json
+package-lock.json
+pnpm-lock.yaml
+node_modules
+captures
+.gitattributes

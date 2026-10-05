@@ -20,16 +20,47 @@ dossier chez n'importe quel hébergeur de sites statiques, sans rien construire.
 | `index.html` | l'accueil : l'en-tête animé et le bouton de téléchargement, le concept, l'inédit (les boss, les armures, la mer, l'île qui grandit), la rangée de vidéos, les premiers pas, la boutique, le téléchargement |
 | `commencer.html` | « Par où commencer » : les dix premières étapes du jeu, les tickets et la roue, les astuces |
 | `boutique.html` | la boutique : à quoi servent les crédits, et la place de l'incrustation Tebex |
+| `404.html` | la page des adresses qui n'existent pas (Vercel l'affiche tout seul, le petit serveur aussi) |
 | `css/style.css`, `js/site.js` | l'habillage et ce qui bouge (le site se lit entier sans JavaScript) |
+| `robots.txt`, `sitemap.xml`, `favicon.ico` | pour Google : le droit de tout lire, le plan du site, l'icône |
+| `vercel.json`, `.vercelignore` | les réglages de la mise en ligne, et ce qui ne part pas en ligne |
 | `assets/` | le logo, les polices, les matières (parchemin, cadre, ruban, boutons), les icônes, les vidéos allégées et leurs affiches |
 
-## Ce qu'il reste à régler (deux choses, à toi de décider)
+## Mettre en ligne sur Vercel (casteria.fr)
 
-1. **Le nom de domaine.** `sitemap.xml`, `robots.txt` et les images de partage (les balises `og:image`) veulent une adresse
-   complète. Quand tu l'as : `node outils/domaine.js https://ton-domaine.fr` écrit le plan du site, la ligne `Sitemap:` de
-   robots.txt, et les adresses complètes dans les trois pages.
-2. **La boutique Tebex.** Dans `boutique.html`, un commentaire « ICI L'INCRUSTATION TEBEX » montre le bloc à remplacer par
-   le code d'incrustation que Tebex te donne. Aucune clé ne va dans ce dépôt.
+Il n'y a rien à construire : Vercel sert les fichiers tels quels. `.vercelignore` garde hors ligne tout ce qui n'est pas
+le site (`serveur.js`, `outils/`, ce README, `package.json`).
+
+1. Sur vercel.com : **Add New, Project**, importe le dépôt `casteria-site`. Ne touche à aucun réglage (Framework :
+   **Other**, pas de commande de build, pas de dossier de sortie), puis **Deploy**.
+2. Dans le projet : **Settings, Domains**, ajoute `casteria.fr` puis `www.casteria.fr`. Le site s'annonce partout sous
+   `https://casteria.fr` (sans www) : c'est donc `casteria.fr` qui doit être le domaine principal, et `www.casteria.fr`
+   qui redirige vers lui (Vercel propose l'inverse par défaut).
+3. Chez le vendeur du domaine (la zone DNS) : à la place des lignes de l'ancien hébergement pour `casteria.fr` et `www`,
+   mets celles que Vercel affiche à l'étape 2 (une ligne `A` pour `casteria.fr`, une ligne `CNAME` pour `www`).
+4. Une fois le site en ligne : déclare `casteria.fr` dans Google Search Console (propriété « Domaine », une ligne `TXT`
+   à ajouter dans la zone DNS), puis envoie-lui `https://casteria.fr/sitemap.xml`.
+
+Ensuite, chaque `git push` sur `main` remet le site en ligne.
+
+## Le domaine et le référencement
+
+`node outils/domaine.js https://casteria.fr` a écrit le domaine partout où il faut une adresse complète : `sitemap.xml`,
+la ligne `Sitemap:` de `robots.txt`, et dans chaque page son adresse (`canonical`, `og:url`), l'image de partage
+(`og:image`) et les données pour Google (le bloc JSON-LD). Relance-le si le domaine change, ou après avoir ajouté une page
+à sa liste `PAGES` (il refait aussi la date du plan du site).
+
+- L'accueil n'a qu'une adresse, `https://casteria.fr/` : les liens vers l'accueil s'écrivent `./`, jamais `index.html`.
+- L'image de partage (`assets/images/casteria-serveur-minecraft-partage.jpg`) fait 1200 x 630, le format des réseaux.
+- Le logo affiché dans les pages est la copie légère (`casteria-logo-300.webp`) ; le grand `casteria-logo.png` reste
+  l'original.
+- Les fichiers de `assets/` restent une semaine dans le navigateur des visiteurs : pour changer une image, donne un autre
+  nom au nouveau fichier plutôt que d'écraser l'ancien.
+
+## Ce qu'il reste à régler
+
+**La boutique Tebex.** Dans `boutique.html`, un commentaire « ICI L'INCRUSTATION TEBEX » montre le bloc à remplacer par
+le code d'incrustation que Tebex te donne. Aucune clé ne va dans ce dépôt.
 
 ## Les règles du site
 
@@ -41,7 +72,8 @@ dossier chez n'importe quel hébergeur de sites statiques, sans rien construire.
 - On ne dévoile pas tout : pas de secret du palais, pas de boss caché.
 - Le site parle d'un serveur où l'on joue : jamais « en développement », « bientôt », « pas encore ouvert ».
 - Avant de pousser : `npm run verifier` (un seul h1 par page, un texte pour chaque image, aucun lien cassé, aucun tiret long,
-  aucun texte sombre sur un fond sombre ni clair sur le parchemin, aucun mot interdit).
+  aucun texte sombre sur un fond sombre ni clair sur le parchemin, aucun mot interdit, et le référencement : l'adresse
+  complète de chaque page, son image de partage, le plan du site).
 
 ## Vérifier, photographier
 

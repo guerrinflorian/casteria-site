@@ -11,25 +11,40 @@
 <meta property="og:site_name" content="Casteria">
 <meta property="og:title" content="Casteria : ton île sur la mer, des boss, des navires">
 <meta property="og:description" content="Un serveur Minecraft français moddé : ton île qui grandit, tes machines, 15 boss, des armures à pouvoirs et toute une mer à écumer.">
-<meta property="og:image" content="assets/images/casteria-serveur-minecraft-ile-sur-la-mer.png">
+<meta property="og:url" content="https://casteria.fr/">
+<link rel="canonical" href="https://casteria.fr/">
+<meta property="og:image" content="https://casteria.fr/assets/images/casteria-serveur-minecraft-partage.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Casteria, ton île sur la mer : le palais au coucher du soleil et le logo au dragon violet">
 <meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="favicon.ico" sizes="48x48">
 <link rel="icon" type="image/png" sizes="32x32" href="assets/logo/favicon-32.png">
-<link rel="apple-touch-icon" href="assets/logo/icone-256.png">
+<link rel="icon" type="image/png" sizes="256x256" href="assets/logo/icone-256.png">
+<link rel="apple-touch-icon" href="assets/logo/icone-apple-180.png">
 <link rel="preload" href="assets/polices/lilita_one.ttf" as="font" type="font/ttf" crossorigin>
 <link rel="preload" href="assets/polices/fredoka.ttf" as="font" type="font/ttf" crossorigin>
 <link rel="stylesheet" href="css/style.css">
 <script type="application/ld+json">
-{ "@context": "https://schema.org", "@type": "VideoGame", "name": "Casteria", "inLanguage": "fr",
-  "description": "Serveur Minecraft français moddé : une île sur la mer par joueur, une économie en jetons, 15 boss, des armures à pouvoirs, des navires et des pirates.",
-  "gamePlatform": ["PC", "Mac", "Linux"], "applicationCategory": "Game", "genre": ["Serveur Minecraft", "Île", "Économie", "Aventure"],
-  "gameServer": { "@type": "GameServer", "name": "Casteria", "game": { "@type": "VideoGame", "name": "Minecraft Java Edition 1.21.1" } } }
+{ "@context": "https://schema.org", "@graph": [
+  { "@type": "WebSite", "@id": "https://casteria.fr/#site", "url": "https://casteria.fr/", "name": "Casteria", "inLanguage": "fr",
+    "publisher": { "@id": "https://casteria.fr/#casteria" } },
+  { "@type": "Organization", "@id": "https://casteria.fr/#casteria", "name": "Casteria", "url": "https://casteria.fr/",
+    "logo": "https://casteria.fr/assets/logo/casteria-logo.png" },
+  { "@type": "VideoGame", "name": "Casteria", "inLanguage": "fr", "url": "https://casteria.fr/",
+    "image": "https://casteria.fr/assets/images/casteria-serveur-minecraft-partage.jpg",
+    "description": "Serveur Minecraft français moddé : une île sur la mer par joueur, une économie en jetons, 15 boss, des armures à pouvoirs, des navires et des pirates.",
+    "gamePlatform": ["PC", "Mac", "Linux"], "applicationCategory": "Game", "genre": ["Serveur Minecraft", "Île", "Économie", "Aventure"],
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
+    "gameServer": { "@type": "GameServer", "name": "Casteria", "game": { "@type": "VideoGame", "name": "Minecraft Java Edition 1.21.1" } } }
+] }
 </script>
 </head>
 <body>
 <div class="progres" aria-hidden="true"></div>
 
 <header class="barre accueil">
-  <a class="marque" href="index.html" aria-label="Casteria, l'accueil"><img src="assets/logo/casteria-logo.png" alt="Logo de Casteria : un dragon violet sur une île" width="46" height="46"><span>Casteria</span></a>
+  <a class="marque" href="./" aria-label="Casteria, l'accueil"><img src="assets/logo/casteria-logo-300.webp" alt="Logo de Casteria : un dragon violet sur une île" width="46" height="46"><span>Casteria</span></a>
   <button class="menu" aria-label="Ouvrir le menu" aria-expanded="false">&#9776;</button>
   <nav aria-label="Le menu">
     <a href="#concept">Le concept</a>
@@ -49,7 +64,7 @@
   <div class="dedans grille">
     <div>
       <div class="entete">
-        <img class="logo" src="assets/logo/casteria-logo.png" alt="Casteria, serveur Minecraft : le dragon violet et son île" width="150" height="150" fetchpriority="high">
+        <img class="logo" src="assets/logo/casteria-logo-300.webp" alt="Casteria, serveur Minecraft : le dragon violet et son île" width="150" height="150" fetchpriority="high">
         <p class="devise">Serveur Minecraft français<br>Moddé 1.21.1 <i aria-hidden="true">&#9670;</i> Launcher gratuit</p>
       </div>
       <h1><span>Casteria, le serveur Minecraft</span><span class="or">où ton île grandit sur la mer</span></h1>
@@ -346,9 +361,9 @@
 <footer>
   <div class="dedans">
     <div class="col">
-      <img src="assets/logo/casteria-logo.png" alt="Casteria" width="70" height="70" loading="lazy">
+      <img src="assets/logo/casteria-logo-300.webp" alt="Casteria" width="70" height="70" loading="lazy">
       <nav aria-label="Le pied de page">
-        <a href="index.html">Accueil</a><a href="commencer.html">Par où commencer</a><a href="boutique.html">Boutique</a><a href="#telecharger">Télécharger</a>
+        <a href="./">Accueil</a><a href="commencer.html">Par où commencer</a><a href="boutique.html">Boutique</a><a href="#telecharger">Télécharger</a>
       </nav>
     </div>
     <small>Casteria est un serveur Minecraft indépendant, créé par des joueurs. Il n'est ni affilié à Mojang ni à Microsoft, ni approuvé par eux. Minecraft est une marque de Mojang Studios.</small>

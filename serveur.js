@@ -15,7 +15,8 @@ http.createServer((req, res) => {
   // jamais hors du dossier du site, jamais un fichier caché
   if (!fichier.startsWith(RACINE + path.sep) || chemin.split('/').some(p => p.startsWith('.'))) { res.writeHead(403); return res.end('Interdit') }
   fs.stat(fichier, (err, st) => {
-    if (err || !st.isFile()) { res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' }); return res.end('Page introuvable') }
+    // une adresse inconnue : la page 404.html, comme en ligne
+    if (err || !st.isFile()) return fs.readFile(path.join(RACINE, '404.html'), (e, page) => { res.writeHead(404, { 'Content-Type': 'text/' + (e ? 'plain' : 'html') + '; charset=utf-8' }); res.end(e ? 'Page introuvable' : page) })
     const tete = { 'Content-Type': TYPES[path.extname(fichier).toLowerCase()] || 'application/octet-stream', 'Accept-Ranges': 'bytes', 'Cache-Control': 'no-cache' }
     const m = /^bytes=(\d*)-(\d*)$/.exec(req.headers.range || '')
     if (m && (m[1] || m[2])) {
