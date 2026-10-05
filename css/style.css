@@ -663,3 +663,5 @@ html.photo .vitrine-tete.page .fond img, html.photo .page .vol img { animation: 
   .astuces.notes { grid-template-columns: minmax(0, 1fr); } .astuces.notes .carte:nth-child(n) { transform: none; }
 }
 @media (prefers-reduced-motion: reduce) { .etapes.longue.chemin .carte, .astuces.notes .carte { transition: none; } }
+/* un mot pour les lecteurs d ecran et les moteurs, hors de la vue */
+.lu { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
