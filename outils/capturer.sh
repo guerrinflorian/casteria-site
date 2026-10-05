@@ -14,5 +14,6 @@ ecran accueil_portable index.html 1366,768
 entiere accueil index.html 1440,8300
 entiere accueil_telephone index.html 520,9000
 entiere commencer commencer.html 1440,3700
+entiere pirates pirates.html 1440,4200
 entiere boutique boutique.html 1440,2100
 ls "$ICI/captures"
