@@ -665,3 +665,9 @@ html.photo .vitrine-tete.page .fond img, html.photo .page .vol img { animation: 
 @media (prefers-reduced-motion: reduce) { .etapes.longue.chemin .carte, .astuces.notes .carte { transition: none; } }
 /* un mot pour les lecteurs d ecran et les moteurs, hors de la vue */
 .lu { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+/* LA RÈGLE, jusque dans le fond des hauts de page : la photo de fond ne dépasse jamais un écran, même quand le haut de page
+   est plus long que lui (un téléphone) : sous elle, la nuit du site */
+.vitrine-tete { background-color: var(--nuit); }
+.vitrine-tete .fond { inset: 0 0 auto 0; height: min(100%, 100svh); overflow: hidden; }
+.vitrine-tete .fond img, .vitrine-tete .fond video { max-height: 100svh; }
+body:has(.achat input:focus) .barre-jeu { display: none; }
