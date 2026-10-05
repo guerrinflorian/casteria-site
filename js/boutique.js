@@ -40,6 +40,7 @@
   var champ = document.getElementById('pseudo'), lettres = document.getElementById('pseudo-lettres'), relire = document.getElementById('relire')
   var sur = document.getElementById('pseudo-sur'), payer = document.getElementById('achat-payer'), retour = document.getElementById('achat-retour')
   var erreurPseudo = document.getElementById('pseudo-erreur'), erreurAchat = document.getElementById('achat-erreur'), titrePack = document.getElementById('achat-pack')
+  var merciAchat = document.getElementById('achat-merci')
   var choisi = null, enCours = false, dernier = ''
 
   // ---------- les packs ----------
@@ -158,11 +159,32 @@
       .then(function (r) { return r.json().catch(function () { return null }).then(function (j) { if (!r.ok || !j || !j.data) throw new Error('refus'); return j.data }) })
   }
   function echec(texte) { enCours = false; erreurAchat.textContent = texte; erreurAchat.hidden = false; payer.textContent = 'Payer ' + prix(choisi); relu() }
+  // ---------- le paiement par-dessus la page (Tebex.js) ----------
+  // Sur ordinateur, si le script de Tebex a chargé : le panneau de paiement de Tebex s'ouvre PAR-DESSUS notre page, en
+  // français, en sombre, à nos couleurs ; le joueur ne quitte pas le site. Sur téléphone (Tebex.js y ouvrirait un autre
+  // onglet, qu'un navigateur peut bloquer), ou si le script manque, ou à la moindre erreur : faux, et le joueur est
+  // envoyé sur la page de paiement de Tebex, comme avant.
+  function incruste(panier, pseudo) {
+    var T = window.Tebex
+    if (!T || !T.checkout || typeof T.checkout.init !== 'function' || typeof T.checkout.launch !== 'function') return false
+    if (window.matchMedia && window.matchMedia('(max-width: 820px), (pointer: coarse)').matches) return false
+    try {
+      T.checkout.init({ ident: panier.ident, locale: 'fr_FR', theme: 'dark', colors: [{ name: 'primary', color: '#D7A421' }, { name: 'secondary', color: '#8E4CB8' }] })
+      T.checkout.on('payment:complete', function () {
+        merciAchat.textContent = 'Merci ! Ton paiement est passé : tes crédits arrivent sur « ' + pseudo + ' » à ta prochaine connexion au serveur.'
+        merciAchat.hidden = false
+      })
+      // le panneau refermé (payé ou non) : le bouton se réveille
+      T.checkout.on('close', function () { enCours = false; if (choisi) payer.textContent = 'Payer ' + prix(choisi); relu() })
+      T.checkout.launch()
+      return true
+    } catch (e) { return false }
+  }
   form.addEventListener('submit', function (ev) {
     ev.preventDefault()
     var pseudo = champ.value
     if (enCours || !choisi || !PSEUDO.test(pseudo) || !sur.checked) return relu()
-    enCours = true; erreurAchat.hidden = true; payer.disabled = true; payer.textContent = 'On prépare ton panier...'
+    enCours = true; erreurAchat.hidden = true; merciAchat.hidden = true; payer.disabled = true; payer.textContent = 'On prépare ton panier...'
     try { sessionStorage.setItem('casteria_pseudo', pseudo) } catch (e) {}
     // les deux pages de retour : « Merci » après le paiement, la boutique si le joueur renonce
     var canon = document.querySelector('link[rel="canonical"]')
@@ -177,6 +199,10 @@
         var lien = panier.links && panier.links.checkout
         // seulement la page de paiement de Tebex
         if (typeof lien !== 'string' || !/^https:\/\/[a-z0-9-]+(\.[a-z0-9-]+)*\.tebex\.io\/[^\s"'<>]*$/i.test(lien)) throw new Error('lien')
+        // par-dessus la page si c'est possible ; sinon la seule sortie du site : la page de paiement de Tebex
+        if (incruste(panier, pseudo)) { payer.textContent = 'Le paiement est ouvert...'; return }
+        // la page de paiement de Tebex en français (essayé le 05/10 : « ?locale=fr_FR » la traduit, rien d'autre ne le fait)
+        lien += (lien.indexOf('?') < 0 ? '?' : '&') + 'locale=fr_FR'
         window.location.assign(lien)
       })
       .catch(function () { echec('Le panier n\'a pas pu se créer. Vérifie ton pseudo, puis réessaie dans un instant.') })

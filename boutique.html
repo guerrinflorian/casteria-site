@@ -109,6 +109,7 @@
               <label class="relire-case"><input type="checkbox" id="pseudo-sur"> C'est bien mon pseudo, je l'ai vérifié</label>
             </div>
             <p class="achat-erreur" id="achat-erreur" role="alert" hidden></p>
+            <p class="achat-merci" id="achat-merci" role="status" hidden></p>
             <p class="tebex-actions">
               <button class="bouton bouton-or grand" type="submit" id="achat-payer" disabled>Payer</button>
               <button class="bouton bouton-bois" type="button" id="achat-retour">Changer de pack</button>
@@ -173,6 +174,10 @@
     <small>Casteria est un serveur Minecraft indépendant, créé par des joueurs. Il n'est ni affilié à Mojang ni à Microsoft, ni approuvé par eux. Minecraft est une marque de Mojang Studios.</small>
   </div>
 </footer>
+<!-- LE PAIEMENT PAR-DESSUS LA PAGE, sur ordinateur : le script de Tebex, notre partenaire de paiement, dans une version
+     FIGÉE (outils/verifier.js n'admet que celle-ci, et sur cette page seule). S'il ne charge pas, ou sur téléphone, le
+     joueur est envoyé sur la page de paiement de Tebex, comme avant. -->
+<script defer src="https://js.tebex.io/v/1.11.0.js"></script>
 <script src="js/site.js" defer></script>
 <script src="js/boutique.config.js" defer></script>
 <script src="js/boutique.js" defer></script>

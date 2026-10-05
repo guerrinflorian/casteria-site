@@ -243,6 +243,7 @@ code { font-family: "Fredoka", sans-serif; font-weight: 700; color: var(--ruban)
 .achat-champ input { display: block; width: 100%; margin-top: 6px; padding: 12px 14px; font: 700 24px/1.2 Consolas, "Courier New", monospace; letter-spacing: 1px; color: var(--encre); background: #fff; border: 3px solid var(--bois-clair); border-radius: 0; }
 .achat-champ input:focus { outline: 3px solid var(--or); outline-offset: 2px; border-color: var(--bois); }
 .achat-erreur { margin: 10px 0 0; font-weight: 700; color: var(--ruban); }
+.achat-merci { margin: 14px 0 0; padding: 12px 16px; font-weight: 700; color: #1F4D17; background: #DDF2D2; border: 3px solid var(--vert); border-left-width: 12px; }
 .relire { margin: 20px 0 0; text-align: center; }
 .relire-titre { margin: 0 0 8px; font-weight: 700; color: var(--bois-fonce); }
 .lettres { display: flex; flex-wrap: wrap; justify-content: center; gap: 5px; margin: 0; }
