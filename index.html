@@ -28,7 +28,7 @@
 <body>
 <div class="progres" aria-hidden="true"></div>
 
-<header class="barre">
+<header class="barre accueil">
   <a class="marque" href="index.html" aria-label="Casteria, l'accueil"><img src="assets/logo/casteria-logo.png" alt="Logo de Casteria : un dragon violet sur une île" width="46" height="46"><span>Casteria</span></a>
   <button class="menu" aria-label="Ouvrir le menu" aria-expanded="false">&#9776;</button>
   <nav aria-label="Le menu">
@@ -50,18 +50,16 @@
     <div>
       <div class="entete">
         <img class="logo" src="assets/logo/casteria-logo.png" alt="Casteria, serveur Minecraft : le dragon violet et son île" width="150" height="150" fetchpriority="high">
-        <ul class="puces" aria-label="En bref">
-          <li>Serveur Minecraft français</li><li>Moddé · 1.21.1</li><li>Launcher gratuit</li>
-        </ul>
+        <p class="devise">Serveur Minecraft français<br>Moddé 1.21.1 <i aria-hidden="true">&#9670;</i> Launcher gratuit</p>
       </div>
       <h1><span>Casteria, le serveur Minecraft</span><span class="or">où ton île grandit sur la mer</span></h1>
       <p class="accroche">Une île rien qu'à toi, des machines qui tournent toutes seules, quinze boss à faire tomber, des armures à pouvoirs et une mer entière à écumer en navire.</p>
       <div class="gestes">
         <a class="bouton bouton-vert grand" href="https://github.com/guerrinflorian/casteria-mc/releases/download/installateur/Casteria-Installation.exe" rel="noopener"><svg class="picto" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M12 4v16M3 12h18" fill="none" stroke="currentColor" stroke-width="2.6"/></svg>Télécharger pour Windows</a>
         <a class="bouton bouton-or" href="https://github.com/guerrinflorian/casteria-mc/releases/download/installateur/Casteria-mac-apple-silicon.zip" rel="noopener"><svg class="picto" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M12 16v4M8 20.5h8" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>Mac</a>
-        <a class="bouton bouton-bois petit" href="https://github.com/guerrinflorian/casteria-mc/releases/tag/installateur" rel="noopener"><svg class="picto" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M7 9l3.5 3L7 15M13 15.5h4" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Linux</a>
+        <a class="bouton bouton-bois petit" href="#aide-linux"><svg class="picto" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M7 9l3.5 3L7 15M13 15.5h4" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Linux</a>
       </div>
-      <p class="autres">Mac : <a href="https://github.com/guerrinflorian/casteria-mc/releases/download/installateur/Casteria-mac-apple-silicon.zip" rel="noopener">puce Apple (M1 et après)</a> ou <a href="https://github.com/guerrinflorian/casteria-mc/releases/download/installateur/Casteria-mac-intel.zip" rel="noopener">Intel</a>. Le launcher est gratuit et installe tout : tu cliques, tu joues. <a href="#videos">Voir les vidéos</a></p>
+      <p class="autres">Mac : <a href="https://github.com/guerrinflorian/casteria-mc/releases/download/installateur/Casteria-mac-apple-silicon.zip" rel="noopener">puce Apple (M1 et après)</a> ou <a href="https://github.com/guerrinflorian/casteria-mc/releases/download/installateur/Casteria-mac-intel.zip" rel="noopener">Intel</a>. Le launcher est gratuit et installe tout : tu cliques, tu joues. <a href="#aide">Un souci pour installer ?</a></p>
     </div>
     <div class="eventail" aria-label="Trois vidéos du jeu">
       <div class="telephone t1"><video data-auto muted loop playsinline preload="none" poster="assets/affiches/casteria_03.jpg" data-src="assets/videos/casteria_03.mp4" aria-label="Vidéo : l'armure du Yéti fait marcher sur la mer"></video></div>
@@ -239,7 +237,7 @@
           <span class="ruban">La boutique</span>
           <h2>Les crédits : pour soutenir le serveur et te faire plaisir</h2>
           <p>Les crédits sont la monnaie de la boutique, à part des jetons. Ils servent à s'offrir des choses introuvables ailleurs.</p>
-          <ul class="rayons"><li>Familiers</li><li>Montures</li><li>Bêtes</li><li>Clés de caisses</li><li>Couleurs de pseudo</li><li>Cadeaux pour tout le serveur</li></ul>
+          <p class="rayons">Familiers <i aria-hidden="true">&#9670;</i> Montures <i aria-hidden="true">&#9670;</i> Bêtes <i aria-hidden="true">&#9670;</i> Clés de caisses <i aria-hidden="true">&#9670;</i> Couleurs de pseudo <i aria-hidden="true">&#9670;</i> Cadeaux pour tout le serveur</p>
           <a class="bouton bouton-or grand" href="boutique.html">Ouvrir la boutique <span class="fleche" aria-hidden="true">&#8250;</span></a>
         </div>
         <div style="display:grid;place-items:center"><img class="credit" src="assets/icones/credit.png" alt="Un crédit, la monnaie de la boutique de Casteria" width="120" height="120" loading="lazy"></div>
@@ -277,6 +275,68 @@
       <a class="bouton bouton-or grand" href="https://github.com/guerrinflorian/casteria-mc/releases/download/installateur/Casteria-mac-apple-silicon.zip" rel="noopener"><svg class="picto" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M12 16v4M8 20.5h8" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>Mac (puce Apple)</a>
       <a class="bouton bouton-or grand" href="https://github.com/guerrinflorian/casteria-mc/releases/download/installateur/Casteria-mac-intel.zip" rel="noopener"><svg class="picto" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M12 16v4M8 20.5h8" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>Mac (Intel)</a>
       <a class="bouton bouton-bois grand" href="https://github.com/guerrinflorian/casteria-mc/releases/tag/installateur" rel="noopener"><svg class="picto" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M7 9l3.5 3L7 15M13 15.5h4" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Linux</a>
+    </div>
+
+    <div class="aide apparait" id="aide">
+      <h3>Un problème pour installer ?</h3>
+      <p class="note">Ouvre le volet de ton ordinateur : les réponses aux soucis les plus courants.</p>
+
+      <details class="volet" id="aide-windows">
+        <summary><svg class="picto" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M12 4v16M3 12h18" fill="none" stroke="currentColor" stroke-width="2.6"/></svg><span>Sur Windows</span></summary>
+        <div class="reponses">
+          <h4>Un écran bleu dit « Windows a protégé votre ordinateur »</h4>
+          <p>C'est normal pour un nouveau programme, ce n'est pas un virus.</p>
+          <ol><li>Clique sur <b>Informations complémentaires</b>.</li><li>Clique sur <b>Exécuter quand même</b>.</li></ol>
+          <h4>Mon navigateur dit que le fichier est « peu téléchargé »</h4>
+          <p>Choisis <b>Conserver</b>.</p>
+          <h4>Mon antivirus a bloqué le fichier</h4>
+          <p>Ouvre ton antivirus et remets le fichier : le bouton s'appelle souvent <b>Restaurer</b> ou <b>Autoriser</b>.</p>
+          <h4>La première préparation est longue</h4>
+          <p>La première fois, le launcher télécharge le jeu. Ça peut prendre quelques minutes, selon ta connexion internet. Ne ferme pas le launcher.</p>
+          <h4>Le jeu ne se lance pas</h4>
+          <ol><li>Si une fenêtre de Minecraft est encore ouverte, ferme-la.</li><li>Clique encore sur <b>JOUER</b>.</li><li>Si ça recommence : dans <b>Réglages</b>, clique sur <b>Le journal du jeu (pour le staff)</b> et envoie le fichier le plus récent au staff.</li></ol>
+        </div>
+      </details>
+
+      <details class="volet" id="aide-mac">
+        <summary><svg class="picto" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M12 16v4M8 20.5h8" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg><span>Sur Mac</span></summary>
+        <div class="reponses">
+          <h4>Quel fichier prendre ?</h4>
+          <p>Ouvre le menu Pomme (en haut à gauche), puis <b>À propos de ce Mac</b>. Il faut macOS 13 ou plus récent.</p>
+          <ul><li>Tu lis <b>« Puce Apple »</b> (M1, M2, M3...) : prends <a href="https://github.com/guerrinflorian/casteria-mc/releases/download/installateur/Casteria-mac-apple-silicon.zip" rel="noopener">la version puce Apple</a>.</li><li>Tu lis <b>« Processeur Intel »</b> : prends <a href="https://github.com/guerrinflorian/casteria-mc/releases/download/installateur/Casteria-mac-intel.zip" rel="noopener">la version Intel</a>.</li></ul>
+          <h4>Comment l'installer ?</h4>
+          <p>Double-clique sur le fichier téléchargé : <b>Casteria</b> apparaît à côté. Fais-le glisser dans le dossier <b>Applications</b>.</p>
+          <h4>Mon Mac dit qu'Apple n'a pas pu vérifier Casteria</h4>
+          <p>Ton Mac ne le connaît pas encore. C'est normal, et ça n'arrive qu'une fois.</p>
+          <ol><li>Dans le message, clique sur <b>Terminé</b> (pas sur « Placer dans la corbeille »).</li><li>Ouvre <b>Réglages Système</b>, puis <b>Confidentialité et sécurité</b>. Tout en bas, à côté de « Casteria a été bloqué », clique sur <b>Ouvrir quand même</b>, puis tape le mot de passe de ton Mac.</li><li>Un dernier message s'ouvre : clique encore sur <b>Ouvrir quand même</b>.</li></ol>
+          <h4>Mon Mac dit que « Casteria est endommagé »</h4>
+          <p>Ne le mets pas à la corbeille. Télécharge le fichier de nouveau et recommence l'installation.</p>
+        </div>
+      </details>
+
+      <details class="volet" id="aide-linux">
+        <summary><svg class="picto" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M7 9l3.5 3L7 15M13 15.5h4" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Sur Linux</span></summary>
+        <div class="reponses">
+          <h4>Quel fichier prendre ?</h4>
+          <ul>
+            <li><b>Ubuntu, Linux Mint, Debian, Pop!_OS, Zorin</b> : <a href="https://github.com/guerrinflorian/casteria-mc/releases/download/installateur/Casteria-Linux-x86_64.deb" rel="noopener">le fichier .deb</a>.</li>
+            <li><b>Arch, Manjaro, EndeavourOS</b> : <a href="https://github.com/guerrinflorian/casteria-mc/releases/download/installateur/Casteria-Linux-x86_64.pacman" rel="noopener">le paquet Arch</a>.</li>
+            <li><b>Les autres (Fedora...)</b> : <a href="https://github.com/guerrinflorian/casteria-mc/releases/download/installateur/Casteria-Linux-x86_64.tar.gz" rel="noopener">le fichier .tar.gz</a>.</li>
+            <li><b>Pour ceux qui connaissent</b> : <a href="https://github.com/guerrinflorian/casteria-mc/releases/download/installateur/Casteria-Linux-x86_64.AppImage" rel="noopener">l'AppImage</a>.</li>
+          </ul>
+          <h4>Installer le fichier .deb</h4>
+          <p>Double-clique dessus : la logithèque s'ouvre. Clique sur <b>Installer</b>, puis tape le mot de passe de ton ordinateur. Rien ne s'ouvre ? Clic droit dans le dossier du fichier, <b>Ouvrir dans un terminal</b>, puis copie cette ligne :</p>
+          <pre>sudo apt install ./Casteria-Linux-x86_64.deb</pre>
+          <h4>Installer le paquet Arch</h4>
+          <p>Clic droit dans le dossier du fichier, <b>Ouvrir dans un terminal</b>, puis copie cette ligne :</p>
+          <pre>sudo pacman -U Casteria-Linux-x86_64.pacman</pre>
+          <h4>Installer le fichier .tar.gz</h4>
+          <p>Clic droit sur le fichier, <b>Extraire ici</b>. Dans le dossier, double-clique sur <b>installer.sh</b>. Rien ne se passe ? Ouvre un terminal dans ce dossier, puis copie cette ligne :</p>
+          <pre>./installer.sh</pre>
+          <h4>Le launcher dit que mon Linux est trop ancien</h4>
+          <p>Il faut Ubuntu 24.04, Linux Mint 22, Debian 13, Fedora 40, Arch ou Manjaro, ou plus récent. Sur un Linux plus ancien, le launcher s'ouvre, mais le jeu ne peut pas démarrer.</p>
+        </div>
+      </details>
     </div>
     <p class="note apparait">Le serveur est encore en développement : installe le launcher, tu seras prêt le jour de l'ouverture.</p>
   </div>

@@ -25,6 +25,8 @@
     attente = false
     var y = window.scrollY || 0, h = document.documentElement.scrollHeight - window.innerHeight
     if (barre) barre.classList.toggle('posee', y > 30)
+    // jamais deux logos à la fois : le petit de la barre attend que le grand soit passé sous elle
+    if (barre && logo) barre.classList.toggle('avec-logo', logo.getBoundingClientRect().bottom < 56)
     if (progres) progres.style.width = (h > 0 ? Math.min(100, y / h * 100) : 0) + '%'
     if (calme || y > window.innerHeight * 1.2) return
     var p = y / window.innerHeight

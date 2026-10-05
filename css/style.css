@@ -36,13 +36,17 @@ h1, h2, h3 { font-family: "Lilita One", "Fredoka", sans-serif; font-weight: 400;
 .barre .marque { display: flex; align-items: center; gap: 10px; text-decoration: none; color: #fff; font-family: "Lilita One", sans-serif; font-size: 24px; }
 .barre .marque img { width: 46px; height: 46px; transition: transform .3s ease; }
 .barre .marque:hover img { transform: rotate(-6deg) scale(1.08); }
+/* l'accueil : le grand logo de l'en-tête est seul en haut de page ; le petit n'arrive dans la barre que quand le grand est sorti de l'écran */
+.barre.accueil .marque img { width: 0; opacity: 0; margin-right: -10px; transition: width .35s ease, opacity .35s ease, margin .35s ease, transform .3s ease; }
+.barre.accueil.avec-logo .marque img { width: 46px; opacity: 1; margin-right: 0; }
 .barre nav { margin-left: auto; display: flex; align-items: center; gap: 4px; }
-.barre nav a { text-decoration: none; color: #F3E7FF; padding: 8px 12px; border-radius: 8px; font-weight: 600; font-size: 16px; transition: background .2s ease, color .2s ease; }
-.barre nav a:hover, .barre nav a[aria-current="page"] { background: rgba(255, 255, 255, .12); color: var(--or-clair); }
+.barre nav a { text-decoration: none; color: #F3E7FF; padding: 8px 12px; font-weight: 600; font-size: 16px; border-bottom: 3px solid transparent; transition: border-color .2s ease, color .2s ease; }
+.barre nav a:hover, .barre nav a[aria-current="page"] { color: var(--or-clair); border-bottom-color: var(--or); }
 .barre nav a.boutique { color: var(--violet-clair); display: inline-flex; align-items: center; gap: 6px; }
 .barre nav a.boutique img { width: 20px; height: 20px; }
 .barre nav a.bouton { color: var(--encre); margin-left: 8px; }
-.barre nav a.bouton:hover { background: none; color: var(--encre); }
+.barre nav a.bouton, .barre nav a.bouton:hover { color: var(--encre); border-bottom: 15px solid transparent; }
+.barre nav a.bouton.petit, .barre nav a.bouton.petit:hover { border-bottom-width: 12px; }
 .menu { display: none; margin-left: auto; background: none; border: 0; color: #fff; font-size: 30px; cursor: pointer; line-height: 1; }
 .progres { position: fixed; inset: 0 auto auto 0; height: 4px; width: 0; z-index: 60; background: linear-gradient(90deg, var(--or-fonce), var(--or-clair), var(--violet-clair)); }
 
@@ -72,7 +76,6 @@ h1, h2, h3 { font-family: "Lilita One", "Fredoka", sans-serif; font-weight: 400;
   background: radial-gradient(120% 80% at 70% 40%, rgba(142, 76, 184, .28), transparent 60%), linear-gradient(180deg, rgba(27, 16, 40, .55) 0%, rgba(27, 16, 40, .25) 40%, var(--nuit) 100%); }
 .heros .grille { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: 40px; align-items: center; }
 .heros .entete { display: flex; align-items: center; gap: 16px; margin-bottom: 10px; }
-.heros .entete .puces { margin: 0; }
 .heros .logo { flex: 0 0 auto; width: min(132px, 34vw); filter: drop-shadow(0 16px 26px rgba(0, 0, 0, .55)); animation: flotte 5.5s ease-in-out infinite; }
 @keyframes flotte { 0%, 100% { transform: translateY(0) rotate(-1deg); } 50% { transform: translateY(-14px) rotate(1.2deg); } }
 .heros h1 { font-size: clamp(32px, 3.8vw, 54px); text-shadow: 0 4px 0 rgba(0, 0, 0, .35), 0 12px 30px rgba(0, 0, 0, .5); }
@@ -82,8 +85,8 @@ h1, h2, h3 { font-family: "Lilita One", "Fredoka", sans-serif; font-weight: 400;
 .heros .gestes .grand { font-size: 21px; padding: 4px 14px; }
 .heros .autres { margin: 12px 0 0; font-size: 15px; color: #E7D8F7; max-width: 40em; }
 .heros .autres a { color: var(--or-clair); font-weight: 600; }
-.puces { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 18px; padding: 0; list-style: none; }
-.puces li { background: rgba(255, 255, 255, .13); border: 1px solid rgba(255, 255, 255, .22); padding: 3px 12px; border-radius: 999px; font-size: 14px; font-weight: 600; backdrop-filter: blur(4px); }
+.devise { margin: 0; font-family: "Lilita One", sans-serif; font-size: 17px; letter-spacing: 2.2px; text-transform: uppercase; color: var(--or-clair); text-shadow: 0 2px 0 rgba(0, 0, 0, .45); line-height: 1.5; }
+.devise i, .rayons i { font-style: normal; font-size: .62em; margin: 0 .5em; vertical-align: .22em; color: var(--violet-clair); }
 
 /* les trois téléphones du héros */
 .eventail { position: relative; height: min(640px, 74vh); perspective: 1400px; }
@@ -141,7 +144,7 @@ section { position: relative; padding: 92px 0; }
 .carte p { margin: 0; color: #4b3520; }
 .carte .icone { width: 64px; height: 64px; image-rendering: pixelated; filter: drop-shadow(0 4px 0 rgba(58, 38, 20, .25)); }
 .carte .signe { font-size: 46px; line-height: 64px; height: 64px; }
-.carte .commande, code { font-family: "Fredoka", monospace; font-weight: 700; background: var(--bois-fonce); color: var(--or-clair); padding: 1px 9px; border-radius: 6px; white-space: nowrap; font-size: .92em; }
+code { font-family: "Fredoka", sans-serif; font-weight: 700; color: var(--ruban); white-space: nowrap; }
 
 /* les rangs « inédit » : un téléphone et son texte, en alternance */
 .rang { display: grid; grid-template-columns: minmax(0, 300px) minmax(0, 1fr); gap: 56px; align-items: center; margin: 0 auto 84px; max-width: 980px; }
@@ -186,8 +189,27 @@ section { position: relative; padding: 92px 0; }
 .vitrine { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 34px; align-items: center; padding: 22px 26px; color: var(--encre); }
 .vitrine h2 { font-size: clamp(28px, 3.4vw, 42px); color: var(--bois-fonce); }
 .vitrine .credit { width: 120px; height: 120px; image-rendering: pixelated; animation: flotte 4.5s ease-in-out infinite; filter: drop-shadow(0 8px 0 rgba(58, 38, 20, .22)); }
-.rayons { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; margin: 16px 0 20px; }
-.rayons li { background: var(--parchemin-3); border: 2px solid var(--bois-clair); border-radius: 8px; padding: 2px 12px; font-weight: 600; font-size: 16px; }
+.rayons { margin: 16px 0 22px; font-weight: 700; color: var(--bois-fonce); line-height: 1.7; }
+.rayons i { color: var(--or-fonce); }
+/* l'aide dépliable, un volet par système (fermés d'office) */
+.aide { max-width: 900px; margin: 46px auto 26px; text-align: left; }
+.aide > h3 { font-size: clamp(24px, 2.8vw, 32px); color: var(--bois-fonce); text-align: center; }
+.aide > .note { text-align: center; margin: 6px 0 20px; }
+.volet { border: 12px solid transparent; border-image: url("../assets/matieres/carte.png") 6 fill / 12px round; image-rendering: pixelated; margin-bottom: 12px; }
+.volet > * { image-rendering: auto; }
+.volet summary { display: flex; align-items: center; gap: 12px; padding: 8px 12px; cursor: pointer; list-style: none; font-family: "Lilita One", sans-serif; font-size: 23px; color: var(--bois-fonce); }
+.volet summary::-webkit-details-marker { display: none; }
+.volet summary .picto { width: 28px; height: 28px; flex: 0 0 auto; color: var(--ruban); }
+.volet summary::after { content: ""; margin-left: auto; width: 12px; height: 12px; border-right: 4px solid var(--bois); border-bottom: 4px solid var(--bois); transform: rotate(45deg); transition: transform .25s ease; }
+.volet[open] summary::after { transform: rotate(-135deg); }
+.volet summary:hover { color: var(--ruban); }
+.reponses { padding: 4px 14px 14px; border-top: 2px dashed var(--bois-clair); margin-top: 4px; }
+.reponses h4 { font-family: "Fredoka", sans-serif; font-weight: 700; font-size: 18px; margin: 18px 0 4px; color: var(--bois-fonce); }
+.reponses p, .reponses ol, .reponses ul { margin: 4px 0; }
+.reponses ol, .reponses ul { padding-left: 24px; }
+.reponses a { color: var(--ruban); font-weight: 700; }
+.reponses pre { margin: 6px 0; padding: 8px 12px; background: var(--bois-fonce); color: var(--or-clair); font-family: Consolas, "Courier New", monospace; font-size: 15px; overflow-x: auto; }
+
 .tebex { min-height: 360px; display: grid; place-items: center; text-align: center; outline: 4px dashed var(--violet); outline-offset: -14px; padding: 40px 30px; }
 
 .telecharge { text-align: center; }
@@ -227,7 +249,7 @@ html.photo .heros { min-height: 880px; } html.photo .apparait { opacity: 1; tran
 
 @media (max-width: 960px) {
   .heros .grille { grid-template-columns: minmax(0, 1fr); text-align: center; }
-  .heros .entete { flex-direction: column; } .heros .gestes, .puces { justify-content: center; } .heros .accroche { margin-left: auto; margin-right: auto; }
+  .heros .entete { flex-direction: column; } .heros .gestes { justify-content: center; } .heros .accroche { margin-left: auto; margin-right: auto; }
   .eventail { height: 430px; } .eventail .telephone { width: min(200px, 40vw); }
   .cartes, .etapes, .astuces { grid-template-columns: 1fr 1fr; }
   .rang, .rang.inverse { grid-template-columns: 1fr; gap: 26px; text-align: left; } .rang .telephone, .rang.inverse .telephone { order: 0; max-width: 270px; margin: 0 auto; }
