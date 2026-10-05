@@ -542,3 +542,27 @@ html.photo .vitrine-tete .logo, html.photo .accueil .vol img { animation: none; 
   .barre-jeu a { transition: none; }
 }
 @media (max-width: 960px) { .barre nav { margin-left: auto; } }
+
+/* LA HERO DE L'ACCUEIL, RETOUCHES DE LA TÊTE (05/10, 21:10) : un fond net, le voile sous le texte SEULEMENT (la moitié
+   droite en pleine lumière), les modèles POSÉS dans la scène (une ombre au sol, le boss devant, la monture en vol
+   derrière), un titre qui prend moins de place, les trois boutons sur une rangée. */
+.vitrine-tete.accueil::before { background: linear-gradient(96deg, rgba(20, 11, 30, .94) 0%, rgba(27, 16, 40, .86) 30%, rgba(34, 19, 52, .4) 50%, rgba(42, 23, 64, 0) 66%), linear-gradient(0deg, var(--nuit) 0%, rgba(27, 16, 40, 0) 16%); }
+.vitrine-tete.accueil .fond img, .vitrine-tete.accueil .fond video { object-position: 68% 40%; filter: saturate(1.12) contrast(1.06); }
+.vitrine-tete.accueil h1 { font-size: clamp(28px, 3.1vw, 44px); line-height: 1.08; }
+.vitrine-tete.accueil .accroche { margin: 12px 0 20px; }
+.vitrine-tete.accueil .gestes { flex-wrap: nowrap; gap: 10px; }
+.vitrine-tete.accueil .gestes .grand { font-size: 19px; padding: 4px 12px; white-space: nowrap; }
+.vitrine-tete.accueil .gestes .bouton { white-space: nowrap; }
+.accueil .scene .halo { display: none; }
+.accueil .v-boss { width: 58%; right: 4%; bottom: -2%; z-index: 3; }
+.accueil .v-monture { width: 44%; left: 2%; top: -2%; z-index: 1; }
+.accueil .v-familier { width: 20%; right: 2%; top: 6%; z-index: 2; }
+.accueil .v-coffre { width: 26%; left: 12%; bottom: 0; z-index: 4; }
+/* l'ombre au sol de ce qui est posé (le boss, le coffre) : elle ne flotte pas avec l'image */
+.accueil .vol.sol::after { content: ""; position: absolute; left: 12%; right: 12%; bottom: 9%; height: 12%; z-index: -1; background: radial-gradient(closest-side, rgba(10, 5, 16, .62), rgba(10, 5, 16, 0)); }
+.accueil .vol.sol img { animation: none; }
+@media (max-width: 960px) {
+  .vitrine-tete.accueil::before { background: linear-gradient(180deg, rgba(20, 11, 30, .5) 0%, rgba(42, 23, 64, 0) 16%, rgba(42, 23, 64, .1) 40%, rgba(27, 16, 40, .9) 58%, var(--nuit) 100%); }
+  .vitrine-tete.accueil .gestes { flex-wrap: wrap; justify-content: center; }
+  .vitrine-tete.accueil h1 { font-size: clamp(26px, 7vw, 36px); }
+}
