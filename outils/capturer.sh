@@ -11,7 +11,7 @@ entiere() { # nom, page, largeur,hauteur
 ecran() { "$C" --headless=new --disable-gpu --hide-scrollbars --window-size="$3" --virtual-time-budget=5000 --screenshot="$ICI/captures/$1.png" "http://localhost:$P/$2" > /dev/null 2>&1; }
 ecran accueil_ecran index.html 1440,900
 ecran accueil_portable index.html 1366,768
-entiere accueil index.html 1440,7700
+entiere accueil index.html 1440,8300
 entiere accueil_telephone index.html 520,9000
 entiere commencer commencer.html 1440,3700
 entiere boutique boutique.html 1440,2100
