@@ -15,5 +15,7 @@ entiere accueil index.html 1440,8300
 entiere accueil_telephone index.html 520,9000
 entiere commencer commencer.html 1440,3700
 entiere pirates pirates.html 1440,4200
-entiere boutique boutique.html 1440,2100
+entiere boutique boutique.html 1440,2700
+entiere boutique_telephone boutique.html 390,3400
+entiere merci merci.html 1440,1500
 ls "$ICI/captures"

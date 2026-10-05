@@ -1,8 +1,13 @@
 // Les règles du site, vérifiées en une seconde : npm run verifier (code 0 : tout est bon)
 'use strict'
 const fs = require('fs'), path = require('path')
-const RACINE = path.join(__dirname, '..'), PAGES = ['index.html', 'commencer.html', 'pirates.html', 'boutique.html', '404.html']
-// LA BOUTIQUE : js/boutique.config.js ne porte que des adresses publiques en https (ou rien), jamais une clé
+const RACINE = path.join(__dirname, '..'), PAGES = ['index.html', 'commencer.html', 'pirates.html', 'boutique.html', 'merci.html', '404.html']
+// les pages qui restent hors de Google et hors du plan du site : la 404, et « Merci » (la page de retour après un achat)
+const HORS_GOOGLE = ['404.html', 'merci.html']
+// LA BOUTIQUE : js/boutique.config.js ne porte que le jeton PUBLIC de Tebex et des adresses publiques en https (ou rien),
+// jamais une clé ; js/boutique.js ne parle qu'à l'API publique de Tebex et n'envoie le joueur que sur sa page de paiement.
+// Le jeton public : quelques caractères, un tiret, quarante lettres et chiffres (Tebex, « API Keys », « Public Token »).
+const JETON = /^[a-z0-9]{4,6}-[a-f0-9]{40}$/
 function verifierBoutique(faute) {
   const f = path.join(RACINE, 'js', 'boutique.config.js')
   if (!fs.existsSync(f)) return faute('js/boutique.config.js manque')
@@ -10,8 +15,31 @@ function verifierBoutique(faute) {
   try { new Function('window', fs.readFileSync(f, 'utf8'))(bac) } catch (e) { return faute('js/boutique.config.js ne se lit pas : ' + e.message) }
   const c = bac.CASTERIA_BOUTIQUE
   if (!c || typeof c !== 'object') return faute('js/boutique.config.js ne pose pas CASTERIA_BOUTIQUE')
-  for (const k of Object.keys(c)) if (!['adresse', 'cadre', 'hauteurCadre'].includes(k)) faute('js/boutique.config.js : un champ inconnu « ' + k + ' » (une clé n\'a rien à faire ici)')
-  for (const k of ['adresse', 'cadre']) if (c[k] !== '' && !/^https:\/\/[a-z0-9-]+(\.[a-z0-9-]+)+(\/[^\s"\'<>]*)?$/i.test(String(c[k]))) faute('js/boutique.config.js : « ' + k + ' » doit être vide ou une adresse https://')
+  for (const k of Object.keys(c)) if (!['jeton', 'adresse', 'cadre', 'hauteurCadre'].includes(k)) faute('js/boutique.config.js : un champ inconnu « ' + k + ' » (une clé n\'a rien à faire ici)')
+  const jeton = c.jeton === undefined ? '' : c.jeton
+  if (jeton !== '' && (typeof jeton !== 'string' || !JETON.test(jeton))) faute('js/boutique.config.js : « jeton » doit être vide ou le jeton PUBLIC de Tebex (quelques caractères, un tiret, quarante lettres et chiffres) : jamais la « Private Key »')
+  for (const k of ['adresse', 'cadre']) if (c[k] !== undefined && c[k] !== '' && !/^https:\/\/[a-z0-9-]+(\.[a-z0-9-]+)+(\/[^\s"\'<>]*)?$/i.test(String(c[k]))) faute('js/boutique.config.js : « ' + k + ' » doit être vide ou une adresse https complète')
+  // AUCUNE CLÉ dans le dépôt : une longue suite de lettres et de chiffres (32 et plus) ne peut être que la fin du jeton public
+  const permis = typeof jeton === 'string' && JETON.test(jeton) ? jeton.split('-')[1] : ''
+  const textes = fs.readdirSync(RACINE).filter(n => /\.(html|js|json|md|txt|xml)$/.test(n)).concat(fs.readdirSync(path.join(RACINE, 'js')).map(n => 'js/' + n), fs.readdirSync(path.join(RACINE, 'css')).map(n => 'css/' + n))
+  for (const n of textes) {
+    if (n === 'package-lock.json') continue
+    for (const m of fs.readFileSync(path.join(RACINE, n), 'utf8').match(/[A-Fa-f0-9]{32,}/g) || []) if (m !== permis) faute(n + ' : une suite de ' + m.length + ' lettres et chiffres qui ressemble à une clé (« ' + m.slice(0, 6) + '... ») : aucune clé dans ce dépôt')
+  }
+  // le script de la boutique : il ne s'adresse qu'à l'API publique de Tebex, n'écrit jamais du texte reçu comme du code de
+  // page, et ne quitte le site que pour la page de paiement de Tebex
+  const js = fs.readFileSync(path.join(RACINE, 'js', 'boutique.js'), 'utf8')
+  for (const u of js.match(/https?:\/\/[^\s'"`)]+/g) || []) if (!u.startsWith('https://headless.tebex.io/')) faute('js/boutique.js : une adresse autre que l\'API de Tebex : ' + u)
+  if (/innerHTML|outerHTML|insertAdjacentHTML|document\.write|\beval\(/.test(js)) faute('js/boutique.js : un texte reçu de Tebex ne s\'écrit jamais comme du code de page (textContent seulement)')
+  const sorties = js.match(/location\.(assign|replace|href)[^\n]*/g) || []
+  if (sorties.length !== 1 || !/location\.assign\(lien\)/.test(sorties[0]) || !js.includes('\\.tebex\\.io\\/')) faute('js/boutique.js : la seule sortie du site doit être la page de paiement de Tebex, vérifiée (« .tebex.io »)')
+  if (!/\[A-Za-z0-9_\]\{3,16\}/.test(js)) faute('js/boutique.js : la règle du pseudo du serveur (3 à 16 lettres sans accent, chiffres, tiret du bas) manque')
+  // la page : la mise en garde sur le pseudo, la case qui oblige à relire, le bouton gris au départ
+  const page = lire('boutique.html'), merci = lire('merci.html')
+  if (c.jeton) {
+    for (const [quoi, motif] of [['la mise en garde « Une erreur de pseudo n\'est pas remboursée »', /Une erreur de pseudo n'est pas remboursée/], ['la case « je l\'ai vérifié »', /<input type="checkbox" id="pseudo-sur">/], ['le bouton « Payer » gris au départ', /id="achat-payer" disabled/], ['le champ du pseudo', /<input id="pseudo"/]]) if (!motif.test(page)) faute('boutique.html : ' + quoi + ' manque')
+    if (!/Une erreur de pseudo n'est pas remboursée/.test(merci)) faute('merci.html : la phrase sur le remboursement manque')
+  }
 }
 const LIENS_FIGES = 'https://github.com/guerrinflorian/casteria-mc/releases/'
 // le domaine du site : celui que outils/domaine.js a écrit dans robots.txt ; et le plan du site
@@ -75,9 +103,10 @@ for (const page of PAGES) {
   for (const v of s.match(/<video\b[^>]*>/g) || []) if (!/preload="none"/.test(v) || /\ssrc="/.test(v)) faute('une vidéo se chargerait sans attendre : ' + v.slice(0, 70))
   // LE RÉFÉRENCEMENT : chaque page dit son adresse complète (la même que dans sitemap.xml) et son image de partage.
   // La page 404, elle, demande à rester hors de Google, et cite ses fichiers depuis la racine (elle s'affiche à toute adresse).
-  if (page === '404.html') {
-    if (!/<meta name="robots" content="noindex">/.test(s)) faute('la page 404 doit porter noindex')
-    if (/(?:src|href)="(?![/#]|https?:)/.test(s)) faute('la page 404 cite un fichier sans partir de la racine (« / »)')
+  if (HORS_GOOGLE.includes(page)) {
+    if (!/<meta name="robots" content="noindex">/.test(s)) faute('la page ' + page + ' doit porter noindex')
+    if (page === '404.html' && /(?:src|href)="(?![/#]|https?:)/.test(s)) faute('la page 404 cite un fichier sans partir de la racine (« / »)')
+    if (PLAN.includes('/' + page + '</loc>')) faute('sitemap.xml ne doit pas citer ' + page)
   } else if (DOMAINE) {
     const adresse = DOMAINE + '/' + (page === 'index.html' ? '' : page)
     if (!s.includes('<link rel="canonical" href="' + adresse + '">')) faute('l\'adresse de la page (canonical) devrait être ' + adresse)
@@ -96,7 +125,7 @@ for (const page of PAGES) {
 // le domaine est écrit, et le plan du site cite les pages, rien de plus
 console.log('robots.txt, sitemap.xml')
 if (!DOMAINE) faute('le domaine manque : node outils/domaine.js https://ton-domaine.fr')
-else if ((PLAN.match(/<loc>/g) || []).length !== PAGES.length - 1) faute('sitemap.xml doit citer ' + (PAGES.length - 1) + ' pages (relance outils/domaine.js)')
+else if ((PLAN.match(/<loc>/g) || []).length !== PAGES.length - HORS_GOOGLE.length) faute('sitemap.xml doit citer ' + (PAGES.length - HORS_GOOGLE.length) + ' pages (relance outils/domaine.js)')
 // les îlots de parchemin portent leur propre fond et leur encre (sinon, posés dans une section sombre, ils ne se lisent pas)
 {
   const css = fs.readFileSync(path.join(RACINE, 'css', 'style.css'), 'utf8')
@@ -106,7 +135,7 @@ else if ((PLAN.match(/<loc>/g) || []).length !== PAGES.length - 1) faute('sitema
   if (!/\.cadre-bois > \* \{[^}]*background:/.test(css)) faute('.cadre-bois > * doit porter son fond de parchemin')
   for (const sel of ['.sombre', '.mer']) if (!/color:\s*#[EeFf]/.test(bloc(sel))) faute(sel + ' doit donner une couleur de texte claire')
 }
-for (const f of ['css/style.css', 'js/site.js', 'README.md', 'serveur.js']) {
+for (const f of ['css/style.css', 'js/site.js', 'js/boutique.js', 'js/boutique.config.js', 'README.md', 'serveur.js']) {
   const s = fs.readFileSync(path.join(RACINE, f), 'utf8')
   for (const t of TIRETS) if (s.includes(t)) { console.log(f); faute('un tiret long ou moyen') }
 }

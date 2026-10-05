@@ -20,7 +20,8 @@ dossier chez n'importe quel hébergeur de sites statiques, sans rien construire.
 | `index.html` | l'accueil : l'en-tête animé et le bouton de téléchargement, le concept, l'inédit (les boss, les armures, la mer, l'île qui grandit), la rangée de vidéos, les premiers pas, la boutique, le téléchargement |
 | `commencer.html` | « Par où commencer » : les dix premières étapes du jeu, les tickets et la roue, les astuces |
 | `pirates.html` | la mer : les bateaux, les pirates, les canons (la page qui vise « serveur Minecraft pirate ») |
-| `boutique.html` | la boutique : à quoi servent les crédits, et le cadre où Tebex s'affiche (`js/boutique.config.js`) |
+| `boutique.html` | la boutique : à quoi servent les crédits, et tes packs de Tebex, lus en direct (`js/boutique.config.js`, `js/boutique.js`) |
+| `merci.html` | la page où Tebex ramène le joueur après son paiement (hors de Google) |
 | `404.html` | la page des adresses qui n'existent pas (Vercel l'affiche tout seul, le petit serveur aussi) |
 | `css/style.css`, `js/site.js` | l'habillage et ce qui bouge (le site se lit entier sans JavaScript) |
 | `robots.txt`, `sitemap.xml`, `favicon.ico` | pour Google : le droit de tout lire, le plan du site, l'icône |
@@ -60,16 +61,31 @@ la ligne `Sitemap:` de `robots.txt`, et dans chaque page son adresse (`canonical
 
 ## Ce qu'il reste à régler
 
-**La boutique Tebex.** Tout se règle dans `js/boutique.config.js`, deux lignes :
+**La boutique Tebex.** Les packs s'affichent tout seuls sur `boutique.html` : ils sont lus EN DIRECT chez Tebex à
+chaque visite (leurs noms, leurs images, leurs prix, du moins cher au plus cher). Change un prix ou ajoute un pack dans
+Tebex : le site suit, sans rien toucher ici. Le seul réglage est dans `js/boutique.config.js` :
 
-- `adresse` : l'adresse de ta boutique (`https://....tebex.io`) : le grand bouton « Ouvrir la boutique » apparaît dans le
-  cadre de bois de `boutique.html` ;
-- `cadre` (facultatif) : une adresse à incruster, si Tebex t'en donne une : la boutique s'affiche dans la page, sous le
-  bouton (le bouton reste : il sert si le cadre ne s'affiche pas chez un joueur).
+- `jeton` : le jeton PUBLIC de ta boutique (Tebex, « API Keys », « Public Token »). Il sert à lire les packs et à créer
+  un panier : il est fait pour être vu de tous. JAMAIS la « Private Key » ni la clé secrète du serveur de jeu ici.
 
-Si Tebex te donne plutôt un code à coller (une balise `script`), un commentaire dans `boutique.html` montre où. Tant que
-les deux lignes sont vides, la page ne change pas. Aucune clé ne va dans ce dépôt : seulement des adresses publiques, et
-`npm run verifier` refuse autre chose qu'une adresse `https://`.
+Ce que fait la page : le joueur choisit un pack, écrit son pseudo (la règle du launcher : 3 à 16 lettres sans accent,
+chiffres et tiret du bas), le RELIT lettre par lettre et coche « C'est bien mon pseudo, je l'ai vérifié » (sans cette
+case le bouton « Payer » reste gris), puis il est envoyé sur la page de paiement de Tebex. Aucun paiement ni aucune
+carte ne passe par ce site. Après le paiement, Tebex le ramène sur `merci.html`.
+
+Le prix affiché est celui que le joueur paiera, TVA de son pays comprise (Tebex la calcule) : la page de Tebex montre
+d'abord le prix hors taxe, puis le même total que le site dès que le joueur écrit son code postal.
+
+Si Tebex ne répond pas, la page reste entière et dit « La boutique revient dans un instant. », avec un bouton
+« Réessayer ».
+
+À régler CHEZ TEBEX, pas ici : couper les paiements d'essai avant d'envoyer des joueurs payer (tant qu'ils sont actifs,
+la page de paiement porte un bandeau « TEST PAYMENTS ACTIVE »), et choisir la langue de la page de paiement.
+
+`npm run verifier` refuse : un jeton qui n'a pas la forme d'un jeton public, tout champ inconnu dans la config, toute
+longue suite de lettres et de chiffres qui ressemblerait à une clé n'importe où dans le dépôt, un script de boutique
+qui parlerait à un autre serveur que Tebex ou qui enverrait le joueur ailleurs que sur sa page de paiement, et la mise
+en garde du pseudo si elle disparaissait.
 
 ## Les règles du site
 

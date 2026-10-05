@@ -218,6 +218,58 @@ code { font-family: "Fredoka", sans-serif; font-weight: 700; color: var(--ruban)
 .tebex-cadre iframe { display: block; width: 100%; border: 0; background: #fff; }
 .tebex { min-height: 360px; display: grid; place-items: center; text-align: center; padding: 40px 30px; }
 
+/* LA BOUTIQUE : les packs de crédits (lus chez Tebex par js/boutique.js), puis l'achat : le pseudo relu et confirmé */
+.tebex.ouverte { grid-template-columns: minmax(0, 1fr); }
+.tebex-dedans { width: 100%; min-width: 0; }
+.packs { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 18px; margin: 30px 0 0; align-items: stretch; }
+.packs-etat { grid-column: 1 / -1; margin: 26px 0 6px; font-weight: 700; color: var(--bois-fonce); }
+.packs > .bouton { grid-column: 1 / -1; justify-self: center; }
+.pack { border: 12px solid transparent; border-image: url("../assets/matieres/carte.png") 6 fill / 12px round; image-rendering: pixelated; background: var(--parchemin) url("../assets/matieres/parchemin.png") 0 0 / 96px 96px repeat; color: var(--encre); padding: 8px 6px 10px; display: flex; flex-direction: column; align-items: center; gap: 4px; transition: transform .2s ease, filter .2s ease; }
+.pack > * { image-rendering: auto; }
+.pack:hover { transform: translateY(-5px); filter: drop-shadow(0 12px 14px rgba(58, 38, 20, .28)); }
+.pack.choisi { filter: drop-shadow(0 0 0 var(--or)) drop-shadow(0 0 10px rgba(215, 164, 33, .9)); transform: translateY(-5px); }
+.pack-image { width: min(100%, 150px); aspect-ratio: 1; display: grid; background: var(--parchemin-3) url("../assets/icones/credit.png") center / 64px 64px no-repeat; image-rendering: pixelated; }
+.pack-image img { width: 100%; height: 100%; object-fit: contain; image-rendering: auto; }
+.pack h4 { font-family: "Lilita One", "Fredoka", sans-serif; font-weight: 400; font-size: 23px; margin: 6px 0 0; color: var(--bois-fonce); }
+.pack-prix { font-family: "Lilita One", "Fredoka", sans-serif; font-size: 30px; line-height: 1.1; margin: 2px 0 0; color: var(--ruban); }
+.pack-taxe { font-size: 13px; margin: 0; color: var(--encre-douce); }
+.pack .bouton { margin-top: auto; }
+.pack .pack-taxe + .bouton, .pack .pack-prix + .bouton { margin-top: 10px; }
+.achat { margin: 34px auto 0; max-width: 640px; text-align: left; border-top: 3px dashed var(--bois-clair); padding-top: 26px; }
+.achat-pack { font-family: "Lilita One", "Fredoka", sans-serif; font-weight: 400; font-size: 26px; margin: 0 0 16px; text-align: center; color: var(--bois-fonce); }
+.alerte { background: #FBE0D8; border: 3px solid var(--ruban); border-left-width: 12px; color: #5E1710; padding: 12px 16px; text-align: left; }
+.alerte p { margin: 0; } .alerte p + p { margin-top: 8px; }
+.achat-champ { display: block; margin: 20px 0 0; font-weight: 700; color: var(--bois-fonce); }
+.achat-champ input { display: block; width: 100%; margin-top: 6px; padding: 12px 14px; font: 700 24px/1.2 Consolas, "Courier New", monospace; letter-spacing: 1px; color: var(--encre); background: #fff; border: 3px solid var(--bois-clair); border-radius: 0; }
+.achat-champ input:focus { outline: 3px solid var(--or); outline-offset: 2px; border-color: var(--bois); }
+.achat-erreur { margin: 10px 0 0; font-weight: 700; color: var(--ruban); }
+.relire { margin: 20px 0 0; text-align: center; }
+.relire-titre { margin: 0 0 8px; font-weight: 700; color: var(--bois-fonce); }
+.lettres { display: flex; flex-wrap: wrap; justify-content: center; gap: 5px; margin: 0; }
+.lettres span, .relire-legende .cle { display: inline-grid; place-items: center; width: 34px; height: 44px; font: 700 28px/1 Consolas, "Courier New", monospace; color: var(--encre); background: #fff; border: 2px solid var(--bois-clair); }
+.lettres span.maj, .relire-legende .cle.maj { background: var(--or-clair); border-color: var(--or-fonce); }
+.lettres span.chiffre, .relire-legende .cle.chiffre { background: #CFE6F7; border-color: var(--bleu); }
+.lettres span.faux { background: #FBE0D8; border-color: var(--ruban); color: var(--ruban); }
+.relire-legende { margin: 10px 0 0; font-size: 14px; color: var(--encre-douce); }
+.relire-legende .cle { width: 20px; height: 26px; font-size: 16px; margin: 0 4px 0 12px; vertical-align: middle; }
+.relire-legende .cle:first-child { margin-left: 0; }
+.relire-case { display: inline-flex; align-items: center; gap: 10px; margin: 18px 0 0; font-weight: 700; color: var(--bois-fonce); cursor: pointer; }
+.relire-case input { width: 26px; height: 26px; accent-color: var(--vert); flex: 0 0 auto; }
+.relire-case input:disabled { cursor: not-allowed; }
+button.bouton { cursor: pointer; }
+button.bouton:disabled { filter: grayscale(1) brightness(.92); opacity: .6; cursor: not-allowed; transform: none; }
+.achat .note { text-align: center; margin: 18px 0 0; }
+@media (max-width: 620px) {
+  .tebex { padding: 28px 10px; }
+  .packs { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .pack { padding: 6px 2px 8px; } .pack .bouton { font-size: 16px; }
+  .achat-pack { font-size: 22px; } .alerte { padding: 10px 12px; border-left-width: 8px; }
+  .relire-case { text-align: left; }
+  .pack h4 { font-size: 20px; } .pack-prix { font-size: 26px; }
+  .lettres span { width: 28px; height: 38px; font-size: 23px; }
+  .achat-champ input { font-size: 21px; }
+}
+
 .telecharge { text-align: center; }
 .launcher { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: 40px; align-items: center; text-align: left; margin: 0 0 56px; }
 .launcher .cadre-bois { border-width: 18px; border-image-width: 18px; }

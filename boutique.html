@@ -72,18 +72,48 @@
     <div class="tete apparait">
       <span class="ruban">Acheter des crédits</span>
       <h2>Obtenir des crédits</h2>
-      <p>Le paiement passe par notre boutique en ligne sécurisée. Tes crédits arrivent directement sur ton compte en jeu.</p>
+      <p>Choisis ton pack, écris ton pseudo, et paie sur la page sécurisée de Tebex, notre partenaire de paiement.</p>
     </div>
     <div class="cadre-bois apparait grandit">
-      <!-- LA BOUTIQUE TEBEX : rien à écrire ici. L'adresse de la boutique se met dans js/boutique.config.js : le bouton
-           « Ouvrir la boutique » et, si Tebex donne une adresse à incruster, le cadre apparaissent tout seuls.
-           Si Tebex donne plutôt un CODE à coller (une balise script) : le coller à la place de la ligne « tebex-cadre ».
-           Aucune clé ne s'écrit dans ce dépôt : seulement des adresses publiques. -->
-      <div class="tebex" id="tebex" style="color:var(--encre)">
-        <div>
-          <img class="pixel" src="assets/icones/credit.png" alt="Un crédit de Casteria" width="96" height="96" style="margin:0 auto 14px" loading="lazy">
+      <!-- LES PACKS DE CRÉDITS : rien à écrire ici. Ils sont lus EN DIRECT chez Tebex à chaque visite (leurs noms, leurs
+           images, leurs prix) : change un prix ou ajoute un pack dans Tebex, la page suit toute seule.
+           Le seul réglage : le jeton PUBLIC de la boutique, dans js/boutique.config.js. Aucune clé secrète ne s'écrit
+           dans ce dépôt, et aucun paiement ne se fait sur ce site : le joueur paie sur la page de Tebex. -->
+      <div class="tebex ouverte" id="tebex" style="color:var(--encre)">
+        <div class="tebex-dedans">
+          <img class="pixel" src="assets/icones/credit.png" alt="Un crédit de Casteria" width="72" height="72" style="margin:0 auto 10px" loading="lazy">
           <h3 style="font-size:30px;color:var(--bois-fonce)">Choisis ton pack de crédits</h3>
-          <p style="max-width:520px;margin:10px auto 0">Tes crédits arrivent sur ton compte en jeu dès le paiement validé. En jeu, tape <code>/credits</code> pour voir ton solde.</p>
+          <p style="max-width:560px;margin:10px auto 0">Tes crédits sont ajoutés à ton compte à ta prochaine connexion au serveur. En jeu, tape <code>/boutique</code> pour les dépenser et <code>/credits</code> pour voir ton solde.</p>
+
+          <div class="packs" id="packs" aria-live="polite">
+            <p class="packs-etat" id="packs-etat">On ouvre les coffres...</p>
+          </div>
+          <noscript><p class="packs-etat">Pour voir les packs et acheter des crédits, active JavaScript dans ton navigateur.</p></noscript>
+
+          <form class="achat" id="achat" hidden novalidate>
+            <h4 class="achat-pack" id="achat-pack">Ton pack</h4>
+            <div class="alerte" role="note">
+              <p><b>Écris ton pseudo EXACT, celui du jeu : chaque majuscule et chaque caractère comptent.</b> «&nbsp;Florian&nbsp;» et «&nbsp;florian&nbsp;» sont deux joueurs différents.</p>
+              <p>Les crédits partent sur ce pseudo. <b>Une erreur de pseudo n'est pas remboursée.</b></p>
+            </div>
+            <label class="achat-champ" for="pseudo">Ton pseudo en jeu
+              <input id="pseudo" name="pseudo" type="text" maxlength="16" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="Ton pseudo exact">
+            </label>
+            <p class="achat-erreur" id="pseudo-erreur" role="alert" hidden></p>
+            <div class="relire" id="relire" hidden>
+              <p class="relire-titre">Relis-le, lettre par lettre :</p>
+              <p class="lettres" id="pseudo-lettres" aria-live="polite"></p>
+              <p class="relire-legende"><span class="cle maj">A</span> une MAJUSCULE <span class="cle">a</span> une minuscule <span class="cle chiffre">0</span> un chiffre</p>
+              <label class="relire-case"><input type="checkbox" id="pseudo-sur"> C'est bien mon pseudo, je l'ai vérifié</label>
+            </div>
+            <p class="achat-erreur" id="achat-erreur" role="alert" hidden></p>
+            <p class="tebex-actions">
+              <button class="bouton bouton-or grand" type="submit" id="achat-payer" disabled>Payer</button>
+              <button class="bouton bouton-bois" type="button" id="achat-retour">Changer de pack</button>
+            </p>
+            <p class="note">Le paiement se fait sur la page sécurisée de Tebex, notre partenaire de paiement : aucune carte n'est demandée sur ce site.</p>
+          </form>
+
           <p class="tebex-actions" id="tebex-actions"><a class="bouton bouton-vert" href="./#telecharger">Pas encore de compte ? Télécharge le launcher</a></p>
         </div>
       </div>
