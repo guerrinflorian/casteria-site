@@ -733,3 +733,25 @@ body:has(.achat input:focus) .barre-jeu { display: none; }
 }
 html.photo .hublot, html.photo .launcher .perche, html.photo .plateformes.quai .quai-d { animation: none; }
 @media (prefers-reduced-motion: reduce) { .hublot, .launcher .perche, .plateformes.quai .quai-d { animation: none; } .pancarte, .ecran-penche { transition: none; } }
+
+/* LES VOILES (la page « La mer ») : quatre voiles suspendues à un cordage, l'une plus bas que l'autre ; chacune son
+   écran de jeu en haut, son texte dessous. Sur téléphone : une rangée qu'on fait glisser. */
+.voiles { position: relative; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; align-items: start; padding-top: 30px; margin-top: 20px; }
+.voiles::before { content: ""; position: absolute; left: -2%; right: -2%; top: 8px; height: 0; border-top: 5px dashed #C9A227; transform: rotate(-.6deg); }
+.voile { position: relative; padding: 0 0 20px; color: #EAF8FF; background: linear-gradient(180deg, #1B1028, #2A1740); border: 4px solid #0A2233; box-shadow: 0 0 0 2px #C9A227, 0 18px 30px rgba(0, 0, 0, .45); transform-origin: 50% 0; transition: transform .45s cubic-bezier(.2, .8, .2, 1); }
+.voile::before { content: ""; position: absolute; left: 50%; top: -26px; width: 12px; height: 26px; margin-left: -6px; background: #C9A227; border: 2px solid #0A2233; }
+.voile:nth-child(1) { transform: rotate(-1.4deg); } .voile:nth-child(2) { transform: rotate(1deg); margin-top: 54px; } .voile:nth-child(3) { transform: rotate(-.8deg); margin-top: 18px; } .voile:nth-child(4) { transform: rotate(1.6deg); margin-top: 70px; }
+.voile:hover { transform: rotate(0) translateY(6px); }
+.voile-ecran { aspect-ratio: 9 / 13; overflow: hidden; background: #0A2233; border-bottom: 4px solid #C9A227; }
+.voile-ecran video { display: block; width: 100%; height: 100%; object-fit: cover; }
+.voile .num { color: #8FE3FF; margin: 16px 16px 4px; } .voile h3 { font-size: 23px; color: var(--or-clair); margin: 0 16px 8px; } .voile p { margin: 0 16px 8px; font-size: 16px; }
+.voile ul { margin: 8px 16px 0; padding: 0; list-style: none; display: grid; gap: 6px; } .voile li { padding-left: 22px; position: relative; font-size: 15px; }
+.voile li::before { content: ""; position: absolute; left: 2px; top: .5em; width: 9px; height: 9px; background: var(--or); transform: rotate(45deg); }
+.voile .bouton { font-size: 15px; }
+.page .v-c.haut { width: 46%; left: auto; right: 0; top: -4%; bottom: auto; } .page .v-c.haut img { animation: flotte 6s ease-in-out -2s infinite; }
+@media (max-width: 960px) {
+  .voiles { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 16px; padding: 34px 6px 24px; margin: 20px -14px 0; scrollbar-width: thin; scrollbar-color: #C9A227 transparent; }
+  .voiles::before { left: 0; right: 0; transform: none; position: sticky; flex: 0 0 0; }
+  .voile, .voile:nth-child(n) { flex: 0 0 min(76vw, 300px); scroll-snap-align: center; margin-top: 0; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) { .voile { transition: none; } .page .v-c.haut img { animation: none; } }
