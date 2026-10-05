@@ -49,8 +49,14 @@
     if (reessayer) { var b = el('button', 'bouton bouton-bois', 'Réessayer'); b.type = 'button'; b.addEventListener('click', charger); packsEl.appendChild(b) }
   }
   function panne() { form.hidden = true; etat('La boutique revient dans un instant.', true) }
-  function carte(p) {
-    var art = el('article', 'pack')
+  // les crédits d'un pack, lus dans son nom (« 400 crédits ») : 0 si son nom n'en dit pas ; et ses crédits par euro
+  function credits(p) { var m = /(\d[\d \u00A0\u202F.]*)\s*cr[ée]dits?/i.exec(String(p.name || '')); return m ? parseInt(m[1].replace(/\D/g, ''), 10) || 0 : 0 }
+  function taux(p) { return p.total_price > 0 ? credits(p) / p.total_price : 0 }
+  // marque : 'meilleur' (le plus de crédits par euro), 'milieu' (le pack du milieu de l'étal) ou '' ; bonus : ses
+  // crédits par euro en plus de ceux du plus petit pack, en pour cent (0 : rien à dire)
+  function carte(p, marque, bonus) {
+    var art = el('article', 'pack' + (marque ? ' ' + marque : ''))
+    if (marque) art.appendChild(el('p', 'pack-marque', marque === 'meilleur' ? 'Le meilleur prix' : 'Le juste milieu'))
     // l'image du pack : sa place est réservée (un crédit dessiné dessous), elle se charge tout de suite ; si elle manque
     // ou ne répond pas, le crédit dessiné reste
     var cadre = el('div', 'pack-image'), img = sure(p.image)
@@ -63,6 +69,14 @@
     art.appendChild(el('h4', '', p.name))
     art.appendChild(el('p', 'pack-prix', prix(p)))
     if (p.sales_tax > 0) art.appendChild(el('p', 'pack-taxe', 'TVA comprise'))
+    if (bonus > 0) art.appendChild(el('p', 'pack-bonus', bonus + ' % de crédits en plus'))
+    // la grande carte : trois vignettes de ce qu'on s'offre (nos rendus, assets/boutique), sans rien chiffrer
+    if (marque === 'meilleur') {
+      var v = el('p', 'pack-offre')
+      ;['phenix', 'wyverne', 'caisse'].forEach(function (n) { var i = el('img'); i.alt = ''; i.width = 86; i.height = 86; i.loading = 'lazy'; i.src = 'assets/boutique/' + n + '.png'; v.appendChild(i) })
+      art.appendChild(v)
+      art.appendChild(el('p', 'pack-offre-mot', 'Familiers, montures, clés : à toi de choisir'))
+    }
     var b = el('button', 'bouton bouton-or', 'Acheter'); b.type = 'button'
     b.setAttribute('aria-label', 'Acheter le pack ' + p.name + ' : ' + prix(p))
     b.addEventListener('click', function () { choisir(p, art) })
@@ -88,7 +102,14 @@
         // du moins cher au plus cher
         packs.sort(function (x, y) { return x.total_price - y.total_price })
         packsEl.textContent = ''
-        packs.forEach(function (p) { packsEl.appendChild(carte(p)) })
+        // la vitrine : le meilleur prix (le plus de crédits par euro) et le juste milieu, calculés sur les prix lus
+        var base = taux(packs[0]), meilleur = null
+        packs.forEach(function (p) { if (taux(p) > base && (!meilleur || taux(p) > taux(meilleur))) meilleur = p })
+        var milieu = packs.length >= 3 ? packs[Math.floor(packs.length / 2)] : null
+        if (milieu === meilleur) milieu = null
+        packs.forEach(function (p) {
+          packsEl.appendChild(carte(p, p === meilleur ? 'meilleur' : (p === milieu ? 'milieu' : ''), base > 0 && taux(p) > base ? Math.round((taux(p) / base - 1) * 100) : 0))
+        })
       })
       .catch(function () { clearTimeout(minuteur); panne() })
   }
