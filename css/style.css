@@ -480,3 +480,65 @@ html.photo .pluie i { animation: none; opacity: .85; bottom: auto; top: calc(18%
   .pack, .offre, .offre-scene img, .pseudo, .ticket, .pack-image::after { transition: none; }
   .pack:hover, .offre:hover { transform: none; }
 }
+
+/* ============================================================================================================
+   LE SITE EN VOLUME (le propriétaire, 05/10 au soir : « ça fait trop IA [...] la hero section doit être mémorable,
+   le header aussi sur mobile doit être original [...] une image doit jamais dépasser d'un écran de scroll »).
+   ============================================================================================================ */
+/* LA RÈGLE : aucune image ni vidéo plus haute qu'un écran, sur ordinateur comme sur téléphone (outils/verifier.js) */
+main img, main video { max-height: 100svh; }
+
+/* LE HAUT DE CHAQUE PAGE : une photo ou une vidéo du jeu, nette, et des choses du jeu en volume devant (la même
+   mise en scène que la boutique : .vitrine-tete). Ici ce qui la rend commune à toutes les pages. */
+.vitrine-tete .fond { inset: 0; }
+.vitrine-tete .fond img, .vitrine-tete .fond video { width: 100%; height: 100%; object-fit: cover; filter: none; }
+.vitrine-tete .fond video { transform: none; }
+.vitrine-tete.accueil { min-height: 100svh; max-height: none; padding: 104px 0 90px; }
+.vitrine-tete.accueil::before { background: linear-gradient(98deg, rgba(27, 16, 40, .95) 0%, rgba(34, 19, 52, .86) 38%, rgba(42, 23, 64, .34) 62%, rgba(42, 23, 64, .05) 82%), linear-gradient(0deg, var(--nuit) 0%, rgba(27, 16, 40, 0) 24%); }
+.vitrine-tete .entete { display: flex; align-items: center; gap: 16px; margin-bottom: 6px; }
+.vitrine-tete .logo { flex: 0 0 auto; width: min(124px, 30vw); height: auto; filter: drop-shadow(0 16px 26px rgba(0, 0, 0, .55)); animation: flotte 5.5s ease-in-out infinite; }
+.vitrine-tete.accueil h1 { font-size: clamp(34px, 4.2vw, 60px); line-height: 1.04; margin-top: 6px; }
+.vitrine-tete.accueil h1 span { display: block; font-size: 1em; margin: 0; color: #fff; }
+.vitrine-tete.accueil h1 span.or { color: var(--or-clair); }
+.vitrine-tete .autres { margin: 14px 0 0; font-size: 15px; color: #E7D8F7; max-width: 40em; text-shadow: 0 2px 6px rgba(0, 0, 0, .6); }
+.vitrine-tete .autres a { color: var(--or-clair); font-weight: 600; }
+/* la scène en volume : chaque chose dans son « vol » (le défilement et la souris le déplacent : js/site.js), l'image
+   dedans flotte à son rythme */
+.vitrine-tete .scene .vol { position: absolute; display: block; will-change: transform; }
+.vitrine-tete .scene .vol img { position: static; width: 100%; height: auto; display: block; }
+.accueil .scene { height: min(560px, 62svh); }
+.accueil .v-boss { width: 66%; right: -4%; bottom: -8%; } .accueil .v-boss img { animation: flotte 7s ease-in-out infinite; }
+.accueil .v-monture { width: 62%; left: -10%; top: -8%; } .accueil .v-monture img { animation: flotte 5.2s ease-in-out -1.5s infinite; }
+.accueil .v-familier { width: 30%; right: 4%; top: -4%; } .accueil .v-familier img { animation: flotte 4.2s ease-in-out -.6s infinite; }
+.accueil .v-coffre { width: 34%; left: 4%; bottom: -10%; } .accueil .v-coffre img { animation: flotte 6.4s ease-in-out -2.4s infinite; }
+
+/* LE MENU DU TÉLÉPHONE : une barre d'objets, comme en jeu, au pied de l'écran. Cinq cases : celle de la page où l'on
+   est a son cadre d'or et se soulève. Pas de menu à déplier : tout est sous le pouce. */
+.barre-jeu { display: none; }
+@media (max-width: 960px) {
+  .barre .menu { display: none; }
+  .barre nav { position: static; display: flex; flex-direction: row; background: none; padding: 0; box-shadow: none; width: auto; max-height: none; }
+  .barre nav a:not(.bouton) { display: none; }
+  .barre-jeu { display: flex; position: fixed; z-index: 60; left: 50%; bottom: calc(8px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); gap: 0; padding: 4px;
+    background: rgba(20, 11, 30, .88); border: 3px solid var(--bois-fonce); box-shadow: 0 0 0 2px var(--or-fonce), 0 10px 26px rgba(0, 0, 0, .55); backdrop-filter: blur(6px); }
+  .barre-jeu a { position: relative; display: grid; justify-items: center; align-content: center; gap: 1px; width: min(64px, 18.4vw); height: 60px; text-decoration: none; color: #F3E7FF;
+    background: rgba(255, 255, 255, .06); border: 2px solid rgba(255, 255, 255, .16); margin: 0 1px; font-size: 11px; font-weight: 700; line-height: 1; transition: transform .2s cubic-bezier(.2, .8, .2, 1); }
+  .barre-jeu a img { width: 32px; height: 32px; object-fit: contain; filter: drop-shadow(0 3px 2px rgba(0, 0, 0, .5)); }
+  .barre-jeu a[aria-current="page"] { border: 3px solid var(--or-clair); background: rgba(255, 215, 94, .16); transform: translateY(-7px) scale(1.06); color: var(--or-clair); z-index: 1; box-shadow: 0 6px 12px rgba(0, 0, 0, .5); }
+  .barre-jeu a:active { transform: translateY(-3px) scale(.97); }
+  .barre-jeu a.jouer { background: linear-gradient(180deg, var(--vert-clair), var(--vert)); border-color: #2C6A20; color: #fff; text-shadow: 0 1px 0 rgba(0, 0, 0, .4); }
+  body { padding-bottom: 86px; }
+  footer { padding-bottom: 30px; }
+  /* le haut de page sur téléphone : la scène en volume D'ABORD (une image dès le premier écran), le texte dessous */
+  .vitrine-tete.accueil { padding: 84px 0 40px; min-height: 0; }
+  .vitrine-tete.accueil::before { background: linear-gradient(180deg, rgba(27, 16, 40, .6) 0%, rgba(42, 23, 64, .12) 18%, rgba(42, 23, 64, .35) 40%, rgba(27, 16, 40, .93) 56%, var(--nuit) 100%); }
+  .accueil .scene { height: min(320px, 42svh); max-width: 440px; }
+  .vitrine-tete .entete { flex-direction: column; gap: 6px; }
+  .vitrine-tete .logo { width: 84px; }
+}
+html.photo .vitrine-tete .logo, html.photo .accueil .vol img { animation: none; }
+@media (prefers-reduced-motion: reduce) {
+  .vitrine-tete .logo, .accueil .vol img { animation: none; }
+  .barre-jeu a { transition: none; }
+}
+@media (max-width: 960px) { .barre nav { margin-left: auto; } }

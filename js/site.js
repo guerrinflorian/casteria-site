@@ -20,6 +20,7 @@
     { e: document.querySelector('.eventail .t2'), base: 'translate(-50%, -52%)', v: -0.22, r: 0 },
     { e: document.querySelector('.eventail .t3'), base: 'translate(18%, -50%) rotate(9deg) scale(.86)', v: -0.14, r: 6 }
   ]
+  var vols = document.querySelectorAll('.scene .vol'), scene = document.querySelector('.scene')
   var attente = false
   function defile() {
     attente = false
@@ -33,6 +34,8 @@
     if (fond) fond.style.transform = 'translateY(' + (y * 0.25) + 'px) scale(' + (1 + p * 0.12) + ')'
     if (logo) logo.style.marginTop = (-y * 0.08) + 'px'
     if (eventail) poses.forEach(function (t) { if (t.e) t.e.style.transform = t.base + ' translateY(' + (y * t.v) + 'px) rotate(' + (p * t.r) + 'deg)' })
+    // la scène en volume : chaque chose glisse à sa vitesse (data-v), les plus proches plus vite
+    Array.prototype.forEach.call(vols, function (e) { e.style.setProperty('--vy', (y * Number(e.dataset.v || 0)) + 'px'); e.style.transform = 'translate(var(--sx, 0px), calc(var(--vy, 0px) + var(--sy, 0px)))' })
   }
   window.addEventListener('scroll', function () { if (!attente) { attente = true; requestAnimationFrame(defile) } }, { passive: true })
   window.addEventListener('load', defile)
@@ -47,6 +50,15 @@
     })
     eventail.addEventListener('mouseleave', function () { eventail.style.transform = '' })
     eventail.style.transition = 'transform .3s ease-out'
+  }
+
+  // la scène en volume suit un peu la souris (les choses proches bougent plus)
+  if (scene && vols.length && !calme && window.matchMedia('(hover: hover)').matches) {
+    var tete = scene.closest('section') || scene
+    tete.addEventListener('mousemove', function (e) {
+      var r = tete.getBoundingClientRect(), dx = (e.clientX - r.left) / r.width - 0.5, dy = (e.clientY - r.top) / r.height - 0.5
+      Array.prototype.forEach.call(vols, function (v) { var k = Math.abs(Number(v.dataset.v || 0)) * 220; v.style.setProperty('--sx', (-dx * k) + 'px'); v.style.setProperty('--sy', (-dy * k) + 'px'); v.style.transform = 'translate(var(--sx, 0px), calc(var(--vy, 0px) + var(--sy, 0px)))' })
+    })
   }
 
   // les braises du héros

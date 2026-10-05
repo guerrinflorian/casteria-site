@@ -33,7 +33,6 @@
 <div class="progres" aria-hidden="true"></div>
 <header class="barre posee">
   <a class="marque" href="./" aria-label="Casteria, l'accueil"><img src="assets/logo/casteria-logo-300.webp" alt="Logo de Casteria" width="46" height="46"><span>Casteria</span></a>
-  <button class="menu" aria-label="Ouvrir le menu" aria-expanded="false">&#9776;</button>
   <nav aria-label="Le menu">
     <a href="./#concept">Le concept</a>
     <a href="./#inedit">L'inédit</a>
@@ -178,6 +177,13 @@
      FIGÉE (outils/verifier.js n'admet que celle-ci, et sur cette page seule). S'il ne charge pas, ou sur téléphone, le
      joueur est envoyé sur la page de paiement de Tebex, comme avant. -->
 <script defer src="https://js.tebex.io/v/1.11.0.js"></script>
+<nav class="barre-jeu" aria-label="Le menu du téléphone">
+  <a href="./"><img src="assets/logo/casteria-logo-300.webp" alt="" width="32" height="32"><span>Accueil</span></a>
+  <a href="commencer.html"><img class="pixel" src="assets/icones/jeton.png" alt="" width="32" height="32"><span>Débuter</span></a>
+  <a href="pirates.html"><img src="assets/boutique/baleine.png" alt="" width="32" height="32"><span>La mer</span></a>
+  <a href="boutique.html" aria-current="page"><img class="pixel" src="assets/icones/credit.png" alt="" width="32" height="32"><span>Boutique</span></a>
+  <a class="jouer" href="./#telecharger"><img src="assets/boutique/caisse.png" alt="" width="32" height="32"><span>Jouer</span></a>
+</nav>
 <script src="js/site.js" defer></script>
 <script src="js/boutique.config.js" defer></script>
 <script src="js/boutique.js" defer></script>

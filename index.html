@@ -45,7 +45,6 @@
 
 <header class="barre accueil">
   <a class="marque" href="./" aria-label="Casteria, l'accueil"><img src="assets/logo/casteria-logo-300.webp" alt="Logo de Casteria : un dragon violet sur une île" width="46" height="46"><span>Casteria</span></a>
-  <button class="menu" aria-label="Ouvrir le menu" aria-expanded="false">&#9776;</button>
   <nav aria-label="Le menu">
     <a href="#concept">Le concept</a>
     <a href="#inedit">L'inédit</a>
@@ -58,17 +57,19 @@
 
 <main>
 <!-- ============ LE HÉROS ============ -->
-<section class="heros" id="haut">
-  <div class="fond" aria-hidden="true"><video data-auto muted loop playsinline preload="none" poster="assets/affiches/casteria_08.jpg" data-src="assets/videos/casteria_08.mp4"></video></div>
+<section class="heros vitrine-tete accueil" id="haut">
+  <!-- une boucle du jeu (une île, sa rive, la mer), nette ; devant, en volume : un boss, une monture, un familier, un coffre
+       (des rendus de nos modèles) que le défilement et la souris déplacent (js/site.js). Sur téléphone la scène vient d'abord. -->
+  <div class="fond" aria-hidden="true"><video data-auto muted loop playsinline preload="none" poster="assets/affiches/hero_accueil.jpg" data-src="assets/videos/hero_accueil.mp4"></video></div>
   <div class="braises" aria-hidden="true"></div>
   <div class="dedans grille">
-    <div>
+    <div class="texte">
       <div class="entete">
         <img class="logo" src="assets/logo/casteria-logo-300.webp" alt="Casteria, serveur Minecraft : le dragon violet et son île" width="150" height="150" fetchpriority="high">
         <p class="devise">Serveur Minecraft français<br>Moddé 1.21.1 <i aria-hidden="true">&#9670;</i> Launcher gratuit</p>
       </div>
       <h1><span>Casteria, le serveur Minecraft</span><span class="or">où ton île grandit sur la mer</span></h1>
-      <p class="accroche">Une île rien qu'à toi, des machines qui tournent toutes seules, quinze boss à faire tomber, des armures à pouvoirs et une mer entière à écumer en navire.</p>
+      <p class="accroche">Une île à toi, quinze boss à faire tomber, et une mer entière à écumer en navire.</p>
       <div class="gestes">
         <a class="bouton bouton-vert grand" href="https://github.com/guerrinflorian/casteria-mc/releases/download/installateur/Casteria-Installation.exe" rel="noopener"><svg class="picto" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M12 4v16M3 12h18" fill="none" stroke="currentColor" stroke-width="2.6"/></svg>Télécharger pour Windows</a>
         <a class="bouton bouton-or" href="https://github.com/guerrinflorian/casteria-mc/releases/download/installateur/Casteria-mac-apple-silicon.zip" rel="noopener"><svg class="picto" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M12 16v4M8 20.5h8" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>Mac</a>
@@ -76,10 +77,13 @@
       </div>
       <p class="autres">Mac : <a href="https://github.com/guerrinflorian/casteria-mc/releases/download/installateur/Casteria-mac-apple-silicon.zip" rel="noopener">puce Apple (M1 et après)</a> ou <a href="https://github.com/guerrinflorian/casteria-mc/releases/download/installateur/Casteria-mac-intel.zip" rel="noopener">Intel</a>. Le launcher est gratuit et installe tout : tu cliques, tu joues. <a href="#aide">Un souci pour installer ?</a></p>
     </div>
-    <div class="eventail" aria-label="Trois vidéos du jeu">
-      <div class="telephone t1"><video data-auto muted loop playsinline preload="none" poster="assets/affiches/casteria_03.jpg" data-src="assets/videos/casteria_03.mp4" aria-label="Vidéo : l'armure du Yéti fait marcher sur la mer"></video></div>
-      <div class="telephone t3"><video data-auto muted loop playsinline preload="none" poster="assets/affiches/casteria_15.jpg" data-src="assets/videos/casteria_15.mp4" aria-label="Vidéo : les peintures du navire"></video></div>
-      <div class="telephone t2"><video data-auto muted loop playsinline preload="none" poster="assets/affiches/casteria_08.jpg" data-src="assets/videos/casteria_08.mp4" aria-label="Vidéo : le Dragon Ancien, le dernier boss"></video></div>
+    <div class="scene" aria-hidden="true">
+      <span class="halo"></span>
+      <span class="vol v-monture" data-v="-0.16"><img src="assets/boutique/wyverne.png" alt="" width="420" height="420"></span>
+      <span class="vol v-boss" data-v="-0.07"><img src="assets/volume/yeti.png" alt="" width="520" height="520"></span>
+      <span class="vol v-familier" data-v="-0.24"><img src="assets/boutique/phenix.png" alt="" width="420" height="420"></span>
+      <span class="vol v-coffre" data-v="-0.11"><img src="assets/boutique/caisse.png" alt="" width="420" height="420"></span>
+      <i class="eclat e1"></i><i class="eclat e2"></i><i class="eclat e3"></i><i class="eclat e4"></i><i class="eclat e5"></i>
     </div>
   </div>
   <a class="descends" href="#concept">Découvre le serveur<b aria-hidden="true">&#8964;</b></a>
@@ -400,6 +404,13 @@
     <small>Casteria est un serveur Minecraft indépendant, créé par des joueurs. Il n'est ni affilié à Mojang ni à Microsoft, ni approuvé par eux. Minecraft est une marque de Mojang Studios.</small>
   </div>
 </footer>
+<nav class="barre-jeu" aria-label="Le menu du téléphone">
+  <a href="./" aria-current="page"><img src="assets/logo/casteria-logo-300.webp" alt="" width="32" height="32"><span>Accueil</span></a>
+  <a href="commencer.html"><img class="pixel" src="assets/icones/jeton.png" alt="" width="32" height="32"><span>Débuter</span></a>
+  <a href="pirates.html"><img src="assets/boutique/baleine.png" alt="" width="32" height="32"><span>La mer</span></a>
+  <a href="boutique.html"><img class="pixel" src="assets/icones/credit.png" alt="" width="32" height="32"><span>Boutique</span></a>
+  <a class="jouer" href="./#telecharger"><img src="assets/boutique/caisse.png" alt="" width="32" height="32"><span>Jouer</span></a>
+</nav>
 <script src="js/site.js" defer></script>
 </body>
 </html>
