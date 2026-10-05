@@ -25,6 +25,7 @@
 <link rel="preload" href="assets/polices/lilita_one.ttf" as="font" type="font/ttf" crossorigin>
 <link rel="preload" href="assets/polices/fredoka.ttf" as="font" type="font/ttf" crossorigin>
 <link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/carrousel.css">
 <script type="application/ld+json">
 { "@context": "https://schema.org", "@graph": [
   { "@type": "WebSite", "@id": "https://casteria.fr/#site", "url": "https://casteria.fr/", "name": "Casteria", "inLanguage": "fr",
@@ -108,36 +109,48 @@
       <h2>Un serveur Minecraft d'îles, avec une vraie économie</h2>
       <p>Tu pars d'un bout de terre au milieu de la mer. Tu en fais une île qui produit, qui élève, qui commerce. Et quand elle tourne toute seule, tu pars à l'aventure. Le principe rappelle le skyblock, mais ici ton île est posée sur la mer, et cette mer se parcourt en bateau.</p>
     </div>
-    <div class="cartes">
-      <article class="carte apparait" style="--retard:.05s">
-        <div class="signe" aria-hidden="true">&#127965;&#65039;</div>
-        <h3>Ton île sur la mer</h3>
-        <p>Chaque joueur a son île. Tu l'agrandis, tu la décores, tu y invites tes amis. Elle a son ponton, son écurie, et elle continue de grandir avec toi.</p>
-      </article>
-      <article class="carte apparait" style="--retard:.15s">
-        <img class="icone" src="assets/icones/jeton.png" alt="Un jeton de Casteria" width="64" height="64" loading="lazy">
-        <h3>Les jetons</h3>
-        <p>Tes machines produisent toutes seules, tes bêtes aussi. Tu récoltes, tu vends au marché ou aux autres joueurs à l'hôtel des ventes, et tu réinvestis.</p>
-      </article>
-      <article class="carte apparait" style="--retard:.25s">
-        <img class="icone" src="assets/icones/ticket.png" alt="Un ticket de fortune" width="64" height="64" loading="lazy">
-        <h3>Les tickets</h3>
-        <p>Tes champs donnent des tickets, tes missions du jour aussi. Un ticket, un tour de roue : tu mises un objet pour en gagner un plus précieux. Ou tu perds ta mise.</p>
-      </article>
+    <div class="monnaies apparait">
+      <div><img class="pixel" src="assets/icones/jeton.png" alt="Un jeton de Casteria" width="64" height="64" loading="lazy"><h3>Les jetons</h3><p>Tes machines produisent toutes seules, tes bêtes aussi. Tu récoltes, tu vends au marché ou aux autres joueurs à l'hôtel des ventes, et tu réinvestis.</p></div>
+      <div><img class="pixel" src="assets/icones/ticket.png" alt="Un ticket de fortune" width="64" height="64" loading="lazy"><h3>Les tickets</h3><p>Tes champs donnent des tickets, tes missions du jour aussi. Un ticket, un tour de roue : tu mises un objet pour en gagner un plus précieux. Ou tu perds ta mise.</p></div>
     </div>
-    <div class="galerie">
-      <figure class="tableau grand apparait grandit">
-        <img src="assets/images/casteria-palais-serveur-minecraft.jpg" alt="Le palais de Casteria sur son rocher : un grand escalier, un pont de pierre et une montgolfière au-dessus de la mer" width="1280" height="720" loading="lazy">
-        <figcaption>Le palais de Casteria. C'est là que tu arrives, et que tout le serveur se retrouve.</figcaption>
-      </figure>
-      <figure class="tableau apparait" style="--retard:.1s">
-        <img src="assets/images/casteria-arrivee-au-palais-minecraft.jpg" alt="L'arrivée au palais de Casteria : Gaspard le majordome attend les nouveaux joueurs sur la place" width="1280" height="720" loading="lazy">
-        <figcaption>Gaspard t'attend à l'arrivée pour te faire visiter.</figcaption>
-      </figure>
-      <figure class="tableau apparait" style="--retard:.2s">
-        <img src="assets/images/casteria-marche-caisses-mysteres-minecraft.jpg" alt="La place du marché de Casteria : les caisses mystères et leur forain" width="1280" height="720" loading="lazy">
-        <figcaption>La place du marché, ses caisses mystères et ses habitants.</figcaption>
-      </figure>
+    <div class="apparait" data-carrousel="glisse" data-nom="Casteria en quatre images" style="--vue: min(84vw, 560px)">
+      <figure class="vue"><img src="assets/images/casteria-ile-sur-la-mer-minecraft.jpg" alt="Une île de joueur sur Casteria, vue du ciel : son ponton sur la mer, son écurie et ses prés" width="1080" height="608" loading="lazy"><figcaption><strong>Ton île sur la mer</strong>Chaque joueur a la sienne. Tu l'agrandis, tu la décores, tu y invites tes amis.</figcaption></figure>
+      <figure class="vue"><img src="assets/images/casteria-palais-serveur-minecraft.jpg" alt="Le palais de Casteria sur son rocher : un grand escalier, un pont de pierre et une montgolfière au-dessus de la mer" width="1280" height="720" loading="lazy"><figcaption><strong>Le palais</strong>C'est là que tu arrives, et que tout le serveur se retrouve.</figcaption></figure>
+      <figure class="vue"><img src="assets/images/casteria-arrivee-au-palais-minecraft.jpg" alt="L'arrivée au palais de Casteria : Gaspard le majordome attend les nouveaux joueurs sur la place" width="1280" height="720" loading="lazy"><figcaption><strong>Gaspard t'attend</strong>À l'arrivée, il te fait visiter et te donne tes premières quêtes.</figcaption></figure>
+      <figure class="vue"><img src="assets/images/casteria-marche-caisses-mysteres-minecraft.jpg" alt="La place du marché de Casteria : les caisses mystères et leur forain" width="1280" height="720" loading="lazy"><figcaption><strong>Le marché</strong>Une clé, une caisse, une surprise : le forain t'attend sur la place.</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<!-- ============ LA PARADE : ce qui peuple Casteria, en volume, qui défile ============ -->
+<div class="parade" aria-label="Ceux que tu croiseras sur Casteria">
+  <div data-carrousel="defile" data-format="carre" data-vitesse="42" data-nom="Les créatures de Casteria" style="--vue: min(46vw, 230px)">
+    <figure class="vue"><img src="assets/volume/yeti.png" alt="Le Yéti des glaces, un boss de Casteria" width="420" height="420" loading="lazy"><figcaption><strong>Le Yéti des glaces</strong>un boss</figcaption></figure>
+    <figure class="vue"><img src="assets/boutique/wyverne.png" alt="La Wyverne royale, une monture de Casteria" width="420" height="420" loading="lazy"><figcaption><strong>La Wyverne royale</strong>une monture</figcaption></figure>
+    <figure class="vue"><img src="assets/boutique/phenix.png" alt="Le Phénix, un familier de Casteria" width="420" height="420" loading="lazy"><figcaption><strong>Le Phénix</strong>un familier</figcaption></figure>
+    <figure class="vue"><img src="assets/volume/roi_champignon.png" alt="Le Roi Champignon, le premier boss de Casteria" width="420" height="420" loading="lazy"><figcaption><strong>Le Roi Champignon</strong>le premier boss</figcaption></figure>
+    <figure class="vue"><img src="assets/boutique/renard.png" alt="Le Renard des contes, un familier de Casteria" width="420" height="420" loading="lazy"><figcaption><strong>Le Renard des contes</strong>un familier</figcaption></figure>
+    <figure class="vue"><img src="assets/boutique/destrier.png" alt="Le Destrier de castérium, une monture de Casteria" width="420" height="420" loading="lazy"><figcaption><strong>Le Destrier</strong>une monture</figcaption></figure>
+    <figure class="vue"><img src="assets/volume/kraken.png" alt="Le Kraken des Abysses, un boss de Casteria" width="420" height="420" loading="lazy"><figcaption><strong>Le Kraken des Abysses</strong>un boss</figcaption></figure>
+    <figure class="vue"><img src="assets/boutique/baleine.png" alt="La Baleine du ciel de nuit, un familier de Casteria" width="420" height="420" loading="lazy"><figcaption><strong>La Baleine du ciel</strong>un familier</figcaption></figure>
+    <figure class="vue"><img src="assets/boutique/caisse.png" alt="Le Trésor de Casteria, la caisse mystère légendaire" width="420" height="420" loading="lazy"><figcaption><strong>Le Trésor de Casteria</strong>une caisse mystère</figcaption></figure>
+  </div>
+</div>
+
+<!-- ============ LES BOSS : trois entrées, en pile de cartes ; un boss en volume déborde du cadre ============ -->
+<section class="sombre boss-bande" id="boss">
+  <div class="dedans">
+    <div class="texte apparait de-gauche">
+      <span class="ruban">Quinze boss</span>
+      <h2>Chaque boss de Casteria fait son entrée</h2>
+      <p>Quinze arènes, quinze boss, et pour chacun une armure à pouvoirs à lui arracher. En voici trois. Les autres, tu les découvriras en jeu.</p>
+      <p class="geste">Tire la carte du dessus pour voir la suivante.</p>
+      <img class="deborde" src="assets/volume/kraken.png" alt="" width="520" height="520" loading="lazy">
+    </div>
+    <div class="apparait de-droite" data-carrousel="pile" data-nom="Trois entrées de boss" style="--vue: min(80vw, 520px)">
+      <figure class="vue"><video data-auto muted loop playsinline preload="none" poster="assets/affiches/boss_entree_1.jpg" data-src="assets/videos/boss_entree_1.mp4" aria-label="Vidéo : l'entrée de Le Yéti des glaces, un boss de Casteria"></video><figcaption><strong>Le Yéti des glaces</strong>Le quatrième boss, sur son lac gelé.</figcaption></figure>
+      <figure class="vue"><video data-auto muted loop playsinline preload="none" poster="assets/affiches/boss_entree_2.jpg" data-src="assets/videos/boss_entree_2.mp4" aria-label="Vidéo : l'entrée de Le Kraken des Abysses, un boss de Casteria"></video><figcaption><strong>Le Kraken des Abysses</strong>Le cinquième boss, sorti des profondeurs.</figcaption></figure>
+      <figure class="vue"><video data-auto muted loop playsinline preload="none" poster="assets/affiches/boss_entree_3.jpg" data-src="assets/videos/boss_entree_3.mp4" aria-label="Vidéo : l'entrée de L'Oni Samouraï, un boss de Casteria"></video><figcaption><strong>L'Oni Samouraï</strong>Le sixième boss, et son sabre.</figcaption></figure>
     </div>
   </div>
 </section>
@@ -411,6 +424,7 @@
   <a href="boutique.html"><img class="pixel" src="assets/icones/credit.png" alt="" width="32" height="32"><span>Boutique</span></a>
   <a class="jouer" href="./#telecharger"><img src="assets/boutique/caisse.png" alt="" width="32" height="32"><span>Jouer</span></a>
 </nav>
+<script src="js/carrousel.js" defer></script>
 <script src="js/site.js" defer></script>
 </body>
 </html>

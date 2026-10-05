@@ -566,3 +566,37 @@ html.photo .vitrine-tete .logo, html.photo .accueil .vol img { animation: none; 
   .vitrine-tete.accueil .gestes { flex-wrap: wrap; justify-content: center; }
   .vitrine-tete.accueil h1 { font-size: clamp(26px, 7vw, 36px); }
 }
+
+/* LE CORPS DE L'ACCUEIL, EN MISES EN PAGE DIFFÉRENTES d'une section à l'autre (les carrousels : css/carrousel.css) */
+/* les deux monnaies : une bande en biais, deux moitiés, pas de cartes */
+.monnaies { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0; margin: 34px 0 26px; color: var(--encre); border-top: 3px dashed var(--bois-clair); border-bottom: 3px dashed var(--bois-clair); }
+.monnaies > div { display: grid; grid-template-columns: 64px minmax(0, 1fr); column-gap: 16px; align-items: start; padding: 22px 26px; }
+.monnaies > div + div { border-left: 3px dashed var(--bois-clair); }
+.monnaies img { grid-row: span 2; width: 64px; height: 64px; animation: flotte 4.6s ease-in-out infinite; }
+.monnaies > div + div img { animation-delay: -2s; }
+.monnaies h3 { font-size: 28px; color: var(--bois-fonce); } .monnaies p { margin: 4px 0 0; }
+/* la parade : une bande de nuit en travers de la page, les créatures en volume qui défilent, sans cadre */
+.parade { background: linear-gradient(180deg, var(--nuit-2), var(--nuit)); padding: 26px 0 14px; border-top: 4px solid var(--or-fonce); border-bottom: 4px solid var(--or-fonce); transform: skewY(-1.4deg); margin: 30px 0 -10px; position: relative; z-index: 2; }
+.parade [data-carrousel] { transform: skewY(1.4deg); }
+.parade [data-carrousel] > .vue { background: none; border: 0; box-shadow: none; color: #F3E7FF; text-align: center; overflow: visible; }
+.parade [data-carrousel] > .vue img { background: none; object-fit: contain; filter: drop-shadow(0 14px 10px rgba(0, 0, 0, .5)); transition: transform .35s cubic-bezier(.2, .8, .2, 1); }
+.parade [data-carrousel] > .vue:hover img { transform: translateY(-10px) scale(1.08) rotate(-2deg); }
+.parade [data-carrousel] > .vue > figcaption { padding: 0 6px 8px; font-size: 14px; color: #CDB8E6; }
+.parade [data-carrousel] > .vue > figcaption strong { color: var(--or-clair); font-family: "Lilita One", "Fredoka", sans-serif; font-weight: 400; font-size: 19px; }
+/* la bande des boss : le texte à gauche, la pile de vidéos à droite, le Kraken qui déborde en bas à gauche */
+.boss-bande { overflow: hidden; }
+.boss-bande > .dedans { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: 30px; align-items: center; }
+.boss-bande .texte { position: relative; padding-bottom: 190px; }
+.boss-bande h2 { font-size: clamp(30px, 3.6vw, 48px); margin-top: 12px; }
+.boss-bande .geste { color: var(--or-clair); font-weight: 700; }
+.boss-bande .deborde { position: absolute; left: -90px; bottom: -150px; width: min(430px, 90%); height: auto; filter: drop-shadow(0 18px 16px rgba(0, 0, 0, .6)); animation: flotte 6.5s ease-in-out infinite; pointer-events: none; }
+.boss-bande [data-carrousel] > .vue { background: var(--nuit-2); color: #F3E7FF; border-color: var(--or-fonce); }
+.boss-bande [data-carrousel] > .vue > figcaption strong { color: var(--or-clair); font-family: "Lilita One", "Fredoka", sans-serif; font-weight: 400; font-size: 22px; }
+@media (max-width: 960px) {
+  .monnaies { grid-template-columns: minmax(0, 1fr); } .monnaies > div + div { border-left: 0; border-top: 3px dashed var(--bois-clair); }
+  .boss-bande > .dedans { grid-template-columns: minmax(0, 1fr); }
+  .boss-bande .texte { padding-bottom: 0; text-align: center; }
+  .boss-bande .deborde { position: static; width: min(240px, 60%); margin: 6px auto -30px; display: block; }
+}
+html.photo .monnaies img, html.photo .boss-bande .deborde { animation: none; }
+@media (prefers-reduced-motion: reduce) { .monnaies img, .boss-bande .deborde { animation: none; } .parade [data-carrousel] > .vue img { transition: none; } }
