@@ -253,6 +253,9 @@ html.photo .heros { min-height: 880px; } html.photo .apparait { opacity: 1; tran
 .galerie { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 56px; }
 .tableau { margin: 0; border: 16px solid transparent; border-image: url("../assets/matieres/cadre.png") 8 fill / 16px / 0 round; image-rendering: pixelated; background: var(--parchemin-2); box-shadow: 0 14px 30px rgba(27, 16, 40, .28); }
 .tableau.grand { grid-column: 1 / -1; }
+.galerie.seule { grid-template-columns: 1fr; max-width: 980px; margin: 0 auto 70px; }
+.sombre .galerie, .mer .galerie { margin-top: 70px; }
+.mer .galerie.seule { margin-top: 0; }
 .tableau img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; image-rendering: auto; }
 .tableau figcaption { image-rendering: auto; background: var(--parchemin-2) url("../assets/matieres/parchemin.png") 0 0 / 96px 96px repeat; color: var(--encre); font-weight: 600; font-size: 17px; text-align: center; padding: 12px 16px 10px; }
 .tableau.grand figcaption { font-size: 19px; }
