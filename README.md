@@ -20,7 +20,7 @@ dossier chez n'importe quel hébergeur de sites statiques, sans rien construire.
 | `index.html` | l'accueil : l'en-tête animé et le bouton de téléchargement, le concept, l'inédit (les boss, les armures, la mer, l'île qui grandit), la rangée de vidéos, les premiers pas, la boutique, le téléchargement |
 | `commencer.html` | « Par où commencer » : les dix premières étapes du jeu, les tickets et la roue, les astuces |
 | `pirates.html` | la mer : les bateaux, les pirates, les canons (la page qui vise « serveur Minecraft pirate ») |
-| `boutique.html` | la boutique : à quoi servent les crédits, et la place de l'incrustation Tebex |
+| `boutique.html` | la boutique : à quoi servent les crédits, et le cadre où Tebex s'affiche (`js/boutique.config.js`) |
 | `404.html` | la page des adresses qui n'existent pas (Vercel l'affiche tout seul, le petit serveur aussi) |
 | `css/style.css`, `js/site.js` | l'habillage et ce qui bouge (le site se lit entier sans JavaScript) |
 | `robots.txt`, `sitemap.xml`, `favicon.ico` | pour Google : le droit de tout lire, le plan du site, l'icône |
@@ -60,8 +60,16 @@ la ligne `Sitemap:` de `robots.txt`, et dans chaque page son adresse (`canonical
 
 ## Ce qu'il reste à régler
 
-**La boutique Tebex.** Dans `boutique.html`, un commentaire « ICI L'INCRUSTATION TEBEX » montre le bloc à remplacer par
-le code d'incrustation que Tebex te donne. Aucune clé ne va dans ce dépôt.
+**La boutique Tebex.** Tout se règle dans `js/boutique.config.js`, deux lignes :
+
+- `adresse` : l'adresse de ta boutique (`https://....tebex.io`) : le grand bouton « Ouvrir la boutique » apparaît dans le
+  cadre de bois de `boutique.html` ;
+- `cadre` (facultatif) : une adresse à incruster, si Tebex t'en donne une : la boutique s'affiche dans la page, sous le
+  bouton (le bouton reste : il sert si le cadre ne s'affiche pas chez un joueur).
+
+Si Tebex te donne plutôt un code à coller (une balise `script`), un commentaire dans `boutique.html` montre où. Tant que
+les deux lignes sont vides, la page ne change pas. Aucune clé ne va dans ce dépôt : seulement des adresses publiques, et
+`npm run verifier` refuse autre chose qu'une adresse `https://`.
 
 ## Les règles du site
 

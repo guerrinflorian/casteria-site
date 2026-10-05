@@ -211,7 +211,11 @@ code { font-family: "Fredoka", sans-serif; font-weight: 700; color: var(--ruban)
 .reponses a { color: var(--ruban); font-weight: 700; }
 .reponses pre { margin: 6px 0; padding: 8px 12px; background: var(--bois-fonce); color: var(--or-clair); font-family: Consolas, "Courier New", monospace; font-size: 15px; overflow-x: auto; }
 
-.tebex { min-height: 360px; display: grid; place-items: center; text-align: center; outline: 4px dashed var(--violet); outline-offset: -14px; padding: 40px 30px; }
+.tebex.ouverte { min-height: 0; }
+.tebex-actions { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; align-items: center; margin: 22px 0 0; }
+.tebex-cadre { background: var(--parchemin); padding: 0 14px 14px; }
+.tebex-cadre iframe { display: block; width: 100%; border: 0; background: #fff; }
+.tebex { min-height: 360px; display: grid; place-items: center; text-align: center; padding: 40px 30px; }
 
 .telecharge { text-align: center; }
 .launcher { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: 40px; align-items: center; text-align: left; margin: 0 0 56px; }

@@ -2,6 +2,17 @@
 'use strict'
 const fs = require('fs'), path = require('path')
 const RACINE = path.join(__dirname, '..'), PAGES = ['index.html', 'commencer.html', 'pirates.html', 'boutique.html', '404.html']
+// LA BOUTIQUE : js/boutique.config.js ne porte que des adresses publiques en https (ou rien), jamais une clé
+function verifierBoutique(faute) {
+  const f = path.join(RACINE, 'js', 'boutique.config.js')
+  if (!fs.existsSync(f)) return faute('js/boutique.config.js manque')
+  const bac = {}
+  try { new Function('window', fs.readFileSync(f, 'utf8'))(bac) } catch (e) { return faute('js/boutique.config.js ne se lit pas : ' + e.message) }
+  const c = bac.CASTERIA_BOUTIQUE
+  if (!c || typeof c !== 'object') return faute('js/boutique.config.js ne pose pas CASTERIA_BOUTIQUE')
+  for (const k of Object.keys(c)) if (!['adresse', 'cadre', 'hauteurCadre'].includes(k)) faute('js/boutique.config.js : un champ inconnu « ' + k + ' » (une clé n\'a rien à faire ici)')
+  for (const k of ['adresse', 'cadre']) if (c[k] !== '' && !/^https:\/\/[a-z0-9-]+(\.[a-z0-9-]+)+(\/[^\s"\'<>]*)?$/i.test(String(c[k]))) faute('js/boutique.config.js : « ' + k + ' » doit être vide ou une adresse https://')
+}
 const LIENS_FIGES = 'https://github.com/guerrinflorian/casteria-mc/releases/'
 // le domaine du site : celui que outils/domaine.js a écrit dans robots.txt ; et le plan du site
 const lire = f => { try { return fs.readFileSync(path.join(RACINE, f), 'utf8') } catch (e) { return '' } }
@@ -109,6 +120,8 @@ let total = 0
     if (st.size > 5 * 1024 * 1024) faute('un fichier de plus de 5 Mo : ' + path.relative(RACINE, p))
   }
 })(RACINE)
+console.log('js/boutique.config.js')
+verifierBoutique(faute)
 console.log('le site pèse ' + (total / 1048576).toFixed(1) + ' Mo')
 console.log(fautes ? fautes + ' faute(s)' : 'tout est bon')
 process.exit(fautes ? 1 : 0)

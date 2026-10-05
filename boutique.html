@@ -75,16 +75,19 @@
       <p>Le paiement passe par notre boutique en ligne sécurisée. Tes crédits arrivent directement sur ton compte en jeu.</p>
     </div>
     <div class="cadre-bois apparait grandit">
-      <!-- ICI L'INCRUSTATION TEBEX : remplacer le bloc .tebex ci-dessous par le code d'incrustation donné par Tebex
-           (une balise iframe ou leur script). Aucune clé ne s'écrit dans ce fichier : Tebex fournit une adresse publique. -->
-      <div class="tebex" style="color:var(--encre)">
+      <!-- LA BOUTIQUE TEBEX : rien à écrire ici. L'adresse de la boutique se met dans js/boutique.config.js : le bouton
+           « Ouvrir la boutique » et, si Tebex donne une adresse à incruster, le cadre apparaissent tout seuls.
+           Si Tebex donne plutôt un CODE à coller (une balise script) : le coller à la place de la ligne « tebex-cadre ».
+           Aucune clé ne s'écrit dans ce dépôt : seulement des adresses publiques. -->
+      <div class="tebex" id="tebex" style="color:var(--encre)">
         <div>
           <img class="pixel" src="assets/icones/credit.png" alt="Un crédit de Casteria" width="96" height="96" style="margin:0 auto 14px" loading="lazy">
           <h3 style="font-size:30px;color:var(--bois-fonce)">Choisis ton pack de crédits</h3>
           <p style="max-width:520px;margin:10px auto 0">Tes crédits arrivent sur ton compte en jeu dès le paiement validé. En jeu, tape <code>/credits</code> pour voir ton solde.</p>
-          <p style="margin:22px 0 0"><a class="bouton bouton-vert" href="./#telecharger">Pas encore de compte ? Télécharge le launcher</a></p>
+          <p class="tebex-actions" id="tebex-actions"><a class="bouton bouton-vert" href="./#telecharger">Pas encore de compte ? Télécharge le launcher</a></p>
         </div>
       </div>
+      <div class="tebex-cadre" id="tebex-cadre" hidden></div>
     </div>
     <p class="note apparait" style="text-align:center;margin-top:26px">Casteria se joue sans rien payer : le launcher et le serveur sont gratuits.</p>
   </div>
@@ -101,5 +104,7 @@
   </div>
 </footer>
 <script src="js/site.js" defer></script>
+<script src="js/boutique.config.js" defer></script>
+<script src="js/boutique.js" defer></script>
 </body>
 </html>
