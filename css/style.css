@@ -600,3 +600,32 @@ html.photo .vitrine-tete .logo, html.photo .accueil .vol img { animation: none; 
 }
 html.photo .monnaies img, html.photo .boss-bande .deborde { animation: none; }
 @media (prefers-reduced-motion: reduce) { .monnaies img, .boss-bande .deborde { animation: none; } .parade [data-carrousel] > .vue img { transition: none; } }
+
+/* LE HAUT DES AUTRES PAGES (« Débuter », « La mer ») : la même mise en scène que l'accueil : une photo nette, le voile
+   sous le texte seulement, des choses du jeu en volume posées sur la photo */
+.vitrine-tete.page { min-height: min(640px, 100svh); padding: 130px 0 70px; }
+.vitrine-tete.page::before { background: linear-gradient(96deg, rgba(20, 11, 30, .95) 0%, rgba(27, 16, 40, .88) 32%, rgba(34, 19, 52, .42) 52%, rgba(42, 23, 64, 0) 70%), linear-gradient(0deg, var(--nuit) 0%, rgba(27, 16, 40, 0) 18%); }
+.vitrine-tete.page .fond img { filter: saturate(1.1) contrast(1.05); animation: derive 28s ease-in-out infinite alternate; }
+.vitrine-tete.page h1 { font-size: clamp(30px, 3.5vw, 50px); line-height: 1.08; }
+.vitrine-tete.page .scene { height: min(430px, 52svh); }
+.page .scene .halo { display: none; }
+.page .v-a { width: 60%; right: 4%; bottom: -4%; z-index: 2; }
+.page .v-a.nage { width: 64%; right: 0; bottom: 4%; } .page .v-a.nage img { animation: flotte 6.5s ease-in-out infinite; filter: drop-shadow(0 0 14px rgba(255, 215, 94, .55)) drop-shadow(0 18px 18px rgba(0, 0, 0, .5)); }
+.page .v-b { width: 32%; left: 6%; top: 0; z-index: 1; } .page .v-b img { animation: flotte 4.8s ease-in-out -1s infinite; }
+.page .v-c { width: 26%; left: 16%; bottom: -2%; z-index: 3; }
+.vitrine-tete .vol.sol::after { content: ""; position: absolute; left: 12%; right: 12%; bottom: 9%; height: 12%; z-index: -1; background: radial-gradient(closest-side, rgba(10, 5, 16, .62), rgba(10, 5, 16, 0)); }
+.vitrine-tete .vol.sol img { animation: none; }
+/* LA BANDE VIDÉO : une boucle du jeu d'un bord à l'autre de l'écran, jamais plus haute que lui, une phrase dessus */
+.bande-video { position: relative; isolation: isolate; overflow: hidden; display: grid; place-items: center; text-align: center; color: #fff; height: min(78svh, 620px); padding: 0; }
+.bande-video video { position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%; object-fit: cover; max-height: 100svh; }
+.bande-video::before { content: ""; position: absolute; inset: 0; z-index: -1; background: radial-gradient(70% 70% at 50% 55%, rgba(20, 11, 30, .62), rgba(20, 11, 30, .12) 70%), linear-gradient(180deg, var(--nuit) 0%, rgba(27, 16, 40, 0) 14%, rgba(27, 16, 40, 0) 86%, var(--parchemin) 100%); }
+.bande-video .grand-mot { font-family: "Lilita One", "Fredoka", sans-serif; font-size: clamp(34px, 5.2vw, 72px); line-height: 1.04; margin: 0; text-shadow: 0 4px 0 rgba(0, 0, 0, .4), 0 14px 34px rgba(0, 0, 0, .6); }
+.bande-video p { font-size: clamp(18px, 1.8vw, 24px); margin: 14px auto 24px; max-width: 30em; text-shadow: 0 2px 8px rgba(0, 0, 0, .7); }
+@media (max-width: 960px) {
+  .vitrine-tete.page { padding: 96px 0 44px; min-height: 0; }
+  .vitrine-tete.page::before { background: linear-gradient(180deg, rgba(20, 11, 30, .5) 0%, rgba(42, 23, 64, 0) 16%, rgba(42, 23, 64, .1) 40%, rgba(27, 16, 40, .9) 58%, var(--nuit) 100%); }
+  .vitrine-tete.page .scene { height: min(280px, 38svh); }
+  .bande-video { height: min(70svh, 520px); }
+}
+html.photo .vitrine-tete.page .fond img, html.photo .page .vol img { animation: none; }
+@media (prefers-reduced-motion: reduce) { .vitrine-tete.page .fond img, .page .vol img { animation: none; } }
