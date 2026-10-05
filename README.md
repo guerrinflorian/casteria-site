@@ -23,15 +23,13 @@ dossier chez n'importe quel hébergeur de sites statiques, sans rien construire.
 | `css/style.css`, `js/site.js` | l'habillage et ce qui bouge (le site se lit entier sans JavaScript) |
 | `assets/` | le logo, les polices, les matières (parchemin, cadre, ruban, boutons), les icônes, les vidéos allégées et leurs affiches |
 
-## Ce qu'il reste à régler (trois choses, à toi de décider)
+## Ce qu'il reste à régler (deux choses, à toi de décider)
 
 1. **Le nom de domaine.** `sitemap.xml`, `robots.txt` et les images de partage (les balises `og:image`) veulent une adresse
    complète. Quand tu l'as : `node outils/domaine.js https://ton-domaine.fr` écrit le plan du site, la ligne `Sitemap:` de
    robots.txt, et les adresses complètes dans les trois pages.
 2. **La boutique Tebex.** Dans `boutique.html`, un commentaire « ICI L'INCRUSTATION TEBEX » montre le bloc à remplacer par
    le code d'incrustation que Tebex te donne. Aucune clé ne va dans ce dépôt.
-3. **L'ouverture.** Le site dit « le serveur est encore en développement », sans date. Le jour J, deux phrases à changer
-   (cherche « développement » et « ouvre bientôt »).
 
 ## Les règles du site
 
@@ -41,7 +39,9 @@ dossier chez n'importe quel hébergeur de sites statiques, sans rien construire.
 - Les vidéos sont des copies allégées (540 x 960, sans son). Pour en ajouter une : `bash outils/alleger_videos.sh
   <ffmpeg> <dossier des vidéos> <numéro>`, puis une ligne de plus dans la rangée de `index.html`.
 - On ne dévoile pas tout : pas de secret du palais, pas de boss caché.
-- Avant de pousser : `npm run verifier` (un seul h1 par page, un texte pour chaque image, aucun lien cassé, aucun tiret long).
+- Le site parle d'un serveur où l'on joue : jamais « en développement », « bientôt », « pas encore ouvert ».
+- Avant de pousser : `npm run verifier` (un seul h1 par page, un texte pour chaque image, aucun lien cassé, aucun tiret long,
+  aucun texte sombre sur un fond sombre ni clair sur le parchemin, aucun mot interdit).
 
 ## Vérifier, photographier
 

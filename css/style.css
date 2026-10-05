@@ -136,6 +136,7 @@ section { position: relative; padding: 92px 0; }
 .cartes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; }
 .carte {
   border: 12px solid transparent; border-image: url("../assets/matieres/carte.png") 6 fill / 12px round; image-rendering: pixelated;
+  background: var(--parchemin-2) url("../assets/matieres/parchemin.png") 0 0 / 96px 96px repeat;
   padding: 18px 20px 22px; color: var(--encre); transition: transform .25s ease, filter .25s ease;
 }
 .carte > * { image-rendering: auto; }
@@ -195,7 +196,7 @@ code { font-family: "Fredoka", sans-serif; font-weight: 700; color: var(--ruban)
 .aide { max-width: 900px; margin: 46px auto 26px; text-align: left; }
 .aide > h3 { font-size: clamp(24px, 2.8vw, 32px); color: var(--bois-fonce); text-align: center; }
 .aide > .note { text-align: center; margin: 6px 0 20px; }
-.volet { border: 12px solid transparent; border-image: url("../assets/matieres/carte.png") 6 fill / 12px round; image-rendering: pixelated; margin-bottom: 12px; }
+.volet { border: 12px solid transparent; border-image: url("../assets/matieres/carte.png") 6 fill / 12px round; image-rendering: pixelated; margin-bottom: 12px; background: var(--parchemin-2) url("../assets/matieres/parchemin.png") 0 0 / 96px 96px repeat; color: var(--encre); }
 .volet > * { image-rendering: auto; }
 .volet summary { display: flex; align-items: center; gap: 12px; padding: 8px 12px; cursor: pointer; list-style: none; font-family: "Lilita One", sans-serif; font-size: 23px; color: var(--bois-fonce); }
 .volet summary::-webkit-details-marker { display: none; }

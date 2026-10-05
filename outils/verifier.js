@@ -31,8 +31,42 @@ for (const page of PAGES) {
     if (/^(mailto:|data:)/.test(c)) continue
     if (!fs.existsSync(path.join(RACINE, c))) faute('un fichier cité n\'existe pas : ' + c)
   }
+  // aucun mot qui dise que le serveur n'est pas ouvert (le propriétaire, 05/10 : le site parle d'un serveur où l'on joue)
+  const visible = s.replace(/<!--[\s\S]*?-->/g, '').replace(/<script[\s\S]*?<\/script>/g, '')
+  // (le mot entier : « tu le découvriras » n'est pas « ouvrira »)
+  for (const mot of ['en développement', 'bientôt', 'pas encore ouvert', 'ouvrira', "jour de l'ouverture"]) if (new RegExp('(^|[^a-zà-ÿ])' + mot, 'i').test(visible)) faute('un mot interdit : « ' + mot + ' »')
+  // LE CONTRASTE : on suit le fond en descendant dans la page. Une section sombre (sombre, mer, heros, page-tete, le pied)
+  // demande un texte clair ; le parchemin (clair, et les îlots carte, volet, cadre-bois, tebex) un texte sombre. Une couleur
+  // écrite dans la page doit aller avec le fond où elle tombe.
+  {
+    const SOMBRES = ['sombre', 'mer', 'heros', 'page-tete', 'chiffres', 'barre'], CLAIRS = ['clair', 'carte', 'volet', 'cadre-bois', 'tebex']
+    const ENCRES = ['--encre', '--bois-fonce', '--encre-douce', '--bois)'], LUMIERES = ['#fff', '--or-clair', '--parchemin', '--violet-clair']
+    const VIDES = new Set(['img', 'br', 'meta', 'link', 'input', 'source', 'hr', 'path', 'rect', 'circle'])
+    const pile = [{ nom: 'html', fond: 'sombre' }]
+    for (const m of visible.matchAll(/<(\/?)([a-zA-Z0-9]+)([^>]*)>/g)) {
+      const nom = m[2].toLowerCase(), attrs = m[3]
+      if (m[1]) { for (let i = pile.length - 1; i > 0; i--) if (pile[i].nom === nom) { pile.length = i; break } continue }
+      let fond = pile[pile.length - 1].fond
+      const classes = ((attrs.match(/class="([^"]*)"/) || [])[1] || '').split(/\s+/)
+      if (nom === 'footer' || classes.some(c => SOMBRES.includes(c))) fond = 'sombre'
+      if (classes.some(c => CLAIRS.includes(c))) fond = 'clair'
+      const style = (attrs.match(/style="([^"]*)"/) || [])[1] || '', couleur = (style.match(/(?:^|;)\s*color:\s*([^;]+)/) || [])[1] || ''
+      if (couleur && fond === 'sombre' && ENCRES.some(e => couleur.includes(e))) faute('un texte sombre sur un fond sombre : <' + nom + ' ' + attrs.trim().slice(0, 60) + '>')
+      if (couleur && fond === 'clair' && LUMIERES.some(e => couleur.includes(e))) faute('un texte clair sur le parchemin : <' + nom + ' ' + attrs.trim().slice(0, 60) + '>')
+      if (!VIDES.has(nom) && !/\/\s*$/.test(attrs)) pile.push({ nom, fond })
+    }
+  }
   // une vidéo ne se charge jamais d'office
   for (const v of s.match(/<video\b[^>]*>/g) || []) if (!/preload="none"/.test(v) || /\ssrc="/.test(v)) faute('une vidéo se chargerait sans attendre : ' + v.slice(0, 70))
+}
+// les îlots de parchemin portent leur propre fond et leur encre (sinon, posés dans une section sombre, ils ne se lisent pas)
+{
+  const css = fs.readFileSync(path.join(RACINE, 'css', 'style.css'), 'utf8')
+  const bloc = sel => { const i = css.indexOf('\n' + sel + ' {'); return i < 0 ? '' : css.slice(i, css.indexOf('}', i)) }
+  console.log('css/style.css')
+  for (const sel of ['.carte', '.volet']) { const b = bloc(sel); if (!/background:/.test(b) || !/color:/.test(b)) faute(sel + ' doit porter son fond de parchemin et sa couleur d\'encre') }
+  if (!/\.cadre-bois > \* \{[^}]*background:/.test(css)) faute('.cadre-bois > * doit porter son fond de parchemin')
+  for (const sel of ['.sombre', '.mer']) if (!/color:\s*#[EeFf]/.test(bloc(sel))) faute(sel + ' doit donner une couleur de texte claire')
 }
 for (const f of ['css/style.css', 'js/site.js', 'README.md', 'serveur.js']) {
   const s = fs.readFileSync(path.join(RACINE, f), 'utf8')
