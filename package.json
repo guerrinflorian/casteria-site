@@ -1,0 +1,12 @@
+{
+  "name": "casteria-site",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Le site de Casteria, serveur Minecraft français : la vitrine, le guide du débutant, la boutique.",
+  "scripts": {
+    "dev": "node serveur.js",
+    "start": "node serveur.js",
+    "verifier": "node outils/verifier.js"
+  },
+  "engines": { "node": ">=18" }
+}
