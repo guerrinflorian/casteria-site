@@ -248,6 +248,13 @@ footer small { display: block; margin-top: 20px; opacity: .7; }
 html.photo .heros { min-height: 880px; } html.photo .apparait { opacity: 1; transform: none; transition: none; } html.photo .barre { position: absolute; }
 
 /* l'apparition au défilement */
+/* Les photos larges du jeu : un tableau (la photo dans le cadre de bois, sa légende dessous), une galerie (une grande, deux petites) */
+.galerie { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 56px; }
+.tableau { margin: 0; border: 16px solid transparent; border-image: url("../assets/matieres/cadre.png") 8 fill / 16px / 0 round; image-rendering: pixelated; background: var(--parchemin-2); box-shadow: 0 14px 30px rgba(27, 16, 40, .28); }
+.tableau.grand { grid-column: 1 / -1; }
+.tableau img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; image-rendering: auto; }
+.tableau figcaption { image-rendering: auto; background: var(--parchemin-2) url("../assets/matieres/parchemin.png") 0 0 / 96px 96px repeat; color: var(--encre); font-weight: 600; font-size: 17px; text-align: center; padding: 12px 16px 10px; }
+.tableau.grand figcaption { font-size: 19px; }
 .apparait { opacity: 0; transform: translateY(34px); transition: opacity .8s ease, transform .8s cubic-bezier(.2, .8, .2, 1); transition-delay: var(--retard, 0s); }
 .apparait.de-gauche { transform: translateX(-50px); } .apparait.de-droite { transform: translateX(50px); } .apparait.grandit { transform: scale(.88); }
 .apparait.vu { opacity: 1; transform: none; }
@@ -265,6 +272,7 @@ html.photo .heros { min-height: 880px; } html.photo .apparait { opacity: 1; tran
   .barre nav.ouvert { display: flex; } .barre nav a { padding: 12px; font-size: 18px; }
 }
 @media (max-width: 620px) {
+  .galerie { grid-template-columns: 1fr; gap: 22px; margin-top: 40px; }
   body { font-size: 17px; } section { padding: 64px 0; }
   .cartes, .etapes, .etapes.longue, .astuces { grid-template-columns: 1fr; }
   .chiffres ul { grid-template-columns: repeat(2, 1fr); }
