@@ -629,3 +629,37 @@ html.photo .monnaies img, html.photo .boss-bande .deborde { animation: none; }
 }
 html.photo .vitrine-tete.page .fond img, html.photo .page .vol img { animation: none; }
 @media (prefers-reduced-motion: reduce) { .vitrine-tete.page .fond img, .page .vol img { animation: none; } }
+
+/* PAS TOUJOURS LE MÊME FORMAT (le propriétaire, 05/10) : les pages « Débuter » et « La mer » */
+/* les dix étapes : UN CHEMIN en zigzag (une étape à gauche, la suivante à droite), un pointillé d'or au milieu, de
+   grands numéros ; sur téléphone : une colonne le long du pointillé */
+.etapes.longue.chemin { grid-template-columns: minmax(0, 1fr); gap: 18px; position: relative; max-width: 980px; margin: 0 auto; }
+.etapes.longue.chemin::before { content: ""; position: absolute; left: 50%; top: 10px; bottom: 10px; border-left: 4px dashed var(--or); transform: translateX(-2px); }
+.etapes.longue.chemin li { width: calc(50% - 46px); }
+.etapes.longue.chemin li:nth-child(even) { margin-left: auto; }
+.etapes.longue.chemin li:nth-child(odd) .carte { transform: rotate(-.7deg); } .etapes.longue.chemin li:nth-child(even) .carte { transform: rotate(.7deg); }
+.etapes.longue.chemin li::before { left: auto; right: -70px; top: 50%; width: 48px; height: 48px; margin-top: -24px; font-size: 26px; }
+.etapes.longue.chemin li:nth-child(even)::before { right: auto; left: -70px; }
+.etapes.longue.chemin .carte { transition: transform .3s cubic-bezier(.2, .8, .2, 1); }
+.etapes.longue.chemin li:hover .carte { transform: rotate(0) scale(1.03); }
+/* trois cartes : une MOSAÏQUE inégale (une grande, deux petites décalées), un peu de travers */
+.cartes.mosaique { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); grid-template-rows: auto auto; align-items: stretch; }
+.cartes.mosaique > :nth-child(1) { grid-row: 1 / 3; display: grid; align-content: center; transform: rotate(-1deg); }
+.cartes.mosaique > :nth-child(1) h3 { font-size: 36px; } .cartes.mosaique > :nth-child(1) .signe { font-size: 76px; line-height: 96px; height: 96px; }
+.cartes.mosaique > :nth-child(2) { transform: rotate(1.2deg) translateX(-14px); }
+.cartes.mosaique > :nth-child(3) { transform: rotate(-.8deg) translateX(10px); }
+/* les astuces et les questions : des NOTES ÉPINGLÉES, trois colonnes décalées, chacune un peu de travers */
+.astuces.notes { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 26px 22px; }
+.astuces.notes .carte { position: relative; transition: transform .3s cubic-bezier(.2, .8, .2, 1); }
+.astuces.notes .carte::before { content: ""; position: absolute; left: 50%; top: -9px; width: 16px; height: 16px; margin-left: -8px; background: var(--ruban); border: 3px solid var(--bois-fonce); transform: rotate(45deg); }
+.astuces.notes .carte:nth-child(3n+1) { transform: rotate(-1.4deg); } .astuces.notes .carte:nth-child(3n+2) { transform: rotate(.9deg) translateY(18px); } .astuces.notes .carte:nth-child(3n) { transform: rotate(-.6deg) translateY(-6px); }
+.astuces.notes .carte:hover { transform: rotate(0) scale(1.04); z-index: 2; }
+@media (max-width: 960px) {
+  .etapes.longue.chemin::before { left: 22px; }
+  .etapes.longue.chemin li, .etapes.longue.chemin li:nth-child(even) { width: auto; margin-left: 58px; }
+  .etapes.longue.chemin li::before, .etapes.longue.chemin li:nth-child(even)::before { left: -60px; right: auto; }
+  .cartes.mosaique { grid-template-columns: minmax(0, 1fr); } .cartes.mosaique > :nth-child(1) { grid-row: auto; }
+  .cartes.mosaique > :nth-child(n) { transform: none; }
+  .astuces.notes { grid-template-columns: minmax(0, 1fr); } .astuces.notes .carte:nth-child(n) { transform: none; }
+}
+@media (prefers-reduced-motion: reduce) { .etapes.longue.chemin .carte, .astuces.notes .carte { transition: none; } }

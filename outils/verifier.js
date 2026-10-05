@@ -42,6 +42,37 @@ function verifierBoutique(faute) {
     if (!/Une erreur de pseudo n'est pas remboursée/.test(merci)) faute('merci.html : la phrase sur le remboursement manque')
   }
 }
+// ---------- deux lecteurs, pour les règles du soir du 05/10 (la hero, les hauteurs, la barre du téléphone) ----------
+// Les règles d'une feuille de style : [{ sel, corps, media }]. Les commentaires sont retirés ; @media, @supports et
+// @layer sont ouverts (leur intitulé est gardé dans « media ») ; @keyframes et @font-face ne sont pas des règles.
+function reglesCss(css) {
+  const out = []
+  ;(function lireBloc(s, media) {
+    let i = 0
+    while (i < s.length) {
+      const o = s.indexOf('{', i)
+      if (o < 0) break
+      const tete = s.slice(i, o).trim()
+      let p = 1, j = o + 1
+      while (j < s.length && p) { if (s[j] === '{') p++; else if (s[j] === '}') p--; j++ }
+      const corps = s.slice(o + 1, j - 1)
+      if (/^@(media|supports|layer)\b/.test(tete)) lireBloc(corps, (media ? media + ' ' : '') + tete)
+      else if (!tete.startsWith('@')) out.push({ sel: tete, corps, media })
+      i = j
+    }
+  })(String(css).replace(/\/\*[\s\S]*?\*\//g, ''), '')
+  return out
+}
+// Ce qu'il y a DANS l'élément <nom> ouvert à l'indice i de la page (jusqu'à sa fermeture, les mêmes balises imbriquées comptées)
+function dedans(s, i, nom) {
+  const re = new RegExp('<(/?)' + nom + '\\b[^>]*>', 'g')
+  re.lastIndex = i
+  let p = 0, debut = -1, m
+  while ((m = re.exec(s))) {
+    if (!m[1]) { if (p === 0) debut = re.lastIndex; p++ } else { p--; if (p <= 0) return debut < 0 ? '' : s.slice(debut, m.index) }
+  }
+  return debut < 0 ? '' : s.slice(debut)
+}
 const LIENS_FIGES = 'https://github.com/guerrinflorian/casteria-mc/releases/'
 // LE SEUL SCRIPT D'UN AUTRE SERVEUR admis sur tout le site : celui du paiement de Tebex, UNE version figée, sur la page de
 // la boutique seulement, chargé sans bloquer la page (defer). Toute autre adresse, toute autre version, toute autre page :
@@ -105,8 +136,56 @@ for (const page of PAGES) {
       if (!VIDES.has(nom) && !/\/\s*$/.test(attrs)) pile.push({ nom, fond })
     }
   }
-  // une vidéo ne se charge jamais d'office
-  for (const v of s.match(/<video\b[^>]*>/g) || []) if (!/preload="none"/.test(v) || /\ssrc="/.test(v)) faute('une vidéo se chargerait sans attendre : ' + v.slice(0, 70))
+  // une vidéo ne se charge jamais d'office (preload="none", jamais de src : data-src, que js/site.js ouvre quand elle
+  // paraît) ; elle est muette, elle joue dans la page sur un téléphone, et elle a son affiche (le visiteur voit une image
+  // tout de suite, sans rien télécharger de lourd)
+  const nu = s.replace(/<!--[\s\S]*?-->/g, '')
+  for (const v of nu.match(/<video\b[^>]*>/g) || []) {
+    if (!/preload="none"/.test(v) || /\ssrc="/.test(v)) faute('une vidéo se chargerait sans attendre : ' + v.slice(0, 70))
+    for (const [mot, motif] of [['muted', /\smuted(?=[\s>=])/], ['playsinline', /\splaysinline(?=[\s>=])/], ['poster', /\sposter="[^"]+"/]]) if (!motif.test(v)) faute('une vidéo sans « ' + mot + ' » : ' + v.slice(0, 70))
+  }
+  // AUCUNE IMAGE NI VIDÉO PLUS HAUTE QU'UN ÉCRAN (le propriétaire, 05/10) : la feuille de style porte la règle garde
+  // (vérifiée plus bas) ; ici : aucune hauteur écrite en style, dans la page, sur une image ou une vidéo
+  for (const b of nu.match(/<(?:img|video|picture)\b[^>]*>/g) || []) {
+    const st = (b.match(/\sstyle="([^"]*)"/) || [])[1] || ''
+    if (/(^|;|\s)(max-|min-)?height\s*:/.test(st)) faute('une hauteur écrite en style sur une image ou une vidéo (la feuille de style seule en décide) : ' + b.slice(0, 90))
+  }
+  // LA HERO de chaque page (sauf la 404 et « Merci ») : <section class="heros vitrine-tete ...">, avec son fond (une image,
+  // ou une vidéo et son affiche) et sa scène (les choses du jeu en volume : au moins une image). Sur un téléphone aussi :
+  // la feuille de style ne les cache jamais (vérifié plus bas).
+  if (!HORS_GOOGLE.includes(page)) {
+    const h = nu.search(/<section class="heros vitrine-tete(?:\s[^"]*)?"/)
+    if (h < 0) faute('la hero manque : <section class="heros vitrine-tete ...">')
+    else {
+      const sec = dedans(nu, h, 'section'), f = sec.search(/<div class="fond(?:\s[^"]*)?"/), sc = sec.search(/<div class="scene(?:\s[^"]*)?"/)
+      const fond = f < 0 ? '' : dedans(sec, f, 'div'), scene = sc < 0 ? '' : dedans(sec, sc, 'div')
+      if (!(/<img\b/.test(fond) || /<video\b[^>]*\sposter="[^"]+"/.test(fond))) faute('la hero : <div class="fond"> doit porter une image, ou une vidéo avec son affiche')
+      if (!/<img\b/.test(scene)) faute('la hero : <div class="scene"> doit porter au moins une image (les choses du jeu en volume)')
+    }
+  }
+  // LA BARRE DU TÉLÉPHONE : <nav class="barre-jeu">, cinq liens ; sur la page où l'on est, UN lien porte
+  // aria-current="page" (aucun sur la 404 et « Merci ») ; l'ancien bouton du menu n'existe plus
+  {
+    const b = nu.search(/<nav class="barre-jeu"/)
+    if (b < 0) faute('la barre du téléphone manque : <nav class="barre-jeu">')
+    else {
+      const liens = dedans(nu, b, 'nav').match(/<a\b[^>]*>/g) || [], ici = liens.filter(a => /aria-current="page"/.test(a)).length
+      const attendu = HORS_GOOGLE.includes(page) ? 0 : 1
+      if (liens.length !== 5) faute('la barre du téléphone doit avoir cinq liens, elle en a ' + liens.length)
+      if (ici !== attendu) faute('la barre du téléphone : ' + attendu + ' lien avec aria-current="page" attendu, ' + ici + ' trouvé(s)')
+    }
+    if (/<button class="menu"/.test(nu)) faute('l\'ancien bouton du menu (<button class="menu">) est encore là')
+  }
+  // LES CARROUSELS (css/carrousel.css, js/carrousel.js) : une des trois sortes, au moins deux vues, et la page charge
+  // la feuille et le script
+  {
+    const tous = [...nu.matchAll(/<div\b[^>]*\sdata-carrousel="([^"]*)"[^>]*>/g)]
+    for (const m of tous) {
+      if (!['defile', 'glisse', 'pile'].includes(m[1])) faute('un carrousel d\'une sorte inconnue : data-carrousel="' + m[1] + '" (defile, glisse ou pile)')
+      if ((dedans(nu, m.index, 'div').match(/<figure class="vue[\s"]/g) || []).length < 2) faute('un carrousel « ' + m[1] + ' » de moins de deux <figure class="vue">')
+    }
+    if (tous.length && (!/<link rel="stylesheet" href="\/?css\/carrousel\.css">/.test(nu) || !/<script src="\/?js\/carrousel\.js" defer><\/script>/.test(nu))) faute('la page a un carrousel sans charger css/carrousel.css et js/carrousel.js (defer)')
+  }
   // LE RÉFÉRENCEMENT : chaque page dit son adresse complète (la même que dans sitemap.xml) et son image de partage.
   // La page 404, elle, demande à rester hors de Google, et cite ses fichiers depuis la racine (elle s'affiche à toute adresse).
   if (HORS_GOOGLE.includes(page)) {
@@ -140,8 +219,26 @@ else if ((PLAN.match(/<loc>/g) || []).length !== PAGES.length - HORS_GOOGLE.leng
   for (const sel of ['.carte', '.volet']) { const b = bloc(sel); if (!/background:/.test(b) || !/color:/.test(b)) faute(sel + ' doit porter son fond de parchemin et sa couleur d\'encre') }
   if (!/\.cadre-bois > \* \{[^}]*background:/.test(css)) faute('.cadre-bois > * doit porter son fond de parchemin')
   for (const sel of ['.sombre', '.mer']) if (!/color:\s*#[EeFf]/.test(bloc(sel))) faute(sel + ' doit donner une couleur de texte claire')
+  // AUCUNE IMAGE NI VIDÉO PLUS HAUTE QU'UN ÉCRAN (le propriétaire, 05/10) : la règle garde, telle quelle, et rien qui la
+  // défasse : sur une image ou une vidéo (le sujet du sélecteur), jamais « max-height: none », jamais une hauteur de
+  // plus de 900 px ni de plus d'un écran (100vh). Une image agrandie par une animation dans un cadre qui la rogne (le
+  // fond d'une hero) n'est pas mesurée ici.
+  const GARDE = 'main img, main video { max-height: 100svh; }'
+  if (!css.includes(GARDE)) faute('la règle garde manque, telle quelle : ' + GARDE)
+  const regles = reglesCss(css).map(r => Object.assign({ f: 'css/style.css' }, r)).concat(reglesCss(lire('css/carrousel.css')).map(r => Object.assign({ f: 'css/carrousel.css' }, r)))
+  for (const r of regles) {
+    const sels = r.sel.split(',').map(x => x.trim()), ou = r.f + ', « ' + r.sel.slice(0, 70) + ' »' + (r.media ? ' (' + r.media + ')' : '')
+    if (sels.some(x => /(^|[\s>+~])(img|video|picture)(?![\w-])[^\s>+~]*$/.test(x))) {
+      if (/max-height\s*:\s*none/.test(r.corps)) faute(ou + ' : « max-height: none » sur une image ou une vidéo défait la règle garde')
+      for (const m of r.corps.matchAll(/(?:^|;|\s)(?:min-)?height\s*:\s*(\d+(?:\.\d+)?)(px|vh|svh|dvh|lvh)/g)) {
+        if (m[2] === 'px' ? +m[1] > 900 : +m[1] > 100) faute(ou + ' : une image ou une vidéo de ' + m[1] + m[2] + ' de haut (900 px, un écran au plus)')
+      }
+    }
+    // LA HERO SUR UN TÉLÉPHONE : son fond et sa scène ne sont jamais cachés, dans aucune requête de largeur
+    if (sels.some(x => /\.(fond|scene)(?![\w-])(:[\w-]+(\([^)]*\))?)*$/.test(x)) && /display\s*:\s*none|visibility\s*:\s*hidden/.test(r.corps)) faute(ou + ' : le fond ou la scène d\'une hero est caché')
+  }
 }
-for (const f of ['css/style.css', 'js/site.js', 'js/boutique.js', 'js/boutique.config.js', 'README.md', 'serveur.js']) {
+for (const f of ['css/style.css', 'css/carrousel.css', 'js/site.js', 'js/carrousel.js', 'js/boutique.js', 'js/boutique.config.js', 'README.md', 'serveur.js']) {
   const s = fs.readFileSync(path.join(RACINE, f), 'utf8')
   for (const t of TIRETS) if (s.includes(t)) { console.log(f); faute('un tiret long ou moyen') }
 }
