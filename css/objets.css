@@ -2,8 +2,14 @@
    farm etc... tout ce qui est custom ») : les objets du serveur, chacun en volume (le rendu du vrai modele du jeu, sur fond
    transparent), son nom et une ligne, rangés en trois familles. Sur parchemin, entre le voyage (violet) et les boss (nuit). */
 .objets .familles { display: grid; gap: 46px; }
-.objets .famille h3 { font-size: clamp(22px, 2.4vw, 30px); margin: 0 0 18px; color: var(--bois-fonce); display: flex; align-items: center; gap: 12px; }
+/* chaque famille est un <details> (js/objets.js) : sur PC, toujours ouverte, son titre comme avant ; sur telephone, un
+   bandeau qu'on touche pour l'ouvrir */
+.objets .famille > summary { list-style: none; display: flex; align-items: center; gap: 12px; margin: 0 0 18px; cursor: default; }
+.objets .famille > summary::-webkit-details-marker { display: none; }
+.objets .famille > summary::marker { content: ""; }
+.objets .famille h3 { font-size: clamp(22px, 2.4vw, 30px); margin: 0; color: var(--bois-fonce); display: flex; align-items: center; gap: 12px; flex: 1; }
 .objets .famille h3::after { content: ""; flex: 1; height: 3px; background: linear-gradient(90deg, var(--or-fonce), transparent); opacity: .55; }
+.objets .famille .compte { display: none; }
 .objets .grille-objets { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
 .objet {
   display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 14px; align-items: center;
@@ -23,10 +29,27 @@
   .objets .grille-objets { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 620px) {
+  .objets .familles { gap: 12px; }
+  .objets .famille > summary {
+    cursor: pointer; margin: 0; padding: 12px 16px; gap: 10px;
+    border: 10px solid transparent; border-image: url("../assets/matieres/carte.png") 6 fill / 10px round; image-rendering: pixelated;
+    background: var(--parchemin-2) url("../assets/matieres/parchemin.png") 0 0 / 96px 96px repeat;
+  }
+  .objets .famille > summary > * { image-rendering: auto; }
+  .objets .famille h3 { font-size: 22px; }
+  .objets .famille h3::after { display: none; }
+  .objets .famille .compte { display: inline; font-size: 14px; font-weight: 700; color: var(--encre-douce); white-space: nowrap; }
+  .objets .famille > summary::after {
+    content: ""; width: 10px; height: 10px; border-right: 3px solid var(--bois); border-bottom: 3px solid var(--bois);
+    transform: rotate(45deg) translate(-2px, -2px); transition: transform .25s ease; flex: none;
+  }
+  .objets .famille[open] > summary::after { transform: rotate(225deg) translate(-2px, -2px); }
+  .objets .famille[open] > summary { margin-bottom: 12px; }
   .objets .grille-objets { grid-template-columns: minmax(0, 1fr); gap: 12px; }
   .objet { grid-template-columns: 76px minmax(0, 1fr); gap: 10px; }
   .objet img { width: 76px; height: 76px; }
   .objet h4 { font-size: 19px; }
   .objet p { font-size: 15px; }
 }
+@media (max-width: 380px) { .objets .famille h3 { font-size: 19px; } }
 @media (prefers-reduced-motion: reduce) { .objet, .objet img { transition: none; } .objet:hover img { transform: none; } }

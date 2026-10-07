@@ -165,8 +165,8 @@
       <p>Des armes aux machines, de la ferme aux bêtes : chaque objet ici a été dessiné et codé pour le serveur. Tu ne les trouveras nulle part ailleurs.</p>
     </div>
     <div class="familles">
-      <div class="famille">
-        <h3>Les armes</h3>
+      <details class="famille" open>
+        <summary><h3>Les armes</h3><span class="compte">6 objets</span></summary>
         <div class="grille-objets">
           <article class="objet monte"><img src="assets/objets/objet_arbalete.webp" alt="L'arbalète de castérium, violette et or" width="240" height="240" loading="lazy"><div><h4>Arbalète de castérium</h4><p>Sa flèche traverse et touche plusieurs créatures. Elle ne casse jamais : un castérium raffiné rend ses tirs.</p></div></article>
           <article class="objet monte"><img src="assets/objets/objet_hachette.webp" alt="La hachette de lancer" width="240" height="240" loading="lazy"><div><h4>Hachette de lancer</h4><p>Lance-la : elle frappe et revient dans ta main. Tranchant l'améliore, au lancer aussi.</p></div></article>
@@ -175,9 +175,9 @@
           <article class="objet monte"><img src="assets/objets/objet_katana.webp" alt="Le katana en castérium" width="240" height="240" loading="lazy"><div><h4>Katana en castérium</h4><p>Clic droit : un élan de 6 blocs qui frappe les monstres sur son passage.</p></div></article>
           <article class="objet monte"><img src="assets/objets/objet_bouclier.webp" alt="Le bouclier en castérium" width="240" height="240" loading="lazy"><div><h4>Bouclier en castérium</h4><p>Contre les boss, la parade parfaite se réussit plus facilement.</p></div></article>
         </div>
-      </div>
-      <div class="famille">
-        <h3>La ferme et tes bêtes</h3>
+      </details>
+      <details class="famille" open>
+        <summary><h3>La ferme et tes bêtes</h3><span class="compte">9 objets</span></summary>
         <div class="grille-objets">
           <article class="objet monte"><img src="assets/objets/objet_houe.webp" alt="La houe de récolte en diamant" width="240" height="240" loading="lazy"><div><h4>Houe de récolte</h4><p>Clic droit sur une plante mûre : elle récolte et replante.</p></div></article>
           <article class="objet monte"><img src="assets/objets/objet_arrosoir.webp" alt="L'arrosoir" width="240" height="240" loading="lazy"><div><h4>Arrosoir</h4><p>Chaque plante arrosée a une chance de pousser d'un cran. Il ne s'use pas.</p></div></article>
@@ -189,9 +189,9 @@
           <article class="objet monte"><img src="assets/objets/objet_oeuf.webp" alt="Un œuf mystère mythique, rose" width="240" height="240" loading="lazy"><div><h4>Œuf mystère</h4><p>Il éclot dans un incubateur : une bête commune, rare... ou mythique.</p></div></article>
           <article class="objet monte"><img src="assets/objets/objet_incubateur.webp" alt="L'incubateur" width="240" height="240" loading="lazy"><div><h4>Incubateur</h4><p>C'est là que tes œufs mystères éclosent.</p></div></article>
         </div>
-      </div>
-      <div class="famille">
-        <h3>Ton île</h3>
+      </details>
+      <details class="famille" open>
+        <summary><h3>Ton île</h3><span class="compte">6 objets</span></summary>
         <div class="grille-objets">
           <article class="objet monte"><img src="assets/objets/objet_cailloux.webp" alt="Le Casse-cailloux, une machine de pierre" width="240" height="240" loading="lazy"><div><h4>Casse-cailloux</h4><p>La pierre de l'île, sans fin : ton premier revenu, le plus sûr.</p></div></article>
           <article class="objet monte"><img src="assets/objets/objet_fonderie.webp" alt="La Fonderie d'or" width="240" height="240" loading="lazy"><div><h4>Fonderie d'or</h4><p>Un creuset où l'or fond à ciel ouvert. Elle marche au charbon.</p></div></article>
@@ -200,7 +200,7 @@
           <article class="objet monte"><img src="assets/objets/objet_comptoir.webp" alt="Le comptoir du marchand, sous son auvent rayé" width="240" height="240" loading="lazy"><div><h4>Comptoir du marchand</h4><p>Il vend le contenu du coffre collé toutes les 5 minutes, même quand tu es absent.</p></div></article>
           <article class="objet monte"><img src="assets/objets/objet_pierre_foyer.webp" alt="La pierre de foyer" width="240" height="240" loading="lazy"><div><h4>Pierre de foyer</h4><p>Clic droit : elle te ramène sur ton île, d'où que tu sois.</p></div></article>
         </div>
-      </div>
+      </details>
     </div>
     <p class="esquif-objet monte">Et au bout du voyage, <a href="#planete">l'Esquif</a> : la fusée de ton île, qui t'emmène sur la planète.</p>
   </div>
@@ -410,5 +410,6 @@
 <script src="js/carrousel.js" defer></script>
 <script src="js/site.js" defer></script>
 <script src="js/scene.js" defer></script>
+<script src="js/objets.js" defer></script>
 </body>
 </html>
