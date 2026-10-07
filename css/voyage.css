@@ -82,9 +82,36 @@
   .panoplies .pancarte { grid-column: 1; grid-row: 2; margin: -30px 12px 0; }
   .cartes-planete { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
-@media (max-width: 560px) {
-  .vitrine-tete.trou-noir .gestes .grand { font-size: 18px; }
-  .voyage .etape strong { font-size: 17px; } .voyage .etape small { display: none; }
+.seul-telephone { display: none !important; }
+/* LE HAUT DE PAGE SUR UN TÉLÉPHONE (le propriétaire, 07/10 : « tout est gros gros, on voit pas le fond ») : le jeu en
+   haut, bien visible ; en bas, un titre sur deux lignes, une ligne de texte, UN grand bouton, les trois systèmes en petit,
+   puis les quatre étapes qui défilent de côté. */
+@media (max-width: 600px) {
+  .vitrine-tete.trou-noir { padding: 64px 0 18px; }
+  /* le montage du téléphone (un carré par plan, son sujet au milieu) remplit le HAUT de l'écran, pas tout : moins
+     agrandi, il reste net ; il se fond dans la nuit vers le bas */
+  .vitrine-tete.trou-noir .fond { bottom: 30%; -webkit-mask-image: linear-gradient(180deg, #000 80%, transparent 100%); mask-image: linear-gradient(180deg, #000 80%, transparent 100%); }
+  .vitrine-tete.trou-noir .fond video { object-position: 50% 50%; }
+  .vitrine-tete.trou-noir::before { background: linear-gradient(180deg, rgba(14, 8, 20, .55) 0%, rgba(14, 8, 20, 0) 12%, rgba(14, 8, 20, 0) 40%, rgba(14, 8, 20, .78) 60%, var(--nuit) 100%); }
+  .trou-noir .devise { font-size: 10px; letter-spacing: .5px; margin-bottom: 6px; }
+  .trou-noir .devise i { margin: 0 4px; }
+  .vitrine-tete.trou-noir h1 { font-size: 27px; line-height: 1.08; }
+  .vitrine-tete.trou-noir .accroche { display: none; }
+  .vitrine-tete.trou-noir h1 { margin-bottom: 14px; }
+  .vitrine-tete.trou-noir .autres { display: none; }
+  .seul-telephone { display: inline-flex !important; }
+  .vitrine-tete.trou-noir .gestes { display: grid; grid-template-columns: repeat(3, auto); justify-content: center; gap: 6px; }
+  .vitrine-tete.trou-noir .gestes .seul-telephone { grid-column: 1 / -1; justify-self: center; width: 230px; justify-content: center; font-size: 18px; padding: 0 10px; border-width: 12px; border-image-width: 12px; }
+  .vitrine-tete.trou-noir .gestes .bouton:not(.seul-telephone) { font-size: 12px; padding: 0 4px; border-width: 9px; border-image-width: 9px; gap: 4px; }
+  .vitrine-tete.trou-noir .gestes .bouton:not(.seul-telephone) .picto { width: 13px; height: 13px; }
+  .trou-noir .sur-ordi { display: none; }
+  /* les étapes : une rangée qui défile au doigt, pas un mur de cartes */
+  .vitrine-tete.trou-noir .scene.voyage { display: flex; gap: 10px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding: 0 16px; width: 100%; margin: 16px 0 0; padding: 0 0 4px; scrollbar-width: none; }
+  .voyage .etape:first-child { margin-left: 16px; } .voyage .etape:last-child { margin-right: 16px; }
+  .vitrine-tete.trou-noir .scene.voyage::-webkit-scrollbar { display: none; }
+  .voyage .etape { flex: 0 0 148px; scroll-snap-align: start; }
+  .voyage .etape strong { font-size: 15px; } .voyage .etape small { display: none; }
+  .voyage .etape b { font-size: 13px; top: 4px; left: 7px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .voyage .etape video { transition: none; }

@@ -512,23 +512,15 @@ main img, main video { max-height: 100svh; }
 .accueil .v-familier { width: 30%; right: 4%; top: -4%; } .accueil .v-familier img { animation: flotte 4.2s ease-in-out -.6s infinite; }
 .accueil .v-coffre { width: 34%; left: 4%; bottom: -10%; } .accueil .v-coffre img { animation: flotte 6.4s ease-in-out -2.4s infinite; }
 
-/* LE MENU DU TÉLÉPHONE : une barre d'objets, comme en jeu, au pied de l'écran. Cinq cases : celle de la page où l'on
-   est a son cadre d'or et se soulève. Pas de menu à déplier : tout est sous le pouce. */
-.barre-jeu { display: none; }
+/* LE MENU DU TÉLÉPHONE (le propriétaire, 07/10 : « la barre sur mobile en bas c'est affreux ») : plus de barre au pied de
+   l'écran. En haut, une barre fine : le logo, la Boutique et Télécharger ; le reste est dans le pied de page. */
 @media (max-width: 960px) {
   .barre .menu { display: none; }
-  .barre nav { position: static; display: flex; flex-direction: row; background: none; padding: 0; box-shadow: none; width: auto; max-height: none; }
-  .barre nav a:not(.bouton) { display: none; }
-  .barre-jeu { display: flex; position: fixed; z-index: 60; left: 50%; bottom: calc(8px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); gap: 0; padding: 4px;
-    background: rgba(20, 11, 30, .88); border: 3px solid var(--bois-fonce); box-shadow: 0 0 0 2px var(--or-fonce), 0 10px 26px rgba(0, 0, 0, .55); backdrop-filter: blur(6px); }
-  .barre-jeu a { position: relative; display: grid; justify-items: center; align-content: center; gap: 1px; width: min(64px, 18.4vw); height: 60px; text-decoration: none; color: #F3E7FF;
-    background: rgba(255, 255, 255, .06); border: 2px solid rgba(255, 255, 255, .16); margin: 0 1px; font-size: 11px; font-weight: 700; line-height: 1; transition: transform .2s cubic-bezier(.2, .8, .2, 1); }
-  .barre-jeu a img { width: 32px; height: 32px; object-fit: contain; filter: drop-shadow(0 3px 2px rgba(0, 0, 0, .5)); }
-  .barre-jeu a[aria-current="page"] { border: 3px solid var(--or-clair); background: rgba(255, 215, 94, .16); transform: translateY(-7px) scale(1.06); color: var(--or-clair); z-index: 1; box-shadow: 0 6px 12px rgba(0, 0, 0, .5); }
-  .barre-jeu a:active { transform: translateY(-3px) scale(.97); }
-  .barre-jeu a.jouer { background: linear-gradient(180deg, var(--vert-clair), var(--vert)); border-color: #2C6A20; color: #fff; text-shadow: 0 1px 0 rgba(0, 0, 0, .4); }
-  body { padding-bottom: 86px; }
-  footer { padding-bottom: 30px; }
+  .barre nav { position: static; display: flex; flex-direction: row; align-items: center; gap: 12px; background: none; padding: 0; box-shadow: none; width: auto; max-height: none; }
+  .barre nav a:not(.bouton):not(.boutique) { display: none; }
+  .barre nav a.boutique { font-size: 14px; }
+  .barre { padding: 8px 14px; }
+  .barre .marque { font-size: 20px; } .barre .marque img { width: 36px; height: 36px; }
   /* le haut de page sur téléphone : la scène en volume D'ABORD (une image dès le premier écran), le texte dessous */
   .vitrine-tete.accueil { padding: 84px 0 40px; min-height: 0; }
   .vitrine-tete.accueil::before { background: linear-gradient(180deg, rgba(27, 16, 40, .6) 0%, rgba(42, 23, 64, .12) 18%, rgba(42, 23, 64, .35) 40%, rgba(27, 16, 40, .93) 56%, var(--nuit) 100%); }
@@ -539,7 +531,6 @@ main img, main video { max-height: 100svh; }
 html.photo .vitrine-tete .logo, html.photo .accueil .vol img { animation: none; }
 @media (prefers-reduced-motion: reduce) {
   .vitrine-tete .logo, .accueil .vol img { animation: none; }
-  .barre-jeu a { transition: none; }
 }
 @media (max-width: 960px) { .barre nav { margin-left: auto; } }
 
@@ -670,7 +661,6 @@ html.photo .vitrine-tete.page .fond img, html.photo .page .vol img { animation: 
 .vitrine-tete { background-color: var(--nuit); }
 .vitrine-tete .fond { inset: 0 0 auto 0; height: min(100%, 100svh); overflow: hidden; }
 .vitrine-tete .fond img, .vitrine-tete .fond video { max-height: 100svh; }
-body:has(.achat input:focus) .barre-jeu { display: none; }
 
 /* LE RESTE DE L'ACCUEIL : chaque section sa mise en page */
 /* L'AFFICHE (« l'inédit ») : la photo de l'arène d'un bord à l'autre, deux pancartes posées dessus, deux écrans penchés */

@@ -1,0 +1,304 @@
+/* Casteria, le site : L'ACCUEIL EN SCÈNE (INTERFACES, 07/10 ; le propriétaire : « le même style [...] mobile et pc mais
+   adapté à mon serveur avec mes images et informations [...] design, 3d, interaction, animation »). Chaque section a sa
+   couleur (le soir du palais, le vert de l'île, le parchemin de la carte, le violet des boss, le rouge de la planète) et,
+   entre deux, une bande qui les lie : des feuilles, un bord déchiré, des braises. Les choses du jeu sont des rendus de
+   nos modèles, détourés, en couches (js/scene.js). Chargé après style.css, carrousel.css et voyage.css. */
+
+:root {
+  --orange: #FF8A2B; --orange-fonce: #C9531A; --orange-clair: #FFB45E;
+  --nuit-3: #140A22; --violet-pan: #2A0F40; --vert-pan: #10351F; --parchemin-pan: #F2D7A3; --encre-pan: #4A2C12;
+}
+
+/* ---------- la barre du haut, en verre, posée au-dessus de la page ---------- */
+.barre.verre { left: 50%; right: auto; top: 12px; width: min(1180px, 100% - 24px); transform: translateX(-50%); padding: 8px 14px 8px 18px;
+  border-radius: 18px; background: rgba(24, 12, 36, .42); border: 1px solid rgba(255, 255, 255, .14); backdrop-filter: blur(14px) saturate(1.2); -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .28); }
+.barre.verre.posee { background: rgba(20, 10, 30, .86); box-shadow: 0 12px 30px rgba(0, 0, 0, .45); padding: 6px 14px 6px 18px; }
+
+/* ---------- les gestes : un bouton orange en relief, un bouton de verre ---------- */
+.bouton-orange { display: inline-flex; align-items: center; gap: 10px; padding: 12px 22px 13px; border-radius: 14px; border: 0; text-decoration: none; cursor: pointer;
+  font-family: "Lilita One", sans-serif; font-size: 20px; letter-spacing: .4px; color: #fff; text-shadow: 0 2px 0 rgba(120, 40, 0, .55);
+  background: linear-gradient(180deg, var(--orange-clair), var(--orange) 55%, #F2741F); box-shadow: inset 0 2px 0 rgba(255, 255, 255, .35), 0 5px 0 var(--orange-fonce), 0 14px 26px rgba(201, 83, 26, .35);
+  transition: transform .15s ease, box-shadow .15s ease, filter .15s ease; }
+.bouton-orange:hover { transform: translateY(-2px); filter: brightness(1.06); }
+.bouton-orange:active { transform: translateY(3px); box-shadow: inset 0 2px 0 rgba(255, 255, 255, .3), 0 2px 0 var(--orange-fonce), 0 8px 16px rgba(201, 83, 26, .3); }
+.bouton-orange.grand { font-size: 23px; padding: 14px 26px 15px; }
+.bouton-orange .triangle { width: 0; height: 0; border-left: 12px solid #fff; border-top: 8px solid transparent; border-bottom: 8px solid transparent; filter: drop-shadow(0 2px 0 rgba(120, 40, 0, .5)); }
+.bouton-verre { display: inline-flex; align-items: center; gap: 8px; padding: 12px 20px; border-radius: 14px; text-decoration: none; font-weight: 700; font-size: 17px; color: #fff;
+  background: rgba(33, 21, 45, .6); border: 1px solid rgba(255, 255, 255, .28); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); transition: transform .15s ease, background .2s ease; }
+.bouton-verre:hover { background: rgba(50, 30, 66, .85); transform: translateY(-2px); }
+.bouton-orange:focus-visible, .bouton-verre:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+.sur-titre { display: block; margin-bottom: 10px; font-size: 13px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--orange-clair); }
+.sur-titre.encre { color: #B4501E; }
+
+/* ============================ LE HAUT DE PAGE EN SCÈNE ============================ */
+.vitrine-tete.scene-tete { min-height: 100svh; padding: 92px 0 34px; display: flex; flex-direction: column; justify-content: flex-end; text-align: center; overflow: hidden; background: #24122E; }
+.vitrine-tete.scene-tete::before { background: linear-gradient(180deg, rgba(20, 10, 30, .55) 0%, rgba(20, 10, 30, 0) 22%, rgba(20, 10, 30, 0) 52%, rgba(20, 10, 30, .55) 74%, var(--vert-pan) 100%); }
+.vitrine-tete.scene-tete::after { display: none; }
+.scene-tete .fond { inset: -40px; }
+.scene-tete .fond .pointeur { position: absolute; inset: 0; }
+.scene-tete .fond img { width: 100%; height: 100%; object-fit: cover; object-position: 56% 40%; filter: saturate(1.15) contrast(1.05); animation: none; transform: none; }
+/* les rayons : de grands faisceaux tièdes qui tournent à peine */
+.scene-tete .rayons { position: absolute; inset: -20%; z-index: -1; pointer-events: none; mix-blend-mode: screen; opacity: .55;
+  background: conic-gradient(from 200deg at 62% 18%, transparent 0 8deg, rgba(255, 196, 120, .18) 11deg, transparent 15deg 26deg, rgba(255, 210, 140, .14) 29deg, transparent 34deg 48deg, rgba(255, 190, 110, .12) 52deg, transparent 58deg 360deg);
+  animation: rayons 22s ease-in-out infinite alternate; }
+@keyframes rayons { to { transform: rotate(5deg) scale(1.04); } }
+/* les choses du jeu en volume */
+.scene.sprites { position: absolute; inset: 0; height: auto; z-index: 0; pointer-events: none; }
+.sprite { position: absolute; will-change: transform; }
+.sprite .pointeur, .sprite .entree { position: relative; will-change: transform; }
+.sprite img { display: block; width: 100%; height: auto; filter: drop-shadow(0 18px 18px rgba(10, 4, 20, .5)); user-select: none; }
+.sp-phenix { left: 5%; top: 15%; width: 14%; }
+.sp-baleine { right: 4%; top: 13%; width: 17%; }
+.sp-roi { left: 18%; bottom: 17%; width: 11%; }
+.sp-yeti { left: -2%; bottom: -3%; width: 25%; }
+.sp-kraken { right: -3%; bottom: -5%; width: 26%; }
+.sp-caisse { right: 23%; bottom: 6%; width: 9%; }
+/* l'arrivée : chaque chose entre de son côté, l'une après l'autre (seulement avec le script : sans lui, tout est là) */
+.scene-js .entree { opacity: 0; transition: transform 1.2s cubic-bezier(.18, .9, .25, 1.12), opacity .7s ease; }
+.scene-js .e-haut { transform: translateY(-140px) scale(.9); } .scene-js .e-bas { transform: translateY(160px) scale(.9); }
+.scene-js .e-gauche { transform: translateX(-180px) rotate(-6deg); } .scene-js .e-droite { transform: translateX(180px) rotate(6deg); }
+.scene-prete .entree { opacity: 1; transform: none; }
+.sp-baleine .entree { transition-delay: .1s; } .sp-phenix .entree { transition-delay: .2s; } .sp-roi .entree { transition-delay: .35s; }
+.sp-yeti .entree { transition-delay: .45s; } .sp-kraken .entree { transition-delay: .55s; } .sp-caisse .entree { transition-delay: .7s; }
+/* le balancement */
+.flotte { animation: flotte-sol 5s ease-in-out infinite; }
+.f-vol { animation: flotte-vol 6s ease-in-out infinite; } .f-lent { animation: flotte-vol 8.5s ease-in-out -2s infinite; }
+.f-sol { animation: flotte-sol 5.5s ease-in-out -1s infinite; } .f-vif { animation: flotte-vif 3.4s ease-in-out infinite; }
+@keyframes flotte-vol { 0%, 100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-16px) rotate(2deg); } }
+@keyframes flotte-sol { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+@keyframes flotte-vif { 0%, 100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-12px) rotate(4deg); } }
+/* les poussières lumineuses */
+.poussieres { position: absolute; inset: 0; z-index: 1; pointer-events: none; overflow: hidden; }
+.poussieres span { position: absolute; bottom: -12px; width: var(--t); height: var(--t); border-radius: 50%; opacity: 0;
+  background: radial-gradient(circle, #FFFBE6, rgba(255, 217, 138, .6) 45%, rgba(255, 217, 138, 0) 72%); animation: poussiere linear infinite; }
+@keyframes poussiere { 0% { transform: translate(0, 0); opacity: 0; } 12% { opacity: .9; } 80% { opacity: .6; } 100% { transform: translate(40px, -92svh); opacity: 0; } }
+/* le centre : le logo géant et son reflet qui passe, la phrase, les gestes */
+.scene-tete .centre { position: relative; z-index: 2; width: min(860px, 100% - 32px); margin: 0 auto; display: flex; flex-direction: column; align-items: center; flex: 1; }
+.logo-geant { position: relative; width: min(330px, 46vw); margin: 0 auto auto; }
+.logo-geant .logo { width: 100%; height: auto; filter: drop-shadow(0 18px 30px rgba(0, 0, 0, .55)); animation: flotte-sol 6s ease-in-out infinite; }
+.logo-geant .reflet { position: absolute; inset: 0; pointer-events: none; -webkit-mask: url("../assets/logo/casteria-logo.png") center / contain no-repeat; mask: url("../assets/logo/casteria-logo.png") center / contain no-repeat;
+  background: linear-gradient(105deg, transparent 38%, rgba(255, 255, 255, .7) 48%, transparent 58%) -150% 0 / 250% 100% no-repeat; animation: reflet 5.5s ease-in-out 1.6s infinite; }
+@keyframes reflet { 0% { background-position: -150% 0; } 35%, 100% { background-position: 250% 0; } }
+.vitrine-tete.scene-tete h1 { margin: 18px 0 0; font-size: clamp(32px, 4.2vw, 58px); line-height: 1.02; text-shadow: 0 4px 0 #140a03, 0 0 34px rgba(0, 0, 0, .45); }
+.vitrine-tete.scene-tete h1 span { display: block; color: #fff; } .vitrine-tete.scene-tete h1 span.or { color: var(--or-clair); }
+.scene-tete .gestes { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 20px; }
+.scene-tete .preuves { margin: 14px 0 0; font-size: 14px; color: #F1E6D0; text-shadow: 0 1px 4px rgba(0, 0, 0, .7); }
+.scene-tete .preuves i { font-style: normal; margin: 0 8px; color: var(--or-clair); }
+
+/* ============================ LES PANS DE COULEUR ET LEURS BANDES ============================ */
+.pan { position: relative; padding: 110px 0; }
+.pan h2 { font-size: clamp(30px, 4vw, 52px); line-height: 1.05; }
+.pan .tete { text-align: center; max-width: 780px; margin: 0 auto 50px; }
+.pan .tete p { font-size: 19px; margin: 14px 0 0; }
+.pan-vert { background: radial-gradient(90% 70% at 80% 20%, rgba(108, 192, 74, .16), transparent 60%), linear-gradient(180deg, var(--vert-pan), #0B2616); color: #EFF8E8; }
+.pan-violet { background: radial-gradient(80% 60% at 20% 0%, rgba(176, 122, 224, .2), transparent 60%), linear-gradient(180deg, var(--violet-pan), #1B0B2B); color: #F4EAFF; }
+.pan-nuit { background: linear-gradient(180deg, #1B0B2B, var(--nuit-3)); color: #F4EAFF; }
+.pan-parchemin { background: var(--parchemin-pan) url("../assets/matieres/parchemin.png") 0 0 / 96px 96px repeat; color: var(--encre-pan); image-rendering: pixelated; padding: 84px 0 110px; }
+.pan-parchemin > * { image-rendering: auto; }
+.deux-colonnes { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 50px; align-items: center; }
+.deux-colonnes .texte p { font-size: 18px; }
+.pan .gestes { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 22px; }
+
+/* le feuillage qui déborde du haut du pan vert (un feuillage en pixels, dessiné ici) */
+.feuillage.haut { position: absolute; left: 0; right: 0; top: -38px; height: 76px; z-index: 3; pointer-events: none;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='192' height='76' shape-rendering='crispEdges'%3E%3Cg fill='%232E6B1F'%3E%3Crect x='0' y='28' width='40' height='48'/%3E%3Crect x='36' y='16' width='48' height='60'/%3E%3Crect x='80' y='32' width='36' height='44'/%3E%3Crect x='112' y='8' width='44' height='68'/%3E%3Crect x='152' y='24' width='40' height='52'/%3E%3C/g%3E%3Cg fill='%233E8E2F'%3E%3Crect x='8' y='36' width='24' height='16'/%3E%3Crect x='44' y='24' width='24' height='20'/%3E%3Crect x='88' y='40' width='16' height='12'/%3E%3Crect x='120' y='16' width='24' height='16'/%3E%3Crect x='160' y='32' width='20' height='16'/%3E%3C/g%3E%3Cg fill='%236CC04A'%3E%3Crect x='12' y='36' width='8' height='8'/%3E%3Crect x='52' y='24' width='8' height='8'/%3E%3Crect x='124' y='16' width='8' height='8'/%3E%3Crect x='164' y='32' width='8' height='8'/%3E%3C/g%3E%3C/svg%3E") 0 0 / 192px 76px repeat-x;
+  filter: drop-shadow(0 -6px 10px rgba(0, 0, 0, .25)); }
+/* le bord déchiré du parchemin, dessus et dessous */
+.dechirure { position: absolute; left: 0; width: 100%; height: 48px; fill: var(--parchemin-pan); z-index: 2; pointer-events: none; filter: drop-shadow(0 -4px 6px rgba(0, 0, 0, .18)); }
+.dechirure.dessus { top: -47px; }
+.dechirure.dessous { bottom: -47px; filter: drop-shadow(0 5px 6px rgba(0, 0, 0, .25)); }
+/* de grandes feuilles aux coins du parchemin */
+.feuille-coin { position: absolute; width: 170px; height: 170px; z-index: 3; pointer-events: none; opacity: .95;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='170' height='170' viewBox='0 0 34 34' shape-rendering='crispEdges'%3E%3Cpath fill='%232E6B1F' d='M2 30h4v-4h4v-4h4v-4h4v-4h4v-4h4V6h4V2h2v10h-2v6h-2v4h-4v4h-4v2h-6v2h-8v2H2z'/%3E%3Cpath fill='%236CC04A' d='M8 26h4v-4h4v-4h4v-4h4v-4h4V8h2v4h-2v4h-4v4h-4v2h-4v2h-4v2H8z'/%3E%3Cpath fill='%23A8E07A' d='M14 22h2v-2h2v-2h2v-2h2v2h-2v2h-2v2h-2v2h-2z'/%3E%3C/svg%3E") center / contain no-repeat; }
+.feuille-coin.g { left: -30px; top: 30px; transform: rotate(-12deg); }
+.feuille-coin.d { right: -34px; bottom: 10px; transform: scaleX(-1) rotate(-20deg); }
+
+/* ---------- ton aventure commence ici ---------- */
+.trois-gestes { list-style: none; margin: 20px 0 0; padding: 0; display: grid; gap: 10px; }
+.trois-gestes li { display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 18px; }
+.trois-gestes b { flex: none; display: grid; place-items: center; width: 34px; height: 34px; border-radius: 10px; font-family: "Lilita One", sans-serif; font-weight: 400; color: #fff; background: linear-gradient(180deg, var(--orange-clair), var(--orange)); box-shadow: 0 3px 0 var(--orange-fonce); }
+.fenetre-launcher { position: relative; }
+.fenetre-launcher .capture { width: 100%; height: auto; border-radius: 16px; border: 3px solid rgba(255, 255, 255, .16); box-shadow: 0 30px 60px rgba(0, 0, 0, .5); transform: rotate(2deg); }
+.fenetre-launcher .sort { position: absolute; right: -6%; bottom: -14%; width: 40%; }
+.fenetre-launcher .sort img { width: 100%; height: auto; filter: drop-shadow(0 16px 16px rgba(0, 0, 0, .5)); }
+.on-t-attend { position: absolute; left: 6%; bottom: -12%; margin: 0; font-family: "Lilita One", sans-serif; font-size: 26px; color: var(--or-clair); transform: rotate(-6deg); text-shadow: 0 3px 0 #0B2616; }
+
+/* ---------- la carte au trésor ---------- */
+.carte-tresor { position: relative; height: 560px; max-width: 1000px; margin: 0 auto; }
+.carte-tresor .fil { position: absolute; inset: 0; width: 100%; height: 100%; fill: none; stroke: #C0392B; stroke-width: 3; stroke-dasharray: 9 7; filter: drop-shadow(0 2px 0 rgba(0, 0, 0, .2)); }
+.morceau { position: absolute; width: 210px; padding: 26px 18px 22px; text-align: center; transform: translate(-50%, -50%) rotate(var(--r, -2deg));
+  background: #FBEBC6 url("../assets/matieres/parchemin.png") 0 0 / 96px 96px; color: var(--encre-pan);
+  clip-path: polygon(3% 4%, 18% 0, 36% 3%, 55% 0, 74% 4%, 97% 1%, 100% 22%, 97% 45%, 100% 70%, 96% 97%, 76% 100%, 52% 96%, 30% 100%, 8% 97%, 0 76%, 3% 50%, 0 24%);
+  filter: drop-shadow(0 10px 14px rgba(74, 44, 18, .3)); transition: transform 1s cubic-bezier(.2, .9, .25, 1.1), opacity .7s ease; }
+.morceau img { position: absolute; left: -6px; top: -14px; width: 92px; height: auto; filter: drop-shadow(0 6px 6px rgba(0, 0, 0, .3)); }
+.morceau img.pixel { width: 54px; left: 12px; top: 8px; }
+.morceau img.rond { width: 74px; height: 74px; object-fit: cover; border-radius: 50%; border: 3px solid #C0392B; left: 6px; top: 6px; }
+.morceau b { display: block; font-family: "Lilita One", sans-serif; font-weight: 400; font-size: 58px; line-height: 1; color: var(--encre-pan); }
+.morceau span { display: block; margin-top: 4px; font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #8A5A2B; }
+.m1 { left: 15%; top: 19.6%; --r: -4deg; } .m2 { left: 52%; top: 28.6%; --r: 2deg; } .m3 { left: 85%; top: 25%; --r: 4deg; }
+.m4 { left: 25%; top: 75%; --r: 3deg; } .m5 { left: 76%; top: 76.8%; --r: -3deg; }
+.scene-js .morceau.monte:not(.vu) { opacity: 0; transform: translate(-50%, -20%) rotate(calc(var(--r) * 5)) scale(.85); }
+.m2 { transition-delay: .1s; } .m3 { transition-delay: .2s; } .m4 { transition-delay: .3s; } .m5 { transition-delay: .4s; }
+
+/* ---------- ce qui monte en arrivant ---------- */
+.scene-js .monte:not(.morceau) { transition: transform .8s cubic-bezier(.2, .9, .25, 1), opacity .7s ease; }
+.scene-js .monte:not(.morceau):not(.vu) { opacity: 0; transform: translateY(40px); }
+
+/* ---------- le voyage : la grille des mondes ---------- */
+.grille-mondes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; }
+.monde { position: relative; display: flex; flex-direction: column; text-decoration: none; color: #F4EAFF; border-radius: 18px; padding-bottom: 18px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, .07), rgba(255, 255, 255, .02)); border: 1px solid rgba(255, 255, 255, .12); transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease; }
+.monde:hover { transform: translateY(-6px); border-color: color-mix(in srgb, var(--teinte) 70%, white); box-shadow: 0 18px 40px rgba(0, 0, 0, .35), 0 0 0 1px var(--teinte); }
+.monde-art { position: relative; display: block; aspect-ratio: 16 / 10; margin: 8px 8px 0; border-radius: 13px; overflow: visible; }
+.monde-art > img:first-child { width: 100%; height: 100%; object-fit: cover; border-radius: 13px; display: block; }
+.monde-art::after { content: ""; position: absolute; inset: 0; border-radius: 13px; background: linear-gradient(180deg, transparent 45%, color-mix(in srgb, var(--teinte) 55%, #12081c) 100%); }
+.monde-art .deborde { position: absolute; right: -6%; bottom: -10%; width: 46%; height: auto; z-index: 2; filter: drop-shadow(0 12px 12px rgba(0, 0, 0, .5)); transition: transform .3s ease; }
+.monde:hover .deborde { transform: translateY(-8px) rotate(-3deg) scale(1.04); }
+.monde-titre { position: relative; z-index: 3; margin: -26px 16px 0; font-family: "Lilita One", sans-serif; font-size: 32px; line-height: 1; color: #fff; text-shadow: 0 3px 0 color-mix(in srgb, var(--teinte) 60%, #000), 0 0 18px rgba(0, 0, 0, .5); }
+.monde-texte { margin: 10px 16px 0; font-size: 15px; line-height: 1.45; color: #DCCDEB; }
+.monde-lien { margin: 12px 16px 0; font-size: 14px; font-weight: 700; color: var(--orange-clair); }
+
+/* ---------- les boss (la pile, les panoplies) sur la nuit ---------- */
+.pan-nuit.boss-bande .texte { padding-bottom: 0; }
+.pan-nuit.boss-bande .geste { color: var(--orange-clair); }
+
+/* la bande des braises, entre la nuit des boss et le rouge de la planète */
+.bande-braises { position: relative; height: 140px; overflow: hidden; background: linear-gradient(180deg, var(--nuit-3), #2A0A08 70%, #0B0710); }
+.bande-braises i { position: absolute; bottom: -10px; width: 6px; height: 6px; background: #FFB347; box-shadow: 0 0 10px #FF7A1F, 0 0 18px #FF5A1F; animation: braise 5s linear infinite; }
+.bande-braises i:nth-child(1) { left: 6%; animation-delay: -1s; } .bande-braises i:nth-child(2) { left: 14%; animation-delay: -3.5s; width: 4px; height: 4px; }
+.bande-braises i:nth-child(3) { left: 22%; animation-delay: -2s; } .bande-braises i:nth-child(4) { left: 31%; animation-delay: -4.2s; width: 5px; height: 5px; }
+.bande-braises i:nth-child(5) { left: 40%; animation-delay: -.6s; } .bande-braises i:nth-child(6) { left: 49%; animation-delay: -2.8s; width: 4px; height: 4px; }
+.bande-braises i:nth-child(7) { left: 58%; animation-delay: -1.7s; } .bande-braises i:nth-child(8) { left: 66%; animation-delay: -3.9s; width: 5px; height: 5px; }
+.bande-braises i:nth-child(9) { left: 74%; animation-delay: -.3s; } .bande-braises i:nth-child(10) { left: 82%; animation-delay: -2.4s; }
+.bande-braises i:nth-child(11) { left: 90%; animation-delay: -4.6s; width: 4px; height: 4px; } .bande-braises i:nth-child(12) { left: 96%; animation-delay: -1.2s; }
+@keyframes braise { 0% { transform: translate(0, 0); opacity: 0; } 15% { opacity: 1; } 100% { transform: translate(18px, -150px); opacity: 0; } }
+.planete .planete-fond img { transform: scale(1.15); }
+
+/* ---------- les nouveautés ---------- */
+.nouveautes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+.nouveaute { display: flex; flex-direction: column; border-radius: 16px; overflow: hidden; background: rgba(255, 255, 255, .06); border: 1px solid rgba(255, 255, 255, .12); }
+.nouveaute-art img { display: block; width: 100%; aspect-ratio: 16 / 9; height: auto; object-fit: cover; }
+.nouveaute-meta { display: flex; align-items: center; gap: 10px; margin: 14px 16px 0; font-size: 13px; color: #CDB9E0; }
+.etiquette { font-style: normal; font-size: 12px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--orange-clair); border: 1px solid rgba(255, 180, 94, .55); padding: 2px 7px; }
+.nouveaute h3 { margin: 8px 16px 0; font-size: 23px; color: #fff; }
+.nouveaute p { margin: 8px 16px 18px; font-size: 15px; line-height: 1.5; color: #DCCDEB; }
+
+/* ---------- la boutique : ses choses en couches ---------- */
+.boutique-scene .puces { list-style: none; padding: 0; margin: 18px 0 24px; display: grid; gap: 10px; }
+.boutique-scene .puces li { display: flex; align-items: center; gap: 12px; font-weight: 600; }
+.boutique-scene .puces img { width: 24px; height: 24px; }
+.couches { position: relative; height: 440px; }
+.couches .pointeur { position: absolute; }
+.couches img { width: 100%; height: auto; filter: drop-shadow(0 18px 18px rgba(0, 0, 0, .5)); }
+.couches .c1 { left: 2%; top: 0; width: 46%; } .couches .c2 { left: 30%; top: 26%; width: 46%; }
+.couches .c3 { right: 6%; top: 6%; width: 16%; } .couches .c4 { left: 0; bottom: 0; width: 34%; }
+
+/* ---------- le final ---------- */
+.final { position: relative; isolation: isolate; overflow: hidden; padding: 140px 0 130px; color: #FFF1E0; background: #0B0710; }
+.final-fond { position: absolute; inset: -30px; z-index: -2; }
+.final-fond .pointeur { position: absolute; inset: 0; }
+.final-fond img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 45%; }
+.final::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, rgba(11, 7, 16, .92) 0%, rgba(11, 7, 16, .7) 40%, rgba(11, 7, 16, .15) 75%), linear-gradient(180deg, #0B0710 0%, transparent 18%, transparent 80%, #0B0710 100%); }
+.final h2 { font-size: clamp(44px, 6vw, 84px); color: #fff; text-shadow: 0 4px 0 #140a03; }
+.final .texte p { font-size: 19px; }
+.final-sprite { position: relative; display: flex; justify-content: center; }
+.final-sprite .pointeur { width: min(380px, 80%); }
+.final-sprite img { width: 100%; height: auto; filter: drop-shadow(0 22px 22px rgba(0, 0, 0, .6)); }
+.etincelles i { position: absolute; width: 18px; height: 18px; background: #FFC24D; clip-path: polygon(50% 0, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0 50%, 39% 39%); filter: drop-shadow(0 0 6px rgba(255, 179, 64, .6)); animation: scintille 2.8s ease-in-out infinite; }
+.etincelles i:nth-child(1) { left: 58%; top: 18%; } .etincelles i:nth-child(2) { left: 72%; top: 30%; animation-delay: -.7s; width: 12px; height: 12px; }
+.etincelles i:nth-child(3) { left: 88%; top: 22%; animation-delay: -1.4s; } .etincelles i:nth-child(4) { left: 64%; top: 70%; animation-delay: -2s; width: 10px; height: 10px; }
+.etincelles i:nth-child(5) { left: 92%; top: 64%; animation-delay: -.3s; width: 14px; height: 14px; } .etincelles i:nth-child(6) { left: 52%; top: 46%; animation-delay: -1.1s; width: 9px; height: 9px; }
+.etincelles i:nth-child(7) { left: 80%; top: 84%; animation-delay: -2.3s; } .etincelles i:nth-child(8) { left: 70%; top: 10%; animation-delay: -1.8s; width: 10px; height: 10px; }
+@keyframes scintille { 0%, 100% { transform: scale(.6) rotate(0); opacity: .4; } 50% { transform: scale(1.1) rotate(20deg); opacity: 1; } }
+
+/* ============================ LA TABLETTE ET LE TÉLÉPHONE ============================ */
+@media (max-width: 960px) {
+  .barre.verre { top: 8px; width: calc(100% - 16px); padding: 6px 10px; border-radius: 14px; }
+  .deux-colonnes { grid-template-columns: minmax(0, 1fr); gap: 34px; }
+  .grille-mondes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .nouveautes { grid-template-columns: minmax(0, 1fr); max-width: 560px; margin: 0 auto; }
+  .carte-tresor { height: auto; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 26px 16px; padding-top: 10px; }
+  .carte-tresor .fil { display: none; }
+  .morceau { position: relative; left: auto; top: auto; width: auto; transform: rotate(var(--r)); }
+  .scene-js .morceau.monte:not(.vu) { transform: translateY(30px) rotate(calc(var(--r) * 4)); }
+  .m5 { grid-column: 1 / -1; justify-self: center; width: 70%; }
+  .couches { height: 340px; max-width: 460px; margin: 0 auto; width: 100%; }
+}
+@media (max-width: 600px) {
+  .vitrine-tete.scene-tete { padding: 70px 0 22px; }
+  .sp-phenix { left: 2%; top: 12%; width: 26%; } .sp-baleine { right: 0; top: 10%; width: 30%; }
+  .sp-roi, .sp-caisse { display: none; }
+  .sp-yeti { left: -10%; bottom: 23%; width: 44%; } .sp-kraken { right: -12%; bottom: 22%; width: 46%; }
+  .logo-geant { width: 62vw; margin-top: 8px; }
+  .vitrine-tete.scene-tete h1 { font-size: 28px; }
+  .scene-tete .gestes { gap: 8px; } .scene-tete .bouton-orange.grand { font-size: 19px; padding: 12px 18px 13px; } .scene-tete .bouton-verre { font-size: 15px; padding: 10px 14px; }
+  .scene-tete .preuves { font-size: 12px; } .scene-tete .preuves i { margin: 0 4px; }
+  .pan { padding: 80px 0; }
+  .pan .tete p { font-size: 17px; }
+  .grille-mondes { gap: 14px; }
+  .monde-titre { font-size: 22px; margin-top: -18px; } .monde-texte { font-size: 13px; margin: 8px 12px 0; } .monde-lien { font-size: 13px; margin: 10px 12px 0; }
+  .morceau { padding: 22px 10px 16px; } .morceau b { font-size: 44px; } .morceau span { font-size: 11px; letter-spacing: 1px; } .morceau img { width: 64px; }
+  .feuille-coin { width: 110px; height: 110px; }
+  .final { padding: 100px 0 90px; } .final::before { background: linear-gradient(180deg, rgba(11, 7, 16, .9) 0%, rgba(11, 7, 16, .6) 55%, rgba(11, 7, 16, .9) 100%); }
+  .final-sprite .pointeur { width: 60%; }
+}
+@media (max-width: 420px) {
+  .grille-mondes { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .monde-art { aspect-ratio: 1 / 1; }
+}
+
+/* ============================ SANS MOUVEMENT, ET LES PHOTOS ============================ */
+@media (prefers-reduced-motion: reduce) {
+  .rayons, .poussieres, .flotte, .logo-geant .logo, .logo-geant .reflet, .bande-braises i, .etincelles i { animation: none !important; }
+  .scene-js .entree, .scene-js .monte, .morceau { transition: none !important; opacity: 1 !important; }
+}
+html.photo .scene-js .entree, html.photo .scene-js .monte { opacity: 1; transform: none; transition: none; }
+html.photo .scene-js .morceau { opacity: 1; transform: translate(-50%, -50%) rotate(var(--r)); }
+html.photo .rayons, html.photo .flotte, html.photo .logo-geant .logo { animation: none; }
+
+/* les rendus de nos modèles du 07/10 (outils/boss_modeles, mer_modeles, animaux_modeles : détourés) */
+.sp-fregate { right: 15%; top: 30%; width: 12%; } .sp-djinn { left: 25%; top: 24%; width: 7%; }
+.sp-devoreur { right: 2%; bottom: -4%; width: 14%; }
+.sp-fregate .entree { transition-delay: .3s; } .sp-djinn .entree { transition-delay: .5s; } .sp-devoreur .entree { transition-delay: .6s; }
+.monde-art .deborde { width: auto; height: 82%; } .monde-art .deborde.large { height: auto; width: 62%; bottom: -6%; }
+.morceau img[src$="fregate.webp"] { width: 78px; }
+.final-sprite .pointeur { width: min(300px, 70%); }
+@media (max-width: 600px) {
+  .sp-fregate { right: 6%; top: 34%; width: 20%; } .sp-djinn { display: none; }
+  .sp-devoreur { right: -2%; bottom: 23%; width: 26%; }
+}
+/* les règles des anciennes scènes (style.css : .vitrine-tete .scene img en absolu, .vitrine-tete h1 span à .46em) ne
+   valent pas ici */
+.scene.sprites img { position: static; }
+.vitrine-tete.scene-tete h1 span { font-size: 1em; margin: 0; line-height: 1.02; }
+
+/* le papier des morceaux : la forme dechiree sur une couche a part, pour que l'ombre suive la dechirure */
+.morceau { background: none; clip-path: none; isolation: isolate; filter: drop-shadow(0 12px 14px rgba(74, 44, 18, .32)); }
+.morceau::before { content: ""; position: absolute; inset: 0; z-index: -1; background: #FFF3D2 url("../assets/matieres/parchemin.png") 0 0 / 96px 96px; box-shadow: inset 0 0 0 2px rgba(138, 90, 43, .28);
+  clip-path: polygon(3% 4%, 18% 0, 36% 3%, 55% 0, 74% 4%, 97% 1%, 100% 22%, 97% 45%, 100% 70%, 96% 97%, 76% 100%, 52% 96%, 30% 100%, 8% 97%, 0 76%, 3% 50%, 0 24%); }
+/* le téléphone (les captures de 19:50 à 390 de large) : la barre tient sur une ligne, les choses du haut au-dessus du titre */
+@media (max-width: 600px) {
+  .barre.verre nav { gap: 8px; }
+  .barre.verre nav a.boutique { font-size: 13px; }
+  .barre.verre nav a.bouton.petit { font-size: 13px; padding: 2px 6px; border-width: 8px; border-image-width: 8px; }
+  .sp-yeti { left: -8%; bottom: 36%; width: 38%; }
+  .sp-devoreur { right: 0; bottom: 35%; width: 22%; }
+  .sp-fregate { right: 22%; top: 40%; width: 18%; }
+}
+@media (max-width: 600px) {
+  .barre.verre nav a.boutique { font-size: 0; gap: 0; }
+  .barre.verre nav a.boutique img { width: 26px; height: 26px; }
+  .barre.verre .marque { font-size: 19px; }
+}
+/* rien ne dépasse sur le côté (sur un téléphone, un décor qui dépasse élargissait toute la page : 441 au lieu de 390) ;
+   le haut et le bas restent libres pour les feuillages et les bords déchirés */
+html, body { overflow-x: clip; }
+.pan, .final, .bande-braises, .planete { overflow-x: clip; }
+@media (max-width: 600px) {
+  .barre.verre nav { border: 0; box-shadow: none; background: none; }
+  .barre.verre nav::after, .barre.verre nav::before { display: none; }
+  /* (la tête, 20:16) le petit logo reste dans la barre sur téléphone */
+  .barre.verre.accueil .marque img { width: 32px; height: 32px; opacity: 1; margin-right: 0; }
+  .barre.verre .marque { gap: 8px; }
+}

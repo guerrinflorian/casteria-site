@@ -19,8 +19,6 @@ const COPIE = fs.mkdtempSync(path.join(os.tmpdir(), 'casteria_site_mutants_'))
   }
 })(SITE, COPIE)
 const lancer = () => spawnSync(process.execPath, [path.join(COPIE, 'outils', 'verifier.js')], { encoding: 'utf8' })
-// dans la barre du téléphone seulement (le menu du haut porte les mêmes liens)
-const dansLaBarre = (s, f) => s.replace(/<nav class="barre-jeu"[\s\S]*?<\/nav>/, f)
 
 const MUTANTS = [
   // ---------- la boutique et Tebex (les seize de f8, 05/10) ----------
@@ -64,12 +62,8 @@ const MUTANTS = [
   ['une video chargee d office (src)', 'index.html', s => s.replace(/(<video\b[^>]*?)\sdata-src="/, '$1 src="')],
   ['une video sans preload="none"', 'index.html', s => s.replace(/(<video\b[^>]*?)\spreload="none"/, '$1')],
 
-  // ---------- la barre du téléphone ----------
-  ['la barre du telephone a quatre liens', 'boutique.html', s => dansLaBarre(s, m => m.replace(/<a\b[^>]*>[\s\S]*?<\/a>\s*/, ''))],
-  ['deux liens « ici » dans la barre du telephone', 'index.html', s => dansLaBarre(s, m => m.replace('<a href="commencer.html"', '<a href="commencer.html" aria-current="page"'))],
-  ['aucun lien « ici » dans la barre du telephone', 'pirates.html', s => dansLaBarre(s, m => m.replace(' aria-current="page"', ''))],
-  ['un lien « ici » sur la page 404', '404.html', s => dansLaBarre(s, m => m.replace('<a ', '<a aria-current="page" '))],
-  ['la barre du telephone retiree d une page', 'commencer.html', s => s.replace(/<nav class="barre-jeu"[\s\S]*?<\/nav>/, '')],
+  // ---------- plus de barre au pied de l'écran du téléphone (le propriétaire, 07/10) ----------
+  ['la barre du pied de l ecran revenue', 'commencer.html', s => s.replace('</footer>', '</footer>\n<nav class="barre-jeu" aria-label="Le menu du téléphone"><a href="./">Accueil</a></nav>')],
   ['l ancien bouton du menu revenu', 'index.html', s => s.replace('</header>', '<button class="menu" aria-expanded="false">Menu</button></header>')],
 
   // ---------- les carrousels ----------

@@ -165,17 +165,10 @@ for (const page of PAGES) {
       if (!/<img\b/.test(scene) && !/<video\b[^>]*\sposter="[^"]+"/.test(scene)) faute('la hero : <div class="scene"> doit porter au moins une image ou une vidéo avec son affiche (les choses du jeu)')
     }
   }
-  // LA BARRE DU TÉLÉPHONE : <nav class="barre-jeu">, cinq liens ; sur la page où l'on est, UN lien porte
-  // aria-current="page" (aucun sur la 404 et « Merci ») ; l'ancien bouton du menu n'existe plus
+  // PLUS DE BARRE AU PIED DE L'ÉCRAN DU TÉLÉPHONE (le propriétaire, 07/10 : « la barre sur mobile en bas c'est
+  // affreux ») ; l'ancien bouton du menu n'existe plus non plus
   {
-    const b = nu.search(/<nav class="barre-jeu"/)
-    if (b < 0) faute('la barre du téléphone manque : <nav class="barre-jeu">')
-    else {
-      const liens = dedans(nu, b, 'nav').match(/<a\b[^>]*>/g) || [], ici = liens.filter(a => /aria-current="page"/.test(a)).length
-      const attendu = HORS_GOOGLE.includes(page) ? 0 : 1
-      if (liens.length !== 5) faute('la barre du téléphone doit avoir cinq liens, elle en a ' + liens.length)
-      if (ici !== attendu) faute('la barre du téléphone : ' + attendu + ' lien avec aria-current="page" attendu, ' + ici + ' trouvé(s)')
-    }
+    if (/<nav class="barre-jeu"/.test(nu)) faute('la barre du pied de l\'écran du téléphone (<nav class="barre-jeu">) est revenue')
     if (/<button class="menu"/.test(nu)) faute('l\'ancien bouton du menu (<button class="menu">) est encore là')
   }
   // LES CARROUSELS (css/carrousel.css, js/carrousel.js) : une des trois sortes, au moins deux vues, et la page charge
