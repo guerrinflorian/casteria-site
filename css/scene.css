@@ -302,3 +302,17 @@ html, body { overflow-x: clip; }
   .barre.verre.accueil .marque img { width: 32px; height: 32px; opacity: 1; margin-right: 0; }
   .barre.verre .marque { gap: 8px; }
 }
+/* la passe téléphone du propriétaire (20:12) : sur la carte, l'image AU-DESSUS du chiffre (elle ne le mange plus) ; le
+   final et la boutique moins hauts */
+@media (max-width: 600px) {
+  .morceau { padding-top: 14px; }
+  .morceau img { position: static; display: block; width: 62px; margin: -34px auto 2px; }
+  .morceau img.pixel { width: 40px; margin: -24px auto 6px; }
+  .morceau img.rond { width: 54px; height: 54px; margin: -30px auto 6px; }
+  .morceau img[src$="fregate.webp"] { width: 54px; }
+  .final-sprite .pointeur { width: 44%; }
+  .final { padding-bottom: 60px; }
+  .couches { height: 250px; max-width: 320px; }
+}
+/* le décor du haut en 2560 (le tournage du 07/10 à 20:05) : le palais vu de la rade au couchant */
+.scene-tete .fond img { object-position: 42% 50%; filter: saturate(1.08) contrast(1.04); }
