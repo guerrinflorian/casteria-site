@@ -64,6 +64,7 @@ const MUTANTS = [
   ['une video sans preload="none"', 'index.html', s => s.replace(/(<video\b[^>]*?)\spreload="none"/, '$1')],
 
   // ---------- plus de barre au pied de l'écran du téléphone (le propriétaire, 07/10) ----------
+  ['un lien vers une section de l accueil disparue', 'pirates.html', s => s.replace('href="./#nouveautes"', 'href="./#videos"')],
   ['la barre du pied de l ecran revenue', 'commencer.html', s => s.replace('</footer>', '</footer>\n<nav class="barre-jeu" aria-label="Le menu du téléphone"><a href="./">Accueil</a></nav>')],
   ['l ancien bouton du menu revenu', 'index.html', s => s.replace('</header>', '<button class="menu" aria-expanded="false">Menu</button></header>')],
 

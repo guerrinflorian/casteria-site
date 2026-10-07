@@ -88,6 +88,13 @@ const TIRETS = [String.fromCharCode(0x2014), String.fromCharCode(0x2013)]
 for (const page of PAGES) {
   const s = fs.readFileSync(path.join(RACINE, page), 'utf8')
   console.log(page)
+  // (07/10) un lien vers une section de l'accueil (./#x, /#x, ou #x sur l'accueil) mène à un id qui y existe : la refonte
+  // avait laissé #videos, #concept et #inedit sur les autres pages
+  {
+    const ids = new Set((lire('index.html').match(/\sid="([^"]+)"/g) || []).map(m => m.slice(5, -1)))
+    const motif = page === 'index.html' ? /href="(?:\.?\/)?#([^"]+)"/g : /href="\.?\/#([^"]+)"/g
+    for (const m of s.matchAll(motif)) if (!ids.has(m[1])) faute('un lien vers une section de l\'accueil qui n\'existe plus : #' + m[1])
+  }
   const h1 = (s.match(/<h1[\s>]/g) || []).length
   if (h1 !== 1) faute('il faut un seul h1, il y en a ' + h1)
   if (!/<title>[^<]{20,70}<\/title>/.test(s.replace(/<title>([^<]*)<\/title>/, (m, t) => '<title>' + t.slice(0, 70) + '</title>'))) faute('le titre manque')
