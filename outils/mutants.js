@@ -48,7 +48,8 @@ const MUTANTS = [
   ['une image trop haute dans la feuille du carrousel', 'css/carrousel.css', s => s + '\n[data-carrousel] > .vue img { height: 1300px; }\n'],
 
   // ---------- la hero de chaque page : son fond et sa scène, sur un téléphone aussi ----------
-  ['la hero de l accueil sans son fond', 'index.html', s => s.replace(/(<div class="fond"[^>]*>)\s*(?:<img\b[^>]*>|<video\b[^>]*>(?:<\/video>)?)/, '$1')],
+  // (07/10) l'image du fond peut être dans une couche (<div class="pointeur">) : le mutant la retire où qu'elle soit
+  ['la hero de l accueil sans son fond', 'index.html', s => s.replace(/(<div class="fond"[^>]*>(?:<div\b[^>]*>)*)\s*(?:<img\b[^>]*>|<video\b[^>]*>(?:<\/video>)?)/, '$1')],
   ['la hero de l accueil sans sa scene', 'index.html', s => s.replace('<div class="scene', '<div class="decor')],
   ['la hero d une page devenue une simple tete de page', 'commencer.html', s => s.replace('<section class="heros vitrine-tete', '<section class="page-tete')],
   ['la scene de la hero cachee sur un telephone', 'css/style.css', s => s + '\n@media (max-width: 600px) { .vitrine-tete .scene { display: none; } }\n'],
