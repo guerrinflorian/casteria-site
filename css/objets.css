@@ -1,0 +1,32 @@
+/* « Tout est fait pour Casteria » (07/10/2026 ; le proprietaire : « parler des items custom des armes, machines, truc de
+   farm etc... tout ce qui est custom ») : les objets du serveur, chacun en volume (le rendu du vrai modele du jeu, sur fond
+   transparent), son nom et une ligne, rangés en trois familles. Sur parchemin, entre le voyage (violet) et les boss (nuit). */
+.objets .familles { display: grid; gap: 46px; }
+.objets .famille h3 { font-size: clamp(22px, 2.4vw, 30px); margin: 0 0 18px; color: var(--bois-fonce); display: flex; align-items: center; gap: 12px; }
+.objets .famille h3::after { content: ""; flex: 1; height: 3px; background: linear-gradient(90deg, var(--or-fonce), transparent); opacity: .55; }
+.objets .grille-objets { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+.objet {
+  display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 14px; align-items: center;
+  border: 12px solid transparent; border-image: url("../assets/matieres/carte.png") 6 fill / 12px round; image-rendering: pixelated;
+  background: var(--parchemin-2) url("../assets/matieres/parchemin.png") 0 0 / 96px 96px repeat;
+  padding: 10px 14px 10px 8px; color: var(--encre); transition: transform .25s ease, filter .25s ease;
+}
+.objet > * { image-rendering: auto; }
+.objet:hover { transform: translateY(-4px); filter: drop-shadow(0 12px 14px rgba(58, 38, 20, .25)); }
+.objet img { width: 96px; height: 96px; object-fit: contain; filter: drop-shadow(0 5px 0 rgba(58, 38, 20, .22)); transition: transform .35s cubic-bezier(.2, .8, .2, 1); }
+.objet:hover img { transform: rotate(-6deg) scale(1.08); }
+.objet h4 { font-family: "Lilita One", sans-serif; font-weight: 400; font-size: 21px; line-height: 1.1; margin: 0 0 5px; color: var(--bois-fonce); }
+.objet p { margin: 0; font-size: 15.5px; line-height: 1.35; color: #4b3520; }
+.objets .esquif-objet { margin-top: 8px; text-align: center; font-size: 18px; }
+.objets .esquif-objet a { color: var(--ruban); font-weight: 700; }
+@media (max-width: 960px) {
+  .objets .grille-objets { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 620px) {
+  .objets .grille-objets { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  .objet { grid-template-columns: 76px minmax(0, 1fr); gap: 10px; }
+  .objet img { width: 76px; height: 76px; }
+  .objet h4 { font-size: 19px; }
+  .objet p { font-size: 15px; }
+}
+@media (prefers-reduced-motion: reduce) { .objet, .objet img { transition: none; } .objet:hover img { transform: none; } }

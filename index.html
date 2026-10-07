@@ -28,6 +28,7 @@
 <link rel="stylesheet" href="css/carrousel.css">
 <link rel="stylesheet" href="css/voyage.css">
 <link rel="stylesheet" href="css/scene.css">
+<link rel="stylesheet" href="css/objets.css">
 <script type="application/ld+json">
 { "@context": "https://schema.org", "@graph": [
   { "@type": "WebSite", "@id": "https://casteria.fr/#site", "url": "https://casteria.fr/", "name": "Casteria", "inLanguage": "fr",
@@ -50,6 +51,7 @@
   <a class="marque" href="./" aria-label="Casteria, l'accueil"><img src="assets/logo/casteria-logo-300.webp" alt="Logo de Casteria : un dragon violet sur une île" width="46" height="46"><span>Casteria</span></a>
   <nav aria-label="Le menu">
     <a href="#voyage">Le voyage</a>
+    <a href="#objets">Les objets</a>
     <a href="#boss">Les boss</a>
     <a href="#planete">La planète</a>
     <a href="commencer.html">Par où commencer</a>
@@ -151,6 +153,56 @@
       <a class="monde monte" href="boutique.html" style="--teinte: #D7A421"><span class="monde-art"><img src="assets/affiches/casteria_12.jpg" alt="" width="540" height="960" loading="lazy"><img class="deborde" src="assets/boutique/phenix.png" alt="" width="420" height="420" loading="lazy"></span><span class="monde-titre">Les familiers</span><span class="monde-texte">Vingt-quatre compagnons qui te suivent partout, et qui évoluent avec toi.</span><span class="monde-lien">Les voir <span aria-hidden="true">&#8250;</span></span></a>
       <a class="monde monte" href="commencer.html" style="--teinte: #B07AE0"><span class="monde-art"><img src="assets/affiches/casteria_09.jpg" alt="" width="540" height="960" loading="lazy"><img class="deborde large" src="assets/volume/salamandre_braise.webp" alt="" width="912" height="500" loading="lazy"></span><span class="monde-titre">Les enclos</span><span class="monde-texte">Des bêtes communes, rares, légendaires, mythiques, et celles que tu captures à l'œuf.</span><span class="monde-lien">Par où commencer <span aria-hidden="true">&#8250;</span></span></a>
     </div>
+  </div>
+</section>
+
+<!-- ============ TOUT EST FAIT POUR CASTERIA : les objets du serveur, chacun en volume (le rendu du vrai modele du jeu) ============ -->
+<section class="pan pan-parchemin objets" id="objets" aria-labelledby="objets-titre">
+  <div class="dedans">
+    <div class="tete monte">
+      <span class="sur-titre encre">Fait maison</span>
+      <h2 id="objets-titre">Tout est fait pour Casteria</h2>
+      <p>Des armes aux machines, de la ferme aux bêtes : chaque objet ici a été dessiné et codé pour le serveur. Tu ne les trouveras nulle part ailleurs.</p>
+    </div>
+    <div class="familles">
+      <div class="famille">
+        <h3>Les armes</h3>
+        <div class="grille-objets">
+          <article class="objet monte"><img src="assets/objets/objet_arbalete.webp" alt="L'arbalète de castérium, violette et or" width="240" height="240" loading="lazy"><div><h4>Arbalète de castérium</h4><p>Sa flèche traverse et touche plusieurs créatures. Elle ne casse jamais : un castérium raffiné rend ses tirs.</p></div></article>
+          <article class="objet monte"><img src="assets/objets/objet_hachette.webp" alt="La hachette de lancer" width="240" height="240" loading="lazy"><div><h4>Hachette de lancer</h4><p>Lance-la : elle frappe et revient dans ta main. Tranchant l'améliore, au lancer aussi.</p></div></article>
+          <article class="objet monte"><img src="assets/objets/objet_marteau.webp" alt="Le marteau en diamant" width="240" height="240" loading="lazy"><div><h4>Marteau en diamant</h4><p>Il creuse en 3 x 3 la pierre et la terre. Accroupi, un seul bloc.</p></div></article>
+          <article class="objet monte"><img src="assets/objets/objet_sabre_oni.webp" alt="Le Sabre de l'Oni, une lame rouge" width="240" height="240" loading="lazy"><div><h4>Sabre de l'Oni</h4><p>L'arme d'un boss : trois coups en 4 secondes sur la même créature, et elle explose.</p></div></article>
+          <article class="objet monte"><img src="assets/objets/objet_katana.webp" alt="Le katana en castérium" width="240" height="240" loading="lazy"><div><h4>Katana en castérium</h4><p>Clic droit : un élan de 6 blocs qui frappe les monstres sur son passage.</p></div></article>
+          <article class="objet monte"><img src="assets/objets/objet_bouclier.webp" alt="Le bouclier en castérium" width="240" height="240" loading="lazy"><div><h4>Bouclier en castérium</h4><p>Contre les boss, la parade parfaite se réussit plus facilement.</p></div></article>
+        </div>
+      </div>
+      <div class="famille">
+        <h3>La ferme et tes bêtes</h3>
+        <div class="grille-objets">
+          <article class="objet monte"><img src="assets/objets/objet_houe.webp" alt="La houe de récolte en diamant" width="240" height="240" loading="lazy"><div><h4>Houe de récolte</h4><p>Clic droit sur une plante mûre : elle récolte et replante.</p></div></article>
+          <article class="objet monte"><img src="assets/objets/objet_arrosoir.webp" alt="L'arrosoir" width="240" height="240" loading="lazy"><div><h4>Arrosoir</h4><p>Chaque plante arrosée a une chance de pousser d'un cran. Il ne s'use pas.</p></div></article>
+          <article class="objet monte"><img src="assets/objets/objet_semoir.webp" alt="Le semoir" width="240" height="240" loading="lazy"><div><h4>Semoir</h4><p>Il plante et récolte tout seul. Colle-lui un coffre : la récolte y rentre.</p></div></article>
+          <article class="objet monte"><img src="assets/objets/objet_epouvantail.webp" alt="L'épouvantail" width="240" height="240" loading="lazy"><div><h4>Épouvantail</h4><p>Autour de lui, les plantes poussent quatre fois plus vite, sans poudre d'os.</p></div></article>
+          <article class="objet monte"><img src="assets/objets/objet_aimant.webp" alt="L'aimant à objets" width="240" height="240" loading="lazy"><div><h4>Aimant à objets</h4><p>Allumé, il attire à toi les objets à 6 blocs.</p></div></article>
+          <article class="objet monte"><img src="assets/objets/objet_enclos.webp" alt="L'enclos de ferme" width="240" height="240" loading="lazy"><div><h4>Enclos de ferme</h4><p>Clôture, grange, auge et coffre, posés d'un coup. Tes bêtes n'en sortent jamais.</p></div></article>
+          <article class="objet monte"><img src="assets/objets/objet_mangeoire.webp" alt="Le distributeur de nourriture" width="240" height="240" loading="lazy"><div><h4>Distributeur de nourriture</h4><p>Il nourrit tout seul les bêtes d'un enclos.</p></div></article>
+          <article class="objet monte"><img src="assets/objets/objet_oeuf.webp" alt="Un œuf mystère mythique, rose" width="240" height="240" loading="lazy"><div><h4>Œuf mystère</h4><p>Il éclot dans un incubateur : une bête commune, rare... ou mythique.</p></div></article>
+          <article class="objet monte"><img src="assets/objets/objet_incubateur.webp" alt="L'incubateur" width="240" height="240" loading="lazy"><div><h4>Incubateur</h4><p>C'est là que tes œufs mystères éclosent.</p></div></article>
+        </div>
+      </div>
+      <div class="famille">
+        <h3>Ton île</h3>
+        <div class="grille-objets">
+          <article class="objet monte"><img src="assets/objets/objet_cailloux.webp" alt="Le Casse-cailloux, une machine de pierre" width="240" height="240" loading="lazy"><div><h4>Casse-cailloux</h4><p>La pierre de l'île, sans fin : ton premier revenu, le plus sûr.</p></div></article>
+          <article class="objet monte"><img src="assets/objets/objet_fonderie.webp" alt="La Fonderie d'or" width="240" height="240" loading="lazy"><div><h4>Fonderie d'or</h4><p>Un creuset où l'or fond à ciel ouvert. Elle marche au charbon.</p></div></article>
+          <article class="objet monte"><img src="assets/objets/objet_potionnerie.webp" alt="La Potionnerie" width="240" height="240" loading="lazy"><div><h4>Potionnerie</h4><p>Elle brasse plusieurs potions d'un coup, qui sortent dans le coffre à sa droite.</p></div></article>
+          <article class="objet monte"><img src="assets/objets/objet_coffre_ile.webp" alt="Le coffre de l'île" width="240" height="240" loading="lazy"><div><h4>Coffre de l'île</h4><p>Tous tes coffres à 40 blocs dans un seul écran : chercher, prendre, ranger.</p></div></article>
+          <article class="objet monte"><img src="assets/objets/objet_comptoir.webp" alt="Le comptoir du marchand, sous son auvent rayé" width="240" height="240" loading="lazy"><div><h4>Comptoir du marchand</h4><p>Il vend le contenu du coffre collé toutes les 5 minutes, même quand tu es absent.</p></div></article>
+          <article class="objet monte"><img src="assets/objets/objet_pierre_foyer.webp" alt="La pierre de foyer" width="240" height="240" loading="lazy"><div><h4>Pierre de foyer</h4><p>Clic droit : elle te ramène sur ton île, d'où que tu sois.</p></div></article>
+        </div>
+      </div>
+    </div>
+    <p class="esquif-objet monte">Et au bout du voyage, <a href="#planete">l'Esquif</a> : la fusée de ton île, qui t'emmène sur la planète.</p>
   </div>
 </section>
 
