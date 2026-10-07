@@ -1,0 +1,96 @@
+/* L'ACCUEIL REFAIT (INTERFACES, 07/10 ; le propriétaire : « plus de photos adapté au vrai jeu maintenant la planète de
+   fin, des panoplies d'armures a montrer, quelques scènes, la hero section plus belle moins ia [...] arreter de montrer les
+   montures ») : la page suit le voyage du joueur, ton île, les boss, la mer, la planète. Le haut de page est un montage
+   du vrai jeu en boucle, une phrase au centre, les quatre étapes en bas. Chargé après style.css et carrousel.css. */
+
+/* ---------- le haut de page : le montage en plein écran ---------- */
+.vitrine-tete.trou-noir { min-height: 100svh; padding: 96px 0 30px; display: flex; flex-direction: column; justify-content: flex-end; align-items: stretch; text-align: center; }
+.vitrine-tete.trou-noir .fond video, .vitrine-tete.trou-noir .fond img { object-position: 50% 45%; filter: saturate(1.08); animation: none; }
+/* le voile : sombre en haut sous la barre, clair au milieu (le jeu se voit), sombre en bas sous le texte */
+.vitrine-tete.trou-noir::before { background: radial-gradient(60% 34% at 50% 52%, rgba(14, 8, 20, .5), rgba(14, 8, 20, 0) 100%), linear-gradient(180deg, rgba(14, 8, 20, .7) 0%, rgba(14, 8, 20, 0) 18%, rgba(14, 8, 20, .08) 36%, rgba(14, 8, 20, .66) 68%, var(--nuit) 100%); }
+.vitrine-tete.trou-noir::after { display: none; }
+.trou-noir .centre { width: min(900px, 100% - 32px); margin: 0 auto; }
+.trou-noir .devise { margin: 0 0 10px; font-size: 15px; letter-spacing: 2px; text-transform: uppercase; color: var(--or-clair); text-shadow: 0 2px 6px rgba(0, 0, 0, .8); }
+.trou-noir .devise i { font-style: normal; font-size: 10px; margin: 0 8px; vertical-align: 2px; }
+.vitrine-tete.trou-noir h1 { font-size: clamp(38px, 5.4vw, 72px); line-height: 1.02; margin: 0; text-shadow: 0 4px 0 #140a03, 0 0 40px rgba(255, 120, 40, .28); }
+.vitrine-tete.trou-noir h1 span { display: block; font-size: 1em; margin: 0; color: #fff; }
+.vitrine-tete.trou-noir h1 span.or { color: var(--or-clair); }
+.vitrine-tete.trou-noir .accroche { margin: 14px auto 22px; max-width: 36em; font-size: clamp(17px, 1.5vw, 21px); color: #F1E6D0; }
+.vitrine-tete.trou-noir .gestes { justify-content: center; flex-wrap: wrap; }
+.vitrine-tete.trou-noir .gestes .grand { font-size: 21px; }
+.vitrine-tete.trou-noir .autres { margin: 12px auto 0; max-width: 46em; }
+
+/* les quatre étapes du voyage : une boucle courte du vrai jeu chacune, dans l'ordre où l'on joue */
+.trou-noir .scene.voyage { position: relative; height: auto; width: min(var(--large), 100% - 32px); margin: 34px auto 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+.voyage .etape { position: relative; display: block; text-decoration: none; color: #fff; text-align: left; }
+.voyage .etape video { width: 100%; aspect-ratio: 640 / 276; height: auto; object-fit: cover; border: 2px solid rgba(255, 241, 207, .28); background: var(--nuit-2); transition: border-color .25s ease, box-shadow .25s ease, transform .25s ease; }
+.voyage .etape:hover video, .voyage .etape:focus-visible video { border-color: var(--or-clair); box-shadow: 0 0 26px rgba(255, 215, 94, .4); transform: translateY(-3px); }
+.voyage .etape b { position: absolute; top: 7px; left: 10px; font-family: "Lilita One", sans-serif; font-weight: 400; font-size: 16px; color: var(--or-clair); text-shadow: 0 2px 0 #000, 0 0 8px #000; }
+.voyage .etape strong { display: block; margin-top: 6px; font-family: "Lilita One", sans-serif; font-weight: 400; font-size: 20px; line-height: 1.1; }
+.voyage .etape small { display: block; font-size: 14px; color: #D9CCB0; }
+
+/* ---------- l'entête d'une étape : son numéro dans le ruban ---------- */
+.etape-tete .ruban b { font-weight: 400; color: var(--or-clair); margin-right: 8px; }
+
+/* ---------- étape 1 : ton île, ses trois écrans ---------- */
+.trois-ecrans { display: grid; grid-template-columns: repeat(3, minmax(0, 260px)); justify-content: center; gap: 34px; margin: 10px auto 46px; }
+.trois-ecrans figure { margin: 0; }
+.trois-ecrans .ecran-penche { width: 100%; }
+.trois-ecrans figure:nth-child(1) .ecran-penche { transform: rotate(-2deg); }
+.trois-ecrans figure:nth-child(3) .ecran-penche { transform: rotate(2deg); }
+.trois-ecrans .ecran-penche video { width: 100%; height: 100%; object-fit: cover; }
+.trois-ecrans figcaption { margin-top: 14px; text-align: center; color: var(--encre); }
+.trois-ecrans figcaption strong { display: block; font-family: "Lilita One", sans-serif; font-weight: 400; font-size: 23px; color: var(--bois-fonce); }
+
+/* ---------- étape 2 : les panoplies ---------- */
+.panoplies { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 0; align-items: center; margin-top: 70px; }
+.panoplies .ecran-large { grid-column: 1; grid-row: 1; }
+.panoplies .pancarte { grid-column: 2; grid-row: 1; position: relative; z-index: 2; margin-left: -60px; }
+.ecran-large { margin: 0; position: relative; border: 5px solid var(--bois-fonce); box-shadow: 0 0 0 2px var(--or-clair), 0 18px 34px rgba(0, 0, 0, .55); background: var(--nuit); }
+.ecran-large video, .ecran-large img { width: 100%; height: auto; aspect-ratio: 1280 / 552; object-fit: cover; }
+.ecran-large figcaption { position: absolute; left: 12px; bottom: 10px; font-size: 14px; color: #fff; text-shadow: 0 1px 4px #000; }
+
+/* ---------- étape 4 : la planète ---------- */
+.planete { position: relative; isolation: isolate; overflow: hidden; color: #F6EBDD; background: #0B0710; padding: 110px 0 96px; }
+.planete-fond { position: absolute; inset: 0 0 auto 0; height: min(100svh, 820px); z-index: -2; }
+.planete-fond img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 40%; }
+.planete::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, #0B0710 0%, rgba(11, 7, 16, .35) 22%, rgba(11, 7, 16, .5) 48%, #0B0710 min(100svh, 820px)); }
+.planete .tete p { color: #F1E2CC; }
+.planete .ruban { filter: hue-rotate(-12deg) saturate(1.2); }
+.planete .scene-large { margin: 0 auto 40px; max-width: 980px; }
+.planete .scene-large video { cursor: pointer; }
+.planete .scene-large .jouer { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; transition: opacity .25s ease; }
+.planete .scene-large .jouer::after { content: ""; width: 0; height: 0; border-left: 34px solid #fff; border-top: 21px solid transparent; border-bottom: 21px solid transparent; filter: drop-shadow(0 4px 10px rgba(0, 0, 0, .7)); margin-left: 8px; }
+.planete .scene-large.joue .jouer { opacity: 0; }
+.cartes-planete { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; }
+.cartes-planete figure { margin: 0; background: rgba(20, 10, 4, .6); border-top: 3px solid #FF8A3C; }
+.cartes-planete img, .cartes-planete video { width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; }
+.cartes-planete figcaption { padding: 12px 14px 15px; font-size: 15px; line-height: 1.4; color: #E8DCC6; }
+.cartes-planete figcaption strong { display: block; font-family: "Lilita One", sans-serif; font-weight: 400; font-size: 21px; color: #FFB37A; margin-bottom: 3px; }
+
+.vitrine-tete.trou-noir > * { min-width: 0; max-width: 100%; }
+@media (max-width: 960px) {
+  .vitrine-tete.trou-noir { padding: 92px 0 26px; }
+  /* les étapes restent SOUS la phrase (la scène des autres pages monte au-dessus du texte sur un téléphone) */
+  .vitrine-tete.trou-noir .scene.voyage { order: 2; height: auto; max-width: none; width: calc(100% - 32px); margin: 26px auto 0; }
+  .trou-noir .devise { font-size: 12px; letter-spacing: 1px; }
+  .vitrine-tete.trou-noir::before { background: linear-gradient(180deg, rgba(14, 8, 20, .7) 0%, rgba(14, 8, 20, .05) 16%, rgba(14, 8, 20, .2) 34%, rgba(14, 8, 20, .82) 56%, var(--nuit) 100%); }
+  .trou-noir .scene.voyage { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .trois-ecrans { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+  .trois-ecrans figcaption strong { font-size: 18px; } .trois-ecrans figcaption span { display: none; }
+  .panoplies { grid-template-columns: minmax(0, 1fr); }
+  .panoplies .pancarte { grid-column: 1; grid-row: 2; margin: -30px 12px 0; }
+  .cartes-planete { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 560px) {
+  .vitrine-tete.trou-noir .gestes .grand { font-size: 18px; }
+  .voyage .etape strong { font-size: 17px; } .voyage .etape small { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .voyage .etape video { transition: none; }
+}
+html.photo .vitrine-tete.trou-noir { min-height: 900px; }
+
+/* la rangée des panoplies, sous la pile des entrées : une seule colonne (la bande des boss en a deux) */
+.boss-bande > .dedans.rang-panoplies { display: block; }
+.panoplies .pancarte h3 { font-size: clamp(24px, 2.4vw, 32px); }

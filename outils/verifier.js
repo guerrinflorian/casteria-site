@@ -160,7 +160,9 @@ for (const page of PAGES) {
       const sec = dedans(nu, h, 'section'), f = sec.search(/<div class="fond(?:\s[^"]*)?"/), sc = sec.search(/<div class="scene(?:\s[^"]*)?"/)
       const fond = f < 0 ? '' : dedans(sec, f, 'div'), scene = sc < 0 ? '' : dedans(sec, sc, 'div')
       if (!(/<img\b/.test(fond) || /<video\b[^>]*\sposter="[^"]+"/.test(fond))) faute('la hero : <div class="fond"> doit porter une image, ou une vidéo avec son affiche')
-      if (!/<img\b/.test(scene)) faute('la hero : <div class="scene"> doit porter au moins une image (les choses du jeu en volume)')
+      // (07/10, l'accueil refait : « plus de photos adapté au vrai jeu ») la scène peut aussi être de vraies boucles du jeu,
+      // chacune avec son affiche
+      if (!/<img\b/.test(scene) && !/<video\b[^>]*\sposter="[^"]+"/.test(scene)) faute('la hero : <div class="scene"> doit porter au moins une image ou une vidéo avec son affiche (les choses du jeu)')
     }
   }
   // LA BARRE DU TÉLÉPHONE : <nav class="barre-jeu">, cinq liens ; sur la page où l'on est, UN lien porte

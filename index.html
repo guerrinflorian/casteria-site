@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Casteria : serveur Minecraft français moddé, ton île sur la mer</title>
-<meta name="description" content="Casteria est un serveur Minecraft français moddé (1.21.1, NeoForge) : une île sur la mer par joueur, des machines, 15 boss, des armures à pouvoirs, des navires et des pirates. Télécharge le launcher, il installe tout.">
+<title>Casteria : serveur Minecraft français moddé, de ton île au trou noir</title>
+<meta name="description" content="Casteria est un serveur Minecraft français moddé (1.21.1, NeoForge) : ton île sur la mer, tes machines et tes bêtes, 15 boss et leurs panoplies, des navires et des pirates, puis une planète sous un trou noir. Le launcher installe tout.">
 <meta name="theme-color" content="#1B1028">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="fr_FR">
 <meta property="og:site_name" content="Casteria">
-<meta property="og:title" content="Casteria : ton île sur la mer, des boss, des navires">
-<meta property="og:description" content="Un serveur Minecraft français moddé : ton île qui grandit, tes machines, 15 boss, des armures à pouvoirs et toute une mer à écumer.">
+<meta property="og:title" content="Casteria : d'une île sur la mer jusqu'au trou noir">
+<meta property="og:description" content="Un serveur Minecraft français moddé : ton île qui produit, 15 boss et leurs panoplies, toute une mer à écumer, et une planète au bout du voyage.">
 <meta property="og:url" content="https://casteria.fr/">
 <link rel="canonical" href="https://casteria.fr/">
 <meta property="og:image" content="https://casteria.fr/assets/images/casteria-serveur-minecraft-partage.jpg">
@@ -26,6 +26,7 @@
 <link rel="preload" href="assets/polices/fredoka.ttf" as="font" type="font/ttf" crossorigin>
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/carrousel.css">
+<link rel="stylesheet" href="css/voyage.css">
 <script type="application/ld+json">
 { "@context": "https://schema.org", "@graph": [
   { "@type": "WebSite", "@id": "https://casteria.fr/#site", "url": "https://casteria.fr/", "name": "Casteria", "inLanguage": "fr",
@@ -34,7 +35,7 @@
     "logo": "https://casteria.fr/assets/logo/casteria-logo.png" },
   { "@type": "VideoGame", "name": "Casteria", "inLanguage": "fr", "url": "https://casteria.fr/",
     "image": "https://casteria.fr/assets/images/casteria-serveur-minecraft-partage.jpg",
-    "description": "Serveur Minecraft français moddé : une île sur la mer par joueur, une économie en jetons, 15 boss, des armures à pouvoirs, des navires et des pirates.",
+    "description": "Serveur Minecraft français moddé : une île sur la mer par joueur, une économie en jetons, 15 boss et leurs panoplies, des navires et des pirates, une planète sous un trou noir.",
     "gamePlatform": ["PC", "Mac", "Linux"], "applicationCategory": "Game", "genre": ["Serveur Minecraft", "Île", "Économie", "Aventure"],
     "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
     "gameServer": { "@type": "GameServer", "name": "Casteria", "game": { "@type": "VideoGame", "name": "Minecraft Java Edition 1.21.1" } } }
@@ -44,11 +45,12 @@
 <body>
 <div class="progres" aria-hidden="true"></div>
 
-<header class="barre accueil">
+<header class="barre">
   <a class="marque" href="./" aria-label="Casteria, l'accueil"><img src="assets/logo/casteria-logo-300.webp" alt="Logo de Casteria : un dragon violet sur une île" width="46" height="46"><span>Casteria</span></a>
   <nav aria-label="Le menu">
-    <a href="#concept">Le concept</a>
-    <a href="#inedit">L'inédit</a>
+    <a href="#ile">Le voyage</a>
+    <a href="#boss">Les boss</a>
+    <a href="#planete">La planète</a>
     <a href="#videos">Vidéos</a>
     <a href="commencer.html">Par où commencer</a>
     <a class="boutique" href="boutique.html"><img class="pixel" src="assets/icones/credit.png" alt="" width="20" height="20">Boutique</a>
@@ -57,64 +59,63 @@
 </header>
 
 <main>
-<!-- ============ LE HÉROS ============ -->
-<section class="heros vitrine-tete accueil" id="haut">
-  <!-- une boucle du jeu (une île, sa rive, la mer), nette ; devant, en volume : un boss, une monture, un familier, un coffre
-       (des rendus de nos modèles) que le défilement et la souris déplacent (js/site.js). Sur téléphone la scène vient d'abord. -->
-  <div class="fond" aria-hidden="true"><img src="assets/images/casteria-palais-serveur-minecraft.jpg" alt="" width="1280" height="720" fetchpriority="high"></div>
-  <div class="braises" aria-hidden="true"></div>
-  <div class="dedans grille">
-    <div class="texte">
-      <div class="entete">
-        <img class="logo" src="assets/logo/casteria-logo-300.webp" alt="Casteria, serveur Minecraft : le dragon violet et son île" width="150" height="150" fetchpriority="high">
-        <p class="devise">Serveur Minecraft français<br>Moddé 1.21.1 <i aria-hidden="true">&#9670;</i> Launcher gratuit</p>
-      </div>
-      <h1><span>Casteria, le serveur Minecraft</span><span class="or">où ton île grandit sur la mer</span></h1>
-      <p class="accroche">Une île à toi, quinze boss à faire tomber, et une mer entière à écumer en navire.</p>
-      <div class="gestes">
-        <a class="bouton bouton-vert grand" href="https://github.com/guerrinflorian/casteria-mc/releases/download/installateur/Casteria-Installation.exe" rel="noopener"><svg class="picto" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M12 4v16M3 12h18" fill="none" stroke="currentColor" stroke-width="2.6"/></svg>Télécharger pour Windows</a>
-        <a class="bouton bouton-or" href="https://github.com/guerrinflorian/casteria-mc/releases/download/installateur/Casteria-mac-apple-silicon.zip" rel="noopener"><svg class="picto" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M12 16v4M8 20.5h8" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>Mac</a>
-        <a class="bouton bouton-bois petit" href="#aide-linux"><svg class="picto" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M7 9l3.5 3L7 15M13 15.5h4" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Linux</a>
-      </div>
-      <p class="autres">Mac : <a href="https://github.com/guerrinflorian/casteria-mc/releases/download/installateur/Casteria-mac-apple-silicon.zip" rel="noopener">puce Apple (M1 et après)</a> ou <a href="https://github.com/guerrinflorian/casteria-mc/releases/download/installateur/Casteria-mac-intel.zip" rel="noopener">Intel</a>. Le launcher est gratuit et installe tout : tu cliques, tu joues. <a href="#aide">Un souci pour installer ?</a></p>
+<!-- ============ LE HÉROS : le voyage du joueur en vrai jeu, une phrase, les quatre étapes ============ -->
+<section class="heros vitrine-tete trou-noir" id="haut">
+  <!-- un montage du vrai jeu en boucle (13 s : l'Esquif décolle du palais, des boss font leur entrée, une île de la mer,
+       l'arrivée sous le trou noir, le Dévoreur) ; son affiche s'affiche d'abord. Pas de texte dans la vidéo. -->
+  <div class="fond" aria-hidden="true"><video data-auto muted loop playsinline preload="none" poster="assets/affiches/heros_voyage.jpg" data-src="assets/videos/heros_voyage.mp4"></video></div>
+  <div class="centre">
+    <p class="devise">Serveur Minecraft français<i aria-hidden="true">&#9670;</i>Moddé 1.21.1<i aria-hidden="true">&#9670;</i>Launcher gratuit</p>
+    <h1><span>D'une île sur la mer</span><span class="or">jusqu'au trou noir</span></h1>
+    <p class="accroche">Fais tourner ton île, fais tomber les boss, prends la mer, puis décolle vers la planète du bout du voyage.</p>
+    <div class="gestes">
+      <a class="bouton bouton-vert grand" href="https://github.com/guerrinflorian/casteria-mc/releases/download/installateur/Casteria-Installation.exe" rel="noopener"><svg class="picto" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M12 4v16M3 12h18" fill="none" stroke="currentColor" stroke-width="2.6"/></svg>Télécharger pour Windows</a>
+      <a class="bouton bouton-or" href="https://github.com/guerrinflorian/casteria-mc/releases/download/installateur/Casteria-mac-apple-silicon.zip" rel="noopener"><svg class="picto" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M12 16v4M8 20.5h8" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>Mac</a>
+      <a class="bouton bouton-bois petit" href="#aide-linux"><svg class="picto" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M7 9l3.5 3L7 15M13 15.5h4" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Linux</a>
     </div>
-    <div class="scene" aria-hidden="true">
-      <span class="halo"></span>
-      <span class="vol v-monture" data-v="-0.16"><img src="assets/boutique/wyverne.png" alt="" width="420" height="420"></span>
-      <span class="vol sol v-boss" data-v="-0.05"><img src="assets/volume/yeti.png" alt="" width="520" height="520"></span>
-      <span class="vol v-familier" data-v="-0.24"><img src="assets/boutique/phenix.png" alt="" width="420" height="420"></span>
-      <span class="vol sol v-coffre" data-v="-0.07"><img src="assets/boutique/caisse.png" alt="" width="420" height="420"></span>
-      <i class="eclat e1"></i><i class="eclat e2"></i><i class="eclat e3"></i><i class="eclat e4"></i><i class="eclat e5"></i>
-    </div>
+    <p class="autres">Mac : <a href="https://github.com/guerrinflorian/casteria-mc/releases/download/installateur/Casteria-mac-apple-silicon.zip" rel="noopener">puce Apple (M1 et après)</a> ou <a href="https://github.com/guerrinflorian/casteria-mc/releases/download/installateur/Casteria-mac-intel.zip" rel="noopener">Intel</a>. Le launcher est gratuit et installe tout. <a href="#aide">Un souci pour installer&nbsp;?</a></p>
   </div>
-  <a class="descends" href="#concept">Découvre le serveur<b aria-hidden="true">&#8964;</b></a>
+  <!-- les quatre étapes, dans l'ordre où l'on joue : une boucle courte du vrai jeu chacune, un clic mène à l'étape -->
+  <div class="scene voyage" role="navigation" aria-label="Le voyage de Casteria en quatre étapes">
+    <a class="etape" href="#ile"><video data-auto muted loop playsinline preload="none" poster="assets/affiches/voyage_ile.jpg" data-src="assets/videos/voyage_ile.mp4" aria-hidden="true"></video><b>1</b><strong>Ton île</strong><small>machines, tickets, /up, enclos</small></a>
+    <a class="etape" href="#boss"><video data-auto muted loop playsinline preload="none" poster="assets/affiches/voyage_boss.jpg" data-src="assets/videos/voyage_boss.mp4" aria-hidden="true"></video><b>2</b><strong>Les boss</strong><small>leurs entrées, leurs panoplies</small></a>
+    <a class="etape" href="#la-mer"><video data-auto muted loop playsinline preload="none" poster="assets/affiches/voyage_mer.jpg" data-src="assets/videos/voyage_mer.mp4" aria-hidden="true"></video><b>3</b><strong>La mer</strong><small>navires, pirates, boss de la mer</small></a>
+    <a class="etape" href="#planete"><video data-auto muted loop playsinline preload="none" poster="assets/affiches/voyage_planete.jpg" data-src="assets/videos/voyage_planete.mp4" aria-hidden="true"></video><b>4</b><strong>La planète</strong><small>le trou noir, le Dévoreur</small></a>
+  </div>
 </section>
 
-<!-- ============ LES CHIFFRES ============ -->
+<!-- ============ LES CHIFFRES : chacun lu dans le jeu (07/10) : les 15 arènes (boss.js bt1 à bt15), les 5 navires
+     (ai_mer_table.js, ordre 1 à 5), les 24 familiers (casinocompagnons, Catalogue.TOUS), les 70 niveaux
+     (ai_planete_table.js, niveaux.max) ============ -->
 <div class="chiffres" aria-label="Casteria en chiffres">
   <ul class="dedans">
     <li><b data-n="1">1</b><span>île rien qu'à toi</span></li>
     <li><b data-n="15">15</b><span>boss en arène</span></li>
     <li><b data-n="5">5</b><span>navires à barrer</span></li>
-    <li><b data-n="32">32</b><span>familiers</span></li>
-    <li><b data-n="60">60</b><span>niveaux à gravir</span></li>
+    <li><b data-n="24">24</b><span>familiers</span></li>
+    <li><b data-n="70">70</b><span>niveaux à gravir</span></li>
   </ul>
 </div>
 
-<!-- ============ LE CONCEPT ============ -->
-<section class="clair" id="concept">
+<!-- ============ ÉTAPE 1 : TON ÎLE ============ -->
+<section class="clair" id="ile">
   <div class="dedans">
-    <div class="tete apparait">
-      <span class="ruban">Le concept</span>
-      <h2>Un serveur Minecraft d'îles, avec une vraie économie</h2>
-      <p>Tu pars d'un bout de terre au milieu de la mer. Tu en fais une île qui produit, qui élève, qui commerce. Et quand elle tourne toute seule, tu pars à l'aventure. Le principe rappelle le skyblock, mais ici ton île est posée sur la mer, et cette mer se parcourt en bateau.</p>
+    <div class="tete etape-tete apparait">
+      <span class="ruban"><b>1</b>Ton île</span>
+      <h2>Une île qui produit pendant que tu explores</h2>
+      <p>Tu pars d'un bout de terre au milieu de la mer. Tu poses tes machines, tu élèves tes bêtes, tu vends, tu réinvestis, et tu repousses les bords de ton île. Le principe rappelle le skyblock, mais ici ton île est posée sur la mer.</p>
     </div>
     <div class="monnaies apparait">
-      <div><img class="pixel" src="assets/icones/jeton.png" alt="Un jeton de Casteria" width="64" height="64" loading="lazy"><h3>Les jetons</h3><p>Tes machines produisent toutes seules, tes bêtes aussi. Tu récoltes, tu vends au marché ou aux autres joueurs à l'hôtel des ventes, et tu réinvestis.</p></div>
-      <div><img class="pixel" src="assets/icones/ticket.png" alt="Un ticket de fortune" width="64" height="64" loading="lazy"><h3>Les tickets</h3><p>Tes champs donnent des tickets, tes missions du jour aussi. Un ticket, un tour de roue : tu mises un objet pour en gagner un plus précieux. Ou tu perds ta mise.</p></div>
+      <div><img class="pixel" src="assets/icones/jeton.png" alt="Un jeton de Casteria" width="64" height="64" loading="lazy"><h3>Les jetons</h3><p>Tes machines produisent toutes seules, tes bêtes aussi. Tu récoltes, tu vends au marché ou aux autres joueurs à l'hôtel des ventes, et tu agrandis ton île.</p></div>
+      <div><img class="pixel" src="assets/icones/ticket.png" alt="Un ticket de fortune" width="64" height="64" loading="lazy"><h3>Les tickets et /up</h3><p>Tes champs donnent des tickets, tes missions du jour aussi. Un ticket, un tour de roue : tu mises un objet pour en gagner un plus précieux. Ou tu perds ta mise.</p></div>
+    </div>
+    <div class="trois-ecrans">
+      <figure class="apparait" style="--retard:.05s"><div class="ecran-penche"><video data-auto muted loop playsinline preload="none" poster="assets/affiches/casteria_10.jpg" data-src="assets/videos/casteria_10.mp4" aria-label="Vidéo : les machines d'une île au coucher du soleil"></video></div><figcaption><strong>Tes machines</strong><span>Du Casse-cailloux à la Forge de Casteria.</span></figcaption></figure>
+      <figure class="apparait" style="--retard:.15s"><div class="ecran-penche"><video data-auto muted loop playsinline preload="none" poster="assets/affiches/casteria_09.jpg" data-src="assets/videos/casteria_09.mp4" aria-label="Vidéo : les enclos et les bêtes mythiques"></video></div><figcaption><strong>Tes enclos</strong><span>Des bêtes communes, rares, légendaires, mythiques.</span></figcaption></figure>
+      <figure class="apparait" style="--retard:.25s"><div class="ecran-penche"><video data-auto muted loop playsinline preload="none" poster="assets/affiches/casteria_12.jpg" data-src="assets/videos/casteria_12.mp4" aria-label="Vidéo : les familiers et leur évolution"></video></div><figcaption><strong>Tes familiers</strong><span>Ils te suivent partout et évoluent.</span></figcaption></figure>
     </div>
     <div class="apparait" data-carrousel="glisse" data-nom="Casteria en quatre images" style="--vue: min(84vw, 560px)">
-      <figure class="vue"><img src="assets/images/casteria-ile-sur-la-mer-minecraft.jpg" alt="Une île de joueur sur Casteria, vue du ciel : son ponton sur la mer, son écurie et ses prés" width="1080" height="608" loading="lazy"><figcaption><strong>Ton île sur la mer</strong>Chaque joueur a la sienne. Tu l'agrandis, tu la décores, tu y invites tes amis.</figcaption></figure>
+      <figure class="vue"><img src="assets/images/casteria-ile-sur-la-mer-minecraft.jpg" alt="Une île de joueur sur Casteria, vue du ciel : son ponton sur la mer et ses prés" width="1080" height="608" loading="lazy"><figcaption><strong>Ton île sur la mer</strong>Chaque joueur a la sienne. Tu l'agrandis, tu la décores, tu y invites tes amis.</figcaption></figure>
       <figure class="vue"><img src="assets/images/casteria-palais-serveur-minecraft.jpg" alt="Le palais de Casteria sur son rocher : un grand escalier, un pont de pierre et une montgolfière au-dessus de la mer" width="1280" height="720" loading="lazy"><figcaption><strong>Le palais</strong>C'est là que tu arrives, et que tout le serveur se retrouve.</figcaption></figure>
       <figure class="vue"><img src="assets/images/casteria-arrivee-au-palais-minecraft.jpg" alt="L'arrivée au palais de Casteria : Gaspard le majordome attend les nouveaux joueurs sur la place" width="1280" height="720" loading="lazy"><figcaption><strong>Gaspard t'attend</strong>À l'arrivée, il te fait visiter et te donne tes premières quêtes.</figcaption></figure>
       <figure class="vue"><img src="assets/images/casteria-marche-caisses-mysteres-minecraft.jpg" alt="La place du marché de Casteria : les caisses mystères et leur forain" width="1280" height="720" loading="lazy"><figcaption><strong>Le marché</strong>Une clé, une caisse, une surprise : le forain t'attend sur la place.</figcaption></figure>
@@ -122,107 +123,89 @@
   </div>
 </section>
 
-<!-- ============ LA PARADE : ce qui peuple Casteria, en volume, qui défile ============ -->
+<!-- ============ LA PARADE : ce qui peuple Casteria, en volume, qui défile (sans les montures : le propriétaire, 07/10) ============ -->
 <div class="parade" aria-label="Ceux que tu croiseras sur Casteria">
   <div data-carrousel="defile" data-format="carre" data-vitesse="42" data-nom="Les créatures de Casteria" style="--vue: min(46vw, 230px)">
     <figure class="vue"><img src="assets/volume/yeti.png" alt="Le Yéti des glaces, un boss de Casteria" width="420" height="420" loading="lazy"><figcaption><strong>Le Yéti des glaces</strong>un boss</figcaption></figure>
-    <figure class="vue"><img src="assets/boutique/wyverne.png" alt="La Wyverne royale, une monture de Casteria" width="420" height="420" loading="lazy"><figcaption><strong>La Wyverne royale</strong>une monture</figcaption></figure>
     <figure class="vue"><img src="assets/boutique/phenix.png" alt="Le Phénix, un familier de Casteria" width="420" height="420" loading="lazy"><figcaption><strong>Le Phénix</strong>un familier</figcaption></figure>
     <figure class="vue"><img src="assets/volume/roi_champignon.png" alt="Le Roi Champignon, le premier boss de Casteria" width="420" height="420" loading="lazy"><figcaption><strong>Le Roi Champignon</strong>le premier boss</figcaption></figure>
     <figure class="vue"><img src="assets/boutique/renard.png" alt="Le Renard des contes, un familier de Casteria" width="420" height="420" loading="lazy"><figcaption><strong>Le Renard des contes</strong>un familier</figcaption></figure>
-    <figure class="vue"><img src="assets/boutique/destrier.png" alt="Le Destrier de castérium, une monture de Casteria" width="420" height="420" loading="lazy"><figcaption><strong>Le Destrier</strong>une monture</figcaption></figure>
     <figure class="vue"><img src="assets/volume/kraken.png" alt="Le Kraken des Abysses, un boss de Casteria" width="420" height="420" loading="lazy"><figcaption><strong>Le Kraken des Abysses</strong>un boss</figcaption></figure>
     <figure class="vue"><img src="assets/boutique/baleine.png" alt="La Baleine du ciel de nuit, un familier de Casteria" width="420" height="420" loading="lazy"><figcaption><strong>La Baleine du ciel</strong>un familier</figcaption></figure>
     <figure class="vue"><img src="assets/boutique/caisse.png" alt="Le Trésor de Casteria, la caisse mystère légendaire" width="420" height="420" loading="lazy"><figcaption><strong>Le Trésor de Casteria</strong>une caisse mystère</figcaption></figure>
   </div>
 </div>
 
-<!-- ============ LES BOSS : trois entrées, en pile de cartes ; un boss en volume déborde du cadre ============ -->
+<!-- ============ ÉTAPE 2 : LES BOSS ET LEURS PANOPLIES ============ -->
 <section class="sombre boss-bande" id="boss">
   <div class="dedans">
     <div class="texte apparait de-gauche">
-      <span class="ruban">Quinze boss</span>
+      <span class="ruban">2 &#183; Les boss</span>
       <h2>Chaque boss de Casteria fait son entrée</h2>
-      <p>Quinze arènes, quinze boss, et pour chacun une armure à pouvoirs à lui arracher. En voici trois. Les autres, tu les découvriras en jeu.</p>
+      <p>Quinze arènes, quinze boss. Chaque victoire ouvre le suivant, et chacun a ses attaques, ses phases et sa manière de te surprendre. En voici trois. Les autres, tu les découvriras en jeu.</p>
       <p class="geste">Tire la carte du dessus pour voir la suivante.</p>
       <img class="deborde" src="assets/volume/kraken.png" alt="" width="520" height="520" loading="lazy">
     </div>
     <div class="apparait de-droite" data-carrousel="pile" data-nom="Trois entrées de boss" style="--vue: min(80vw, 520px)">
-      <figure class="vue"><video data-auto muted loop playsinline preload="none" poster="assets/affiches/boss_entree_1.jpg" data-src="assets/videos/boss_entree_1.mp4" aria-label="Vidéo : l'entrée de Le Yéti des glaces, un boss de Casteria"></video><figcaption><strong>Le Yéti des glaces</strong>Le quatrième boss, sur son lac gelé.</figcaption></figure>
-      <figure class="vue"><video data-auto muted loop playsinline preload="none" poster="assets/affiches/boss_entree_2.jpg" data-src="assets/videos/boss_entree_2.mp4" aria-label="Vidéo : l'entrée de Le Kraken des Abysses, un boss de Casteria"></video><figcaption><strong>Le Kraken des Abysses</strong>Le cinquième boss, sorti des profondeurs.</figcaption></figure>
-      <figure class="vue"><video data-auto muted loop playsinline preload="none" poster="assets/affiches/boss_entree_3.jpg" data-src="assets/videos/boss_entree_3.mp4" aria-label="Vidéo : l'entrée de L'Oni Samouraï, un boss de Casteria"></video><figcaption><strong>L'Oni Samouraï</strong>Le sixième boss, et son sabre.</figcaption></figure>
+      <figure class="vue"><video data-auto muted loop playsinline preload="none" poster="assets/affiches/boss_entree_1.jpg" data-src="assets/videos/boss_entree_1.mp4" aria-label="Vidéo : l'entrée du Yéti des glaces, un boss de Casteria"></video><figcaption><strong>Le Yéti des glaces</strong>Le quatrième boss, sur son lac gelé.</figcaption></figure>
+      <figure class="vue"><video data-auto muted loop playsinline preload="none" poster="assets/affiches/boss_entree_2.jpg" data-src="assets/videos/boss_entree_2.mp4" aria-label="Vidéo : l'entrée du Kraken des Abysses, un boss de Casteria"></video><figcaption><strong>Le Kraken des Abysses</strong>Le cinquième boss, sorti des profondeurs.</figcaption></figure>
+      <figure class="vue"><video data-auto muted loop playsinline preload="none" poster="assets/affiches/boss_entree_3.jpg" data-src="assets/videos/boss_entree_3.mp4" aria-label="Vidéo : l'entrée de l'Oni Samouraï, un boss de Casteria"></video><figcaption><strong>L'Oni Samouraï</strong>Le sixième boss, et son sabre.</figcaption></figure>
     </div>
   </div>
-</section>
-
-<!-- ============ L'INÉDIT ============ -->
-<section class="sombre" id="inedit">
-  <div class="dedans">
-    <div class="tete apparait">
-      <span class="ruban">Du jamais vu</span>
-      <h2>Ce que tu ne trouveras sur aucun autre serveur Minecraft moddé</h2>
-      <p>Tout ce qui suit a été créé pour Casteria : les boss, les armures, les navires, les bêtes. On t'en montre un peu. Le reste, tu le découvriras en jeu.</p>
-    </div>
-
-    <div class="affiche apparait">
-      <img class="affiche-fond" src="assets/images/casteria-boss-arene-minecraft.jpg" alt="Un boss de Casteria dans son arène : le Yéti des glaces, sur son lac gelé, en plein combat contre un joueur" width="1280" height="720" loading="lazy">
-      <article class="carte pancarte p1">
-        <span class="num">Les boss</span>
-        <h3>Quinze boss moddés, chacun dans son arène</h3>
-        <p>Du Roi Champignon jusqu'au tout dernier : chaque victoire ouvre le boss suivant. Chacun a ses attaques, ses phases et sa manière de te surprendre.</p>
-        <ul>
-          <li>Tu y vas seul, et tu ne perds rien si tu tombes.</li>
-          <li>Un mode Héroïque pour ceux qui en redemandent.</li>
-          <li>Un classement des boss, pour voir qui est allé le plus loin.</li>
-        </ul>
-      </article>
-      <div class="ecran-penche e1"><video data-auto muted loop playsinline preload="none" poster="assets/affiches/casteria_01.jpg" data-src="assets/videos/casteria_01.mp4" aria-label="Vidéo : un combat contre l'Oni Samouraï"></video></div>
-      <div class="ecran-penche e2"><video data-auto muted loop playsinline preload="none" poster="assets/affiches/casteria_04.jpg" data-src="assets/videos/casteria_04.mp4" aria-label="Vidéo : trois armures de boss et leurs pouvoirs"></video></div>
+  <div class="dedans rang-panoplies">
+    <div class="panoplies apparait">
+      <figure class="ecran-large"><video data-auto muted loop playsinline preload="none" poster="assets/affiches/panoplies.jpg" data-src="assets/videos/panoplies.mp4" aria-label="Vidéo : un joueur essaie les panoplies des boss, l'une après l'autre"></video></figure>
       <article class="carte pancarte p2">
-        <span class="num">Les armures</span>
-        <h3>Des armures de boss qui te donnent des pouvoirs</h3>
-        <p>Chaque boss a sa panoplie, et chaque panoplie change ta façon de jouer. Planer sans élytres. Sauter deux fois. Marcher sur la mer avec l'armure du Yéti.</p>
+        <span class="num">Les panoplies</span>
+        <h3>Chaque boss a son armure, et chaque armure son pouvoir</h3>
+        <p>Respirer sans fin sous l'eau. Sauter une seconde fois en l'air. Marcher sur la mer avec l'armure du Yéti. Chaque panoplie change ta façon de jouer.</p>
         <ul>
-          <li>Plus tu portes de pièces, plus le pouvoir est fort.</li>
-          <li>À la forge, tu choisis la pièce que tu veux fabriquer.</li>
-          <li>Des armes de boss qui vont avec.</li>
+          <li>Chaque pièce donne déjà un bonus ; les quatre ensemble éveillent le pouvoir.</li>
+          <li>À la forge, tes éclats de boss deviennent la pièce qui te manque.</li>
+          <li>Un mode Héroïque pour ceux qui en redemandent.</li>
         </ul>
       </article>
     </div>
   </div>
 </section>
 
+<!-- ============ ÉTAPE 3 : LA MER ============ -->
 <section class="mer" id="la-mer">
   <div class="dedans">
     <div class="rivage apparait">
       <figure class="rivage-photo"><img src="assets/images/casteria-fregate-bateau-pirate-minecraft.jpg" alt="La Frégate, un bateau de Casteria, toutes voiles dehors sur la mer" width="1280" height="720" loading="lazy"></figure>
       <article class="ardoise">
-        <span class="num">La mer</span>
-        <h3>Prends la barre : des bateaux, des pirates, des trésors</h3>
+        <span class="num">3 &#183; La mer</span>
+        <h3>Prends la barre : des navires, des pirates, des boss de la mer</h3>
         <p>Autour des îles, la mer est immense. Tu achètes ton premier navire au port, tu hisses les voiles et tu pars. Plus tu vas loin, plus c'est dangereux, et plus ça rapporte.</p>
         <ul>
           <li>Cinq navires, de la Chaloupe au Vaisseau amiral.</li>
           <li>Des pirates à couler au canon, des cargaisons, des trésors à remonter.</li>
+          <li>Des boss de la mer, chacun sur son île.</li>
           <li>À deux sur le même navire : un à la barre, un au canon.</li>
-          <li>Des voiles et des coques à peindre à tes couleurs.</li>
         </ul>
         <p style="margin:22px 0 0"><a class="bouton bouton-or" href="pirates.html">La mer, les bateaux et les pirates <span class="fleche" aria-hidden="true">&#8250;</span></a></p>
       </article>
       <div class="hublot"><video data-auto muted loop playsinline preload="none" poster="assets/affiches/casteria_16.jpg" data-src="assets/videos/casteria_16.mp4" aria-label="Vidéo : un pirate à couler, vu depuis la barre du navire"></video></div>
     </div>
-    <div class="rivage inverse apparait">
-      <figure class="rivage-photo"><img src="assets/images/casteria-ile-sur-la-mer-minecraft.jpg" alt="Une île de joueur sur Casteria, vue du ciel : son ponton sur la mer, son écurie et ses prés" width="1080" height="608" loading="lazy"></figure>
-      <article class="ardoise">
-        <span class="num">Ton île</span>
-        <h3>Une île qui grandit, un port qui se construit tout seul</h3>
-        <p>Tu débloques un ponton : il se bâtit sous tes yeux, planche après planche. Puis l'écurie, pour tes montures. Ton île n'est jamais finie.</p>
-        <ul>
-          <li>Des machines qui travaillent même quand tu explores.</li>
-          <li>Des enclos, des bêtes rares, et huit bêtes mythiques à faire naître.</li>
-          <li>Des familiers et des montures qui évoluent.</li>
-        </ul>
-      </article>
-      <div class="hublot"><video data-auto muted loop playsinline preload="none" poster="assets/affiches/casteria_11.jpg" data-src="assets/videos/casteria_11.mp4" aria-label="Vidéo : l'île grandit, son ponton et son écurie se construisent"></video></div>
+  </div>
+</section>
+
+<!-- ============ ÉTAPE 4 : LA PLANÈTE ============ -->
+<section class="planete" id="planete">
+  <div class="planete-fond" aria-hidden="true"><img src="assets/images/casteria-planete-vue-d-ensemble.jpg" alt="" width="1280" height="720" loading="lazy"></div>
+  <div class="dedans">
+    <div class="tete apparait">
+      <span class="ruban">4 &#183; La planète</span>
+      <h2>Au bout du voyage, une planète sous un trou noir</h2>
+      <p>Sur ton île, une fusée en ruine : l'Esquif. Remets-la en état, palier après palier, puis décolle. Là-haut, l'air se compte, le sol brûle, et le Dévoreur t'attend.</p>
+    </div>
+    <figure class="ecran-large scene-large apparait"><video data-clic tabindex="0" muted loop playsinline preload="none" poster="assets/affiches/scene_esquif.jpg" data-src="assets/videos/scene_esquif.mp4" aria-label="Lancer la vidéo : le voyage de l'Esquif, du palais jusqu'au trou noir"></video><span class="jouer" aria-hidden="true"></span><figcaption>Le voyage de l'Esquif, du palais jusqu'au trou noir</figcaption></figure>
+    <div class="cartes-planete">
+      <figure class="apparait" style="--retard:.05s"><img src="assets/images/casteria-planete-trou-noir-esquif.jpg" alt="L'Esquif posé sur la planète, devant le trou noir et son anneau de feu" width="1280" height="720" loading="lazy"><figcaption><strong>L'Esquif</strong>Cinq paliers à rénover sur ton île, puis le départ.</figcaption></figure>
+      <figure class="apparait" style="--retard:.12s"><video data-auto muted loop playsinline preload="none" poster="assets/affiches/scene_devoreur.jpg" data-src="assets/videos/scene_devoreur.mp4" aria-label="Vidéo : l'entrée du Dévoreur, le boss de la planète"></video><figcaption><strong>Le Dévoreur</strong>Le boss de la planète. Tu l'affrontes seul.</figcaption></figure>
+      <figure class="apparait" style="--retard:.19s"><img src="assets/images/casteria-planete-salamandre-de-braise.jpg" alt="Une salamandre de braise sur le sol de la planète, le trou noir derrière elle" width="1280" height="720" loading="lazy"><figcaption><strong>Ses bêtes</strong>Des bêtes qu'on ne trouve que là-haut, à capturer à l'œuf.</figcaption></figure>
+      <figure class="apparait" style="--retard:.26s"><img src="assets/images/casteria-planete-recolte.jpg" alt="La récolte d'un gisement de la planète : la barre à arrêter au bon moment" width="1280" height="720" loading="lazy"><figcaption><strong>Ses gisements</strong>On ne mine pas la planète : on la récolte, à la foreuse.</figcaption></figure>
     </div>
   </div>
 </section>
@@ -233,7 +216,7 @@
     <div class="tete apparait">
       <span class="ruban">En images</span>
       <h2>Casteria en vidéo</h2>
-      <p>Onze extraits du jeu. Fais glisser, et clique sur une vidéo pour la lancer.</p>
+      <p>Dix extraits du jeu. Fais glisser, et clique sur une vidéo pour la lancer.</p>
     </div>
   </div>
   <div class="cinema apparait" data-carrousel="glisse" data-format="haut" data-nom="Casteria en vidéo">
@@ -242,7 +225,6 @@
     <figure class="vue"><video data-clic tabindex="0" aria-label="Lancer la vidéo : les peintures du navire" muted loop playsinline preload="none" poster="assets/affiches/casteria_15.jpg" data-src="assets/videos/casteria_15.mp4"></video><figcaption><strong>Les peintures du navire</strong></figcaption></figure>
     <figure class="vue"><video data-clic tabindex="0" aria-label="Lancer la vidéo : un pirate à couler" muted loop playsinline preload="none" poster="assets/affiches/casteria_16.jpg" data-src="assets/videos/casteria_16.mp4"></video><figcaption><strong>Un pirate à couler</strong></figcaption></figure>
     <figure class="vue"><video data-clic tabindex="0" aria-label="Lancer la vidéo : les cinq navires" muted loop playsinline preload="none" poster="assets/affiches/casteria_17.jpg" data-src="assets/videos/casteria_17.mp4"></video><figcaption><strong>De la Chaloupe au Vaisseau amiral</strong></figcaption></figure>
-    <figure class="vue"><video data-clic tabindex="0" aria-label="Lancer la vidéo : les montures" muted loop playsinline preload="none" poster="assets/affiches/casteria_13.jpg" data-src="assets/videos/casteria_13.mp4"></video><figcaption><strong>Les montures</strong></figcaption></figure>
     <figure class="vue"><video data-clic tabindex="0" aria-label="Lancer la vidéo : les bêtes mythiques" muted loop playsinline preload="none" poster="assets/affiches/casteria_09.jpg" data-src="assets/videos/casteria_09.mp4"></video><figcaption><strong>Les enclos et les bêtes mythiques</strong></figcaption></figure>
     <figure class="vue"><video data-clic tabindex="0" aria-label="Lancer la vidéo : ton île grandit" muted loop playsinline preload="none" poster="assets/affiches/casteria_11.jpg" data-src="assets/videos/casteria_11.mp4"></video><figcaption><strong>Ton île grandit</strong></figcaption></figure>
     <figure class="vue"><video data-clic tabindex="0" aria-label="Lancer la vidéo : l'Oni Samouraï" muted loop playsinline preload="none" poster="assets/affiches/casteria_01.jpg" data-src="assets/videos/casteria_01.mp4"></video><figcaption><strong>Un combat de boss : l'Oni Samouraï</strong></figcaption></figure>
@@ -278,7 +260,7 @@
           <span class="ruban">La boutique</span>
           <h2>Les crédits : pour soutenir le serveur et te faire plaisir</h2>
           <p>Les crédits sont la monnaie de la boutique, à part des jetons. Ils servent à s'offrir des choses introuvables ailleurs.</p>
-          <p class="rayons">Familiers <i aria-hidden="true">&#9670;</i> Montures <i aria-hidden="true">&#9670;</i> Bêtes <i aria-hidden="true">&#9670;</i> Clés de caisses <i aria-hidden="true">&#9670;</i> Couleurs de pseudo <i aria-hidden="true">&#9670;</i> Cadeaux pour tout le serveur</p>
+          <p class="rayons">Familiers <i aria-hidden="true">&#9670;</i> Bêtes <i aria-hidden="true">&#9670;</i> Clés de caisses <i aria-hidden="true">&#9670;</i> Couleurs de pseudo <i aria-hidden="true">&#9670;</i> Cadeaux pour tout le serveur</p>
           <a class="bouton bouton-or grand" href="boutique.html">Ouvrir la boutique <span class="fleche" aria-hidden="true">&#8250;</span></a>
         </div>
         <div style="display:grid;place-items:center"><img class="credit" src="assets/icones/credit.png" alt="Un crédit, la monnaie de la boutique de Casteria" width="120" height="120" loading="lazy"></div>
@@ -322,7 +304,7 @@
       <li class="apparait" style="--retard:.25s"><div class="carte"><h3>Clique sur Jouer</h3><p>Tu arrives au palais de Casteria. Gaspard t'attend.</p></div></li>
     </ol>
     <div class="plateformes quai apparait">
-      <img class="quai-g" src="assets/volume/yeti.png" alt="" width="520" height="520" loading="lazy"><img class="quai-d" src="assets/boutique/wyverne.png" alt="" width="420" height="420" loading="lazy">
+      <img class="quai-g" src="assets/volume/yeti.png" alt="" width="520" height="520" loading="lazy"><img class="quai-d" src="assets/volume/kraken.png" alt="" width="520" height="520" loading="lazy">
       <a class="bouton bouton-vert grand" href="https://github.com/guerrinflorian/casteria-mc/releases/download/installateur/Casteria-Installation.exe" rel="noopener"><svg class="picto" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M12 4v16M3 12h18" fill="none" stroke="currentColor" stroke-width="2.6"/></svg>Windows</a>
       <a class="bouton bouton-or grand" href="https://github.com/guerrinflorian/casteria-mc/releases/download/installateur/Casteria-mac-apple-silicon.zip" rel="noopener"><svg class="picto" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M12 16v4M8 20.5h8" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>Mac (puce Apple)</a>
       <a class="bouton bouton-or grand" href="https://github.com/guerrinflorian/casteria-mc/releases/download/installateur/Casteria-mac-intel.zip" rel="noopener"><svg class="picto" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M12 16v4M8 20.5h8" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>Mac (Intel)</a>
