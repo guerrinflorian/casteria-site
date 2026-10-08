@@ -29,6 +29,7 @@
 <link rel="stylesheet" href="css/voyage.css">
 <link rel="stylesheet" href="css/scene.css">
 <link rel="stylesheet" href="css/objets.css">
+<link rel="stylesheet" href="css/combat.css">
 <script type="application/ld+json">
 { "@context": "https://schema.org", "@graph": [
   { "@type": "WebSite", "@id": "https://casteria.fr/#site", "url": "https://casteria.fr/", "name": "Casteria", "inLanguage": "fr",
@@ -237,6 +238,24 @@
   </div>
 </section>
 
+<!-- ============ LE COMBAT : chaque arme a ses coups (le combat refait) ============ -->
+<section class="pan pan-nuit combat" id="combat" aria-labelledby="combat-titre">
+  <div class="dedans">
+    <div class="texte monte">
+      <span class="sur-titre">Le combat</span>
+      <h2 id="combat-titre">Chaque arme a ses coups</h2>
+      <p>Sur Casteria, chaque arme frappe à sa façon et a son combo : un revers, un coup en avant, un balayage qui prend plusieurs monstres d'un seul geste. Tiens le clic, ton arme enchaîne son combo. Et les armes de boss laissent une traînée à la couleur de leur boss.</p>
+    </div>
+    <div class="cartes-combat">
+      <figure class="monte"><img src="assets/images/casteria-combat-arme-de-boss.jpg" alt="Un joueur frappe avec le sabre de l'Oni, sa traînée de braise derrière la lame" width="1152" height="720" loading="lazy"><figcaption><strong>Ses coups, son combo</strong>Chaque arme a ses gestes et les enchaîne en combo quand tu tiens le clic.</figcaption></figure>
+      <figure class="monte"><img src="assets/images/casteria-combat-balayage.jpg" alt="Un grand coup d'épée à deux mains qui balaie trois monstres d'un seul geste, sa traînée violette" width="1152" height="720" loading="lazy"><figcaption><strong>Deux mains, ou une main et un bouclier</strong>Les grandes armes frappent fort et large, mais ta main gauche ne sert plus. Une épée te laisse ton bouclier.</figcaption></figure>
+      <figure class="monte"><img src="assets/images/casteria-combat-dernier-coup.jpg" alt="La hache de Singularité tournoie au dernier coup de son combo" width="1152" height="720" loading="lazy"><figcaption><strong>La fin de combo des armes de boss</strong>Au dernier coup du combo, chaque arme de boss déchaîne son effet.</figcaption></figure>
+      <figure class="monte"><img src="assets/images/casteria-combat-barre-de-vie.jpg" alt="Des monstres blessés, chacun avec sa barre de vie verte au-dessus de la tête ; la vache, elle, n'en a pas" width="1152" height="720" loading="lazy"><figcaption><strong>Une barre de vie au-dessus des monstres</strong>Le vert, ce qui leur reste ; le sombre, ce que tu leur as pris. Sur les boss aussi.</figcaption></figure>
+    </div>
+    <p class="combat-sang monte"><strong>Le sang</strong> se règle dans le launcher : normal, réduit ou aucun.</p>
+  </div>
+</section>
+
 <!-- la bande entre la nuit des boss et le rouge de la planète : des braises qui montent -->
 <div class="bande-braises" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
 
@@ -400,7 +419,7 @@
     <div class="col">
       <img src="assets/logo/casteria-logo-300.webp" alt="Casteria" width="70" height="70" loading="lazy">
       <nav aria-label="Le pied de page">
-        <a href="./">Accueil</a><a href="commencer.html">Par où commencer</a><a href="pirates.html">La mer et les pirates</a><a href="boutique.html">Boutique</a><a href="#telecharger">Télécharger</a>
+        <a href="./">Accueil</a><a href="commencer.html">Par où commencer</a><a href="pirates.html">La mer et les pirates</a><a href="#combat">Le combat</a><a href="boutique.html">Boutique</a><a href="#telecharger">Télécharger</a>
       </nav>
     </div>
     <small>Casteria est un serveur Minecraft indépendant, créé par des joueurs. Il n'est ni affilié à Mojang ni à Microsoft, ni approuvé par eux. Minecraft est une marque de Mojang Studios.</small>

@@ -1,0 +1,20 @@
+/* LE COMBAT (la 106 : le combat refait, Better Combat ; INTERFACES pour la tête, 09/10/2026). Une section de nuit, après
+   les boss : le titre, une phrase, quatre photos du jeu (une arme de boss en plein coup, un balayage, le dernier coup d'une
+   arme de boss, la barre de vie d'un boss), une ligne sur le sang. Les cartes suivent celles de la planète (voyage.css). */
+.combat .texte { max-width: 760px; margin: 0 auto 34px; text-align: center; }
+.combat h2 { font-size: clamp(30px, 3.6vw, 48px); margin-top: 12px; }
+.combat .texte p { font-size: 18px; color: #EADCF6; }
+.cartes-combat { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; }
+.cartes-combat figure { margin: 0; background: rgba(20, 10, 30, .65); border-top: 3px solid var(--or); box-shadow: 0 14px 30px rgba(0, 0, 0, .35); }
+.cartes-combat img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; }
+.cartes-combat figcaption { padding: 12px 14px 15px; font-size: 15px; line-height: 1.4; color: #E8DCF2; }
+.cartes-combat figcaption strong { display: block; font-family: "Lilita One", sans-serif; font-weight: 400; font-size: 21px; color: var(--or-clair); margin-bottom: 3px; }
+.combat-sang { margin: 26px auto 0; max-width: 760px; text-align: center; font-size: 16px; color: #EADCF6; }
+.combat-sang strong { color: var(--orange-clair); }
+@media (max-width: 960px) {
+  .cartes-combat { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 480px) {
+  .cartes-combat { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+  .combat .texte p { font-size: 16px; }
+}
