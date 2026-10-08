@@ -10,7 +10,9 @@
 .objets .famille h3 { font-size: clamp(22px, 2.4vw, 30px); margin: 0; color: var(--bois-fonce); display: flex; align-items: center; gap: 12px; flex: 1; }
 .objets .famille h3::after { content: ""; flex: 1; height: 3px; background: linear-gradient(90deg, var(--or-fonce), transparent); opacity: .55; }
 .objets .famille .compte { display: none; }
-.objets .grille-objets { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+/* en rangées centrées : une famille dont le compte ne tombe pas juste (Ton île : 5) garde sa dernière rangée au milieu */
+.objets .grille-objets { display: flex; flex-wrap: wrap; justify-content: center; gap: 18px; }
+.objets .grille-objets > .objet { flex: 0 1 calc((100% - 36px) / 3); min-width: 0; }
 .objet {
   display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 14px; align-items: center;
   border: 12px solid transparent; border-image: url("../assets/matieres/carte.png") 6 fill / 12px round; image-rendering: pixelated;
@@ -26,7 +28,7 @@
 .objets .esquif-objet { margin-top: 8px; text-align: center; font-size: 18px; }
 .objets .esquif-objet a { color: var(--ruban); font-weight: 700; }
 @media (max-width: 960px) {
-  .objets .grille-objets { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .objets .grille-objets > .objet { flex-basis: calc((100% - 18px) / 2); }
 }
 @media (max-width: 620px) {
   .objets .familles { gap: 12px; }
@@ -45,7 +47,8 @@
   }
   .objets .famille[open] > summary::after { transform: rotate(225deg) translate(-2px, -2px); }
   .objets .famille[open] > summary { margin-bottom: 12px; }
-  .objets .grille-objets { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  .objets .grille-objets { gap: 12px; }
+  .objets .grille-objets > .objet { flex-basis: 100%; }
   .objet { grid-template-columns: 76px minmax(0, 1fr); gap: 10px; }
   .objet img { width: 76px; height: 76px; }
   .objet h4 { font-size: 19px; }
