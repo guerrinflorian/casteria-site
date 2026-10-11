@@ -62,6 +62,12 @@
 .planete .scene-large .jouer { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; transition: opacity .25s ease; }
 .planete .scene-large .jouer::after { content: ""; width: 0; height: 0; border-left: 34px solid #fff; border-top: 21px solid transparent; border-bottom: 21px solid transparent; filter: drop-shadow(0 4px 10px rgba(0, 0, 0, .7)); margin-left: 8px; }
 .planete .scene-large.joue .jouer { opacity: 0; }
+/* la bande-annonce (12/10) : la même vidéo au clic que le voyage de l'Esquif, en 16:9 (un film entier, rien de rogné) */
+.bande-annonce .scene-large { margin: 0 auto; max-width: 980px; }
+.bande-annonce .scene-large video { cursor: pointer; aspect-ratio: 16 / 9; }
+.bande-annonce .scene-large .jouer { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; transition: opacity .25s ease; }
+.bande-annonce .scene-large .jouer::after { content: ""; width: 0; height: 0; border-left: 34px solid #fff; border-top: 21px solid transparent; border-bottom: 21px solid transparent; filter: drop-shadow(0 4px 10px rgba(0, 0, 0, .7)); margin-left: 8px; }
+.bande-annonce .scene-large.joue .jouer { opacity: 0; }
 .cartes-planete { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; }
 .cartes-planete figure { margin: 0; background: rgba(20, 10, 4, .6); border-top: 3px solid #FF8A3C; }
 .cartes-planete img, .cartes-planete video { width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; }

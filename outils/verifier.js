@@ -2,6 +2,9 @@
 'use strict'
 const fs = require('fs'), path = require('path')
 const RACINE = path.join(__dirname, '..'), PAGES = ['index.html', 'commencer.html', 'pirates.html', 'boutique.html', 'merci.html', '404.html']
+// LE SEUL FICHIER LOURD (la tête, 11/10/2026) : la bande-annonce de l'accueil peut dépasser 5 Mo (16 Mo au plus), parce
+// qu'elle ne se charge qu'au clic du visiteur : une vidéo qui la cite porte « data-clic », jamais « data-auto »
+const LOURDS_PERMIS = { 'assets/videos/bande_annonce_casteria.mp4': 16 }
 // les pages qui restent hors de Google et hors du plan du site : la 404, et « Merci » (la page de retour après un achat)
 const HORS_GOOGLE = ['404.html', 'merci.html']
 // LA BOUTIQUE : js/boutique.config.js ne porte que le jeton PUBLIC de Tebex et des adresses publiques en https (ou rien),
@@ -149,6 +152,8 @@ for (const page of PAGES) {
   const nu = s.replace(/<!--[\s\S]*?-->/g, '')
   for (const v of nu.match(/<video\b[^>]*>/g) || []) {
     if (!/preload="none"/.test(v) || /\ssrc="/.test(v)) faute('une vidéo se chargerait sans attendre : ' + v.slice(0, 70))
+    const lourde = (v.match(/\sdata-src="([^"]+)"/) || [])[1]
+    if (lourde && LOURDS_PERMIS[lourde] && (!/\sdata-clic(?=[\s>=])/.test(v) || /\sdata-auto(?=[\s>=])/.test(v))) faute('une vidéo lourde se jouerait d\'office (elle doit porter data-clic, jamais data-auto) : ' + lourde)
     for (const [mot, motif] of [['muted', /\smuted(?=[\s>=])/], ['playsinline', /\splaysinline(?=[\s>=])/], ['poster', /\sposter="[^"]+"/]]) if (!motif.test(v)) faute('une vidéo sans « ' + mot + ' » : ' + v.slice(0, 70))
   }
   // AUCUNE IMAGE NI VIDÉO PLUS HAUTE QU'UN ÉCRAN (le propriétaire, 05/10) : la feuille de style porte la règle garde
@@ -251,7 +256,8 @@ let total = 0
     const p = path.join(d, n), st = fs.statSync(p)
     if (st.isDirectory()) { if (!['.git', 'node_modules', 'captures'].includes(n)) peser(p); continue }
     total += st.size
-    if (st.size > 5 * 1024 * 1024) faute('un fichier de plus de 5 Mo : ' + path.relative(RACINE, p))
+    const rel = path.relative(RACINE, p).split(path.sep).join('/'), plafond = LOURDS_PERMIS[rel] || 5
+    if (st.size > plafond * 1024 * 1024) faute('un fichier de plus de ' + plafond + ' Mo : ' + rel)
   }
 })(RACINE)
 console.log('js/boutique.config.js')

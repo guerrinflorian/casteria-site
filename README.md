@@ -94,6 +94,9 @@ en garde du pseudo si elle disparaissait.
   sont libres (licence OFL, dans `assets/polices/`).
 - Les vidéos sont des copies allégées (540 x 960, sans son). Pour en ajouter une : `bash outils/alleger_videos.sh
   <ffmpeg> <dossier des vidéos> <numéro>`, puis une ligne de plus dans la rangée de `index.html`.
+- La bande-annonce de l'accueil (`assets/videos/bande_annonce_casteria.mp4`, 1280 x 720, sans son) est le SEUL fichier qui
+  peut dépasser 5 Mo (16 Mo au plus) : elle ne se charge qu'au clic du visiteur (`outils/verifier.js`, `LOURDS_PERMIS`).
+  Les autres vidéos (12/10/2026) : 1280 x 720 pour l'accueil, 720 x 1280 pour la page des pirates, 5 Mo au plus chacune.
 - On ne dévoile pas tout : pas de secret du palais, pas de boss caché.
 - Le site parle d'un serveur où l'on joue : jamais « en développement », « bientôt », « pas encore ouvert ».
 - Avant de pousser : `npm run verifier` (un seul h1 par page, un texte pour chaque image, aucun lien cassé, aucun tiret long,
