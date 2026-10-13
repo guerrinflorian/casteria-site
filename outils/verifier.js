@@ -173,9 +173,18 @@ for (const page of PAGES) {
       const sec = dedans(nu, h, 'section'), f = sec.search(/<div class="fond(?:\s[^"]*)?"/), sc = sec.search(/<div class="scene(?:\s[^"]*)?"/)
       const fond = f < 0 ? '' : dedans(sec, f, 'div'), scene = sc < 0 ? '' : dedans(sec, sc, 'div')
       if (!(/<img\b/.test(fond) || /<video\b[^>]*\sposter="[^"]+"/.test(fond))) faute('la hero : <div class="fond"> doit porter une image, ou une vidéo avec son affiche')
+      // (13/10/2026, le propriétaire : « la hero section est trop remplit trop de bestiole par dessus ca fais moche [...] pas
+      // juste une image de fond mais plusieurs de gauche a droite [...] 4 image de gauche a droite collé ») UN FOND EN
+      // PANNEAUX (<div class="fond panneaux">, l'accueil) remplace la scène : QUATRE panneaux, chacun avec son image, et
+      // plus aucune scène par-dessus
+      if (/<div class="fond panneaux(?:\s[^"]*)?"/.test(sec)) {
+        const n = (fond.match(/<div class="panneau(?:\s[^"]*)?"[^>]*>\s*<img\b[^>]*\ssrc="[^"]+"/g) || []).length
+        if (n !== 4) faute('la hero en panneaux : <div class="fond panneaux"> doit porter QUATRE panneaux, chacun avec son image (' + n + ' trouvé(s))')
+        if (sc >= 0) faute('la hero en panneaux ne porte plus de scène par-dessus (<div class="scene">)')
+      }
       // (07/10, l'accueil refait : « plus de photos adapté au vrai jeu ») la scène peut aussi être de vraies boucles du jeu,
       // chacune avec son affiche
-      if (!/<img\b/.test(scene) && !/<video\b[^>]*\sposter="[^"]+"/.test(scene)) faute('la hero : <div class="scene"> doit porter au moins une image ou une vidéo avec son affiche (les choses du jeu)')
+      else if (!/<img\b/.test(scene) && !/<video\b[^>]*\sposter="[^"]+"/.test(scene)) faute('la hero : <div class="scene"> doit porter au moins une image ou une vidéo avec son affiche (les choses du jeu)')
     }
   }
   // PLUS DE BARRE AU PIED DE L'ÉCRAN DU TÉLÉPHONE (le propriétaire, 07/10 : « la barre sur mobile en bas c'est

@@ -48,9 +48,12 @@ const MUTANTS = [
   ['une image trop haute dans la feuille du carrousel', 'css/carrousel.css', s => s + '\n[data-carrousel] > .vue img { height: 1300px; }\n'],
 
   // ---------- la hero de chaque page : son fond et sa scène, sur un téléphone aussi ----------
-  // (07/10) l'image du fond peut être dans une couche (<div class="pointeur">) : le mutant la retire où qu'elle soit
-  ['la hero de l accueil sans son fond', 'index.html', s => s.replace(/(<div class="fond"[^>]*>(?:<div\b[^>]*>)*)\s*(?:<img\b[^>]*>|<video\b[^>]*>(?:<\/video>)?)/, '$1')],
-  ['la hero de l accueil sans sa scene', 'index.html', s => s.replace('<div class="scene', '<div class="decor')],
+  // (07/10) l'image du fond peut être dans une couche (<div class="pointeur">, ou un panneau depuis le 13/10) : le mutant
+  // la retire où qu'elle soit
+  ['la hero de l accueil sans son fond', 'index.html', s => s.replace(/(<div class="fond(?:\s[^"]*)?"[^>]*>(?:\s*<div\b[^>]*>)*)\s*(?:<img\b[^>]*>|<video\b[^>]*>(?:<\/video>)?)/, '$1')],
+  ['la hero de l accueil avec trois panneaux au lieu de quatre', 'index.html', s => s.replace(/\s*<div class="panneau p4">[^\n]*<\/div>/, '')],
+  ['une scene revenue par-dessus les panneaux de l accueil', 'index.html', s => s.replace('<div class="poussieres"', '<div class="scene sprites"><img src="assets/volume/yeti.png" alt="" width="520" height="520"></div><div class="poussieres"')],
+  ['la hero d une page sans sa scene', 'commencer.html', s => s.replace('<div class="scene', '<div class="decor')],
   ['la hero d une page devenue une simple tete de page', 'commencer.html', s => s.replace('<section class="heros vitrine-tete', '<section class="page-tete')],
   ['la scene de la hero cachee sur un telephone', 'css/style.css', s => s + '\n@media (max-width: 600px) { .vitrine-tete .scene { display: none; } }\n'],
   ['le fond de la hero cache sous 960', 'css/style.css', s => s + '\n@media (max-width: 960px) { .heros .fond { display: none; } }\n'],
