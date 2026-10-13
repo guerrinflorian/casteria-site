@@ -51,13 +51,10 @@
 <header class="barre verre accueil">
   <a class="marque" href="./" aria-label="Casteria, l'accueil"><img src="assets/logo/casteria-logo-300.webp" alt="Logo de Casteria : un dragon violet sur une île" width="46" height="46"><span>Casteria</span></a>
   <nav aria-label="Le menu">
-    <a href="#voyage">Le voyage</a>
-    <a href="#objets">Les objets</a>
-    <a href="#boss">Les boss</a>
-    <a href="#planete">La planète</a>
+    <a href="#voyage">Le jeu</a>
     <a href="commencer.html">Par où commencer</a>
     <a class="boutique" href="boutique.html"><img class="pixel" src="assets/icones/credit.png" alt="" width="20" height="20">Boutique</a>
-    <a class="bouton bouton-or petit" href="#telecharger">Télécharger</a>
+    <a class="bouton bouton-or petit" href="#telecharger">Jouer</a>
   </nav>
 </header>
 
@@ -75,18 +72,16 @@
     <div class="sprite sp-baleine"><div class="pointeur" data-profondeur="34"><div class="entree e-droite"><img class="flotte f-lent" src="assets/boutique/baleine.png" alt="" width="420" height="420"></div></div></div>
     <div class="sprite sp-fregate"><div class="pointeur" data-profondeur="16"><div class="entree e-droite"><img class="flotte f-lent" src="assets/volume/fregate.webp" alt="" width="855" height="1027"></div></div></div>
     <div class="sprite sp-djinn"><div class="pointeur" data-profondeur="38"><div class="entree e-haut"><img class="flotte f-vol" src="assets/volume/djinn_sables.webp" alt="" width="506" height="905"></div></div></div>
-    <div class="sprite sp-roi"><div class="pointeur" data-profondeur="22"><div class="entree e-bas"><img class="flotte f-sol" src="assets/volume/roi_champignon.png" alt="" width="520" height="520"></div></div></div>
     <div class="sprite sp-yeti"><div class="pointeur" data-profondeur="58"><div class="entree e-gauche"><img class="flotte f-sol" src="assets/volume/yeti.png" alt="" width="520" height="520"></div></div></div>
     <div class="sprite sp-devoreur"><div class="pointeur" data-profondeur="64"><div class="entree e-droite"><img class="flotte f-sol" src="assets/volume/devoreur.webp" alt="" width="480" height="898"></div></div></div>
-    <div class="sprite sp-caisse"><div class="pointeur" data-profondeur="80"><div class="entree e-bas"><img class="flotte f-vif" src="assets/boutique/caisse.png" alt="" width="420" height="420"></div></div></div>
   </div>
   <div class="poussieres" aria-hidden="true"></div>
   <div class="centre">
     <div class="logo-geant"><img class="logo" src="assets/logo/casteria-logo.png" alt="Casteria, serveur Minecraft : le dragon violet et son île" width="512" height="512" fetchpriority="high"><span class="reflet" aria-hidden="true"></span></div>
     <h1><span>D'une île sur la mer</span><span class="or">jusqu'au trou noir</span></h1>
+    <p class="accroche-heros">Bâtis ton île, bats quinze boss, coule des pirates, puis décolle.</p>
     <div class="gestes">
       <a class="bouton bouton-orange grand" href="#telecharger"><span class="triangle" aria-hidden="true"></span>Jouer gratuitement</a>
-      <a class="bouton-verre" href="#voyage">Voir le voyage <span class="fleche" aria-hidden="true">&#8250;</span></a>
     </div>
     <p class="preuves"><span>Serveur Minecraft français</span><i aria-hidden="true">&#183;</i><span>moddé 1.21.1</span><i aria-hidden="true">&#183;</i><span>Windows, Mac et Linux</span></p>
   </div>
@@ -115,19 +110,6 @@
   </div>
 </section>
 
-<!-- ============ LA BANDE-ANNONCE (12/10/2026) : un film d'une minute tourné en jeu, chargé au clic seulement (le seul
-     fichier lourd du site : outils/verifier.js, LOURDS_PERMIS) ============ -->
-<section class="pan pan-nuit bande-annonce" id="bande-annonce" aria-labelledby="bande-annonce-titre">
-  <div class="dedans">
-    <div class="tete monte">
-      <span class="sur-titre">En une minute</span>
-      <h2 id="bande-annonce-titre">Casteria, de ton île au trou noir</h2>
-      <p>Ton île et ses machines, la mer et ses pirates, les boss et leurs armures, puis la fusée. Tout est filmé en jeu.</p>
-    </div>
-    <figure class="ecran-large scene-large monte"><video data-clic tabindex="0" muted loop playsinline preload="none" poster="assets/affiches/bande_annonce_casteria.jpg" data-src="assets/videos/bande_annonce_casteria.mp4" aria-label="Lancer la vidéo : la bande-annonce de Casteria, de ton île au trou noir"></video><span class="jouer" aria-hidden="true"></span><figcaption>La bande-annonce : une minute de jeu, de ton île au trou noir</figcaption></figure>
-  </div>
-</section>
-
 <!-- ============ LA CARTE AU TRÉSOR : nos chiffres vrais (lus dans le jeu, 07/10 : boss.js bt1 à bt15, ai_mer_table.js
      ordre 1 à 5, casinocompagnons Catalogue.TOUS, ai_planete_table.js niveaux.max), sur des morceaux de parchemin reliés
      par un fil rouge, qui s'assemblent quand on arrive ============ -->
@@ -143,7 +125,7 @@
       <svg class="fil" viewBox="0 0 1000 560" preserveAspectRatio="none" aria-hidden="true"><path d="M150 110 C 300 40, 420 260, 520 160 S 760 70, 850 140 M520 160 C 470 300, 300 330, 250 420 M520 160 C 600 300, 720 330, 760 430"/></svg>
       <article class="morceau m1 monte"><img src="assets/volume/yeti.png" alt="" width="520" height="520" loading="lazy"><b data-n="15">15</b><span>boss en arène</span></article>
       <article class="morceau m2 monte"><img class="pixel" src="assets/icones/jeton.png" alt="" width="64" height="64" loading="lazy"><b data-n="70">70</b><span>niveaux à gravir</span></article>
-      <article class="morceau m3 monte"><img src="assets/boutique/phenix.png" alt="" width="420" height="420" loading="lazy"><b data-n="24">24</b><span>familiers</span></article>
+      <article class="morceau m3 monte"><img src="assets/boutique/phenix.png" alt="" width="420" height="420" loading="lazy"><b data-n="31">31</b><span>familiers</span></article>
       <article class="morceau m4 monte"><img src="assets/volume/fregate.webp" alt="" width="855" height="1027" loading="lazy"><b data-n="5">5</b><span>navires à barrer</span></article>
       <article class="morceau m5 monte"><img src="assets/images/casteria-planete-trou-noir-esquif.jpg" class="rond" alt="" width="1280" height="720" loading="lazy"><b data-n="1">1</b><span>planète sous un trou noir</span></article>
     </div>
@@ -160,11 +142,11 @@
       <p>Tout commence sur ton île. Tout finit sous un trou noir. Entre les deux, à toi de choisir ta route.</p>
     </div>
     <div class="grille-mondes">
-      <a class="monde monte" href="commencer.html" style="--teinte: #3E8E2F"><span class="monde-art"><img src="assets/affiches/voyage_ile.jpg" alt="" width="640" height="276" loading="lazy"></span><span class="monde-titre">Ton île</span><span class="monde-texte">Des machines qui produisent toutes seules, des tickets, la roue de /up. Tu repousses les bords de ton île.</span><span class="monde-lien">Par où commencer <span aria-hidden="true">&#8250;</span></span></a>
+      <a class="monde monte" href="commencer.html" style="--teinte: #3E8E2F"><span class="monde-art"><img src="assets/affiches/voyage_ile.jpg" alt="" width="640" height="276" loading="lazy"></span><span class="monde-titre">Ton île</span><span class="monde-texte">Des machines qui produisent toutes seules, une Mine sous tes pieds, un canon face aux navires pirates. Tu repousses les bords de ton île.</span><span class="monde-lien">Par où commencer <span aria-hidden="true">&#8250;</span></span></a>
       <a class="monde monte" href="#boss" style="--teinte: #8E4CB8"><span class="monde-art"><img src="assets/affiches/voyage_boss.jpg" alt="" width="640" height="276" loading="lazy"><img class="deborde" src="assets/volume/oni_samourai.webp" alt="" width="774" height="849" loading="lazy"></span><span class="monde-titre">Les boss</span><span class="monde-texte">Quinze arènes, quinze boss. Chacun fait son entrée, et chacun a sa panoplie à pouvoir.</span><span class="monde-lien">Voir les boss <span aria-hidden="true">&#8250;</span></span></a>
       <a class="monde monte" href="pirates.html" style="--teinte: #2E8FB8"><span class="monde-art"><img src="assets/images/casteria-fregate-bateau-pirate-minecraft.jpg" alt="" width="1280" height="720" loading="lazy"><img class="deborde" src="assets/volume/fregate.webp" alt="" width="855" height="1027" loading="lazy"></span><span class="monde-titre">La mer</span><span class="monde-texte">Cinq navires, des pirates à couler, des trésors, et des boss de la mer, chacun sur son île.</span><span class="monde-lien">La mer et les pirates <span aria-hidden="true">&#8250;</span></span></a>
       <a class="monde monte" href="#planete" style="--teinte: #E0592A"><span class="monde-art"><img src="assets/images/casteria-planete-trou-noir-esquif.jpg" alt="" width="1280" height="720" loading="lazy"><img class="deborde" src="assets/volume/devoreur.webp" alt="" width="480" height="898" loading="lazy"></span><span class="monde-titre">La planète</span><span class="monde-texte">Rénove l'Esquif, la fusée de ton île, et pars sous le trou noir. L'air y est compté.</span><span class="monde-lien">Voir la planète <span aria-hidden="true">&#8250;</span></span></a>
-      <a class="monde monte" href="boutique.html" style="--teinte: #D7A421"><span class="monde-art"><img src="assets/affiches/casteria_12.jpg" alt="" width="540" height="960" loading="lazy"><img class="deborde" src="assets/boutique/phenix.png" alt="" width="420" height="420" loading="lazy"></span><span class="monde-titre">Les familiers</span><span class="monde-texte">Vingt-quatre compagnons qui te suivent partout, et qui évoluent avec toi.</span><span class="monde-lien">Les voir <span aria-hidden="true">&#8250;</span></span></a>
+      <a class="monde monte" href="boutique.html" style="--teinte: #D7A421"><span class="monde-art"><img src="assets/affiches/casteria_12.jpg" alt="" width="540" height="960" loading="lazy"><img class="deborde" src="assets/boutique/phenix.png" alt="" width="420" height="420" loading="lazy"></span><span class="monde-titre">Les familiers</span><span class="monde-texte">Trente et un compagnons qui te suivent partout. Six ne s'achètent pas : tu les trouves en jouant, dans ta Mine, en mer, sur la planète et dans tes champs.</span><span class="monde-lien">Les voir <span aria-hidden="true">&#8250;</span></span></a>
       <a class="monde monte" href="commencer.html" style="--teinte: #B07AE0"><span class="monde-art"><img src="assets/affiches/casteria_09.jpg" alt="" width="540" height="960" loading="lazy"><img class="deborde large" src="assets/volume/salamandre_braise.webp" alt="" width="912" height="500" loading="lazy"></span><span class="monde-titre">Les enclos</span><span class="monde-texte">Des bêtes communes, rares, légendaires, mythiques, et celles que tu captures à l'œuf.</span><span class="monde-lien">Par où commencer <span aria-hidden="true">&#8250;</span></span></a>
     </div>
   </div>

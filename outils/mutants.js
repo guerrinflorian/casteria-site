@@ -62,8 +62,6 @@ const MUTANTS = [
   ['une video sans son affiche', 'index.html', s => s.replace(/(<video\b[^>]*?)\sposter="[^"]*"/, '$1')],
   ['une video chargee d office (src)', 'index.html', s => s.replace(/(<video\b[^>]*?)\sdata-src="/, '$1 src="')],
   ['une video sans preload="none"', 'index.html', s => s.replace(/(<video\b[^>]*?)\spreload="none"/, '$1')],
-  ['la bande-annonce jouee d office (data-auto a la place de data-clic)', 'index.html', s => s.replace(/(<video) data-clic tabindex="0"([^>]*bande_annonce_casteria\.mp4)/, '$1 data-auto$2')],
-  ['la bande-annonce citee par une video jouee d office', 'index.html', s => s.replace(/(<video data-auto\b[^>]*?\sdata-src=")[^"]+"/, '$1assets/videos/bande_annonce_casteria.mp4"')],
 
   // ---------- plus de barre au pied de l'écran du téléphone (le propriétaire, 07/10) ----------
   ['un lien vers une section de l accueil disparue', 'pirates.html', s => s.replace('href="./#boss"', 'href="./#videos"')],

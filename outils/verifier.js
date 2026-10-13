@@ -2,9 +2,10 @@
 'use strict'
 const fs = require('fs'), path = require('path')
 const RACINE = path.join(__dirname, '..'), PAGES = ['index.html', 'commencer.html', 'pirates.html', 'boutique.html', 'merci.html', '404.html']
-// LE SEUL FICHIER LOURD (la tête, 11/10/2026) : la bande-annonce de l'accueil peut dépasser 5 Mo (16 Mo au plus), parce
-// qu'elle ne se charge qu'au clic du visiteur : une vidéo qui la cite porte « data-clic », jamais « data-auto »
-const LOURDS_PERMIS = { 'assets/videos/bande_annonce_casteria.mp4': 16 }
+// LES FICHIERS LOURDS PERMIS (aucun depuis le 13/10/2026 : la bande-annonce de l'accueil a été retirée sur la demande du
+// propriétaire) : un fichier de plus de 5 Mo n'entre ici qu'avec son plafond en Mo, et la vidéo qui le cite porte
+// « data-clic » (chargée au clic du visiteur), jamais « data-auto »
+const LOURDS_PERMIS = {}
 // les pages qui restent hors de Google et hors du plan du site : la 404, et « Merci » (la page de retour après un achat)
 const HORS_GOOGLE = ['404.html', 'merci.html']
 // LA BOUTIQUE : js/boutique.config.js ne porte que le jeton PUBLIC de Tebex et des adresses publiques en https (ou rien),
