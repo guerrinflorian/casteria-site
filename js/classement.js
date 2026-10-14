@@ -1,10 +1,17 @@
-// LE CLASSEMENT (classement.html) : lu à l'ouverture de la page dans /api/classement (la base du jeu, que Vercel garde
-// 5 minutes), puis écrit dans la page : le podium du Score de Casteria et sa suite, puis les catégories de /top, une
-// famille à la fois (les onglets). Tout ce qui vient de la réponse s'écrit en TEXTE (textContent), jamais comme du code
-// de page. Sans réponse : « Le classement arrive très bientôt sur le site. En jeu, tape /top. », et un bouton « Réessayer ».
+// LE CLASSEMENT (classement.html) : lu à l'ouverture de la page dans le fichier classement.json d'un gist GitHub, que le
+// serveur du jeu réécrit lui-même (la 119 : leaderboard.js, puis Site.publier de casteria-moteur, au plus une fois toutes
+// les 5 minutes ; la base du jeu refuse les connexions venues de Vercel), puis écrit dans la page : le podium du Score de
+// Casteria et sa suite, puis les catégories de /top, une famille à la fois (les onglets). Le format est celui de l'ancien
+// /api/classement : { lu, familles: [{ cle, nom }], categories: [{ id, famille, titre, aide, classes, top: [{ rang,
+// pseudo, valeur, texte }] }] }. Tout ce qui vient du fichier s'écrit en TEXTE (textContent), jamais comme du code de page.
+// Sans réponse, ou tant que GIST_ID est vide : « Le classement arrive très bientôt sur le site. En jeu, tape /top. », et un
+// bouton « Réessayer ».
 (function () {
   'use strict'
-  var API = '/api/classement', DELAI = 12000
+  // le gist du classement : son compte et son identifiant (la fin de son adresse sur gist.github.com) ; vide : la panne
+  var GIST_COMPTE = 'guerrinflorian', GIST_ID = '4337783e1d14963774decfe06f2709da'
+  var SOURCE = GIST_ID ? 'https://gist.githubusercontent.com/' + GIST_COMPTE + '/' + GIST_ID + '/raw/classement.json' : ''
+  var DELAI = 12000
   var podium = document.getElementById('podium'), suite = document.getElementById('suite'), lu = document.getElementById('classement-lu')
   var onglets = document.getElementById('onglets'), panneau = document.getElementById('panneau')
   if (!podium || !suite || !lu || !onglets || !panneau) return
@@ -65,7 +72,8 @@
   function dessinerLu(iso) {
     var t = ''
     try { t = new Intl.DateTimeFormat('fr-FR', { timeZone: 'Europe/Paris', hour: '2-digit', minute: '2-digit' }).format(new Date(iso)) } catch (e) { t = '' }
-    lu.textContent = (t ? 'Lu à ' + t + ', heure de Paris. ' : '') + 'Le classement se met à jour toutes les 5 minutes.'
+    // le serveur publie au plus toutes les 5 minutes, et GitHub garde le fichier jusqu'à 5 minutes de plus
+    lu.textContent = (t ? 'Lu à ' + t + ', heure de Paris. ' : '') + 'Le classement se met à jour toutes les 5 à 10 minutes.'
     lu.hidden = false
   }
 
@@ -128,10 +136,11 @@
   function charger() {
     etat('On compte les points...')
     vider(panneau)
-    if (!window.fetch) { panne(); return }
+    if (!window.fetch || !SOURCE) { panne(); return }
     var fini = false
     var minuteur = setTimeout(function () { if (!fini) { fini = true; panne() } }, DELAI)
-    fetch(API, { headers: { Accept: 'application/json' } })
+    // une lecture simple (sans en-tête de plus : aucune demande préalable du navigateur), sans cookie ni référent
+    fetch(SOURCE, { credentials: 'omit', referrerPolicy: 'no-referrer' })
       .then(function (r) { if (!r.ok) throw new Error('indisponible'); return r.json() })
       .then(function (o) {
         if (fini) return

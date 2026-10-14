@@ -11,10 +11,12 @@ npm run dev
 
 Puis ouvre l'adresse affichée (le port 3000 ; dans Codespaces, clique sur « Ouvrir dans le navigateur »).
 Les pages n'ont besoin de rien : c'est un site statique (du HTML, du CSS et un peu de JavaScript) ; `serveur.js` est un
-tout petit serveur Node qui sert les fichiers tels quels. Seul le classement lit quelque chose ailleurs : la fonction
-`api/classement.js` lit la base du jeu. Pour la voir tourner ici : `npm install` (une fois : le pilote de la base,
-`mysql2`), puis les cinq variables `CASTERIA_DB_*` (plus bas) avant `npm run dev`. Sans elles, la page du classement dit
-« Le classement arrive très bientôt sur le site. En jeu, tape /top. », et tout le reste du site marche.
+tout petit serveur Node qui sert les fichiers tels quels. Seul le classement lit quelque chose ailleurs : la page lit le
+fichier `classement.json` d'un gist GitHub, que le serveur du jeu réécrit lui-même au plus toutes les 5 minutes (son
+compte et son identifiant : `GIST_COMPTE` et `GIST_ID`, en tête de `js/classement.js`). Tant que `GIST_ID` est vide, ou si
+le fichier ne répond pas, la page dit « Le classement arrive très bientôt sur le site. En jeu, tape /top. », et tout le
+reste du site marche. (La fonction `api/classement.js`, qui lisait la base du jeu, reste mais la page ne la lit plus : la
+base refuse les connexions venues de Vercel.)
 
 ## Les pages
 
@@ -23,7 +25,7 @@ tout petit serveur Node qui sert les fichiers tels quels. Seul le classement lit
 | `index.html` | l'accueil : l'en-tête animé et le bouton de téléchargement, le concept, l'inédit (les boss, les armures, la mer, l'île qui grandit), la rangée de vidéos, les premiers pas, la boutique, le téléchargement |
 | `commencer.html` | « Par où commencer » : les dix premières étapes du jeu, les tickets et la roue, les astuces |
 | `pirates.html` | la mer : les bateaux, les pirates, les canons (la page qui vise « serveur Minecraft pirate ») |
-| `classement.html` | le classement : les mêmes catégories que `/top` en jeu, le Score de Casteria d'abord (son podium), puis l'île, les jeux, les boss, la mer et le progrès, les dix premiers de chacune ; lus à l'ouverture par `js/classement.js` dans `/api/classement` ; habillage : `css/classement.css` |
+| `classement.html` | le classement : les mêmes catégories que `/top` en jeu, le Score de Casteria d'abord (son podium), puis l'île, les jeux, les boss, la mer et le progrès, les dix premiers de chacune ; lus à l'ouverture par `js/classement.js` dans le fichier `classement.json` du gist que le serveur du jeu publie ; habillage : `css/classement.css` |
 | `api/classement.js` | la fonction de Vercel du classement : elle lit la base du jeu (une requête SELECT, en lecture seule) et rend du JSON ; Vercel garde la réponse 5 minutes |
 | `boutique.html` | la boutique : à quoi servent les crédits, et tes packs de Tebex, lus en direct (`js/boutique.config.js`, `js/boutique.js`) |
 | `merci.html` | la page où Tebex ramène le joueur après son paiement (hors de Google) |

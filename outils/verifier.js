@@ -25,11 +25,15 @@ function verifierBoutique(faute) {
   for (const k of ['adresse', 'cadre']) if (c[k] !== undefined && c[k] !== '' && !/^https:\/\/[a-z0-9-]+(\.[a-z0-9-]+)+(\/[^\s"\'<>]*)?$/i.test(String(c[k]))) faute('js/boutique.config.js : « ' + k + ' » doit être vide ou une adresse https complète')
   // AUCUNE CLÉ dans le dépôt : une longue suite de lettres et de chiffres (32 et plus) ne peut être que la fin du jeton public
   const permis = typeof jeton === 'string' && JETON.test(jeton) ? jeton.split('-')[1] : ''
+  // (la 119) l'identifiant PUBLIC du gist du classement (32 caractères hexadécimaux, dans l'adresse du fichier) : permis
+  // seulement à sa place, la ligne GIST_ID de js/classement.js (ce n'est pas une clé : le jeton qui écrit le gist reste sur le
+  // serveur du jeu)
+  const gistId = ((fs.existsSync(path.join(RACINE, 'js', 'classement.js')) ? fs.readFileSync(path.join(RACINE, 'js', 'classement.js'), 'utf8') : '').match(/\n  var GIST_COMPTE = '[A-Za-z0-9-]{1,39}', GIST_ID = '([0-9a-f]{32})'\n/) || [])[1] || ''
   const textes = fs.readdirSync(RACINE).filter(n => /\.(html|js|json|md|txt|xml)$/.test(n)).concat(fs.readdirSync(path.join(RACINE, 'js')).map(n => 'js/' + n), fs.readdirSync(path.join(RACINE, 'css')).map(n => 'css/' + n),
     fs.existsSync(path.join(RACINE, 'api')) ? fs.readdirSync(path.join(RACINE, 'api')).map(n => 'api/' + n) : [])
   for (const n of textes) {
     if (n === 'package-lock.json') continue
-    for (const m of fs.readFileSync(path.join(RACINE, n), 'utf8').match(/[A-Fa-f0-9]{32,}/g) || []) if (m !== permis) faute(n + ' : une suite de ' + m.length + ' lettres et chiffres qui ressemble à une clé (« ' + m.slice(0, 6) + '... ») : aucune clé dans ce dépôt')
+    for (const m of fs.readFileSync(path.join(RACINE, n), 'utf8').match(/[A-Fa-f0-9]{32,}/g) || []) if (m !== permis && !(n === 'js/classement.js' && m === gistId)) faute(n + ' : une suite de ' + m.length + ' lettres et chiffres qui ressemble à une clé (« ' + m.slice(0, 6) + '... ») : aucune clé dans ce dépôt')
   }
   // le script de la boutique : il ne s'adresse qu'à l'API publique de Tebex, n'écrit jamais du texte reçu comme du code de
   // page, et ne quitte le site que pour la page de paiement de Tebex
@@ -50,7 +54,8 @@ function verifierBoutique(faute) {
 // LE CLASSEMENT (14/10/2026 : classement.html, api/classement.js, js/classement.js) : la fonction lit la base du jeu avec
 // les identifiants de ses variables d'environnement SEULEMENT, en lecture seule (une requête SELECT), et Vercel garde sa
 // réponse 5 minutes ; une panne rend 503 et { indisponible: true }, jamais gardée. La page n'écrit jamais un texte reçu
-// comme du code de page, et ne lit que /api/classement.
+// comme du code de page ; (la 119) elle ne lit que le fichier brut classement.json du gist que le serveur du jeu publie
+// (la fonction reste, plus lue par la page).
 function verifierClassement(faute) {
   const api = lire('api/classement.js'), js = lire('js/classement.js')
   if (!api) return faute('api/classement.js manque (la page du classement le lit)')
@@ -76,10 +81,18 @@ function verifierClassement(faute) {
   const total = Number((api.match(/const DELAI_TOTAL_MS = (\d+)/) || [])[1]) || 0
   if (!fn || !(fn.maxDuration > 0) || !(total > 0) || total >= fn.maxDuration * 1000) faute('api/classement.js : son délai total (DELAI_TOTAL_MS) doit tenir sous la limite de Vercel (vercel.json, maxDuration)')
   if (/innerHTML|outerHTML|insertAdjacentHTML|document\.write|\beval\(/.test(js)) faute('js/classement.js : un texte reçu ne s\'écrit jamais comme du code de page (textContent seulement)')
-  for (const u of js.match(/https?:\/\/[^\s'"`)]+/g) || []) faute('js/classement.js : une adresse d\'un autre serveur : ' + u)
+  // (la 119) la page lit le fichier brut du gist que le serveur du jeu publie, et rien d'autre : la seule adresse permise est
+  // celle des fichiers bruts des gists ; elle ne lit plus /api/classement ; sans identifiant de gist, la panne
+  for (const u of js.match(/https?:\/\/[^\s'"`)]+/g) || []) if (u !== 'https://gist.githubusercontent.com/') faute('js/classement.js : une adresse d\'un autre serveur : ' + u)
   // (le code seul : la phrase de la panne est aussi dans le commentaire de tête, qui ne s'affiche jamais)
   const code = js.split('\n').filter(l => !/^\s*\/\//.test(l)).join('\n')
-  if (!code.includes("'/api/classement'")) faute('js/classement.js : la page lit /api/classement')
+  if (!code.includes("'https://gist.githubusercontent.com/' + GIST_COMPTE + '/' + GIST_ID + '/raw/classement.json'")) faute('js/classement.js : la page lit le fichier brut classement.json du gist (https://gist.githubusercontent.com/<compte>/<id>/raw/classement.json)')
+  if (code.includes('/api/classement')) faute('js/classement.js : la page ne lit plus /api/classement (la base refuse Vercel) : le gist seulement')
+  if (!/if \(!window\.fetch \|\| !SOURCE\) \{ panne\(\); return \}/.test(code)) faute('js/classement.js : sans identifiant de gist (SOURCE vide), la page dit la panne sans rien lire')
+  if (!/fetch\(SOURCE, \{ credentials: 'omit'/.test(code)) faute('js/classement.js : la lecture du gist part sans cookie (credentials: \'omit\')')
+  const idGist = (code.match(/GIST_ID = '([^']*)'/) || [])[1]
+  if (idGist === undefined || !/^([0-9a-f]{32})?$/.test(idGist)) faute('js/classement.js : GIST_ID est vide ou l\'identifiant hexadécimal du gist (32 caractères, la fin de son adresse sur gist.github.com)')
+  if (!/GIST_COMPTE = '[A-Za-z0-9-]{1,39}'/.test(code)) faute('js/classement.js : GIST_COMPTE est un nom de compte GitHub')
   if (!code.includes("'Le classement arrive très bientôt sur le site. En jeu, tape /top.'")) faute('js/classement.js : la phrase de la panne manque (« Le classement arrive très bientôt sur le site. En jeu, tape /top. »)')
 }
 // ---------- deux lecteurs, pour les règles du soir du 05/10 (la hero, les hauteurs, la barre du téléphone) ----------
