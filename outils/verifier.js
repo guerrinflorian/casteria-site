@@ -80,7 +80,7 @@ function verifierClassement(faute) {
   // (le code seul : la phrase de la panne est aussi dans le commentaire de tête, qui ne s'affiche jamais)
   const code = js.split('\n').filter(l => !/^\s*\/\//.test(l)).join('\n')
   if (!code.includes("'/api/classement'")) faute('js/classement.js : la page lit /api/classement')
-  if (!code.includes("'Le classement revient dans quelques minutes.'")) faute('js/classement.js : la phrase de la panne manque (« Le classement revient dans quelques minutes. »)')
+  if (!code.includes("'Le classement arrive très bientôt sur le site. En jeu, tape /top.'")) faute('js/classement.js : la phrase de la panne manque (« Le classement arrive très bientôt sur le site. En jeu, tape /top. »)')
 }
 // ---------- deux lecteurs, pour les règles du soir du 05/10 (la hero, les hauteurs, la barre du téléphone) ----------
 // Les règles d'une feuille de style : [{ sel, corps, media }]. Les commentaires sont retirés ; @media, @supports et

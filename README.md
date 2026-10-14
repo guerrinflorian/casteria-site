@@ -14,7 +14,7 @@ Les pages n'ont besoin de rien : c'est un site statique (du HTML, du CSS et un p
 tout petit serveur Node qui sert les fichiers tels quels. Seul le classement lit quelque chose ailleurs : la fonction
 `api/classement.js` lit la base du jeu. Pour la voir tourner ici : `npm install` (une fois : le pilote de la base,
 `mysql2`), puis les cinq variables `CASTERIA_DB_*` (plus bas) avant `npm run dev`. Sans elles, la page du classement dit
-« Le classement revient dans quelques minutes. », et tout le reste du site marche.
+« Le classement arrive très bientôt sur le site. En jeu, tape /top. », et tout le reste du site marche.
 
 ## Les pages
 
@@ -68,7 +68,7 @@ serveurs du jeu tiennent à jour ; un dossier retiré du classement n'y compte p
   au plus une fois toutes les 5 minutes, quel que soit le nombre de visiteurs ;
 - **rien de privé** : les pseudos et les chiffres que `/top` montre déjà, jamais un identifiant ;
 - **en panne** (la base ne répond pas, une variable manque) : `{ "indisponible": true, "raison": ... }` et le code 503,
-  jamais gardé ; la page dit « Le classement revient dans quelques minutes. » et propose « Réessayer ». La raison se lit
+  jamais gardé ; la page dit « Le classement arrive très bientôt sur le site. En jeu, tape /top. » et propose « Réessayer ». La raison se lit
   sans les journaux de Vercel (ouvrir `https://casteria.fr/api/classement`) : `variables` (une variable `CASTERIA_DB_*`
   manque au déploiement), `calcul`, ou le code de l'erreur de la base tel quel (`ENOTFOUND` : l'hôte mal écrit ;
   `ETIMEDOUT` : la base ne répond pas aux serveurs de Vercel, un pare-feu ; `ECONNREFUSED` : le port ;

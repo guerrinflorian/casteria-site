@@ -100,7 +100,7 @@ const MUTANTS = [
   ['un delai plus long que la limite de Vercel', 'api/classement.js', s => s.replace('const DELAI_TOTAL_MS = 9000', 'const DELAI_TOTAL_MS = 12000')],
   ['un pseudo ecrit comme du code de page', 'js/classement.js', s => s.replace("li.appendChild(el('span', 'cl-pseudo', String(e.pseudo)))", "var sp = el('span', 'cl-pseudo'); sp.innerHTML = e.pseudo; li.appendChild(sp)")],
   ['la page du classement qui lit un autre serveur', 'js/classement.js', s => s.replace("var API = '/api/classement'", "var API = 'https://exemple.test/api/classement'")],
-  ['la phrase de la panne du classement retiree', 'js/classement.js', s => s.replace("var PANNE = 'Le classement revient dans quelques minutes.'", "var PANNE = 'Erreur.'")],
+  ['la phrase de la panne du classement retiree', 'js/classement.js', s => s.replace("var PANNE = 'Le classement arrive très bientôt sur le site. En jeu, tape /top.'", "var PANNE = 'Erreur.'")],
   ['le lien Classement retire du menu d une page', 'pirates.html', s => s.replace(/\n\s*<a class="classement" href="classement\.html"[^\n]*<\/a>/, '')],
   ['la coupe du classement retiree de l en-tete d une page', 'index.html', s => s.replace('<img class="pixel" src="assets/icones/classement.png" alt="" width="20" height="20">', '')],
   ['le nom du lien du classement retire (aria-label)', 'commencer.html', s => s.replace(' aria-label="Classement"', '')],

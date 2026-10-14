@@ -1,7 +1,7 @@
 // LE CLASSEMENT (classement.html) : lu à l'ouverture de la page dans /api/classement (la base du jeu, que Vercel garde
 // 5 minutes), puis écrit dans la page : le podium du Score de Casteria et sa suite, puis les catégories de /top, une
 // famille à la fois (les onglets). Tout ce qui vient de la réponse s'écrit en TEXTE (textContent), jamais comme du code
-// de page. Sans réponse : « Le classement revient dans quelques minutes. », et un bouton « Réessayer ».
+// de page. Sans réponse : « Le classement arrive très bientôt sur le site. En jeu, tape /top. », et un bouton « Réessayer ».
 (function () {
   'use strict'
   var API = '/api/classement', DELAI = 12000
@@ -9,7 +9,7 @@
   var onglets = document.getElementById('onglets'), panneau = document.getElementById('panneau')
   if (!podium || !suite || !lu || !onglets || !panneau) return
   var MEDAILLES = ['assets/classement/medaille_1.png', 'assets/classement/medaille_2.png', 'assets/classement/medaille_3.png']
-  var PANNE = 'Le classement revient dans quelques minutes.'
+  var PANNE = 'Le classement arrive très bientôt sur le site. En jeu, tape /top.'
   var donnees = null, choisie = ''
 
   function el(nom, classe, texte) { var e = document.createElement(nom); if (classe) e.className = classe; if (texte !== undefined) e.textContent = texte; return e }
