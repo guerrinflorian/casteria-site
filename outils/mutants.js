@@ -48,11 +48,16 @@ const MUTANTS = [
   ['une image trop haute dans la feuille du carrousel', 'css/carrousel.css', s => s + '\n[data-carrousel] > .vue img { height: 1300px; }\n'],
 
   // ---------- la hero de chaque page : son fond et sa scène, sur un téléphone aussi ----------
-  // (07/10) l'image du fond peut être dans une couche (<div class="pointeur">, ou un panneau depuis le 13/10) : le mutant
-  // la retire où qu'elle soit
-  ['la hero de l accueil sans son fond', 'index.html', s => s.replace(/(<div class="fond(?:\s[^"]*)?"[^>]*>(?:\s*<div\b[^>]*>)*)\s*(?:<img\b[^>]*>|<video\b[^>]*>(?:<\/video>)?)/, '$1')],
-  ['la hero de l accueil avec trois panneaux au lieu de quatre', 'index.html', s => s.replace(/\s*<div class="panneau p4">[^\n]*<\/div>/, '')],
-  ['une scene revenue par-dessus les panneaux de l accueil', 'index.html', s => s.replace('<div class="poussieres"', '<div class="scene sprites"><img src="assets/volume/yeti.png" alt="" width="520" height="520"></div><div class="poussieres"')],
+  // (07/10) l'image du fond peut être dans une couche (<div class="pointeur">, la couche qui avance du haut en cinéma depuis
+  // le 14/10, et son <picture>) : le mutant la retire où qu'elle soit
+  ['la hero de l accueil sans son fond', 'index.html', s => s.replace(/(<div class="fond(?:\s[^"]*)?"[^>]*>(?:\s*<(?:div|picture|source)\b[^>]*>)*)\s*(?:<img\b[^>]*>|<video\b[^>]*>(?:<\/video>)?)/, '$1')],
+  // (14/10/2026) le haut en cinéma : sa version pour un écran étroit, son image jamais en différé, aucune scène par-dessus,
+  // chaque taille d'une image (srcset) existe
+  ['la hero de l accueil sans sa version pour un ecran etroit', 'index.html', s => s.replace(/(<div class="fond plein-cadre"[\s\S]*?<picture>)[\s\S]*?(<source type="image\/webp")/, '$1\n        $2')],
+  ['l image de la hero de l accueil chargee en differe', 'index.html', s => s.replace(/(<div class="fond plein-cadre"[\s\S]*?<img\b)/, '$1 loading="lazy"')],
+  ['une scene revenue par-dessus le haut en cinema des pirates', 'pirates.html', s => s.replace('<div class="cinema-texte">', '<div class="scene" aria-hidden="true"><img src="assets/volume/kraken.png" alt="" width="520" height="520"></div>\n  <div class="cinema-texte">')],
+  ['la banniere du classement sans son image de repli', 'classement.html', s => s.replace(/(<div class="fond plein-cadre"[\s\S]*?)<img\b[^>]*>/, '$1')],
+  ['une taille d image (srcset) qui n existe pas', 'index.html', s => s.replace('casteria-decollage-2560.webp 2560w" sizes', 'casteria-decollage-3840.webp 3840w" sizes')],
   ['la hero d une page sans sa scene', 'commencer.html', s => s.replace('<div class="scene', '<div class="decor')],
   ['la hero d une page devenue une simple tete de page', 'commencer.html', s => s.replace('<section class="heros vitrine-tete', '<section class="page-tete')],
   ['la scene de la hero cachee sur un telephone', 'css/style.css', s => s + '\n@media (max-width: 600px) { .vitrine-tete .scene { display: none; } }\n'],

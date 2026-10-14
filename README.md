@@ -99,7 +99,8 @@ la ligne `Sitemap:` de `robots.txt`, et dans chaque page son adresse (`canonical
 à sa liste `PAGES` (il refait aussi la date du plan du site).
 
 - L'accueil n'a qu'une adresse, `https://casteria.fr/` : les liens vers l'accueil s'écrivent `./`, jamais `index.html`.
-- L'image de partage (`assets/images/casteria-serveur-minecraft-partage.jpg`) fait 1200 x 630, le format des réseaux.
+- L'image de partage (`assets/images/casteria-decollage-partage.jpg`, le décollage de l'en-tête et le logo au dragon) fait 1200 x 630, le format des
+  réseaux ; `outils/domaine.js` l'écrit dans chaque page.
 - Le logo affiché dans les pages est la copie légère (`casteria-logo-300.webp`) ; le grand `casteria-logo.png` reste
   l'original.
 - Les fichiers de `assets/` restent une semaine dans le navigateur des visiteurs : pour changer une image, donne un autre

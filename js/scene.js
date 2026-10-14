@@ -6,6 +6,7 @@
 //   [data-defile]                           glisse moins vite que la page (un facteur : 0,18 = 18 % du défilement)
 //   .poussieres                             des poussières lumineuses qui montent
 //   .carte-tresor b[data-n]                 les chiffres comptent jusqu'à leur valeur
+//   [data-cinema]                           le haut de page en cinéma : ses lueurs, ses braises et ses étoiles
 (function () {
   'use strict'
   var calme = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -57,6 +58,105 @@
       s.style.animationDelay = (-Math.random() * 16).toFixed(1) + 's'
       p.appendChild(s)
     }
+  })
+
+  // ---------- le haut de page en cinéma (14/10/2026) : les lueurs posées sur l'image exacte, des braises, des étoiles ----------
+  // Chaque .lueur porte data-paysage et data-portrait : x et y en % de l'image, puis son diamètre en % de la largeur de
+  // l'image ; elle suit le cadrage réel (object-fit: cover et l'object-position de la feuille de style), quelle que soit la
+  // version que le <picture> a choisie. La toile « ciel-vivant » : au plus 34 braises qui montent de la fusée et 28 étoiles
+  // qui scintillent, 40 images par seconde au plus, rien quand l'onglet est caché ou le haut de page hors de la vue.
+  if (!calme) document.querySelectorAll('[data-cinema]').forEach(function (plan) {
+    var img = plan.querySelector('img'), toile = plan.querySelector('.ciel-vivant'), lueurs = plan.querySelectorAll('.lueur')
+    if (!img) return
+    var c = toile && toile.getContext ? toile.getContext('2d') : null
+    var cadre = null, braises = [], etoiles = [], visible = true, dernier = 0, boucle = 0
+    // un point lumineux pré-dessiné (un dégradé rond), copié à chaque image : bien moins cher qu'un dégradé par point
+    function sprite(r, g, b) {
+      var s = document.createElement('canvas'), x = s.getContext('2d'), d = x.createRadialGradient(16, 16, 0, 16, 16, 16)
+      s.width = s.height = 32
+      d.addColorStop(0, 'rgba(255,255,255,1)'); d.addColorStop(0.18, 'rgba(' + r + ',' + g + ',' + b + ',.9)'); d.addColorStop(1, 'rgba(' + r + ',' + g + ',' + b + ',0)')
+      x.fillStyle = d; x.fillRect(0, 0, 32, 32)
+      return s
+    }
+    var feu = c ? sprite(255, 170, 80) : null, astre = c ? sprite(210, 200, 255) : null
+    function cadrer() {
+      if (!img.naturalWidth || !img.clientWidth) return
+      var W = img.clientWidth, H = img.clientHeight, iw = img.naturalWidth, ih = img.naturalHeight
+      var op = getComputedStyle(img).objectPosition.split(' ')
+      var px = parseFloat(op[0]) / 100, py = parseFloat(op[1] || '50%') / 100
+      if (isNaN(px)) px = 0.5
+      if (isNaN(py)) py = 0.5
+      var k = Math.max(W / iw, H / ih)
+      cadre = { W: W, H: H, w: iw * k, h: ih * k, ox: (W - iw * k) * px, oy: (H - ih * k) * py, portrait: ih > iw }
+      lueurs.forEach(function (l) {
+        var v = (l.getAttribute(cadre.portrait ? 'data-portrait' : 'data-paysage') || '').split(' ').map(Number)
+        if (v.length < 3 || v.some(isNaN)) return
+        l.style.left = (cadre.ox + cadre.w * v[0] / 100).toFixed(1) + 'px'
+        l.style.top = (cadre.oy + cadre.h * v[1] / 100).toFixed(1) + 'px'
+        l.style.setProperty('--d', (cadre.w * v[2] / 100).toFixed(1) + 'px')
+        l.classList.add('placee')
+      })
+      if (!c) return
+      // la toile : la taille de l'image, 2,4 millions de pixels au plus (un grand écran ne coûte pas plus)
+      var dpr = Math.min(window.devicePixelRatio || 1, 1.5, Math.sqrt(2400000 / (W * H)))
+      toile.width = Math.round(W * dpr); toile.height = Math.round(H * dpr)
+      toile.style.width = W + 'px'; toile.style.height = H + 'px'
+      c.setTransform(dpr, 0, 0, dpr, 0, 0)
+      // les étoiles : dans le ciel de l'image (le haut), chacune à son rythme
+      etoiles = []
+      var n = W < 700 ? 16 : 28, haut = cadre.portrait ? 0.42 : 0.4
+      for (var i = 0; i < n; i++) etoiles.push({ x: Math.random(), y: 0.02 + Math.random() * haut, t: 0.8 + Math.random() * 1.6, p: Math.random() * 6.3, s: 0.8 + Math.random() * 1.4 })
+      braises = []
+    }
+    // une braise naît au pied de la fusée (la zone du décollage, en % de l'image) et monte en dérivant
+    function naitre() {
+      var z = cadre.portrait ? [0.22, 0.5, 0.62, 0.76] : [0.3, 0.52, 0.46, 0.6]
+      braises.push({ x: z[0] + Math.random() * (z[1] - z[0]), y: z[2] + Math.random() * (z[3] - z[2]), vy: 0.022 + Math.random() * 0.035, vx: -0.009 + Math.random() * 0.014,
+        age: 0, vie: 3.5 + Math.random() * 3.5, s: 0.7 + Math.random() * 1.1, p: Math.random() * 6.3 })
+    }
+    function image(m) {
+      boucle = 0
+      if (!visible || document.hidden || !cadre || !c) return
+      boucle = requestAnimationFrame(image)
+      if (m - dernier < 24) return
+      var dt = Math.min(0.1, (m - dernier) / 1000 || 0.016), t = m / 1000
+      dernier = m
+      var max = cadre.W < 700 ? 18 : 34
+      if (braises.length < max && Math.random() < 0.5) naitre()
+      c.clearRect(0, 0, cadre.W, cadre.H)
+      c.globalCompositeOperation = 'lighter'
+      var i, e, a, r
+      for (i = 0; i < etoiles.length; i++) {
+        e = etoiles[i]
+        a = Math.sin(t * e.t + e.p)
+        if (a <= 0.2) continue
+        a = (a - 0.2) / 0.8
+        c.globalAlpha = a * a * 0.9
+        r = e.s * 4
+        c.drawImage(astre, cadre.ox + cadre.w * e.x - r, cadre.oy + cadre.h * e.y - r, r * 2, r * 2)
+      }
+      for (i = braises.length - 1; i >= 0; i--) {
+        e = braises[i]
+        e.age += dt
+        if (e.age >= e.vie) { braises.splice(i, 1); continue }
+        e.y -= e.vy * dt
+        e.x += (e.vx + Math.sin(e.age * 1.6 + e.p) * 0.004) * dt
+        a = Math.min(1, e.age / 0.5) * Math.min(1, (e.vie - e.age) / (e.vie * 0.45))
+        c.globalAlpha = Math.max(0, a * (0.7 + 0.3 * Math.sin(e.age * 11 + e.p)))
+        r = e.s * Math.max(3, cadre.w / 520)
+        c.drawImage(feu, cadre.ox + cadre.w * e.x - r, cadre.oy + cadre.h * e.y - r, r * 2, r * 2)
+      }
+      c.globalAlpha = 1
+      c.globalCompositeOperation = 'source-over'
+    }
+    function relancer() { if (!boucle && visible && !document.hidden && cadre && c) boucle = requestAnimationFrame(image) }
+    var attente = 0
+    function recadrer() { if (!attente) attente = requestAnimationFrame(function () { attente = 0; cadrer(); relancer() }) }
+    if (img.complete) recadrer()
+    img.addEventListener('load', recadrer)
+    window.addEventListener('resize', recadrer, { passive: true })
+    document.addEventListener('visibilitychange', relancer)
+    if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { visible = es[0].isIntersecting; relancer() }).observe(plan)
   })
 
   if (calme) return

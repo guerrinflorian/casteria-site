@@ -164,6 +164,8 @@ for (const page of PAGES) {
   // les fichiers du site cités par la page existent
   const cites = new Set()
   for (const m of s.matchAll(/(?:src|href|poster|data-src)="([^"#?]+)[^"]*"/g)) cites.add(m[1])
+  // (14/10/2026) les tailles d'une image (srcset d'une <source> ou d'une <img>, imagesrcset d'un préchargement) : chacune
+  for (const m of s.matchAll(/\s(?:srcset|imagesrcset)="([^"]*)"/g)) for (const t of m[1].split(',')) { const u = t.trim().split(/\s+/)[0]; if (u) cites.add(u.split(/[?#]/)[0]) }
   for (const c of cites) {
     if (DOMAINE && c.startsWith(DOMAINE + '/')) { if (!fs.existsSync(path.join(RACINE, c.slice(DOMAINE.length)))) faute('une adresse du site qui n\'existe pas : ' + c); continue }
     if (c === TEBEX_JS && page === 'boutique.html') { if (!s.includes('<script defer src="' + TEBEX_JS + '"></script>')) faute('boutique.html : le script de Tebex doit s\'écrire <script defer src="' + TEBEX_JS + '"></script>, tel quel'); continue }
@@ -222,14 +224,20 @@ for (const page of PAGES) {
       const sec = dedans(nu, h, 'section'), f = sec.search(/<div class="fond(?:\s[^"]*)?"/), sc = sec.search(/<div class="scene(?:\s[^"]*)?"/)
       const fond = f < 0 ? '' : dedans(sec, f, 'div'), scene = sc < 0 ? '' : dedans(sec, sc, 'div')
       if (!(/<img\b/.test(fond) || /<video\b[^>]*\sposter="[^"]+"/.test(fond))) faute('la hero : <div class="fond"> doit porter une image, ou une vidéo avec son affiche')
-      // (13/10/2026, le propriétaire : « la hero section est trop remplit trop de bestiole par dessus ca fais moche [...] pas
-      // juste une image de fond mais plusieurs de gauche a droite [...] 4 image de gauche a droite collé ») UN FOND EN
-      // PANNEAUX (<div class="fond panneaux">, l'accueil) remplace la scène : QUATRE panneaux, chacun avec son image, et
-      // plus aucune scène par-dessus
-      if (/<div class="fond panneaux(?:\s[^"]*)?"/.test(sec)) {
-        const n = (fond.match(/<div class="panneau(?:\s[^"]*)?"[^>]*>\s*<img\b[^>]*\ssrc="[^"]+"/g) || []).length
-        if (n !== 4) faute('la hero en panneaux : <div class="fond panneaux"> doit porter QUATRE panneaux, chacun avec son image (' + n + ' trouvé(s))')
-        if (sc >= 0) faute('la hero en panneaux ne porte plus de scène par-dessus (<div class="scene">)')
+      // (14/10/2026, le propriétaire : « une hero section [...] faut que le texte, logo et tout aille PARFAITEMENT avec
+      // l'image [...] qu'elle fasse pas IA avec la disposition du texte, le centrage [...] que ça fasse WAW » ; il remplace
+      // les quatre panneaux du 13/10) UN FOND EN CINÉMA (<div class="fond plein-cadre">, l'accueil, les pirates, le classement)
+      // remplace la scène : UNE image dans un <picture>, avec sa version pour un écran étroit (une <source media srcset>),
+      // jamais chargée en différé (c'est le haut de la page), et plus aucune scène par-dessus ; le texte est celui de la page
+      if (/<div class="fond plein-cadre(?:\s[^"]*)?"/.test(sec)) {
+        const image = (fond.match(/<picture\b[^>]*>([\s\S]*?)<\/picture>/) || [])[1]
+        if (image === undefined) faute('la hero en cinéma : <div class="fond plein-cadre"> doit porter son image dans un <picture>')
+        else {
+          if (!/<source\b(?=[^>]*\smedia="[^"]+")(?=[^>]*\ssrcset="[^"]+")[^>]*>/.test(image)) faute('la hero en cinéma : son <picture> doit porter la version pour un écran étroit (<source media="..." srcset="...">)')
+          if (!/<img\b[^>]*\ssrc="[^"]+"/.test(image)) faute('la hero en cinéma : son <picture> finit par son image de repli (<img src="...">)')
+          if (/\sloading="lazy"/.test(image)) faute('la hero en cinéma : l\'image du haut de la page ne se charge jamais en différé (loading="lazy")')
+        }
+        if (sc >= 0) faute('la hero en cinéma ne porte pas de scène par-dessus (<div class="scene">)')
       }
       // (07/10, l'accueil refait : « plus de photos adapté au vrai jeu ») la scène peut aussi être de vraies boucles du jeu,
       // chacune avec son affiche

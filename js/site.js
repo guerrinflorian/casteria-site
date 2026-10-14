@@ -13,8 +13,9 @@
     liens.addEventListener('click', function (e) { if (e.target.tagName === 'A') liens.classList.remove('ouvert') })
   }
 
-  // le héros : les trois téléphones et le logo glissent à des vitesses différentes, le fond s'éloigne
-  var eventail = document.querySelector('.eventail'), fond = document.querySelector('.heros .fond'), logo = document.querySelector('.heros .logo')
+  // le héros : les trois téléphones et le logo glissent à des vitesses différentes, le fond s'éloigne (la bannière du
+  // classement, elle, reste en place : elle porte son texte)
+  var eventail = document.querySelector('.eventail'), fond = document.querySelector('.heros:not(.banniere) .fond'), logo = document.querySelector('.heros .logo')
   var poses = [
     { e: document.querySelector('.eventail .t1'), base: 'translate(-118%, -50%) rotate(-9deg) scale(.86)', v: -0.10, r: -6 },
     { e: document.querySelector('.eventail .t2'), base: 'translate(-50%, -52%)', v: -0.22, r: 0 },

@@ -337,3 +337,120 @@ html, body { overflow-x: clip; }
 }
 /* le décor du haut en 2560 (le tournage du 07/10 à 20:05) : le palais vu de la rade au couchant */
 .scene-tete .fond img { object-position: 42% 50%; filter: saturate(1.08) contrast(1.04); }
+
+/* ============================ LE HAUT DE PAGE EN CINÉMA (14/10/2026) ============================
+   Le propriétaire : « une hero section [...] faut que le texte, logo et tout aille PARFAITEMENT avec l'image [...] qu'elle
+   fasse pas IA avec la disposition du texte, le centrage [...] épuré, magnifique, que ça fasse WAW ». UNE image en plein
+   écran (sa version portrait sur un écran haut et étroit : le <picture> de la page), qui avance très lentement ; un voile
+   LOCAL (le haut pour la barre, le bas et le coin bas gauche pour le texte), jamais un rectangle ; le texte posé en bas,
+   comme le pied d'une affiche de film : le titre à gauche, la phrase et les gestes à droite, sur la mer sombre ; l'un sous
+   l'autre sur un écran étroit. L'accueil (le décollage) et la page des pirates (la bataille). */
+.vitrine-tete.plein-cadre { min-height: 100svh; padding: 0; display: flex; flex-direction: column; justify-content: flex-end; align-items: stretch; text-align: left; overflow: hidden; background: #0B0714; }
+.vitrine-tete.plein-cadre.page-cinema { min-height: min(100svh, 980px); }
+.vitrine-tete.plein-cadre.page-cinema h1 { font-size: clamp(34px, 4vw, 60px); line-height: 1.02; }
+.vitrine-tete.plein-cadre::before { background:
+    linear-gradient(180deg, rgba(8, 4, 16, .55) 0%, rgba(8, 4, 16, 0) 17%),
+    radial-gradient(78% 64% at 8% 100%, rgba(8, 4, 16, .8) 0%, rgba(8, 4, 16, .45) 44%, rgba(8, 4, 16, 0) 74%),
+    linear-gradient(0deg, #0B0714 0%, rgba(11, 7, 20, .84) 11%, rgba(11, 7, 20, .3) 30%, rgba(11, 7, 20, 0) 46%); }
+.vitrine-tete.plein-cadre::after { display: none; }
+.vitrine-tete.plein-cadre .fond { inset: 0 0 auto 0; overflow: hidden; }
+.vitrine-tete.plein-cadre .plan { position: absolute; inset: 0; transform-origin: 44% 36%; animation: travelling 36s ease-in-out infinite alternate; will-change: transform; }
+.vitrine-tete.plein-cadre .plan picture { display: block; width: 100%; height: 100%; }
+.vitrine-tete.plein-cadre .plan img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 8% 50%; filter: none; transform: none; animation: none; }
+.vitrine-tete.plein-cadre.page-cinema .plan img { object-position: 50% 50%; }
+.vitrine-tete.plein-cadre.page-cinema .plan { transform-origin: 62% 40%; }
+@keyframes travelling { from { transform: scale(1.02) translate3d(0, 0, 0); } to { transform: scale(1.1) translate3d(-.9%, -1.3%, 0); } }
+/* les lueurs, posées par js/scene.js sur l'image exacte (le trou noir, la flamme de la fusée, le phare) ; sans le script,
+   rien (elles restent invisibles) */
+.plein-cadre .lueur { position: absolute; left: 0; top: 0; width: var(--d, 0px); height: var(--d, 0px); margin: calc(var(--d, 0px) / -2) 0 0 calc(var(--d, 0px) / -2); pointer-events: none; mix-blend-mode: screen; opacity: 0; transition: opacity 1.8s ease .4s; }
+.plein-cadre .lueur.placee { opacity: 1; }
+.plein-cadre .lueur::before { content: ""; position: absolute; inset: 0; border-radius: 50%; }
+.plein-cadre .lueur-trou::before { background: radial-gradient(closest-side, rgba(255, 140, 60, 0) 60%, rgba(255, 158, 84, .62) 71%, rgba(255, 104, 46, .24) 83%, rgba(255, 104, 46, 0) 100%); animation: trou-respire 7s ease-in-out infinite; }
+.plein-cadre .lueur-flamme { width: calc(var(--d, 0px) * .62); height: calc(var(--d, 0px) * 1.3); margin: calc(var(--d, 0px) * -.65) 0 0 calc(var(--d, 0px) * -.31); }
+.plein-cadre .lueur-flamme::before { background: radial-gradient(closest-side, rgba(255, 232, 170, .62), rgba(255, 160, 70, .3) 48%, rgba(255, 120, 40, 0) 100%); animation: flamme-vacille 1.9s ease-in-out infinite; }
+.plein-cadre .lueur-phare::before { background: radial-gradient(closest-side, rgba(255, 240, 190, .9), rgba(255, 206, 120, .36) 45%, rgba(255, 206, 120, 0) 100%); animation: phare-respire 3.4s ease-in-out infinite; }
+@keyframes trou-respire { 0%, 100% { opacity: .42; transform: scale(.98); } 50% { opacity: 1; transform: scale(1.035); } }
+@keyframes flamme-vacille { 0%, 100% { opacity: .74; transform: scale(1, 1); } 22% { opacity: .96; transform: scale(1.04, 1.07); } 46% { opacity: .66; transform: scale(.97, .95); } 71% { opacity: 1; transform: scale(1.05, 1.1); } }
+@keyframes phare-respire { 0%, 100% { opacity: .3; transform: scale(.9); } 50% { opacity: 1; transform: scale(1.14); } }
+/* les braises qui montent et les étoiles qui scintillent (js/scene.js) */
+.plein-cadre .ciel-vivant { position: absolute; left: 0; top: 0; pointer-events: none; }
+/* le texte : le pied de l'affiche, aligné sur le logo de la barre */
+.cinema-texte { position: relative; z-index: 2; width: min(1144px, 100% - 60px); margin: 0 auto; padding: 0 0 clamp(60px, 9.5svh, 104px); display: flex; align-items: flex-end; justify-content: space-between; gap: 26px 56px; }
+.cinema-titre { flex: 0 1 auto; min-width: 0; }
+.cinema-geste { flex: 0 0 auto; width: min(410px, 36%); padding-bottom: 8px; }
+.plein-cadre .sur-ligne { display: block; margin: 0 0 16px; font-size: 13px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: #FFE3B0; text-shadow: 0 1px 10px rgba(0, 0, 0, .7); }
+.plein-cadre .sur-ligne::before { content: ""; display: inline-block; vertical-align: middle; width: 40px; height: 2px; margin: -3px 12px 0 0; background: linear-gradient(90deg, var(--or-clair), rgba(255, 215, 94, .15)); }
+.plein-cadre .sur-ligne i { font-style: normal; color: var(--or-clair); }
+.vitrine-tete.plein-cadre h1 { margin: 0; font-size: clamp(40px, 5.2vw, 80px); line-height: .98; letter-spacing: .3px; color: #fff; text-shadow: 0 3px 0 rgba(24, 8, 4, .5), 0 14px 42px rgba(0, 0, 0, .6); }
+.vitrine-tete.plein-cadre h1 span { display: block; font-size: 1em; margin: 0; line-height: inherit; color: #fff; }
+.vitrine-tete.plein-cadre h1 span.or { color: var(--or-clair); background: linear-gradient(180deg, #FFE895 8%, #FFC94A 58%, #F4A23A 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; text-shadow: none; filter: drop-shadow(0 3px 0 rgba(70, 24, 0, .55)) drop-shadow(0 12px 26px rgba(0, 0, 0, .5)); }
+.cinema-accroche { margin: 0 0 20px; font-size: clamp(17px, 1.32vw, 20px); line-height: 1.45; font-weight: 500; color: #FFF4E2; text-shadow: 0 2px 10px rgba(0, 0, 0, .8); }
+.vitrine-tete.plein-cadre .gestes { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 22px; margin: 0; }
+.vitrine-tete.plein-cadre .gestes .bouton-orange.grand { font-size: 22px; padding: 14px 24px 15px; }
+.lien-doux { display: inline-flex; align-items: center; gap: 10px; padding: 8px 2px; color: #fff; font-weight: 700; font-size: 17px; text-decoration: none; text-shadow: 0 2px 8px rgba(0, 0, 0, .75);
+  background: linear-gradient(var(--or-clair), var(--or-clair)) 0 100% / 0 2px no-repeat; transition: background-size .3s ease, color .2s ease; }
+.lien-doux:hover { color: #FFF1C8; background-size: 100% 2px; }
+.lien-doux:focus-visible { outline: 3px solid #fff; outline-offset: 4px; background-size: 100% 2px; }
+.lien-doux .chevron { width: 9px; height: 9px; border-right: 2px solid var(--or-clair); border-bottom: 2px solid var(--or-clair); transform: translateY(-3px) rotate(45deg); transition: transform .3s ease; }
+.lien-doux:hover .chevron { transform: translateY(1px) rotate(45deg); }
+.plein-cadre .preuves { margin: 16px 0 0; font-size: 13.5px; line-height: 1.4; color: #E9DDF5; text-shadow: 0 1px 6px rgba(0, 0, 0, .85); }
+.plein-cadre .preuves i { font-style: normal; margin: 0 7px; color: var(--or-clair); }
+/* l'arrivée : le texte monte en fondu, l'un après l'autre (du CSS seul : sans script, il arrive quand même) */
+.cinema-titre > *, .cinema-geste > * { animation: cinema-entree 1.1s cubic-bezier(.2, .75, .2, 1) both; }
+.plein-cadre .sur-ligne { animation-delay: .15s; } .vitrine-tete.plein-cadre h1 { animation-delay: .3s; } .cinema-accroche { animation-delay: .6s; }
+.vitrine-tete.plein-cadre .gestes { animation-delay: .75s; } .plein-cadre .preuves { animation-delay: .9s; }
+@keyframes cinema-entree { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
+@media (max-width: 1000px) {
+  .cinema-texte { flex-direction: column; align-items: flex-start; }
+  .cinema-geste { width: auto; max-width: 540px; padding-bottom: 0; }
+}
+@media (max-width: 600px) {
+  .vitrine-tete.plein-cadre::before { background: linear-gradient(180deg, rgba(8, 4, 16, .5) 0%, rgba(8, 4, 16, 0) 13%),
+    linear-gradient(0deg, #0B0714 0%, rgba(11, 7, 20, .88) 20%, rgba(11, 7, 20, .45) 37%, rgba(11, 7, 20, 0) 55%); }
+  .cinema-texte { width: calc(100% - 40px); gap: 16px; padding-bottom: 56px; }
+  .vitrine-tete.plein-cadre h1 { font-size: min(9.6vw, 46px); }
+  .plein-cadre .sur-ligne { font-size: 10.5px; letter-spacing: 1.6px; margin-bottom: 12px; } .plein-cadre .sur-ligne::before { width: 22px; margin-right: 9px; }
+  .cinema-accroche { font-size: 16px; margin-bottom: 16px; }
+  .vitrine-tete.plein-cadre .gestes { gap: 10px 18px; }
+  .vitrine-tete.plein-cadre .gestes .bouton-orange.grand { font-size: 19px; padding: 12px 18px 13px; }
+  .lien-doux { font-size: 16px; }
+  .plein-cadre .preuves { font-size: 12px; margin-top: 12px; } .plein-cadre .preuves i { margin: 0 4px; }
+}
+@media (max-aspect-ratio: 2/3) {
+  .vitrine-tete.plein-cadre .plan img, .vitrine-tete.plein-cadre.page-cinema .plan img { object-position: 50% 50%; }
+  .vitrine-tete.plein-cadre .plan { transform-origin: 40% 52%; }
+}
+/* LE GRAND VOYAGE en tête de la section des six mondes : l'image d'un bord à l'autre, le titre posé sur sa mer sombre */
+.pan.voyage-cinema { padding-top: 0; }
+.voyage-plan { position: relative; height: min(54vw, 860px); min-height: 380px; overflow: hidden; }
+.voyage-plan picture { display: block; width: 100%; height: 100%; }
+.voyage-plan img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 60%; }
+.voyage-plan::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(0deg, var(--violet-pan) 0%, rgba(42, 15, 64, .78) 15%, rgba(42, 15, 64, 0) 46%), linear-gradient(180deg, rgba(20, 8, 30, .4) 0%, rgba(20, 8, 30, 0) 20%); }
+.voyage-cinema > .dedans { position: relative; z-index: 1; margin-top: max(-15vw, -240px); }
+.voyage-cinema .tete h2, .voyage-cinema .tete p { text-shadow: 0 2px 14px rgba(10, 4, 20, .85); }
+@media (max-aspect-ratio: 2/3) {
+  .voyage-plan { height: auto; min-height: 0; aspect-ratio: 1536 / 2752; }
+  .voyage-plan img { object-position: 50% 50%; }
+  .voyage-cinema > .dedans { margin-top: -150px; }
+}
+/* LA BANNIÈRE DU CLASSEMENT : elle porte son titre ; montrée entière (jamais rognée), dans son cadre, sous la barre */
+.vitrine-tete.banniere { min-height: 0; padding: 94px 0 30px; display: block; overflow: visible; background: radial-gradient(70% 55% at 50% 18%, rgba(120, 70, 190, .28), rgba(120, 70, 190, 0) 70%), linear-gradient(180deg, #0E0A1C, var(--nuit)); }
+.vitrine-tete.banniere::before, .vitrine-tete.banniere::after { display: none; }
+.vitrine-tete.banniere .fond { position: relative; inset: auto; z-index: 0; height: auto; width: min(1320px, 100% - 32px); margin: 0 auto; border-radius: 22px; overflow: hidden; background: #120C22; box-shadow: 0 30px 80px rgba(0, 0, 0, .55), 0 0 0 1px rgba(255, 215, 94, .24), 0 0 60px rgba(255, 170, 60, .12); }
+.vitrine-tete.banniere .fond picture { display: block; }
+.vitrine-tete.banniere .fond img { display: block; width: 100%; height: auto; object-fit: contain; filter: none; transform: none; animation: none; }
+.vitrine-tete.banniere .banniere-texte { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px 24px; width: min(1320px, 100% - 32px); margin: 22px auto 0; padding: 0 6px; }
+.vitrine-tete.banniere .accroche { margin: 0; max-width: 44em; font-size: 17px; color: #F1E6FF; }
+.vitrine-tete.banniere .gestes { margin: 0; }
+@media (max-width: 700px) {
+  .vitrine-tete.banniere { padding: 78px 0 24px; }
+  .vitrine-tete.banniere .fond { width: calc(100% - 24px); border-radius: 18px; }
+  .vitrine-tete.banniere .banniere-texte { width: calc(100% - 24px); flex-direction: column; align-items: flex-start; }
+  .vitrine-tete.banniere .accroche { font-size: 16px; }
+}
+/* sans mouvement, et les photos : rien ne bouge, tout est là */
+@media (prefers-reduced-motion: reduce) {
+  .vitrine-tete.plein-cadre .plan, .plein-cadre .lueur::before, .cinema-titre > *, .cinema-geste > * { animation: none !important; }
+  .plein-cadre .ciel-vivant { display: none; }
+}
+html.photo .vitrine-tete.plein-cadre .plan, html.photo .cinema-titre > *, html.photo .cinema-geste > * { animation: none; }

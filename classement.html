@@ -13,10 +13,10 @@
 <meta property="og:description" content="Qui mène le serveur ? Les meilleurs joueurs de Casteria, comme sur /top en jeu.">
 <meta property="og:url" content="https://casteria.fr/classement.html">
 <link rel="canonical" href="https://casteria.fr/classement.html">
-<meta property="og:image" content="https://casteria.fr/assets/images/casteria-serveur-minecraft-partage.jpg">
+<meta property="og:image" content="https://casteria.fr/assets/images/casteria-decollage-partage.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Casteria, ton île sur la mer : le palais au coucher du soleil et le logo au dragon violet">
+<meta property="og:image:alt" content="Casteria : de nuit, une fusée décolle de l'île du palais vers le trou noir ; le logo au dragon violet">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="favicon.ico" sizes="48x48">
 <link rel="icon" type="image/png" sizes="32x32" href="assets/logo/favicon-32.png">
@@ -45,29 +45,26 @@
 </header>
 
 <main>
-<!-- LE HAUT DE PAGE : le palais au couchant, et un podium du jeu (le dessin de /top) avec trois boss en volume dessus :
-     le Roi Champignon, couronné, sur la première marche. -->
-<section class="heros vitrine-tete page" id="haut">
-  <div class="fond" aria-hidden="true"><img src="assets/images/casteria-palais-rade-couchant.jpg" alt="" width="1280" height="720" fetchpriority="high"></div>
-  <div class="dedans grille">
-    <div class="texte">
-      <span class="ruban">Le classement</span>
-      <h1>Le classement de Casteria</h1>
-      <p class="accroche">Qui mène le serveur ? Les meilleurs joueurs, comme sur /top en jeu : le Score de Casteria d'abord, puis l'île, les jeux, les boss, la mer et le progrès.</p>
-      <p class="gestes">
-        <a class="bouton bouton-or grand" href="#score">Voir le Score</a>
-        <a class="bouton bouton-bois" href="#categories">Toutes les catégories</a>
-      </p>
-    </div>
-    <div class="scene podium-scene" aria-hidden="true">
-      <div class="ps-groupe">
-        <img class="ps-podium pixel" src="assets/classement/podium.png" alt="" width="360" height="120">
-        <img class="ps-bete ps-2" src="assets/volume/yeti.png" alt="" width="520" height="520">
-        <img class="ps-bete ps-3" src="assets/volume/kraken.png" alt="" width="520" height="520">
-        <img class="ps-bete ps-1" src="assets/volume/roi_champignon.png" alt="" width="520" height="520">
-      </div>
-      <i class="eclat e1"></i><i class="eclat e2"></i><i class="eclat e3"></i><i class="eclat e5"></i>
-    </div>
+<!-- LE HAUT DE PAGE : la bannière du classement (14/10/2026), le podium, la couronne et le trou noir ; elle porte déjà son
+     titre, son logo et « Mis à jour toutes les 5 minutes » : aucun titre écrit par-dessus, le h1 reste pour Google et les
+     lecteurs d'écran (.lu). Sur un téléphone, sa version verticale. Pour changer d'image : une ligne par version (ses
+     sources et l'image de repli), un nouveau nom de fichier (les images restent une semaine chez les visiteurs). -->
+<section class="heros vitrine-tete banniere" id="haut">
+  <div class="fond plein-cadre">
+    <picture>
+      <source media="(max-width: 700px)" type="image/webp" srcset="assets/images/casteria-classement-banniere-telephone-768.webp 768w" sizes="calc(100vw - 24px)">
+      <source media="(max-width: 700px)" srcset="assets/images/casteria-classement-banniere-telephone-768.jpg 768w" sizes="calc(100vw - 24px)">
+      <source type="image/webp" srcset="assets/images/casteria-classement-banniere-1600.webp 1600w, assets/images/casteria-classement-banniere-2560.webp 2560w" sizes="min(1320px, 100vw - 32px)">
+      <img src="assets/images/casteria-classement-banniere-1600.jpg" alt="Classement : les meilleurs joueurs de Casteria, mis à jour toutes les 5 minutes ; le podium et sa couronne d'or, sous le trou noir" width="3168" height="1344" fetchpriority="high" decoding="async">
+    </picture>
+  </div>
+  <div class="dedans banniere-texte">
+    <h1 class="lu">Le classement de Casteria</h1>
+    <p class="accroche">Comme sur /top en jeu : le Score de Casteria d'abord, puis l'île, les jeux, les boss, la mer et le progrès.</p>
+    <p class="gestes">
+      <a class="bouton bouton-or grand" href="#score">Voir le Score</a>
+      <a class="bouton bouton-bois" href="#categories">Toutes les catégories</a>
+    </p>
   </div>
 </section>
 

@@ -9,7 +9,7 @@ const domaine = (process.argv[2] || '').replace(/\/+$/, '')
 if (!/^https:\/\/[a-z0-9.-]+\.[a-z]{2,}$/i.test(domaine)) { console.log('Usage : node outils/domaine.js https://ton-domaine.fr'); process.exit(1) }
 const PAGES = [['index.html', '', '1.0'], ['commencer.html', 'commencer.html', '0.8'], ['pirates.html', 'pirates.html', '0.8'], ['classement.html', 'classement.html', '0.7'], ['boutique.html', 'boutique.html', '0.6']]
 // l'image de partage : 1200 x 630, le format des réseaux (l'image d'origine, plus large, y perdait ses bords)
-const IMAGE = 'assets/images/casteria-serveur-minecraft-partage.jpg'
+const IMAGE = 'assets/images/casteria-decollage-partage.jpg'
 const jour = new Date().toISOString().slice(0, 10)
 fs.writeFileSync(path.join(RACINE, 'sitemap.xml'), '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
   PAGES.map(p => '  <url><loc>' + domaine + '/' + p[1] + '</loc><lastmod>' + jour + '</lastmod><priority>' + p[2] + '</priority></url>').join('\n') + '\n</urlset>\n')
