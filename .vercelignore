@@ -1,10 +1,9 @@
-# Ce qui ne part pas en ligne : Vercel ne publie que les pages, css/, js/, assets/, robots.txt, sitemap.xml et favicon.ico.
-# Sans package.json, Vercel n'installe rien et ne construit rien : il sert les fichiers tels quels.
+# Ce qui ne part pas en ligne : Vercel publie les pages, css/, js/, assets/, robots.txt, sitemap.xml et favicon.ico, et
+# la fonction du classement (api/). package.json et package-lock.json partent (14/10/2026) : Vercel y lit le pilote de
+# la base (mysql2, une version exacte) et l'installe pour la fonction ; il n'y a toujours rien à construire.
 README.md
 serveur.js
 outils
-package.json
-package-lock.json
 pnpm-lock.yaml
 node_modules
 captures

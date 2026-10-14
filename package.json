@@ -2,11 +2,16 @@
   "name": "casteria-site",
   "version": "0.1.0",
   "private": true,
-  "description": "Le site de Casteria, serveur Minecraft français : la vitrine, le guide du débutant, la boutique.",
+  "description": "Le site de Casteria, serveur Minecraft français : la vitrine, le guide du débutant, le classement, la boutique.",
   "scripts": {
     "dev": "node serveur.js",
     "start": "node serveur.js",
     "verifier": "node outils/verifier.js"
   },
-  "engines": { "node": ">=18" }
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "mysql2": "3.24.5"
+  }
 }

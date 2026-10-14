@@ -1,6 +1,7 @@
 # Casteria, le site
 
-La vitrine du serveur Minecraft Casteria : l'accueil, le guide « Par où commencer » et la boutique des crédits.
+La vitrine du serveur Minecraft Casteria : l'accueil, le guide « Par où commencer », le classement des joueurs et la
+boutique des crédits.
 
 ## Le voir tourner (GitHub Codespaces ou ton PC)
 
@@ -9,9 +10,11 @@ npm run dev
 ```
 
 Puis ouvre l'adresse affichée (le port 3000 ; dans Codespaces, clique sur « Ouvrir dans le navigateur »).
-Il n'y a rien à installer : pas de `npm install`, aucune dépendance. C'est un site statique (du HTML, du CSS et un peu de
-JavaScript) ; `serveur.js` est un tout petit serveur Node qui sert les fichiers tels quels. On peut aussi déposer le
-dossier chez n'importe quel hébergeur de sites statiques, sans rien construire.
+Les pages n'ont besoin de rien : c'est un site statique (du HTML, du CSS et un peu de JavaScript) ; `serveur.js` est un
+tout petit serveur Node qui sert les fichiers tels quels. Seul le classement lit quelque chose ailleurs : la fonction
+`api/classement.js` lit la base du jeu. Pour la voir tourner ici : `npm install` (une fois : le pilote de la base,
+`mysql2`), puis les cinq variables `CASTERIA_DB_*` (plus bas) avant `npm run dev`. Sans elles, la page du classement dit
+« Le classement revient dans quelques minutes. », et tout le reste du site marche.
 
 ## Les pages
 
@@ -20,6 +23,8 @@ dossier chez n'importe quel hébergeur de sites statiques, sans rien construire.
 | `index.html` | l'accueil : l'en-tête animé et le bouton de téléchargement, le concept, l'inédit (les boss, les armures, la mer, l'île qui grandit), la rangée de vidéos, les premiers pas, la boutique, le téléchargement |
 | `commencer.html` | « Par où commencer » : les dix premières étapes du jeu, les tickets et la roue, les astuces |
 | `pirates.html` | la mer : les bateaux, les pirates, les canons (la page qui vise « serveur Minecraft pirate ») |
+| `classement.html` | le classement : les mêmes catégories que `/top` en jeu, le Score de Casteria d'abord (son podium), puis l'île, les jeux, les boss, la mer et le progrès, les dix premiers de chacune ; lus à l'ouverture par `js/classement.js` dans `/api/classement` ; habillage : `css/classement.css` |
+| `api/classement.js` | la fonction de Vercel du classement : elle lit la base du jeu (une requête SELECT, en lecture seule) et rend du JSON ; Vercel garde la réponse 5 minutes |
 | `boutique.html` | la boutique : à quoi servent les crédits, et tes packs de Tebex, lus en direct (`js/boutique.config.js`, `js/boutique.js`) |
 | `merci.html` | la page où Tebex ramène le joueur après son paiement (hors de Google) |
 | `404.html` | la page des adresses qui n'existent pas (Vercel l'affiche tout seul, le petit serveur aussi) |
@@ -31,7 +36,8 @@ dossier chez n'importe quel hébergeur de sites statiques, sans rien construire.
 ## Mettre en ligne sur Vercel (casteria.fr)
 
 Il n'y a rien à construire : Vercel sert les fichiers tels quels. `.vercelignore` garde hors ligne tout ce qui n'est pas
-le site (`serveur.js`, `outils/`, ce README, `package.json`).
+le site (`serveur.js`, `outils/`, ce README). `package.json` et `package-lock.json` partent en ligne : Vercel y lit le
+pilote de la base (`mysql2`, une version exacte) et l'installe pour la fonction du classement (`api/`).
 
 1. Sur vercel.com : **Add New, Project**, importe le dépôt `casteria-site`. Ne touche à aucun réglage (Framework :
    **Other**, pas de commande de build, pas de dossier de sortie), puis **Deploy**.
@@ -44,6 +50,32 @@ le site (`serveur.js`, `outils/`, ce README, `package.json`).
    à ajouter dans la zone DNS), puis envoie-lui `https://casteria.fr/sitemap.xml`.
 
 Ensuite, chaque `git push` sur `main` remet le site en ligne.
+
+## Le classement (la base du jeu)
+
+La page `classement.html` montre les mêmes classements que `/top` en jeu. La fonction `api/classement.js` les lit dans
+la base du réseau de Casteria (MariaDB, la table `res_classement_stat` : une ligne par joueur et par chiffre, que les
+serveurs du jeu tiennent à jour ; un dossier retiré du classement n'y compte plus) :
+
+- **en lecture seule** : une seule requête SELECT, une connexion fermée à la fin, 4 secondes au plus pour répondre ;
+- **gardée 5 minutes par Vercel** (`Cache-Control: public, s-maxage=300, stale-while-revalidate=600`) : la base est lue
+  au plus une fois toutes les 5 minutes, quel que soit le nombre de visiteurs ;
+- **rien de privé** : les pseudos et les chiffres que `/top` montre déjà, jamais un identifiant ;
+- **en panne** (la base ne répond pas, une variable manque) : `{ "indisponible": true }` et le code 503, sans aucun
+  détail, jamais gardé ; la page dit « Le classement revient dans quelques minutes. » et propose « Réessayer ».
+
+Le Score de Casteria n'est pas rangé dans la base : chaque serveur du jeu le recalcule sur les autres chiffres, et la
+fonction fait le même calcul (`leaderboard.js` du jeu), avec les maximums du jeu écrits en tête du fichier : le niveau 60,
+les 15 boss, les 42 familiers et montures, les 234 étoiles des quêtes. **Quand le jeu en ajoute, ces chiffres suivent.**
+
+**Les cinq variables à régler dans Vercel** (Settings, Environment Variables, pour « Production ») : `CASTERIA_DB_HOST`,
+`CASTERIA_DB_PORT`, `CASTERIA_DB_USER`, `CASTERIA_DB_PASSWORD`, `CASTERIA_DB_NAME`. Leurs valeurs sont dans le fichier
+des clés de la base, hors du dépôt : elles ne s'écrivent JAMAIS ici. Une variable changée ne vaut qu'au déploiement
+suivant (Deployments, Redeploy).
+
+**L'essai sur ce PC** : `npm install`, puis `node outils/essai_classement.js <fichier des clés de la base> <sortie.json>`.
+La fonction est jouée contre la vraie base, sa réponse écrite dans `<sortie.json>` et relue (sa forme, aucun identifiant
+dedans), puis deux pannes (sans variables, une adresse qui n'existe pas : 503). Code 0 : tout est bon.
 
 ## Le domaine et le référencement
 
@@ -101,7 +133,8 @@ en garde du pseudo si elle disparaissait.
 - Le site parle d'un serveur où l'on joue : jamais « en développement », « bientôt », « pas encore ouvert ».
 - Avant de pousser : `npm run verifier` (un seul h1 par page, un texte pour chaque image, aucun lien cassé, aucun tiret long,
   aucun texte sombre sur un fond sombre ni clair sur le parchemin, aucun mot interdit, et le référencement : l'adresse
-  complète de chaque page, son image de partage, le plan du site).
+  complète de chaque page, son image de partage, le plan du site ; le classement : chaque menu y mène, sa fonction ne
+  prend ses identifiants que dans l'environnement et ne fait que lire, sa page n'écrit qu'en texte).
 
 ## Vérifier, photographier
 

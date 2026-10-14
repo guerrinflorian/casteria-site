@@ -1,8 +1,11 @@
-// Le petit serveur du site (aucune dépendance) : `npm run dev`, puis http://localhost:3000
+// Le petit serveur du site : `npm run dev`, puis http://localhost:3000
 // Il sert les fichiers du dossier tels quels, et sait envoyer un morceau de vidéo (les navigateurs le demandent).
+// /api/classement, comme en ligne : la fonction api/classement.js. Elle demande le pilote de la base (`npm install`, une
+// fois) et les cinq variables CASTERIA_DB_* ; sans eux, elle répond 503 et la page dit que le classement revient.
 'use strict'
 const http = require('http'), fs = require('fs'), path = require('path')
 const RACINE = __dirname, PORT = Number(process.env.PORT) || 3000
+function indisponible(res) { if (!res.headersSent) res.writeHead(503, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' }); res.end('{"indisponible":true}') }
 const TYPES = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.json': 'application/json',
   '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.webp': 'image/webp', '.svg': 'image/svg+xml', '.ico': 'image/x-icon',
   '.mp4': 'video/mp4', '.ttf': 'font/ttf', '.txt': 'text/plain; charset=utf-8', '.xml': 'application/xml; charset=utf-8' }
@@ -10,6 +13,9 @@ const TYPES = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=
 http.createServer((req, res) => {
   let chemin
   try { chemin = decodeURIComponent(new URL(req.url, 'http://x').pathname) } catch (e) { res.writeHead(400); return res.end() }
+  if (chemin === '/api/classement') {
+    try { return Promise.resolve(require(path.join(RACINE, 'api', 'classement.js'))(req, res)).catch(() => indisponible(res)) } catch (e) { return indisponible(res) }
+  }
   if (chemin.endsWith('/')) chemin += 'index.html'
   const fichier = path.join(RACINE, chemin)
   // jamais hors du dossier du site, jamais un fichier caché

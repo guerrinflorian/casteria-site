@@ -1,7 +1,7 @@
 // Les règles du site, vérifiées en une seconde : npm run verifier (code 0 : tout est bon)
 'use strict'
 const fs = require('fs'), path = require('path')
-const RACINE = path.join(__dirname, '..'), PAGES = ['index.html', 'commencer.html', 'pirates.html', 'boutique.html', 'merci.html', '404.html']
+const RACINE = path.join(__dirname, '..'), PAGES = ['index.html', 'commencer.html', 'pirates.html', 'classement.html', 'boutique.html', 'merci.html', '404.html']
 // LES FICHIERS LOURDS PERMIS (aucun depuis le 13/10/2026 : la bande-annonce de l'accueil a été retirée sur la demande du
 // propriétaire) : un fichier de plus de 5 Mo n'entre ici qu'avec son plafond en Mo, et la vidéo qui le cite porte
 // « data-clic » (chargée au clic du visiteur), jamais « data-auto »
@@ -25,7 +25,8 @@ function verifierBoutique(faute) {
   for (const k of ['adresse', 'cadre']) if (c[k] !== undefined && c[k] !== '' && !/^https:\/\/[a-z0-9-]+(\.[a-z0-9-]+)+(\/[^\s"\'<>]*)?$/i.test(String(c[k]))) faute('js/boutique.config.js : « ' + k + ' » doit être vide ou une adresse https complète')
   // AUCUNE CLÉ dans le dépôt : une longue suite de lettres et de chiffres (32 et plus) ne peut être que la fin du jeton public
   const permis = typeof jeton === 'string' && JETON.test(jeton) ? jeton.split('-')[1] : ''
-  const textes = fs.readdirSync(RACINE).filter(n => /\.(html|js|json|md|txt|xml)$/.test(n)).concat(fs.readdirSync(path.join(RACINE, 'js')).map(n => 'js/' + n), fs.readdirSync(path.join(RACINE, 'css')).map(n => 'css/' + n))
+  const textes = fs.readdirSync(RACINE).filter(n => /\.(html|js|json|md|txt|xml)$/.test(n)).concat(fs.readdirSync(path.join(RACINE, 'js')).map(n => 'js/' + n), fs.readdirSync(path.join(RACINE, 'css')).map(n => 'css/' + n),
+    fs.existsSync(path.join(RACINE, 'api')) ? fs.readdirSync(path.join(RACINE, 'api')).map(n => 'api/' + n) : [])
   for (const n of textes) {
     if (n === 'package-lock.json') continue
     for (const m of fs.readFileSync(path.join(RACINE, n), 'utf8').match(/[A-Fa-f0-9]{32,}/g) || []) if (m !== permis) faute(n + ' : une suite de ' + m.length + ' lettres et chiffres qui ressemble à une clé (« ' + m.slice(0, 6) + '... ») : aucune clé dans ce dépôt')
@@ -45,6 +46,28 @@ function verifierBoutique(faute) {
     for (const [quoi, motif] of [['la mise en garde « Une erreur de pseudo n\'est pas remboursée »', /Une erreur de pseudo n'est pas remboursée/], ['la case « je l\'ai vérifié »', /<input type="checkbox" id="pseudo-sur">/], ['le bouton « Payer » gris au départ', /id="achat-payer" disabled/], ['le champ du pseudo', /<input id="pseudo"/]]) if (!motif.test(page)) faute('boutique.html : ' + quoi + ' manque')
     if (!/Une erreur de pseudo n'est pas remboursée/.test(merci)) faute('merci.html : la phrase sur le remboursement manque')
   }
+}
+// LE CLASSEMENT (14/10/2026 : classement.html, api/classement.js, js/classement.js) : la fonction lit la base du jeu avec
+// les identifiants de ses variables d'environnement SEULEMENT, en lecture seule (une requête SELECT), et Vercel garde sa
+// réponse 5 minutes ; une panne rend 503 et { indisponible: true }, jamais gardée. La page n'écrit jamais un texte reçu
+// comme du code de page, et ne lit que /api/classement.
+function verifierClassement(faute) {
+  const api = lire('api/classement.js'), js = lire('js/classement.js')
+  if (!api) return faute('api/classement.js manque (la page du classement le lit)')
+  if (!js) return faute('js/classement.js manque')
+  for (const n of ['CASTERIA_DB_HOST', 'CASTERIA_DB_PORT', 'CASTERIA_DB_USER', 'CASTERIA_DB_PASSWORD', 'CASTERIA_DB_NAME']) if (!api.includes(n)) faute('api/classement.js : la variable ' + n + ' manque (les identifiants viennent de l\'environnement)')
+  if (/\b(host|user|password|database)\s*:\s*['"`]/.test(api)) faute('api/classement.js : un identifiant de la base écrit en clair (il ne vient que des variables CASTERIA_DB_*)')
+  if (/\b(INSERT|UPDATE|DELETE|REPLACE|CREATE|ALTER|DROP|TRUNCATE|GRANT|RENAME|LOCK|CALL|LOAD|HANDLER)\b/.test(api)) faute('api/classement.js : un ordre qui écrirait dans la base (lecture seule : SELECT)')
+  if (/multipleStatements\s*:\s*true/.test(api)) faute('api/classement.js : plusieurs ordres par requête sont interdits')
+  if (!/const SQL = 'SELECT /.test(api)) faute('api/classement.js : la requête doit être un SELECT')
+  if (!api.includes("'public, s-maxage=300, stale-while-revalidate=600'")) faute('api/classement.js : la réponse doit être gardée 5 minutes par Vercel (« public, s-maxage=300, stale-while-revalidate=600 »)')
+  if (!/repondre\(res, 503, \{ indisponible: true \}, 'no-store'\)/.test(api)) faute('api/classement.js : une panne rend 503 et { indisponible: true }, jamais gardée (no-store)')
+  if (/innerHTML|outerHTML|insertAdjacentHTML|document\.write|\beval\(/.test(js)) faute('js/classement.js : un texte reçu ne s\'écrit jamais comme du code de page (textContent seulement)')
+  for (const u of js.match(/https?:\/\/[^\s'"`)]+/g) || []) faute('js/classement.js : une adresse d\'un autre serveur : ' + u)
+  // (le code seul : la phrase de la panne est aussi dans le commentaire de tête, qui ne s'affiche jamais)
+  const code = js.split('\n').filter(l => !/^\s*\/\//.test(l)).join('\n')
+  if (!code.includes("'/api/classement'")) faute('js/classement.js : la page lit /api/classement')
+  if (!code.includes("'Le classement revient dans quelques minutes.'")) faute('js/classement.js : la phrase de la panne manque (« Le classement revient dans quelques minutes. »)')
 }
 // ---------- deux lecteurs, pour les règles du soir du 05/10 (la hero, les hauteurs, la barre du téléphone) ----------
 // Les règles d'une feuille de style : [{ sel, corps, media }]. Les commentaires sont retirés ; @media, @supports et
@@ -193,6 +216,13 @@ for (const page of PAGES) {
     if (/<nav class="barre-jeu"/.test(nu)) faute('la barre du pied de l\'écran du téléphone (<nav class="barre-jeu">) est revenue')
     if (/<button class="menu"/.test(nu)) faute('l\'ancien bouton du menu (<button class="menu">) est encore là')
   }
+  // LE CLASSEMENT DANS LE MENU (14/10/2026) : le menu du haut de chaque page y mène, et son pied aussi (sur un téléphone,
+  // le menu du haut ne garde que la Boutique et « Jouer » : le pied porte le reste)
+  {
+    const m = nu.indexOf('<nav aria-label="Le menu">'), p = nu.indexOf('<nav aria-label="Le pied de page">')
+    if (m >= 0 && !/<a href="\/?classement\.html"( aria-current="page")?>Classement<\/a>/.test(dedans(nu, m, 'nav'))) faute('le menu du haut ne mène pas au classement (classement.html)')
+    if (p >= 0 && !/<a href="\/?classement\.html">Classement<\/a>/.test(dedans(nu, p, 'nav'))) faute('le pied de page ne mène pas au classement (classement.html)')
+  }
   // LES CARROUSELS (css/carrousel.css, js/carrousel.js) : une des trois sortes, au moins deux vues, et la page charge
   // la feuille et le script
   {
@@ -242,7 +272,8 @@ else if ((PLAN.match(/<loc>/g) || []).length !== PAGES.length - HORS_GOOGLE.leng
   // fond d'une hero) n'est pas mesurée ici.
   const GARDE = 'main img, main video { max-height: 100svh; }'
   if (!css.includes(GARDE)) faute('la règle garde manque, telle quelle : ' + GARDE)
-  const regles = reglesCss(css).map(r => Object.assign({ f: 'css/style.css' }, r)).concat(reglesCss(lire('css/carrousel.css')).map(r => Object.assign({ f: 'css/carrousel.css' }, r)))
+  const regles = reglesCss(css).map(r => Object.assign({ f: 'css/style.css' }, r)).concat(reglesCss(lire('css/carrousel.css')).map(r => Object.assign({ f: 'css/carrousel.css' }, r)),
+    reglesCss(lire('css/classement.css')).map(r => Object.assign({ f: 'css/classement.css' }, r)))
   for (const r of regles) {
     const sels = r.sel.split(',').map(x => x.trim()), ou = r.f + ', « ' + r.sel.slice(0, 70) + ' »' + (r.media ? ' (' + r.media + ')' : '')
     if (sels.some(x => /(^|[\s>+~])(img|video|picture)(?![\w-])[^\s>+~]*$/.test(x))) {
@@ -255,7 +286,7 @@ else if ((PLAN.match(/<loc>/g) || []).length !== PAGES.length - HORS_GOOGLE.leng
     if (sels.some(x => /\.(fond|scene)(?![\w-])(:[\w-]+(\([^)]*\))?)*$/.test(x)) && /display\s*:\s*none|visibility\s*:\s*hidden/.test(r.corps)) faute(ou + ' : le fond ou la scène d\'une hero est caché')
   }
 }
-for (const f of ['css/style.css', 'css/carrousel.css', 'js/site.js', 'js/carrousel.js', 'js/boutique.js', 'js/boutique.config.js', 'README.md', 'serveur.js']) {
+for (const f of ['css/style.css', 'css/carrousel.css', 'css/classement.css', 'js/site.js', 'js/carrousel.js', 'js/boutique.js', 'js/boutique.config.js', 'js/classement.js', 'api/classement.js', 'outils/essai_classement.js', 'README.md', 'serveur.js']) {
   const s = fs.readFileSync(path.join(RACINE, f), 'utf8')
   for (const t of TIRETS) if (s.includes(t)) { console.log(f); faute('un tiret long ou moyen') }
 }
@@ -272,6 +303,8 @@ let total = 0
 })(RACINE)
 console.log('js/boutique.config.js')
 verifierBoutique(faute)
+console.log('api/classement.js, js/classement.js')
+verifierClassement(faute)
 console.log('le site pèse ' + (total / 1048576).toFixed(1) + ' Mo')
 console.log(fautes ? fautes + ' faute(s)' : 'tout est bon')
 process.exit(fautes ? 1 : 0)

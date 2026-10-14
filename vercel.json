@@ -2,6 +2,9 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": null,
   "trailingSlash": false,
+  "functions": {
+    "api/classement.js": { "maxDuration": 10 }
+  },
   "redirects": [
     { "source": "/index.html", "destination": "/", "permanent": true }
   ],

@@ -85,7 +85,22 @@ const MUTANTS = [
   ['un mot interdit (le serveur « en développement »)', 'index.html', s => s.replace('</main>', '<p>Le serveur est en développement.</p></main>')],
   ['une page retiree du plan du site', 'sitemap.xml', s => s.replace(/<url>(?:(?!<\/url>)[\s\S])*pirates\.html[\s\S]*?<\/url>\s*/, '')],
   ['un fichier cite qui n existe pas', 'index.html', s => s.replace(/src="assets\/images\/([^"]+)"/, 'src="assets/images/absente-$1"')],
-  ['un bloc JSON-LD mal ecrit', 'index.html', s => s.replace(/(<script type="application\/ld\+json">\s*\{)/, '$1,')]
+  ['un bloc JSON-LD mal ecrit', 'index.html', s => s.replace(/(<script type="application\/ld\+json">\s*\{)/, '$1,')],
+
+  // ---------- le classement (14/10/2026) : la fonction lit la base en lecture seule, ses identifiants viennent de
+  // l'environnement ; la page n'écrit qu'en texte et ne lit que /api/classement ; chaque menu y mène ----------
+  ['un mot de passe ecrit en clair dans la fonction du classement', 'api/classement.js', s => s.replace('password: r.password', "password: 'motdepasse'")],
+  ['un ordre qui ecrit dans la base', 'api/classement.js', s => s.replace("const SQL = 'SELECT s.pseudo", "const SQL = 'DELETE FROM x; SELECT s.pseudo")],
+  ['plusieurs ordres par requete permis', 'api/classement.js', s => s.replace("charset: 'utf8mb4' }", "charset: 'utf8mb4', multipleStatements: true }")],
+  ['le classement garde 30 s au lieu de 5 minutes', 'api/classement.js', s => s.replace('s-maxage=300', 's-maxage=30')],
+  ['une panne du classement gardee par Vercel', 'api/classement.js', s => s.split("{ indisponible: true }, 'no-store')").join("{ indisponible: true }, 'public, s-maxage=300')")],
+  ['un pseudo ecrit comme du code de page', 'js/classement.js', s => s.replace("li.appendChild(el('span', 'cl-pseudo', String(e.pseudo)))", "var sp = el('span', 'cl-pseudo'); sp.innerHTML = e.pseudo; li.appendChild(sp)")],
+  ['la page du classement qui lit un autre serveur', 'js/classement.js', s => s.replace("var API = '/api/classement'", "var API = 'https://exemple.test/api/classement'")],
+  ['la phrase de la panne du classement retiree', 'js/classement.js', s => s.replace("var PANNE = 'Le classement revient dans quelques minutes.'", "var PANNE = 'Erreur.'")],
+  ['le lien Classement retire du menu d une page', 'pirates.html', s => s.replace('\n    <a href="classement.html">Classement</a>', '')],
+  ['le lien Classement retire du pied d une page', 'boutique.html', s => s.replace('<a href="classement.html">Classement</a><a href="boutique.html">', '<a href="boutique.html">')],
+  ['la page du classement retiree du plan du site', 'sitemap.xml', s => s.replace(/<url>(?:(?!<\/url>)[\s\S])*classement\.html[\s\S]*?<\/url>\s*/, '')],
+  ['une image trop haute dans la feuille du classement', 'css/classement.css', s => s + '\n.cl-rangs .cl-rang img { height: 1200px; }\n']
 ]
 
 let rates = 0, code = 0
