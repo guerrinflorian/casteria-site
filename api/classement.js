@@ -4,14 +4,20 @@
 // son dossier est retiré du classement). Pour chaque catégorie, dans l'ordre de /top (le Score de Casteria d'abord) :
 // son titre, une phrase, ses dix premiers (le rang, le pseudo, la valeur) ; et l'heure de la lecture.
 // RIEN DE PRIVÉ : les pseudos et les chiffres que /top montre déjà, jamais un identifiant de joueur ni de la base.
-// LA BASE EN LECTURE SEULE : une seule requête SELECT, sur UNE connexion fermée à la fin, avec un délai court. Ses
-// identifiants : les cinq variables d'environnement CASTERIA_DB_* (réglées dans Vercel), jamais un fichier du dépôt.
+// LA BASE EN LECTURE SEULE : une seule requête SELECT, sur UNE connexion fermée à la fin, 9 s au plus. Ses identifiants :
+// les cinq variables d'environnement CASTERIA_DB_* (réglées dans Vercel), jamais un fichier du dépôt. La fonction tourne
+// à Paris (vercel.json, « regions » : cdg1), au plus près de la base.
 // Vercel garde la réponse 5 minutes (s-maxage) : la base est lue au plus une fois toutes les 5 minutes.
-// En panne (la base ne répond pas, une variable manque) : { indisponible: true } et le code 503, sans aucun détail.
+// En panne (la base ne répond pas, une variable manque) : { indisponible: true, raison } et le code 503 ; la raison est un
+// mot ou le code de l'erreur (raisonDe, plus bas), jamais un détail qui dirait un hôte, un nom ou un mot de passe.
 'use strict'
 
 const TABLE = 'res_classement_stat'
-const DELAI_MS = 4000
+// LES DÉLAIS (14/10/2026 : en ligne, la connexion depuis Washington tombait en ETIMEDOUT ; la fonction tourne maintenant à
+// Paris, vercel.json « regions ») : 8 s pour se connecter, 9 s en tout, requête comprise : la réponse part toujours avant
+// les 10 s que Vercel accorde à la fonction (maxDuration)
+const DELAI_CONNEXION_MS = 8000
+const DELAI_TOTAL_MS = 9000
 const TOP = 10
 // la forme d'un pseudo du jeu (la table n'en accepte pas d'autre ; une ligne qui s'en écarterait n'est jamais rendue)
 const PSEUDO = /^[A-Za-z0-9_]{1,16}$/
@@ -200,19 +206,24 @@ function classement(lignes, maintenant) {
 }
 
 // ---------- la base ----------
+// (14/10/2026) chaque valeur sans ses blancs du bout : une valeur collée dans Vercel avec une espace ou un retour à la
+// ligne de trop ne doit pas faire tomber la connexion
 function reglages(env) {
-  const e = env || {}
-  const host = String(e.CASTERIA_DB_HOST || ''), user = String(e.CASTERIA_DB_USER || ''), password = String(e.CASTERIA_DB_PASSWORD || '')
-  const database = String(e.CASTERIA_DB_NAME || ''), port = Number(e.CASTERIA_DB_PORT || 3306)
+  const e = env || {}, v = n => String(e[n] || '').trim()
+  const host = v('CASTERIA_DB_HOST'), user = v('CASTERIA_DB_USER'), password = v('CASTERIA_DB_PASSWORD')
+  const database = v('CASTERIA_DB_NAME'), port = Number(v('CASTERIA_DB_PORT') || 3306)
   if (!host || !user || !password || !database || !(port > 0 && port < 65536)) return null
   return { host: host, port: port, user: user, password: password, database: database }
 }
 async function lireBase(r) {
   const mysql = require('mysql2/promise')
-  const cx = await mysql.createConnection({ host: r.host, port: r.port, user: r.user, password: r.password, database: r.database, connectTimeout: DELAI_MS, charset: 'utf8mb4' })
+  const debut = Date.now()
+  const cx = await mysql.createConnection({ host: r.host, port: r.port, user: r.user, password: r.password, database: r.database, connectTimeout: DELAI_CONNEXION_MS, charset: 'utf8mb4' })
   let fini = false
   try {
-    const [lignes] = await cx.query({ sql: SQL, timeout: DELAI_MS, values: [STATS] })
+    // la requête a le temps qui reste sur les 9 s (une demi-seconde au moins)
+    const reste = Math.max(500, DELAI_TOTAL_MS - (Date.now() - debut))
+    const [lignes] = await cx.query({ sql: SQL, timeout: reste, values: [STATS] })
     fini = true
     return lignes
   } finally {
@@ -227,20 +238,29 @@ function repondre(res, code, corps, cache) {
   res.end(JSON.stringify(corps))
 }
 
+// LA RAISON D'UNE PANNE (14/10/2026 : en ligne, la panne se lit sans les journaux de Vercel) : « variables » (une variable
+// CASTERIA_DB_* manque), « calcul », ou le CODE de l'erreur de la base tel quel (ENOTFOUND, ETIMEDOUT, ECONNREFUSED,
+// ER_ACCESS_DENIED_ERROR, ER_DBACCESS_DENIED_ERROR, MODULE_NOT_FOUND...) : un mot en capitales, rien d'autre ; jamais son
+// texte, un hôte ni un nom (un code d'une autre forme devient « erreur »)
+function raisonDe(e) {
+  const c = String((e && e.code) || '')
+  return /^[A-Z][A-Z0-9_]{1,40}$/.test(c) ? c : 'erreur'
+}
+
 async function gerer(req, res) {
   if (req.method !== 'GET' && req.method !== 'HEAD') { res.setHeader('Allow', 'GET, HEAD'); return repondre(res, 405, { indisponible: true }, 'no-store') }
   const r = reglages(process.env)
-  if (!r) { console.error('classement : une variable CASTERIA_DB_* manque'); return repondre(res, 503, { indisponible: true }, 'no-store') }
+  if (!r) { console.error('classement : une variable CASTERIA_DB_* manque'); return repondre(res, 503, { indisponible: true, raison: 'variables' }, 'no-store') }
   let lignes
   try { lignes = await lireBase(r) } catch (e) {
-    // au journal de Vercel : le code de l'erreur seul (jamais l'adresse ni un identifiant de la base)
-    console.error('classement : la base ne répond pas (' + String((e && e.code) || 'erreur') + ')')
-    return repondre(res, 503, { indisponible: true }, 'no-store')
+    const raison = raisonDe(e)
+    console.error('classement : la base ne répond pas (' + raison + ')')
+    return repondre(res, 503, { indisponible: true, raison: raison }, 'no-store')
   }
   let corps
   try { corps = classement(lignes, Date.now()) } catch (e2) {
     console.error('classement : le calcul a échoué')
-    return repondre(res, 503, { indisponible: true }, 'no-store')
+    return repondre(res, 503, { indisponible: true, raison: 'calcul' }, 'no-store')
   }
   return repondre(res, 200, corps, CACHE_OK)
 }

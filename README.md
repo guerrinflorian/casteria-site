@@ -53,16 +53,28 @@ Ensuite, chaque `git push` sur `main` remet le site en ligne.
 
 ## Le classement (la base du jeu)
 
+Chaque page y mène par son en-tête : le mot « Classement » sur ordinateur ; sur tablette et téléphone, sa coupe en
+pixels (`assets/icones/classement.png`), à côté de la Boutique et avant « Jouer », une cible de 44 px pour le doigt.
+
 La page `classement.html` montre les mêmes classements que `/top` en jeu. La fonction `api/classement.js` les lit dans
 la base du réseau de Casteria (MariaDB, la table `res_classement_stat` : une ligne par joueur et par chiffre, que les
 serveurs du jeu tiennent à jour ; un dossier retiré du classement n'y compte plus) :
 
-- **en lecture seule** : une seule requête SELECT, une connexion fermée à la fin, 4 secondes au plus pour répondre ;
+- **en lecture seule** : une seule requête SELECT, une connexion fermée à la fin, 8 secondes pour se connecter et 9 en
+  tout (Vercel en accorde 10 à la fonction : `maxDuration`) ;
+- **à Paris** (`vercel.json` : `"regions": ["cdg1"]`, au niveau du projet, la seule fonction du site) : au plus près
+  de la base, en France. Depuis Washington (la région de Vercel par défaut), la connexion tombait en `ETIMEDOUT` ;
 - **gardée 5 minutes par Vercel** (`Cache-Control: public, s-maxage=300, stale-while-revalidate=600`) : la base est lue
   au plus une fois toutes les 5 minutes, quel que soit le nombre de visiteurs ;
 - **rien de privé** : les pseudos et les chiffres que `/top` montre déjà, jamais un identifiant ;
-- **en panne** (la base ne répond pas, une variable manque) : `{ "indisponible": true }` et le code 503, sans aucun
-  détail, jamais gardé ; la page dit « Le classement revient dans quelques minutes. » et propose « Réessayer ».
+- **en panne** (la base ne répond pas, une variable manque) : `{ "indisponible": true, "raison": ... }` et le code 503,
+  jamais gardé ; la page dit « Le classement revient dans quelques minutes. » et propose « Réessayer ». La raison se lit
+  sans les journaux de Vercel (ouvrir `https://casteria.fr/api/classement`) : `variables` (une variable `CASTERIA_DB_*`
+  manque au déploiement), `calcul`, ou le code de l'erreur de la base tel quel (`ENOTFOUND` : l'hôte mal écrit ;
+  `ETIMEDOUT` : la base ne répond pas aux serveurs de Vercel, un pare-feu ; `ECONNREFUSED` : le port ;
+  `ER_ACCESS_DENIED_ERROR` : l'utilisateur ou le mot de passe, ou une connexion refusée depuis cette machine ;
+  `ER_DBACCESS_DENIED_ERROR`, `ER_BAD_DB_ERROR` : le nom de la base ; `MODULE_NOT_FOUND` : `mysql2` pas installé) ;
+  jamais un hôte, un nom ni le texte d'une erreur.
 
 Le Score de Casteria n'est pas rangé dans la base : chaque serveur du jeu le recalcule sur les autres chiffres, et la
 fonction fait le même calcul (`leaderboard.js` du jeu), avec les maximums du jeu écrits en tête du fichier : le niveau 60,

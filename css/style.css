@@ -44,6 +44,10 @@ h1, h2, h3 { font-family: "Lilita One", "Fredoka", sans-serif; font-weight: 400;
 .barre nav a:hover, .barre nav a[aria-current="page"] { color: var(--or-clair); border-bottom-color: var(--or); }
 .barre nav a.boutique { color: var(--violet-clair); display: inline-flex; align-items: center; gap: 6px; }
 .barre nav a.boutique img { width: 20px; height: 20px; }
+/* LE CLASSEMENT (14/10/2026) : sur ordinateur, un mot à sa place dans le menu, comme « Le jeu » ; sur tablette et sur
+   téléphone, sa coupe en pixels (assets/icones/classement.png), à côté de la Boutique et avant « Jouer » (plus bas) */
+.barre nav a.classement { display: inline-flex; align-items: center; gap: 6px; }
+.barre nav a.classement img { display: none; width: 20px; height: 20px; }
 .barre nav a.bouton { color: var(--encre); margin-left: 8px; }
 .barre nav a.bouton, .barre nav a.bouton:hover { color: var(--encre); border-bottom: 15px solid transparent; }
 .barre nav a.bouton.petit, .barre nav a.bouton.petit:hover { border-bottom-width: 12px; }
@@ -513,12 +517,17 @@ main img, main video { max-height: 100svh; }
 .accueil .v-coffre { width: 34%; left: 4%; bottom: -10%; } .accueil .v-coffre img { animation: flotte 6.4s ease-in-out -2.4s infinite; }
 
 /* LE MENU DU TÉLÉPHONE (le propriétaire, 07/10 : « la barre sur mobile en bas c'est affreux ») : plus de barre au pied de
-   l'écran. En haut, une barre fine : le logo, la Boutique et Télécharger ; le reste est dans le pied de page. */
+   l'écran. En haut, une barre fine : le logo, le Classement (sa coupe, depuis le 14/10), la Boutique et « Jouer » ; le
+   reste est dans le pied de page. */
 @media (max-width: 960px) {
   .barre .menu { display: none; }
-  .barre nav { position: static; display: flex; flex-direction: row; align-items: center; gap: 12px; background: none; padding: 0; box-shadow: none; width: auto; max-height: none; }
-  .barre nav a:not(.bouton):not(.boutique) { display: none; }
+  /* (14/10/2026) sans le trait d'or de l'ancien menu déroulant (border-bottom, plus haut) : sur une tablette, il soulignait
+     tout le menu, comme une page ouverte */
+  .barre nav { position: static; display: flex; flex-direction: row; align-items: center; gap: 12px; background: none; padding: 0; box-shadow: none; width: auto; max-height: none; border-bottom: 0; }
+  .barre nav a:not(.bouton):not(.boutique):not(.classement) { display: none; }
   .barre nav a.boutique { font-size: 14px; }
+  .barre nav a.classement { font-size: 14px; color: var(--or-clair); }
+  .barre nav a.classement img { display: block; }
   .barre { padding: 8px 14px; }
   .barre .marque { font-size: 20px; } .barre .marque img { width: 36px; height: 36px; }
   /* le haut de page sur téléphone : la scène en volume D'ABORD (une image dès le premier écran), le texte dessous */
@@ -533,6 +542,12 @@ html.photo .vitrine-tete .logo, html.photo .accueil .vol img { animation: none; 
   .vitrine-tete .logo, .accueil .vol img { animation: none; }
 }
 @media (max-width: 960px) { .barre nav { margin-left: auto; } }
+/* sur téléphone, la coupe seule, comme la Boutique : son nom reste lu (aria-label « Classement »), et le doigt a une
+   cible de 44 px au moins */
+@media (max-width: 600px) {
+  .barre.verre nav a.classement { font-size: 0; gap: 0; min-width: 44px; min-height: 44px; justify-content: center; }
+  .barre.verre nav a.classement img { width: 26px; height: 26px; }
+}
 
 /* LA HERO DE L'ACCUEIL, RETOUCHES DE LA TÊTE (05/10, 21:10) : un fond net, le voile sous le texte SEULEMENT (la moitié
    droite en pleine lumière), les modèles POSÉS dans la scène (une ombre au sol, le boss devant, la monture en vol

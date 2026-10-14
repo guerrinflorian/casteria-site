@@ -61,7 +61,20 @@ function verifierClassement(faute) {
   if (/multipleStatements\s*:\s*true/.test(api)) faute('api/classement.js : plusieurs ordres par requête sont interdits')
   if (!/const SQL = 'SELECT /.test(api)) faute('api/classement.js : la requête doit être un SELECT')
   if (!api.includes("'public, s-maxage=300, stale-while-revalidate=600'")) faute('api/classement.js : la réponse doit être gardée 5 minutes par Vercel (« public, s-maxage=300, stale-while-revalidate=600 »)')
-  if (!/repondre\(res, 503, \{ indisponible: true \}, 'no-store'\)/.test(api)) faute('api/classement.js : une panne rend 503 et { indisponible: true }, jamais gardée (no-store)')
+  // (14/10/2026) la panne dit sa raison : un mot (variables, calcul) ou le CODE de l'erreur, filtré (un mot en capitales),
+  // jamais le texte d'une erreur (il peut dire un hôte ou un nom)
+  const pannes = api.split('\n').filter(l => l.includes('repondre(res, 503,'))
+  if (!pannes.length || pannes.some(l => !/repondre\(res, 503, \{ indisponible: true, raison: [^}]*\}, 'no-store'\)/.test(l))) faute('api/classement.js : une panne rend 503 et { indisponible: true, raison }, jamais gardée (no-store)')
+  if (!api.includes('/^[A-Z][A-Z0-9_]{1,40}$/')) faute('api/classement.js : la raison d\'une panne n\'est que le code de l\'erreur, un mot en capitales (raisonDe)')
+  if (/\.(message|sqlMessage|stack)\b/.test(api)) faute('api/classement.js : le texte d\'une erreur ne sort jamais (il peut dire un hôte ou un nom)')
+  // (14/10/2026, en ligne : ETIMEDOUT depuis Washington) la fonction tourne à Paris, près de la base, et répond avant la
+  // limite que Vercel lui donne : 9 s en tout, 10 s accordées
+  let vj = null
+  try { vj = JSON.parse(lire('vercel.json')) } catch (e) { vj = null }
+  if (!vj || !Array.isArray(vj.regions) || vj.regions.join(',') !== 'cdg1') faute('vercel.json : la fonction du classement tourne à Paris (« regions »: ["cdg1"]), près de la base')
+  const fn = vj && vj.functions && vj.functions['api/classement.js']
+  const total = Number((api.match(/const DELAI_TOTAL_MS = (\d+)/) || [])[1]) || 0
+  if (!fn || !(fn.maxDuration > 0) || !(total > 0) || total >= fn.maxDuration * 1000) faute('api/classement.js : son délai total (DELAI_TOTAL_MS) doit tenir sous la limite de Vercel (vercel.json, maxDuration)')
   if (/innerHTML|outerHTML|insertAdjacentHTML|document\.write|\beval\(/.test(js)) faute('js/classement.js : un texte reçu ne s\'écrit jamais comme du code de page (textContent seulement)')
   for (const u of js.match(/https?:\/\/[^\s'"`)]+/g) || []) faute('js/classement.js : une adresse d\'un autre serveur : ' + u)
   // (le code seul : la phrase de la panne est aussi dans le commentaire de tête, qui ne s'affiche jamais)
@@ -216,11 +229,12 @@ for (const page of PAGES) {
     if (/<nav class="barre-jeu"/.test(nu)) faute('la barre du pied de l\'écran du téléphone (<nav class="barre-jeu">) est revenue')
     if (/<button class="menu"/.test(nu)) faute('l\'ancien bouton du menu (<button class="menu">) est encore là')
   }
-  // LE CLASSEMENT DANS LE MENU (14/10/2026) : le menu du haut de chaque page y mène, et son pied aussi (sur un téléphone,
-  // le menu du haut ne garde que la Boutique et « Jouer » : le pied porte le reste)
+  // LE CLASSEMENT DANS LE MENU (14/10/2026) : le menu du haut de chaque page y mène, avec sa coupe en pixels (sur tablette et
+  // téléphone, la coupe seule, à côté de la Boutique et avant « Jouer ») et son nom lu (aria-label) ; le pied aussi
   {
     const m = nu.indexOf('<nav aria-label="Le menu">'), p = nu.indexOf('<nav aria-label="Le pied de page">')
-    if (m >= 0 && !/<a href="\/?classement\.html"( aria-current="page")?>Classement<\/a>/.test(dedans(nu, m, 'nav'))) faute('le menu du haut ne mène pas au classement (classement.html)')
+    const LIEN = /<a class="classement" href="\/?classement\.html"( aria-current="page")? aria-label="Classement"><img class="pixel" src="\/?assets\/icones\/classement\.png" alt="" width="20" height="20">Classement<\/a>/
+    if (m >= 0 && !LIEN.test(dedans(nu, m, 'nav'))) faute('le menu du haut ne mène pas au classement avec sa coupe et son nom (<a class="classement" ... aria-label="Classement"><img ... assets/icones/classement.png ...>Classement</a>)')
     if (p >= 0 && !/<a href="\/?classement\.html">Classement<\/a>/.test(dedans(nu, p, 'nav'))) faute('le pied de page ne mène pas au classement (classement.html)')
   }
   // LES CARROUSELS (css/carrousel.css, js/carrousel.js) : une des trois sortes, au moins deux vues, et la page charge
@@ -284,6 +298,16 @@ else if ((PLAN.match(/<loc>/g) || []).length !== PAGES.length - HORS_GOOGLE.leng
     }
     // LA HERO SUR UN TÉLÉPHONE : son fond et sa scène ne sont jamais cachés, dans aucune requête de largeur
     if (sels.some(x => /\.(fond|scene)(?![\w-])(:[\w-]+(\([^)]*\))?)*$/.test(x)) && /display\s*:\s*none|visibility\s*:\s*hidden/.test(r.corps)) faute(ou + ' : le fond ou la scène d\'une hero est caché')
+  }
+  // LE CLASSEMENT DANS L'EN-TÊTE D'UN ÉCRAN ÉTROIT (14/10/2026) : la règle qui y cache les liens du menu épargne
+  // .classement, rien ne cache son lien, et sur téléphone sa coupe est une cible de 44 px au moins pour le doigt
+  {
+    const cacheLiens = regles.filter(r => r.f === 'css/style.css' && /\.barre nav a:not\(/.test(r.sel) && /display\s*:\s*none/.test(r.corps))
+    if (!cacheLiens.length || cacheLiens.some(r => !r.sel.includes(':not(.classement)'))) faute('css/style.css : sur tablette et téléphone, la règle qui cache les liens du menu doit épargner le classement (:not(.classement))')
+    if (regles.some(r => r.media && r.sel.split(',').some(x => /a\.classement\s*$/.test(x)) && /display\s*:\s*none/.test(r.corps))) faute('css/style.css : le lien du classement est caché sur un écran étroit')
+    const cible = regles.find(r => /max-width:\s*600px/.test(r.media || '') && /a\.classement\s*$/.test(r.sel))
+    const px = p => { const x = cible ? (cible.corps.match(new RegExp('(?:^|;|\\s)' + p + '\\s*:\\s*(\\d+)px')) || [])[1] : 0; return x ? +x : 0 }
+    if (!cible || px('min-width') < 44 || px('min-height') < 44) faute('css/style.css : sur téléphone, la coupe du classement doit être une cible de 44 px au moins (min-width et min-height)')
   }
 }
 for (const f of ['css/style.css', 'css/carrousel.css', 'css/classement.css', 'js/site.js', 'js/carrousel.js', 'js/boutique.js', 'js/boutique.config.js', 'js/classement.js', 'api/classement.js', 'outils/essai_classement.js', 'README.md', 'serveur.js']) {

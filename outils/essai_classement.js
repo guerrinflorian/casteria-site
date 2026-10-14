@@ -4,7 +4,8 @@
 // Le fichier des clés (hors du dépôt, JAMAIS dans git) : un JSON { hote, port, base, utilisateur, mot_de_passe }. Ses
 // valeurs ne sont jamais affichées ni écrites : elles passent à la fonction par ses cinq variables CASTERIA_DB_*, dans ce
 // processus seulement. La réponse est écrite dans <sortie.json>, puis relue : sa forme, et qu'aucun identifiant de la
-// base n'y figure. Deux pannes sont jouées aussi (sans variables, une adresse qui n'existe pas) : 503 et rien d'autre.
+// base n'y figure. Deux pannes sont jouées aussi (sans variables, une adresse qui n'existe pas) : 503 et leur raison
+// (« variables », le code de l'erreur), rien d'autre.
 // Code 0 : tout est bon.
 'use strict'
 const fs = require('fs'), path = require('path')
@@ -71,13 +72,18 @@ function appeler(methode) {
     }
   }
 
-  // 2. LES PANNES : sans variables, puis une adresse qui n'existe pas (aucune base n'est jointe)
-  for (const [nom, env] of [['sans variables', null], ['une adresse qui n\'existe pas', { CASTERIA_DB_HOST: 'base.invalid', CASTERIA_DB_PORT: '3306', CASTERIA_DB_USER: 'essai', CASTERIA_DB_PASSWORD: 'essai', CASTERIA_DB_NAME: 'essai' }]]) {
+  // 2. LES PANNES : sans variables, puis une adresse qui n'existe pas (aucune base n'est jointe) ; chacune dit sa raison,
+  // un mot (« variables ») ou le code de l'erreur (ENOTFOUND...), et rien d'autre : ni une valeur des variables ni un texte
+  const essai = { CASTERIA_DB_HOST: 'base.invalid', CASTERIA_DB_PORT: '3306', CASTERIA_DB_USER: 'utilisateur_essai', CASTERIA_DB_PASSWORD: 'mot_de_passe_essai', CASTERIA_DB_NAME: 'base_essai' }
+  for (const [nom, env, raison] of [['sans variables', null, /^variables$/], ['une adresse qui n\'existe pas', essai, /^[A-Z][A-Z0-9_]{1,40}$/]]) {
     poser(env)
     const t = Date.now(), p = await appeler('GET')
     poser(null)
     console.log('la panne « ' + nom + ' » : code ' + p.code + ' en ' + (Date.now() - t) + ' ms, ' + p.corps)
-    if (p.code !== 503 || p.corps !== '{"indisponible":true}') faute('la panne « ' + nom + ' » doit rendre 503 et {"indisponible":true}, rien d\'autre')
+    let o = null
+    try { o = JSON.parse(p.corps) } catch (e) { o = null }
+    if (p.code !== 503 || !o || o.indisponible !== true || !raison.test(String(o.raison)) || Object.keys(o).length !== 2) faute('la panne « ' + nom + ' » doit rendre 503 et { indisponible: true, raison }, rien d\'autre')
+    if (env) for (const v of Object.values(env)) if (v.length > 4 && p.corps.includes(v)) faute('la panne « ' + nom + ' » dit une valeur des variables')
     if (p.tetes['cache-control'] !== 'no-store') faute('la panne « ' + nom + ' » ne doit jamais être gardée (Cache-Control: no-store)')
   }
   const m = await appeler('POST')
