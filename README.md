@@ -14,9 +14,12 @@ Les pages n'ont besoin de rien : c'est un site statique (du HTML, du CSS et un p
 tout petit serveur Node qui sert les fichiers tels quels. Seul le classement lit quelque chose ailleurs : la page lit le
 fichier `classement.json` d'un gist GitHub, que le serveur du jeu réécrit lui-même au plus toutes les 5 minutes (son
 compte et son identifiant : `GIST_COMPTE` et `GIST_ID`, en tête de `js/classement.js`). Tant que `GIST_ID` est vide, ou si
-le fichier ne répond pas, la page dit « Le classement arrive très bientôt sur le site. En jeu, tape /top. », et tout le
+le fichier ne répond pas, la page dit « Le classement ne s'affiche pas pour l'instant. En jeu, tape /top. », et tout le
 reste du site marche. (La fonction `api/classement.js`, qui lisait la base du jeu, reste mais la page ne la lit plus : la
-base refuse les connexions venues de Vercel.)
+base refuse les connexions venues de Vercel.) Depuis la 125 du jeu, un temps de donjon porte aussi `donjon` (`id`, `nom`,
+`niveau`) et `tailles` (les classements seul, à deux, à trois) : la page range les niveaux d'un donjon dans UNE carte, avec
+le niveau (I, II, III) et les joueurs du groupe (Tous, 1, 2, 3) à choisir, comme la rangée des donjons de `/top` ; un
+fichier sans eux s'affiche comme avant, une carte par catégorie.
 
 ## Les pages
 
@@ -70,7 +73,7 @@ serveurs du jeu tiennent à jour ; un dossier retiré du classement n'y compte p
   au plus une fois toutes les 5 minutes, quel que soit le nombre de visiteurs ;
 - **rien de privé** : les pseudos et les chiffres que `/top` montre déjà, jamais un identifiant ;
 - **en panne** (la base ne répond pas, une variable manque) : `{ "indisponible": true, "raison": ... }` et le code 503,
-  jamais gardé ; la page dit « Le classement arrive très bientôt sur le site. En jeu, tape /top. » et propose « Réessayer ». La raison se lit
+  jamais gardé ; la page dit « Le classement ne s'affiche pas pour l'instant. En jeu, tape /top. » et propose « Réessayer ». La raison se lit
   sans les journaux de Vercel (ouvrir `https://casteria.fr/api/classement`) : `variables` (une variable `CASTERIA_DB_*`
   manque au déploiement), `calcul`, ou le code de l'erreur de la base tel quel (`ENOTFOUND` : l'hôte mal écrit ;
   `ETIMEDOUT` : la base ne répond pas aux serveurs de Vercel, un pare-feu ; `ECONNREFUSED` : le port ;

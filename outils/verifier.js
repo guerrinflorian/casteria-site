@@ -8,6 +8,8 @@ const RACINE = path.join(__dirname, '..'), PAGES = ['index.html', 'commencer.htm
 const LOURDS_PERMIS = {}
 // les pages qui restent hors de Google et hors du plan du site : la 404, et « Merci » (la page de retour après un achat)
 const HORS_GOOGLE = ['404.html', 'merci.html']
+// les mots qui diraient que le serveur n'est pas ouvert (le propriétaire, 05/10) : les pages, et les phrases du classement
+const MOTS_INTERDITS = ['en développement', 'bientôt', 'pas encore ouvert', 'ouvrira', "jour de l'ouverture"]
 // LA BOUTIQUE : js/boutique.config.js ne porte que le jeton PUBLIC de Tebex et des adresses publiques en https (ou rien),
 // jamais une clé ; js/boutique.js ne parle qu'à l'API publique de Tebex et n'envoie le joueur que sur sa page de paiement.
 // Le jeton public : quelques caractères, un tiret, quarante lettres et chiffres (Tebex, « API Keys », « Public Token »).
@@ -93,7 +95,21 @@ function verifierClassement(faute) {
   const idGist = (code.match(/GIST_ID = '([^']*)'/) || [])[1]
   if (idGist === undefined || !/^([0-9a-f]{32})?$/.test(idGist)) faute('js/classement.js : GIST_ID est vide ou l\'identifiant hexadécimal du gist (32 caractères, la fin de son adresse sur gist.github.com)')
   if (!/GIST_COMPTE = '[A-Za-z0-9-]{1,39}'/.test(code)) faute('js/classement.js : GIST_COMPTE est un nom de compte GitHub')
-  if (!code.includes("'Le classement arrive très bientôt sur le site. En jeu, tape /top.'")) faute('js/classement.js : la phrase de la panne manque (« Le classement arrive très bientôt sur le site. En jeu, tape /top. »)')
+  // (18/10/2026, le classement est en ligne depuis la 119 : « arrive très bientôt » n'était plus vrai, et « bientôt » est un
+  // mot interdit du site) la panne dit ce qui se passe et où voir le classement
+  if (!code.includes("'Le classement ne s\\'affiche pas pour l\\'instant. En jeu, tape /top.'")) faute('js/classement.js : la phrase de la panne manque (« Le classement ne s\'affiche pas pour l\'instant. En jeu, tape /top. »)')
+  // les phrases du script se lisent sur la page : les mots interdits des pages le sont aussi ici (le code seul)
+  for (const mot of MOTS_INTERDITS) if (new RegExp('(^|[^a-zà-ÿ])' + mot, 'i').test(code)) faute('js/classement.js : un mot interdit : « ' + mot + ' »')
+  // (la 125 du jeu, 18/10/2026) LES DONJONS : les niveaux d'un donjon (« donjon ») dans UNE carte, avec ses tailles de groupe
+  // (« tailles ») ; ses choix sont des boutons qui disent lequel est choisi (aria-pressed)
+  if (!/function carteDonjon\(/.test(code) || code.split('carteDonjon(').length < 3) faute('js/classement.js : les niveaux d\'un donjon vont dans une carte (carteDonjon), comme la rangée des donjons de /top')
+  if (!code.includes('c.donjon') || !code.includes('.tailles')) faute('js/classement.js : la page lit le donjon et les tailles de groupe d\'un temps de donjon (« donjon », « tailles »)')
+  if (!code.includes("setAttribute('aria-pressed'")) faute('js/classement.js : un choix de la carte d\'un donjon dit s\'il est choisi (aria-pressed)')
+  // (18/10/2026, une photo à 360 px : « Chevalier_S » puis « ables ») un pseudo du podium tient sur une ligne : ajusterPodium,
+  // au dessin, quand les polices arrivent (ready et loadingdone) et quand la fenêtre change de taille
+  if (!/function ajusterPodium\(/.test(code) || code.split('ajusterPodium').length < 6 || !code.includes("'loadingdone'")) faute('js/classement.js : un pseudo du podium tient sur une ligne (ajusterPodium : au dessin, quand les polices arrivent, quand la fenêtre change de taille)')
+  // jamais une pastille arrondie (le propriétaire) : aucun arrondi dans la feuille du classement
+  for (const r of reglesCss(lire('css/classement.css'))) for (const m of r.corps.matchAll(/border(?:-[a-z]+)*-radius\s*:\s*([^;]+)/g)) if (!/^0(px)?\s*$/.test(m[1].trim())) faute('css/classement.css, « ' + r.sel.slice(0, 60) + ' » : un arrondi (' + m[1].trim() + ') : jamais une pastille arrondie')
 }
 // ---------- deux lecteurs, pour les règles du soir du 05/10 (la hero, les hauteurs, la barre du téléphone) ----------
 // Les règles d'une feuille de style : [{ sel, corps, media }]. Les commentaires sont retirés ; @media, @supports et
@@ -176,7 +192,7 @@ for (const page of PAGES) {
   // aucun mot qui dise que le serveur n'est pas ouvert (le propriétaire, 05/10 : le site parle d'un serveur où l'on joue)
   const visible = s.replace(/<!--[\s\S]*?-->/g, '').replace(/<script[\s\S]*?<\/script>/g, '')
   // (le mot entier : « tu le découvriras » n'est pas « ouvrira »)
-  for (const mot of ['en développement', 'bientôt', 'pas encore ouvert', 'ouvrira', "jour de l'ouverture"]) if (new RegExp('(^|[^a-zà-ÿ])' + mot, 'i').test(visible)) faute('un mot interdit : « ' + mot + ' »')
+  for (const mot of MOTS_INTERDITS) if (new RegExp('(^|[^a-zà-ÿ])' + mot, 'i').test(visible)) faute('un mot interdit : « ' + mot + ' »')
   // LE CONTRASTE : on suit le fond en descendant dans la page. Une section sombre (sombre, mer, heros, page-tete, le pied)
   // demande un texte clair ; le parchemin (clair, et les îlots carte, volet, cadre-bois, tebex, tableau) un texte sombre. Une couleur
   // écrite dans la page doit aller avec le fond où elle tombe.

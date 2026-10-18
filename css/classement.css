@@ -71,6 +71,21 @@ ol.suite-score { max-width: 820px; margin: 0 auto; padding: 6px 16px 10px; borde
 .carte-classement .cl-aide { margin: 0 0 10px; font-size: 15px; color: var(--encre-douce); }
 .classement-fin { text-align: center; margin: 34px 0 0; }
 
+/* ---------- un donjon (la 125 du jeu) : ses niveaux dans une carte, le niveau et les joueurs du groupe à choisir ----------
+   Les boutons sont des marque-pages carrés, comme les onglets (jamais une pastille arrondie) : le choisi en rouge. Sur une
+   carte très étroite (une tablette en deux colonnes), le mot de la rangée passe au-dessus de ses boutons. */
+.carte-donjon { container-type: inline-size; }
+.cl-choix-rangee { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 0 0 8px; }
+.cl-choix-rangee[hidden], .cl-choix[hidden] { display: none; }
+.cl-choix-mot { flex: 0 0 66px; font-weight: 700; font-size: 15px; color: var(--encre-douce); }
+@container (max-width: 250px) { .cl-choix-mot { flex-basis: 100%; } }
+.cl-choix { min-width: 36px; min-height: 34px; padding: 3px 10px 5px; font-family: "Lilita One", "Fredoka", sans-serif; font-size: 17px; line-height: 1.2; color: var(--bois-fonce); cursor: pointer;
+  background: var(--parchemin-3); border: 2px solid var(--bois-clair); border-radius: 0; box-shadow: 0 3px 0 var(--bois-clair); transition: transform .15s ease; }
+.cl-choix:hover { transform: translateY(-1px); }
+.cl-choix:focus-visible { outline: 3px solid var(--or); outline-offset: 2px; }
+.cl-choix[aria-pressed="true"] { color: #FFF4D6; background: var(--ruban); border-color: var(--or); box-shadow: 0 3px 0 #6E1A14; text-shadow: 0 2px 0 #6E1A14; }
+.carte-donjon .cl-aide { margin-top: 4px; }
+
 @media (max-width: 960px) {
   .cartes-classement > .carte-classement { flex-basis: calc((100% - 24px) / 2); }
   .cl-m1 .cl-socle { height: 130px; } .cl-m2 .cl-socle { height: 96px; } .cl-m3 .cl-socle { height: 70px; }
@@ -80,6 +95,7 @@ ol.suite-score { max-width: 820px; margin: 0 auto; padding: 6px 16px 10px; borde
   .cartes-classement > .carte-classement { flex-basis: 100%; }
   .onglets-classement { gap: 8px; } .cl-onglet { font-size: 18px; padding: 6px 14px 8px; }
   .cl-marche .cl-valeur { font-size: 14px; }
+  .cl-marche .cl-pseudo { padding: 0 2px; }
   .cl-medaille { width: 20px; height: 28px; } .cl-couronne { width: 36px; height: 30px; }
   .cl-m1 .cl-socle { height: 104px; } .cl-m2 .cl-socle { height: 76px; } .cl-m3 .cl-socle { height: 56px; }
   .cl-socle { font-size: 36px; }
@@ -89,5 +105,5 @@ ol.suite-score { max-width: 820px; margin: 0 auto; padding: 6px 16px 10px; borde
 html.photo .cl-couronne { animation: none; }
 @media (prefers-reduced-motion: reduce) {
   .cl-couronne { animation: none; }
-  .cl-onglet { transition: none; }
+  .cl-onglet, .cl-choix { transition: none; }
 }
