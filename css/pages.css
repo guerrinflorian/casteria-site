@@ -161,13 +161,14 @@
 
 /* ---------- le calme : sous « réduire les animations », et dans une capture ---------- */
 @media (prefers-reduced-motion: reduce) {
-  .casino-tete .lustre-lueur, .ampoules, .jeton-casino, .derniers-bande, .ecran-deco, .familiers-scene img, .croupier > img:first-child,
-  .casino-bornes [data-carrousel] > .vue.borne::before { animation: none; }
+  .casino-tete .lustre-lueur, .ampoules, .jeton-casino, .derniers-bande, .ecran-deco, .familiers-scene .f-chat, .familiers-scene .f-carpe,
+  .familiers-scene .piece, .croupier > img:first-child, .casino-bornes [data-carrousel] > .vue.borne::before { animation: none; }
   .derniers-bande { transform: translateX(0); }
   .familiers-scene .piece { display: none; }
 }
 html.photo .casino-tete .lustre-lueur, html.photo .ampoules, html.photo .jeton-casino, html.photo .derniers-bande, html.photo .ecran-deco,
-html.photo .familiers-scene img, html.photo .croupier > img:first-child, html.photo .casino-bornes [data-carrousel] > .vue.borne::before { animation: none; }
+html.photo .familiers-scene .f-chat, html.photo .familiers-scene .f-carpe, html.photo .familiers-scene .piece, html.photo .croupier > img:first-child,
+html.photo .casino-bornes [data-carrousel] > .vue.borne::before { animation: none; }
 html.photo .derniers-bande { transform: translateX(0); }
 html.photo .familiers-scene .piece { display: none; }
 
@@ -279,11 +280,11 @@ html.photo .familiers-scene .piece { display: none; }
   .gardien-scene { min-height: 340px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .donjon-tete .poussiere { display: none; }
-  .gardien-scene img, .gardien-scene .runes, .gardien-scene .runes::before, .regles-groupe img, .sablier { animation: none; }
+  .donjon-tete .poussiere { display: none; animation: none; }
+  .gardien-scene img, .gardien-scene .runes, .gardien-scene .runes::before, .regles-groupe img:not(.eteinte), .sablier { animation: none; }
 }
-html.photo .donjon-tete .poussiere { display: none; }
-html.photo .gardien-scene img, html.photo .gardien-scene .runes, html.photo .gardien-scene .runes::before, html.photo .regles-groupe img, html.photo .sablier { animation: none; }
+html.photo .donjon-tete .poussiere { display: none; animation: none; }
+html.photo .gardien-scene img, html.photo .gardien-scene .runes, html.photo .gardien-scene .runes::before, html.photo .regles-groupe img:not(.eteinte), html.photo .sablier { animation: none; }
 
 /* ======================================================================================================================
    L'ACCUEIL (index.html, 19/10/2026) : les deux portes du palais (le casino sous ses ampoules, les donjons entre deux
