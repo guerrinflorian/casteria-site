@@ -157,7 +157,15 @@ const MUTANTS = [
   // (19/10/2026) l'accueil mène au Discord, juste après « Jouer gratuitement » : /discord, le logo et le mot
   ['le bouton Discord retire de l accueil', 'index.html', s => s.replace(/<a class="bouton bouton-discord grand"[^\n]*<\/a>\n/, '')],
   ['le bouton Discord de l accueil sans son logo', 'index.html', s => s.replace(/<svg class="logo-discord"[\s\S]*?<\/svg>/, '')],
-  ['le bouton Discord de l accueil vers l invitation directe', 'index.html', s => s.replace('<a class="bouton bouton-discord grand" href="/discord"', '<a class="bouton bouton-discord grand" href="https://discord.gg/JKyWQ55Nx"')]
+  ['le bouton Discord de l accueil vers l invitation directe', 'index.html', s => s.replace('<a class="bouton bouton-discord grand" href="/discord"', '<a class="bouton bouton-discord grand" href="https://discord.gg/JKyWQ55Nx"')],
+
+  // ---------- (19/10/2026, le propriétaire : « faut pas dire le nombre ! ») aucun nombre de boss, nulle part ----------
+  ['un nombre de boss dans la description de l accueil', 'index.html', s => s.replace('tes bêtes, des boss, deux donjons', 'tes bêtes, 15 boss, deux donjons')],
+  ['un nombre de boss en lettres dans le haut de l accueil', 'index.html', s => s.replace('bats des boss géants', 'bats quinze boss')],
+  ['un nombre de boss dans la carte au tresor', 'index.html', s => s.replace('<b class="mot">Boss</b><span>en arène</span>', '<b data-n="15">15</b><span>boss en arène</span>')],
+  ['un nombre de boss dans le JSON-LD de l accueil', 'index.html', s => s.replace('une économie en jetons, des boss et leurs panoplies', 'une économie en jetons, 15 boss et leurs panoplies')],
+  ['un nombre d arenes sur une autre page', 'pirates.html', s => s.replace('</main>', '<p>Seize arènes t\'attendent.</p></main>')],
+  ['un nombre de boss dans un script du site', 'js/classement.js', s => s + "\nvar BOSS_TEXTE = 'les 15 boss'\n"]
 ]
 
 let rates = 0, code = 0

@@ -171,6 +171,9 @@ html.photo .scene-tete .fond.panneaux img { animation: none; }
 .morceau img.rond { width: 74px; height: 74px; object-fit: cover; border-radius: 50%; border: 3px solid #C0392B; left: 6px; top: 6px; }
 .morceau b { display: block; font-family: "Lilita One", sans-serif; font-weight: 400; font-size: 58px; line-height: 1; color: var(--encre-pan); }
 .morceau span { display: block; margin-top: 4px; font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #8A5A2B; }
+/* (19/10/2026, le propriétaire : « faut pas dire le nombre ! ») le morceau des boss dit un mot, plus large qu'un nombre : sur
+   un ordinateur (le morceau de 210 px, son image dans le coin), un peu plus petit et à droite de l'image, qui le cachait */
+@media (min-width: 961px) { .morceau b.mot { font-size: 52px; padding-left: 34px; } }
 .m1 { left: 15%; top: 19.6%; --r: -4deg; } .m2 { left: 52%; top: 28.6%; --r: 2deg; } .m3 { left: 85%; top: 25%; --r: 4deg; }
 .m4 { left: 25%; top: 75%; --r: 3deg; } .m5 { left: 76%; top: 76.8%; --r: -3deg; }
 .scene-js .morceau.monte:not(.vu) { opacity: 0; transform: translate(-50%, -20%) rotate(calc(var(--r) * 5)) scale(.85); }

@@ -13,6 +13,10 @@ const MOTS_INTERDITS = ['en développement', 'bientôt', 'pas encore ouvert', 'o
 // (19/10/2026, les pages du casino et des donjons) AUCUN SPOILER (le propriétaire) : jamais l'Abyssarque, jamais le dernier
 // boss, jamais la salle du trône ; les donjons se montrent sans leurs boss (ni leur nom)
 const SPOILERS = ['Abyssarque', 'Dragon Ancien', 'salle du trône', 'Cœur Creux', 'Coeur Creux', "Sphinx d'Or", 'Sphinx d’Or']
+// (19/10/2026, le propriétaire : « ya pas que 15 boss y'en a plus, faut pas dire le nombre ! ») AUCUN NOMBRE DE BOSS, ni
+// d'arènes, en chiffres ou en lettres (« 15 boss », « quinze arènes », « 15</b><span>boss ») : dans le texte, les titres,
+// les descriptions, les textes des images, le JSON-LD et les scripts du site ; un rang (« le quatrième boss ») reste permis
+const NOMBRE_DE_BOSS = /(?:^|[^a-zà-ÿ0-9])(?:\d+|deux|trois|quatre|cinq|six|sept|huit|neuf|dix|onze|douze|treize|quatorze|quinze|seize|dix-sept|dix-huit|dix-neuf|vingt|trente|quarante|cinquante)(?:\s|&#160;|&nbsp;|<[^>]*>)+(?:[a-zà-ÿ]+(?:\s|&#160;|&nbsp;)+)?(?:boss|ar[eè]nes?)(?![a-zà-ÿ])/i
 // LA BOUTIQUE : js/boutique.config.js ne porte que le jeton PUBLIC de Tebex et des adresses publiques en https (ou rien),
 // jamais une clé ; js/boutique.js ne parle qu'à l'API publique de Tebex et n'envoie le joueur que sur sa page de paiement.
 // Le jeton public : quelques caractères, un tiret, quarante lettres et chiffres (Tebex, « API Keys », « Public Token »).
@@ -225,6 +229,8 @@ for (const page of PAGES) {
   for (const mot of MOTS_INTERDITS) if (new RegExp('(^|[^a-zà-ÿ])' + mot, 'i').test(visible)) faute('un mot interdit : « ' + mot + ' »')
   // (19/10/2026) aucun spoiler, dans le texte comme dans les textes des images (alt) : le nom d'un boss caché
   for (const nom of SPOILERS) if (visible.toLowerCase().includes(nom.toLowerCase())) faute('un spoiler : « ' + nom + ' » (jamais l\'Abyssarque, le dernier boss, la salle du trône, ni les boss des donjons)')
+  // (19/10/2026) aucun nombre de boss : la page entière (ses métadonnées et son JSON-LD compris), sans ses commentaires
+  { const m = s.replace(/<!--[\s\S]*?-->/g, '').match(NOMBRE_DE_BOSS); if (m) faute('un nombre de boss : « ' + m[0].trim() + ' » (le propriétaire : « faut pas dire le nombre ! » : « des boss »)') }
   // (19/10/2026, « 300 » puis « 000 jetons » sur deux lignes) un nombre ne se coupe jamais en deux : les milliers séparés
   // par une espace insécable (&#160;), jamais une espace ordinaire, dans le texte de la page (les dessins svg mis à part)
   for (const m of visible.replace(/<svg[\s\S]*?<\/svg>/g, '').matchAll(/>([^<]+)</g)) {
@@ -342,6 +348,11 @@ for (const page of PAGES) {
     try { JSON.parse(m[1]) } catch (e) { faute('un bloc JSON-LD est mal écrit : ' + e.message) }
     for (const a of m[1].match(/https:\/\/[^"/]+/g) || []) if (a !== DOMAINE && a !== 'https://schema.org') faute('une adresse d\'un autre domaine dans le bloc JSON-LD : ' + a)
   }
+}
+// (19/10/2026) aucun nombre de boss non plus dans les scripts du site (ce qu'ils écrivent se lit sur les pages)
+for (const f of fs.readdirSync(path.join(RACINE, 'js')).filter(n => n.endsWith('.js'))) {
+  const m = lire('js/' + f).match(NOMBRE_DE_BOSS)
+  if (m) { console.log('js/' + f); faute('un nombre de boss : « ' + m[0].trim() + ' » (le propriétaire : « faut pas dire le nombre ! » : « des boss »)') }
 }
 // le domaine est écrit, et le plan du site cite les pages, rien de plus
 console.log('robots.txt, sitemap.xml')

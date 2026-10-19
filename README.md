@@ -152,6 +152,9 @@ en garde du pseudo si elle disparaissait.
 - La bande-annonce de l'accueil (`assets/videos/bande_annonce_casteria.mp4`, 1280 x 720, sans son) est le SEUL fichier qui
   peut dépasser 5 Mo (16 Mo au plus) : elle ne se charge qu'au clic du visiteur (`outils/verifier.js`, `LOURDS_PERMIS`).
   Les autres vidéos (12/10/2026) : 1280 x 720 pour l'accueil, 720 x 1280 pour la page des pirates, 5 Mo au plus chacune.
+- Jamais le nombre des boss (le propriétaire, 19/10/2026 : « ya pas que 15 boss y'en a plus, faut pas dire le nombre ! ») :
+  « des boss » ; le vérificateur refuse un nombre devant « boss » ou « arène(s) », en chiffres ou en lettres, dans les pages
+  (métadonnées et JSON-LD compris) et dans `js/` ; un rang (« le quatrième boss ») reste permis.
 - On ne dévoile pas tout : pas de secret du palais, pas de boss caché. Jamais l'Abyssarque, jamais le dernier boss, jamais la
   salle du trône ; les donjons se montrent sans leurs boss ni leurs secrets (`outils/verifier.js` refuse leurs noms, aussi
   dans le texte d'une image).
