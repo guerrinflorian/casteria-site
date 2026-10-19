@@ -153,7 +153,11 @@ const MUTANTS = [
   ['l invitation du Discord ecrite sur une autre page', 'index.html', s => s.replace('</main>', '<p><a href="https://discord.gg/JKyWQ55Nx">Le Discord</a></p></main>')],
   ['une invitation Discord dans un script du site', 'js/site.js', s => s + "\nvar DISCORD = 'https://discord.gg/autre'\n"],
   ['la page du Discord retiree du plan du site', 'sitemap.xml', s => s.replace(/\s*<url><loc>https:\/\/casteria\.fr\/discord<\/loc>[^\n]*/, '')],
-  ['une pastille arrondie sur la page du Discord', 'css/discord.css', s => s + '\n.vitrine-tete.discord .bouton.grand { border-radius: 999px; }\n']
+  ['une pastille arrondie sur la page du Discord', 'css/discord.css', s => s + '\n.vitrine-tete.discord .bouton.grand { border-radius: 999px; }\n'],
+  // (19/10/2026) l'accueil mène au Discord, juste après « Jouer gratuitement » : /discord, le logo et le mot
+  ['le bouton Discord retire de l accueil', 'index.html', s => s.replace(/<a class="bouton bouton-discord grand"[^\n]*<\/a>\n/, '')],
+  ['le bouton Discord de l accueil sans son logo', 'index.html', s => s.replace(/<svg class="logo-discord"[\s\S]*?<\/svg>/, '')],
+  ['le bouton Discord de l accueil vers l invitation directe', 'index.html', s => s.replace('<a class="bouton bouton-discord grand" href="/discord"', '<a class="bouton bouton-discord grand" href="https://discord.gg/JKyWQ55Nx"')]
 ]
 
 let rates = 0, code = 0

@@ -165,6 +165,9 @@ function verifierDiscord(faute) {
   // aucune autre invitation, sur aucune page ni dans aucun script : les autres pages mènent à /discord
   const ailleurs = fs.readdirSync(RACINE).filter(n => /\.html$/.test(n)).concat(fs.readdirSync(path.join(RACINE, 'js')).map(n => 'js/' + n))
   for (const n of ailleurs) for (const m of lire(n).match(/(?:https?:)?\/\/(?:[a-z0-9-]+\.)?discord(?:app)?\.(?:gg|com)\/[A-Za-z0-9_/-]*/gi) || []) if (n !== 'discord.html' || m !== DISCORD) faute(n + ' : une adresse de Discord (' + m + ') : l\'invitation n\'est écrite que dans discord.html, les autres pages mènent à /discord')
+  // (19/10/2026, le propriétaire : « mets-le dans la page d'accueil aussi, à côté / en dessous du Jouer gratuitement ») l'accueil
+  // y mène juste après « Jouer gratuitement » : /discord, le logo de la marque (en ligne) et le mot
+  if (!/Jouer gratuitement<\/a>\s*(?:<!--[\s\S]*?-->\s*)?<a class="bouton bouton-discord grand" href="\/discord" aria-label="[^"]*Discord[^"]*"><svg class="logo-discord"[^>]*>[\s\S]*?<\/svg><span class="mot">Discord<\/span><\/a>/.test(lire('index.html'))) faute('index.html : le bouton du Discord (vers /discord, son logo et le mot « Discord ») doit suivre « Jouer gratuitement »')
   let vj = null
   try { vj = JSON.parse(lire('vercel.json')) } catch (e) { vj = null }
   if (!vj || !Array.isArray(vj.rewrites) || !vj.rewrites.some(r => r && r.source === '/discord' && r.destination === '/discord.html')) faute('vercel.json : /discord doit mener à discord.html (« rewrites » : { "source": "/discord", "destination": "/discord.html" })')
