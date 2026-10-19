@@ -1,0 +1,362 @@
+/* Casteria, le site : LES PAGES DU PALAIS, le casino (casino.html) et les donjons (donjons.html), le 19/10/2026. Chargé
+   après style.css, carrousel.css et scene.css (le haut de page en cinéma vient de scene.css, comme l'accueil et la mer).
+   Chaque section a sa matière : le velours rouge et l'enseigne du casino, le tapis vert de la roulette, la nuit des
+   tables ; la pierre moussue du Temple, le grès du Sanctuaire. Tout ce qui bouge est en CSS et s'arrête sous « réduire
+   les animations » et dans une capture (html.photo). Aucune pastille arrondie : les étiquettes sont carrées. */
+
+/* ---------- le haut des deux pages : le voile du cinéma, plus sombre aussi en bas à droite (la phrase et les gestes s'y
+   posent, sur une image plus claire que la mer de l'accueil) ---------- */
+.vitrine-tete.plein-cadre.page-palais::before { background:
+    linear-gradient(180deg, rgba(8, 4, 16, .55) 0%, rgba(8, 4, 16, 0) 17%),
+    radial-gradient(78% 64% at 8% 100%, rgba(8, 4, 16, .82) 0%, rgba(8, 4, 16, .45) 44%, rgba(8, 4, 16, 0) 74%),
+    radial-gradient(62% 58% at 94% 100%, rgba(8, 4, 16, .82) 0%, rgba(8, 4, 16, .42) 48%, rgba(8, 4, 16, 0) 80%),
+    linear-gradient(0deg, #0B0714 0%, rgba(11, 7, 20, .86) 12%, rgba(11, 7, 20, .34) 32%, rgba(11, 7, 20, 0) 48%); }
+@media (max-width: 600px) {
+  .vitrine-tete.plein-cadre.page-palais::before { background: linear-gradient(180deg, rgba(8, 4, 16, .5) 0%, rgba(8, 4, 16, 0) 13%),
+    linear-gradient(0deg, #0B0714 0%, rgba(11, 7, 20, .9) 24%, rgba(11, 7, 20, .5) 42%, rgba(11, 7, 20, 0) 60%); }
+}
+
+/* ---------- le haut du casino : une lueur chaude qui respire sous les lustres ---------- */
+.casino-tete .lustre-lueur { position: absolute; inset: 0; pointer-events: none; mix-blend-mode: screen;
+  background: radial-gradient(46% 34% at 50% 18%, rgba(255, 214, 140, .26), rgba(255, 214, 140, 0) 72%);
+  animation: lustre-respire 5s ease-in-out infinite alternate; }
+@keyframes lustre-respire { from { opacity: .45 } to { opacity: 1 } }
+
+/* ---------- les mises : l'enseigne et ses ampoules, les minerais, trois jetons ---------- */
+.casino-mises { color: #FFEFE0;
+  background: radial-gradient(70% 55% at 50% 0%, rgba(255, 96, 96, .2), transparent 70%), linear-gradient(180deg, #4A0C17, #2B060D); }
+.enseigne { position: relative; max-width: 880px; margin: 0 auto 44px; padding: 40px 44px 38px; text-align: center;
+  background: linear-gradient(180deg, #74142A, #4E0A17); border: 6px solid var(--or);
+  box-shadow: inset 0 0 0 4px #2B060D, inset 0 0 40px rgba(0, 0, 0, .35), 0 18px 40px rgba(0, 0, 0, .45); }
+.enseigne-nom { margin: 0 0 8px; font-family: "Lilita One", sans-serif; font-size: 15px; letter-spacing: 5px; text-transform: uppercase; color: var(--or-clair); }
+.enseigne h2 { font-size: clamp(28px, 3.6vw, 46px); color: #FFF3D6; text-shadow: 0 3px 0 rgba(60, 0, 10, .6); }
+.enseigne p { margin: 14px auto 0; max-width: 640px; font-size: 18px; color: #FFE6D2; }
+.ampoules { position: absolute; left: 16px; right: 16px; height: 10px; pointer-events: none;
+  background: radial-gradient(circle at 5px 5px, #FFF1C2 0 3px, rgba(255, 233, 168, 0) 4px) 0 0 / 22px 10px repeat-x;
+  filter: drop-shadow(0 0 5px rgba(255, 214, 110, .95)); animation: ampoules 1.2s steps(2) infinite; }
+.ampoules.haut { top: 9px; } .ampoules.bas { bottom: 9px; animation-delay: .6s; }
+@keyframes ampoules { from { background-position: 0 0 } to { background-position: 22px 0 } }
+.minerais { list-style: none; margin: 0 auto 44px; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; max-width: 980px; }
+.minerais li { display: flex; align-items: center; gap: 9px; padding: 8px 14px 8px 9px; font-weight: 700; font-size: 16px; color: #2A1A0C;
+  background: linear-gradient(180deg, #FFF4D6, #F0D9A2); border: 3px solid #A57713; box-shadow: 0 4px 0 #5C1020; }
+.minerais li::before { content: ""; flex: 0 0 auto; width: 18px; height: 18px; background: var(--c, #888);
+  box-shadow: inset -4px -4px 0 rgba(0, 0, 0, .28), inset 3px 3px 0 rgba(255, 255, 255, .4); }
+.m-charbon { --c: #34343B; } .m-cuivre { --c: #C96F3B; } .m-fer { --c: #D9D2CC; } .m-or { --c: #F5C83A; } .m-redstone { --c: #C8221E; }
+.m-lapis { --c: #2F56B8; } .m-quartz { --c: #EFE7DD; } .m-diamant { --c: #4FE3DA; } .m-emeraude { --c: #2FCB63; } .m-netherite { --c: #4A3F45; } .m-casterium { --c: #9B55CC; }
+.jetons-regles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+.jetons-regles p { display: flex; gap: 14px; align-items: flex-start; margin: 0; font-size: 16.5px; color: #FFE6D2; }
+.jetons-regles b { display: block; color: #FFF3D6; }
+.jetons-regles a { color: var(--or-clair); }
+.jeton-casino { flex: 0 0 auto; width: 54px; height: 54px; border-radius: 50%; background: var(--c); border: 5px dashed #FFF4DE;
+  box-shadow: 0 0 0 3px var(--c), 0 6px 0 3px rgba(0, 0, 0, .35); animation: jeton-tourne 7s linear infinite; }
+.jeton-casino.rouge { --c: #B5352B; } .jeton-casino.noir { --c: #1B1B22; } .jeton-casino.vert { --c: #1E6A4A; }
+@keyframes jeton-tourne { to { transform: rotate(360deg) } }
+
+/* ---------- la frise de la salle : sur le velours sombre, entre les mises et la roulette ---------- */
+.casino-frise { padding: 34px 0 6px; background: linear-gradient(180deg, #2B060D, #12301F); }
+.casino-frise [data-carrousel] > .vue { border-radius: 0; border: 3px solid var(--or); background: #1E0A10; color: #FFE9D6; }
+.casino-frise [data-carrousel] > .vue > figcaption strong { color: var(--or-clair); }
+
+/* ---------- la roulette : le tapis vert, les cotes, le panneau des derniers numéros ---------- */
+.casino-roulette { color: #EAF8EF;
+  background: radial-gradient(80% 70% at 72% 30%, rgba(80, 200, 140, .17), transparent 65%), linear-gradient(180deg, #0F3B27, #082618); }
+.casino-roulette .sur-titre, .casino-blackjack .sur-titre, .casino-bornes .sur-titre, .casino-maison .sur-titre { color: var(--or-clair); }
+.roulette-grille { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 46px; align-items: center; }
+.roulette-grille .texte p { font-size: 18px; }
+.cotes { margin: 20px 0 6px; padding: 12px 18px; background: rgba(0, 0, 0, .26); border: 2px solid rgba(215, 164, 33, .7); }
+.cotes div { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 12px; padding: 5px 0; font-size: 16px; }
+.cotes dt { border-bottom: 2px dotted rgba(255, 215, 94, .35); padding-bottom: 2px; }
+.cotes dd { margin: 0; font-weight: 700; color: var(--or-clair); white-space: nowrap; }
+.roulette-grille .note-cote { margin: 8px 0 0; font-size: 15px; opacity: .88; }
+.roulette-ecrans { display: grid; gap: 22px; }
+.ecran-casino { margin: 0; padding: 8px; background: #2A1508; border: 4px solid var(--or); box-shadow: 0 16px 34px rgba(0, 0, 0, .45); }
+.ecran-casino img { width: 100%; height: auto; }
+.ecran-casino figcaption { padding: 9px 4px 2px; font-size: 14.5px; line-height: 1.4; color: #F5E7C8; }
+.ecran-casino.stats { width: 90%; justify-self: end; }
+.ecran-casino.stats.vu { transform: rotate(-1.2deg); }
+.derniers { justify-self: start; width: min(344px, 100%); padding: 0 0 12px; background: #2B1D14; border: 4px solid #1B1009; outline: 4px solid var(--or);
+  box-shadow: 0 12px 26px rgba(0, 0, 0, .4); }
+.derniers p { margin: 0 0 10px; padding: 7px 8px; background: #8E2A24; color: #F8E3B0; font-family: "Lilita One", sans-serif; font-size: 22px; text-align: center; }
+.derniers-fenetre { position: relative; width: 312px; max-width: calc(100% - 24px); margin: 0 auto; overflow: hidden; }
+.derniers-fenetre::after { content: ""; position: absolute; left: 0; top: 0; width: 56px; height: 48px; box-sizing: border-box; border: 3px solid #E0A82E; pointer-events: none; }
+.derniers-bande { display: flex; gap: 8px; width: max-content; transform: translateX(-640px); animation: derniers 30s steps(10) infinite; }
+.derniers-bande b { flex: 0 0 auto; width: 56px; height: 48px; display: grid; place-items: center; font-family: "Lilita One", sans-serif; font-size: 24px; font-weight: 400; color: #fff; }
+.derniers-bande .r { background: #B3262E; } .derniers-bande .n { background: #1C1C22; } .derniers-bande .v { background: #167A45; }
+@keyframes derniers { from { transform: translateX(-640px) } to { transform: translateX(0) } }
+
+/* ---------- le blackjack : la salle vue d'en haut, l'écran du casino posé dessus, des cartes en guise de puces ---------- */
+.casino-blackjack { color: #F4EAFF; background: radial-gradient(60% 60% at 20% 40%, rgba(181, 53, 43, .18), transparent 70%), linear-gradient(180deg, #1B0B2B, #120818); }
+.blackjack-grille { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 56px; align-items: center; }
+.blackjack-grille .texte p { font-size: 18px; }
+.tables { position: relative; margin: 0 0 40px; }
+.tables > img:first-child { width: 100%; height: auto; border: 4px solid var(--or); box-shadow: 0 20px 40px rgba(0, 0, 0, .5); }
+.ecran-deco { position: absolute; width: 40%; height: auto; right: -3%; bottom: -14%; border: 4px solid #2B1D14; outline: 3px solid var(--or);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, .5); transform: rotate(3deg); animation: deco-flotte 6s ease-in-out infinite alternate; }
+@keyframes deco-flotte { from { transform: rotate(3deg) translateY(0) } to { transform: rotate(1.5deg) translateY(-10px) } }
+.cartes-regles { list-style: none; padding: 0; margin: 20px 0 0; display: grid; gap: 14px; }
+.cartes-regles li { display: flex; gap: 16px; align-items: center; font-size: 17px; }
+.carte-mini { flex: 0 0 auto; width: 40px; height: 56px; display: grid; place-items: center; background: #FFF8E7; color: #1B1B22;
+  font-family: "Lilita One", sans-serif; font-size: 19px; border: 2px solid #C9B58E; box-shadow: 0 4px 0 rgba(0, 0, 0, .35); transform: rotate(-5deg); }
+.carte-mini.rouge { color: #B5352B; transform: rotate(5deg); }
+
+/* ---------- les bornes : la rangée à glisser, chaque borne coiffée de ses ampoules ---------- */
+.casino-bornes { color: #F4EAFF; background: radial-gradient(60% 50% at 50% 0%, rgba(255, 180, 94, .16), transparent 70%), linear-gradient(180deg, #2A0F40, #1B0B2B); }
+.casino-bornes [data-carrousel] { padding-top: 10px; }
+.casino-bornes [data-carrousel] > .vue.borne { border-radius: 0; border: 3px solid var(--or); color: #FFE9D6;
+  background: linear-gradient(180deg, #3E0E18, #22060C); box-shadow: 0 8px 0 rgba(0, 0, 0, .35), 0 18px 30px rgba(0, 0, 0, .35); }
+.casino-bornes [data-carrousel] > .vue.borne::before { content: ""; display: block; flex: 0 0 auto; height: 14px; background-color: #5C1020;
+  background-image: radial-gradient(circle at 7px 7px, #FFF1C2 0 3px, rgba(255, 233, 168, 0) 4px); background-size: 18px 14px; background-repeat: repeat-x;
+  animation: ampoules-borne 1s steps(2) infinite; }
+@keyframes ampoules-borne { from { background-position: 0 0 } to { background-position: 18px 0 } }
+.casino-bornes [data-carrousel] > .vue.borne img { background: #0F3B27; }
+.casino-bornes [data-carrousel] > .vue.borne img.pixel { object-fit: contain; image-rendering: pixelated; }
+.casino-bornes [data-carrousel] > .vue.borne > figcaption { font-size: 15.5px; line-height: 1.4; }
+.casino-bornes [data-carrousel] > .vue.borne > figcaption strong { color: var(--or-clair); font-family: "Lilita One", sans-serif; font-weight: 400; font-size: 21px; margin-bottom: 4px; }
+.casino-bornes .carrousel-commandes .fleche { background: #FFF1C2; }
+
+/* ---------- les familiers du casino : le chat et la carpe flottent, des pièces tombent ---------- */
+.familiers-scene { position: relative; min-height: 360px; }
+.familiers-scene .f-chat { position: absolute; left: 10%; bottom: 4%; width: min(44%, 220px); height: auto; filter: drop-shadow(0 18px 12px rgba(74, 44, 18, .32)); animation: flotte-doux 4.5s ease-in-out infinite alternate; }
+.familiers-scene .f-carpe { position: absolute; right: 2%; top: 4%; width: min(54%, 290px); height: auto; filter: drop-shadow(0 16px 12px rgba(74, 44, 18, .3)); animation: nage 7s ease-in-out infinite alternate; }
+.familiers-scene .piece { position: absolute; top: -6%; width: 16px; height: 16px; border-radius: 50%; opacity: 0;
+  background: radial-gradient(circle at 35% 35%, #FFF3B0, #F2B530 60%, #A57713); box-shadow: 0 0 0 2px #7A5410; animation: piece-tombe 3.8s linear infinite; }
+.familiers-scene .p1 { left: 18%; } .familiers-scene .p2 { left: 52%; animation-delay: 1.3s; } .familiers-scene .p3 { left: 80%; animation-delay: 2.5s; }
+@keyframes flotte-doux { from { transform: translateY(0) } to { transform: translateY(-14px) } }
+@keyframes nage { from { transform: translate(0, 0) rotate(-3deg) } to { transform: translate(-18px, 10px) rotate(3deg) } }
+@keyframes piece-tombe { 0% { transform: translateY(0) rotateY(0); opacity: 0 } 12% { opacity: 1 } 85% { opacity: 1 } 100% { transform: translateY(330px) rotateY(720deg); opacity: 0 } }
+.casino-familiers .chances { list-style: none; margin: 16px 0 18px; padding: 0; display: grid; gap: 10px; }
+.casino-familiers .chances li { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 6px 14px; padding: 12px 16px;
+  background: rgba(255, 252, 240, .55); border: 2px solid #A57713; box-shadow: 0 3px 0 rgba(107, 68, 35, .35); }
+.casino-familiers .chances span { font-weight: 700; color: #8A3B12; white-space: nowrap; }
+.casino-familiers .texte p a { color: #8A3B12; font-weight: 700; }
+
+/* ---------- la maison : Auguste et les croupiers, la règle dite franchement ---------- */
+.casino-maison { color: #F4EAFF; background: linear-gradient(180deg, #120818, #1B0B2B); }
+.maison-grille { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 46px; align-items: center; }
+.maison-grille .texte p { font-size: 18px; }
+.maison-grille .texte p.maison-regle { padding: 14px 18px; border-left: 5px solid var(--or); background: rgba(255, 255, 255, .06); font-size: 16.5px; }
+.maison-regle b { color: var(--or-clair); }
+.croupier { position: relative; margin: 0; min-height: 420px; display: flex; justify-content: center; align-items: flex-end; }
+.croupier > img:first-child { position: relative; z-index: 2; width: min(42%, 200px); height: auto; filter: drop-shadow(0 22px 16px rgba(0, 0, 0, .55)); animation: flotte-doux 5s ease-in-out infinite alternate; }
+.croupier .ecran-deco { right: auto; left: 0; bottom: auto; top: 6%; width: 62%; z-index: 1; }
+
+/* ---------- les téléphones et les tablettes ---------- */
+@media (max-width: 900px) {
+  .roulette-grille, .blackjack-grille, .maison-grille { grid-template-columns: minmax(0, 1fr); gap: 34px; }
+  .jetons-regles { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+  .ecran-casino.stats { width: 100%; }
+  .tables { margin-bottom: 26px; }
+  .croupier { min-height: 330px; }
+}
+@media (max-width: 600px) {
+  .enseigne { padding: 34px 18px 32px; }
+  .enseigne p { font-size: 16.5px; }
+  .minerais { gap: 8px; }
+  .minerais li { font-size: 14.5px; padding: 6px 10px 6px 7px; }
+  .cotes { padding: 10px 12px; }
+  .cotes div { font-size: 15px; }
+  .familiers-scene { min-height: 280px; }
+  .ecran-deco { width: 46%; bottom: -10%; }
+}
+
+/* ---------- le calme : sous « réduire les animations », et dans une capture ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .casino-tete .lustre-lueur, .ampoules, .jeton-casino, .derniers-bande, .ecran-deco, .familiers-scene img, .croupier > img:first-child,
+  .casino-bornes [data-carrousel] > .vue.borne::before { animation: none; }
+  .derniers-bande { transform: translateX(0); }
+  .familiers-scene .piece { display: none; }
+}
+html.photo .casino-tete .lustre-lueur, html.photo .ampoules, html.photo .jeton-casino, html.photo .derniers-bande, html.photo .ecran-deco,
+html.photo .familiers-scene img, html.photo .croupier > img:first-child, html.photo .casino-bornes [data-carrousel] > .vue.borne::before { animation: none; }
+html.photo .derniers-bande { transform: translateX(0); }
+html.photo .familiers-scene .piece { display: none; }
+
+/* ======================================================================================================================
+   LES DONJONS (donjons.html) : jamais un boss, jamais une salle de boss. La pierre moussue du Temple, le grès du
+   Sanctuaire ; les dessins du HUD du donjon (le sablier qui coule, les lampes des vies, les coffrets) en pixels, agrandis
+   six fois au plus proche.
+   ====================================================================================================================== */
+
+/* ---------- le haut : une poussière dorée qui monte devant la photo ---------- */
+.donjon-tete .poussiere { position: absolute; inset: 0; pointer-events: none; opacity: .75;
+  background-image: radial-gradient(2px 2px at 12% 80%, #FFE2A0, transparent), radial-gradient(2px 2px at 28% 60%, #FFE2A0, transparent),
+    radial-gradient(3px 3px at 46% 86%, #FFD27A, transparent), radial-gradient(2px 2px at 63% 70%, #FFE2A0, transparent),
+    radial-gradient(3px 3px at 78% 90%, #FFD27A, transparent), radial-gradient(2px 2px at 90% 66%, #FFE2A0, transparent);
+  animation: poussiere-monte 9s linear infinite; }
+@keyframes poussiere-monte { from { transform: translateY(0); opacity: 0 } 20% { opacity: .8 } 80% { opacity: .8 } to { transform: translateY(-34%); opacity: 0 } }
+
+/* ---------- le Gardien : sa nuit de runes, un cercle qui tourne derrière lui ---------- */
+.donjon-gardien { color: #EFE6FF; background: radial-gradient(60% 70% at 25% 50%, rgba(255, 79, 140, .14), transparent 65%), linear-gradient(180deg, #120A22, #1C0F33); }
+.donjon-gardien .sur-titre, .donjon-steles .sur-titre, .donjon-dedans .sur-titre { color: var(--or-clair); }
+.donjon-gardien .texte p { font-size: 18px; }
+.gardien-scene { position: relative; margin: 0; min-height: 520px; display: grid; place-items: center; }
+.gardien-scene img { position: relative; z-index: 2; width: min(62%, 300px); height: auto; filter: drop-shadow(0 26px 22px rgba(0, 0, 0, .6)) drop-shadow(0 0 22px rgba(255, 92, 150, .25));
+  animation: flotte-doux 4s ease-in-out infinite alternate; }
+.gardien-scene .runes { position: absolute; z-index: 1; width: min(88%, 430px); aspect-ratio: 1; border-radius: 50%;
+  border: 3px dashed rgba(255, 215, 94, .55); box-shadow: 0 0 0 14px rgba(255, 215, 94, .06), 0 0 0 28px rgba(255, 92, 150, .05), inset 0 0 60px rgba(255, 92, 150, .18);
+  animation: runes-tournent 40s linear infinite; }
+.gardien-scene .runes::before { content: ""; position: absolute; inset: 16%; border-radius: 50%; border: 2px dotted rgba(255, 140, 190, .5); animation: runes-tournent 24s linear infinite reverse; }
+@keyframes runes-tournent { to { transform: rotate(360deg) } }
+.cles { list-style: none; margin: 18px 0 0; padding: 0; display: grid; gap: 12px; }
+.cles li { position: relative; padding: 0 0 0 30px; font-size: 17px; }
+.cles li::before { content: ""; position: absolute; left: 0; top: 7px; width: 14px; height: 14px; background: var(--or); box-shadow: 4px 4px 0 var(--or-fonce); transform: rotate(45deg); }
+.cles b { color: var(--or-clair); }
+
+/* ---------- les deux stèles : la pierre moussue, le grès ; leurs trois niveaux en marches ---------- */
+.donjon-steles { color: #F1ECE4; background: linear-gradient(180deg, #1C0F33 0%, #1E2420 42%, #2A2216 100%); }
+.donjon-steles .tete h2 { font-size: clamp(28px, 3.4vw, 44px); }
+.steles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 34px; }
+.stele { position: relative; padding: 34px 32px 30px; border: 4px solid; box-shadow: 0 22px 40px rgba(0, 0, 0, .45); overflow: hidden; }
+.stele h3 { font-size: clamp(28px, 2.8vw, 38px); margin: 0 0 10px; }
+.stele .stele-dit { margin: 0 0 22px; font-size: 17px; }
+.stele .stele-astuce { margin: 22px 0 0; padding-top: 14px; font-size: 15.5px; border-top: 2px dashed currentColor; opacity: .92; }
+.stele.temple { color: #EEF5E6; border-color: #5E7A3A;
+  background: radial-gradient(120% 60% at 0% 0%, rgba(110, 160, 60, .32), transparent 60%),
+    repeating-linear-gradient(0deg, rgba(0, 0, 0, .18) 0 2px, transparent 2px 38px), repeating-linear-gradient(90deg, rgba(0, 0, 0, .14) 0 2px, transparent 2px 76px),
+    linear-gradient(180deg, #4E5A4C, #2E372C); }
+.stele.temple::before { content: ""; position: absolute; top: -4px; left: 8%; width: 46%; height: 26px; pointer-events: none;
+  background: radial-gradient(10px 12px at 10px 0, #5FA03A 70%, transparent 72%) 0 0 / 22px 26px repeat-x; filter: drop-shadow(0 3px 0 rgba(0, 0, 0, .3)); }
+.stele.sanctuaire { color: #3B2508; border-color: #C9962C;
+  background: repeating-linear-gradient(0deg, rgba(120, 72, 20, .14) 0 2px, transparent 2px 34px), repeating-linear-gradient(90deg, rgba(120, 72, 20, .1) 0 2px, transparent 2px 68px),
+    radial-gradient(120% 70% at 100% 0%, rgba(255, 220, 140, .55), transparent 60%), linear-gradient(180deg, #E8C98C, #C9A060); }
+.stele.sanctuaire h3 { color: #5A3708; }
+.marches { list-style: none; margin: 0; padding: 0; display: flex; align-items: flex-end; gap: 10px; }
+.marches li { flex: 1 1 0; display: flex; flex-direction: column; justify-content: flex-end; gap: 2px; padding: 12px 12px 10px; text-align: center; border: 3px solid rgba(0, 0, 0, .35); }
+.marches li:nth-child(1) { min-height: 92px; } .marches li:nth-child(2) { min-height: 126px; } .marches li:nth-child(3) { min-height: 160px; }
+.marches b { font-family: "Lilita One", sans-serif; font-weight: 400; font-size: 34px; line-height: 1; }
+.marches span { font-size: 14.5px; font-weight: 700; line-height: 1.25; }
+.stele.temple .marches li { background: linear-gradient(180deg, #6D7A62, #45503F); box-shadow: inset 0 4px 0 rgba(150, 200, 100, .35), 0 6px 0 rgba(0, 0, 0, .3); }
+.stele.temple .marches b { color: #D8F0B0; }
+.stele.sanctuaire .marches li { background: linear-gradient(180deg, #F4DCA2, #D9B26A); box-shadow: inset 0 4px 0 rgba(255, 245, 210, .7), 0 6px 0 rgba(90, 55, 8, .35); }
+.stele.sanctuaire .marches b { color: #8A5A10; }
+.regles-groupe { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; margin-top: 40px; }
+.regles-groupe p { display: flex; align-items: center; gap: 12px; margin: 0; padding: 16px 18px; font-size: 16.5px; background: rgba(0, 0, 0, .28); border: 2px solid rgba(255, 215, 94, .35); }
+.regles-groupe img { flex: 0 0 auto; width: 34px; height: auto; }
+.regles-groupe img + img { margin-left: -6px; }
+.regles-groupe img:not(.eteinte) { animation: lampe-vacille 1.6s ease-in-out infinite alternate; }
+.regles-groupe img + img:not(.eteinte) { animation-delay: .5s; }
+.regles-groupe b { color: var(--or-clair); }
+@keyframes lampe-vacille { from { filter: brightness(1) } to { filter: brightness(1.25) drop-shadow(0 0 6px rgba(255, 190, 90, .7)) } }
+
+/* ---------- le sablier du HUD du donjon : ses neuf images, en boucle ---------- */
+.sablier { flex: 0 0 auto; display: inline-block; width: 44px; height: 72px; image-rendering: pixelated;
+  background: url("../assets/donjons/sablier.webp") 0 0 / 396px 72px no-repeat; animation: sablier-coule 2.7s steps(9) infinite; }
+@keyframes sablier-coule { from { background-position: 0 0 } to { background-position: -396px 0 } }
+
+/* ---------- dedans : la pile de cartes, et ce qui se fouille ---------- */
+.donjon-dedans { color: #F4EEDF; background: radial-gradient(60% 60% at 80% 30%, rgba(224, 168, 80, .14), transparent 65%), linear-gradient(180deg, #2A2216, #17110B); }
+.dedans-grille { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); }
+.donjon-dedans [data-carrousel] > .vue { border-radius: 0; border: 3px solid #8A6A2A; }
+.donjon-dedans [data-carrousel] > .vue img.ecran { object-fit: contain; background: #1A120C; }
+.donjon-dedans .geste-pile { margin: 4px 0 18px; color: var(--or-clair); font-weight: 700; font-size: 16px; }
+.fouilles { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; }
+.fouilles li { display: flex; align-items: center; gap: 16px; font-size: 17px; }
+.fouilles img { flex: 0 0 auto; width: 40px; height: auto; filter: drop-shadow(0 3px 0 rgba(0, 0, 0, .4)); }
+.fouilles b { color: var(--or-clair); }
+
+/* ---------- le butin et le chrono : trois sabliers, seul, à deux, à trois ---------- */
+.trois-sabliers { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; margin: 0 auto 34px; max-width: 900px; }
+.trois-sabliers article { padding: 24px 18px 20px; text-align: center; background: rgba(255, 252, 240, .5); border: 3px solid #A57713; box-shadow: 0 5px 0 rgba(107, 68, 35, .35); }
+.trois-sabliers .sablier { margin: 0 3px 10px; }
+.trois-sabliers .sablier.b { animation-delay: .9s; } .trois-sabliers .sablier.c { animation-delay: 1.8s; }
+.trois-sabliers h3 { font-size: 28px; color: #5A3708; margin: 0 0 6px; }
+.trois-sabliers p { margin: 0; font-size: 16px; }
+.donjon-butin .caisse-donjons { max-width: 760px; margin: 0 auto 26px; text-align: center; font-size: 17px; }
+.gestes.centre { justify-content: center; }
+
+@media (max-width: 900px) {
+  .steles, .regles-groupe { grid-template-columns: minmax(0, 1fr); }
+  .dedans-grille { grid-template-columns: minmax(0, 1fr); }
+  .gardien-scene { min-height: 400px; }
+}
+@media (max-width: 600px) {
+  .stele { padding: 28px 18px 24px; }
+  .marches { gap: 7px; }
+  .marches li { padding: 10px 6px 8px; }
+  .marches b { font-size: 28px; }
+  .marches span { font-size: 13px; }
+  .trois-sabliers { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+  .gardien-scene { min-height: 340px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .donjon-tete .poussiere { display: none; }
+  .gardien-scene img, .gardien-scene .runes, .gardien-scene .runes::before, .regles-groupe img, .sablier { animation: none; }
+}
+html.photo .donjon-tete .poussiere { display: none; }
+html.photo .gardien-scene img, html.photo .gardien-scene .runes, html.photo .gardien-scene .runes::before, html.photo .regles-groupe img, html.photo .sablier { animation: none; }
+
+/* ======================================================================================================================
+   L'ACCUEIL (index.html, 19/10/2026) : les deux portes du palais (le casino sous ses ampoules, les donjons entre deux
+   torches), et la Gazette du palais (tout ce qui fait vivre le serveur, en colonnes de journal)
+   ====================================================================================================================== */
+.palais-portes { color: #F4EAFF;
+  background: radial-gradient(46% 60% at 24% 64%, rgba(181, 53, 43, .22), transparent 70%), radial-gradient(46% 60% at 76% 64%, rgba(215, 164, 33, .16), transparent 70%), linear-gradient(180deg, #1B0B2B, #140A22); }
+.portes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 44px; }
+.porte { position: relative; display: flex; flex-direction: column; text-decoration: none; color: inherit; }
+.porte-arche { position: relative; display: block; aspect-ratio: 4 / 3.3; overflow: hidden; border-radius: 50% 50% 0 0 / 30% 30% 0 0;
+  border: 6px solid var(--or); box-shadow: inset 0 0 0 4px rgba(0, 0, 0, .35), 0 24px 44px rgba(0, 0, 0, .5); }
+.porte-donjons .porte-arche { border-color: #9C8A62; }
+.porte-arche img { width: 100%; height: 100%; object-fit: cover; filter: brightness(.88) saturate(1.05); transition: transform .9s cubic-bezier(.2, .8, .2, 1), filter .4s ease; }
+.porte:hover .porte-arche img, .porte:focus-visible .porte-arche img { transform: scale(1.06); filter: brightness(1.02) saturate(1.15); }
+.porte:focus-visible { outline: 3px solid #fff; outline-offset: 6px; }
+.porte-texte { position: relative; z-index: 2; display: block; margin: -46px 18px 0; padding: 20px 22px 18px;
+  background: linear-gradient(180deg, #2E1846, #1E0F30); border: 3px solid rgba(255, 215, 94, .6); box-shadow: 0 14px 28px rgba(0, 0, 0, .45); transition: transform .3s ease; }
+.porte:hover .porte-texte { transform: translateY(-4px); }
+.porte-titre { display: block; font-family: "Lilita One", sans-serif; font-size: clamp(26px, 2.6vw, 34px); line-height: 1.1; color: #fff; }
+.porte-dit { display: block; margin: 8px 0 12px; font-size: 16.5px; line-height: 1.5; color: #E8DDF5; }
+.porte-lien { font-weight: 700; color: var(--or-clair); }
+.ampoules-arche { position: absolute; inset: 10px; border-radius: 50% 50% 0 0 / 30% 30% 0 0; border: 6px dotted #FFE7A0; border-bottom: 0; pointer-events: none;
+  filter: drop-shadow(0 0 6px rgba(255, 214, 110, .95)); animation: arche-clignote 1.4s steps(2) infinite; }
+@keyframes arche-clignote { 50% { border-color: #FFB84D; } }
+.torche { position: absolute; bottom: 12%; width: 12px; height: 46px; background: linear-gradient(180deg, #7A4E22, #3E2410); box-shadow: 0 0 0 2px rgba(0, 0, 0, .35); }
+.torche.g { left: 9%; } .torche.d { right: 9%; }
+.torche::before { content: ""; position: absolute; left: 50%; bottom: 100%; width: 26px; height: 36px; margin-left: -13px; transform-origin: 50% 100%;
+  border-radius: 50% 50% 45% 45% / 62% 62% 38% 38%; background: radial-gradient(circle at 50% 72%, #FFF4C0 0, #FFC04A 34%, rgba(255, 110, 30, .85) 58%, rgba(255, 80, 20, 0) 76%);
+  filter: drop-shadow(0 0 14px rgba(255, 150, 40, .95)); animation: flamme .8s ease-in-out infinite alternate; }
+.torche.d::before { animation-delay: .35s; }
+@keyframes flamme { from { transform: scale(1, 1) rotate(-4deg); } to { transform: scale(.88, 1.14) rotate(4deg); } }
+
+.gazette { padding: 96px 0; background: radial-gradient(60% 50% at 50% 0%, rgba(255, 215, 94, .1), transparent 70%), linear-gradient(180deg, #140A22, #1B0B2B); }
+.gazette-page { position: relative; padding: 34px 38px 30px; color: #2A1A0C; background: #F4E9CF url("../assets/matieres/parchemin.png") 0 0 / 96px 96px repeat; image-rendering: pixelated;
+  box-shadow: 0 0 0 1px rgba(58, 38, 20, .3), 10px 12px 0 rgba(0, 0, 0, .25), 0 34px 64px rgba(0, 0, 0, .55); }
+.gazette-page > * { image-rendering: auto; }
+.gazette-une { text-align: center; margin-bottom: 6px; padding-bottom: 14px; border-bottom: 5px double #3A2614; }
+.gazette-filet { margin: 0 0 10px; padding-bottom: 8px; font-size: 13px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: #7A5B3E; border-bottom: 1px solid rgba(58, 38, 20, .5); }
+.gazette-filet i { font-style: normal; margin: 0 6px; }
+.gazette-une h2 { font-size: clamp(40px, 5.6vw, 74px); line-height: 1; color: #2A1A0C; letter-spacing: 1px; text-shadow: 0 2px 0 rgba(255, 255, 255, .5); }
+.gazette-sous { margin: 8px 0 0; font-size: 17px; font-style: italic; color: #5A4028; }
+.gazette-colonnes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.g-article { padding: 18px 20px 14px; border-left: 1px solid rgba(58, 38, 20, .4); border-top: 1px solid rgba(58, 38, 20, .4); }
+.g-article:nth-child(1), .g-article:nth-child(4), .g-article:nth-child(7) { border-left: 0; padding-left: 0; }
+.g-article:nth-child(3n) { padding-right: 0; }
+.g-article:nth-child(1), .g-article:nth-child(2) { border-top: 0; }
+.g-lead { grid-column: span 2; grid-row: span 2; }
+.g-article img { width: 100%; height: auto; margin: 0 0 12px; border: 2px solid #3A2614; filter: sepia(.18) contrast(1.04); transition: filter .5s ease; }
+.g-article:hover img { filter: none; }
+.g-article h3 { margin: 0 0 8px; font-size: 23px; line-height: 1.15; color: #2A1A0C; }
+.g-lead h3 { font-size: clamp(28px, 3vw, 40px); }
+.g-article p { margin: 0 0 10px; font-size: 16px; line-height: 1.5; color: #3A2614; }
+.g-lead p:first-of-type::first-letter { float: left; margin: 5px 8px 0 0; font-family: "Lilita One", sans-serif; font-size: 56px; line-height: .86; color: #8A2A1E; }
+
+@media (max-width: 900px) {
+  .portes { grid-template-columns: minmax(0, 1fr); gap: 36px; }
+  .gazette-colonnes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .g-article, .g-article:nth-child(n) { border-left: 0; padding-left: 0; padding-right: 0; border-top: 1px solid rgba(58, 38, 20, .4); }
+  .g-article:nth-child(1) { border-top: 0; }
+  .g-article:nth-child(2n+3) { padding-right: 14px; }
+  .g-article:nth-child(2n+4) { padding-left: 14px; border-left: 1px solid rgba(58, 38, 20, .4); }
+  .g-lead { grid-column: span 2; grid-row: auto; }
+  .g-caisses { grid-column: span 2; }
+}
+@media (max-width: 600px) {
+  .gazette { padding: 64px 0; }
+  .gazette-page { padding: 24px 16px 18px; }
+  .gazette-colonnes { grid-template-columns: minmax(0, 1fr); }
+  .g-article:nth-child(n) { grid-column: auto; padding-left: 0; padding-right: 0; border-left: 0; }
+  .porte-texte { margin: -36px 10px 0; padding: 16px 16px 14px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ampoules-arche, .torche::before { animation: none; }
+  .porte-arche img, .porte-texte { transition: none; }
+}
+html.photo .ampoules-arche, html.photo .torche::before { animation: none; }

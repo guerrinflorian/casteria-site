@@ -128,7 +128,20 @@ const MUTANTS = [
   ['la coupe du classement trop petite pour le doigt', 'css/style.css', s => s.replace('min-width: 44px; min-height: 44px;', 'min-width: 30px; min-height: 30px;')],
   ['le lien Classement retire du pied d une page', 'boutique.html', s => s.replace('<a href="classement.html">Classement</a><a href="boutique.html">', '<a href="boutique.html">')],
   ['la page du classement retiree du plan du site', 'sitemap.xml', s => s.replace(/<url>(?:(?!<\/url>)[\s\S])*classement\.html[\s\S]*?<\/url>\s*/, '')],
-  ['une image trop haute dans la feuille du classement', 'css/classement.css', s => s + '\n.cl-rangs .cl-rang img { height: 1200px; }\n']
+  ['une image trop haute dans la feuille du classement', 'css/classement.css', s => s + '\n.cl-rangs .cl-rang img { height: 1200px; }\n'],
+
+  // ---------- (19/10/2026) le casino et les donjons : leurs pages suivent les mêmes règles, et aucun spoiler ----------
+  ['la page du casino retiree du plan du site', 'sitemap.xml', s => s.replace(/<url>(?:(?!<\/url>)[\s\S])*casino\.html[\s\S]*?<\/url>\s*/, '')],
+  ['la hero des donjons sans sa version pour un ecran etroit', 'donjons.html', s => s.replace(/(<div class="fond plein-cadre"[\s\S]*?<picture>)[\s\S]*?(<source type="image\/webp")/, '$1\n        $2')],
+  ['l image de la hero du casino chargee en differe', 'casino.html', s => s.replace(/(<div class="fond plein-cadre"[\s\S]*?<img\b)/, '$1 loading="lazy"')],
+  ['l image de partage du casino qui n existe pas', 'casino.html', s => s.replace('/assets/images/casteria-casino-partage.jpg', '/assets/images/casteria-casino-absente.jpg')],
+  ['l adresse de la page des donjons (canonical) fausse', 'donjons.html', s => s.replace(/<link rel="canonical" href="[^"]*">/, '<link rel="canonical" href="https://casteria.fr/donjon.html">')],
+  ['un mot interdit sur la page du casino', 'casino.html', s => s.replace('</main>', '<p>Le casino ouvrira bientôt.</p></main>')],
+  ['le carrousel des donjons sans son script', 'donjons.html', s => s.replace('<script src="js/carrousel.js" defer></script>', '')],
+  ['le boss d un donjon nomme sur la page des donjons', 'donjons.html', s => s.replace('</main>', "<p>Au fond t'attend le Sphinx d'Or.</p></main>")],
+  ['le boss d un donjon nomme dans un texte d image', 'donjons.html', s => s.replace('alt="L\'écran du sceau', 'alt="Le sceau du Cœur Creux')],
+  ['le dernier boss nomme sur l accueil', 'index.html', s => s.replace('</main>', '<p>Le Dragon Ancien t\'attend.</p></main>')],
+  ['l Abyssarque nommee sur la page de la mer', 'pirates.html', s => s.replace('</main>', '<p>Et l\'Abyssarque, sur sa tortue.</p></main>')]
 ]
 
 let rates = 0, code = 0

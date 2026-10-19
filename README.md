@@ -25,9 +25,12 @@ fichier sans eux s'affiche comme avant, une carte par catégorie.
 
 | Fichier | Ce que c'est |
 |---|---|
-| `index.html` | l'accueil : l'en-tête animé et le bouton de téléchargement, le concept, l'inédit (les boss, les armures, la mer, l'île qui grandit), la rangée de vidéos, les premiers pas, la boutique, le téléchargement |
+| `index.html` | l'accueil : le haut en cinéma, le launcher, la carte au trésor (les chiffres du jeu), les six mondes, les deux portes du palais (le casino, les donjons), les objets faits maison, la Gazette du palais (l'île, les caisses, les quêtes, les missions, les soirées, l'Héroïque...), les boss, le combat, la planète, la boutique, le téléchargement |
 | `commencer.html` | « Par où commencer » : les dix premières étapes du jeu, les tickets et la roue, les astuces |
 | `pirates.html` | la mer : les bateaux, les pirates, les canons (la page qui vise « serveur Minecraft pirate ») |
+| `casino.html` | le casino du palais (19/10/2026) : le casino à minerais, la roulette européenne à plusieurs (ses cotes, ses derniers numéros), le blackjack à quatre, les bornes des autres jeux (un carrousel à glisser), les deux familiers du casino, Auguste et la règle de la maison |
+| `donjons.html` | les donjons (19/10/2026) : Anselme, le Temple Creux et le Sanctuaire des Sables (leurs trois niveaux), dedans (une pile de cartes), le butin et le classement par taille de groupe ; jamais un boss ni une salle de boss |
+| `css/pages.css` | l'habillage du casino, des donjons, et sur l'accueil des deux portes du palais et de la Gazette du palais |
 | `classement.html` | le classement : les mêmes catégories que `/top` en jeu, le Score de Casteria d'abord (son podium), puis l'île, les jeux, les boss, la mer et le progrès, les dix premiers de chacune ; lus à l'ouverture par `js/classement.js` dans le fichier `classement.json` du gist que le serveur du jeu publie ; habillage : `css/classement.css` |
 | `api/classement.js` | la fonction de Vercel du classement : elle lit la base du jeu (une requête SELECT, en lecture seule) et rend du JSON ; Vercel garde la réponse 5 minutes |
 | `boutique.html` | la boutique : à quoi servent les crédits, et tes packs de Tebex, lus en direct (`js/boutique.config.js`, `js/boutique.js`) |
@@ -36,7 +39,7 @@ fichier sans eux s'affiche comme avant, une carte par catégorie.
 | `css/style.css`, `js/site.js` | l'habillage et ce qui bouge (le site se lit entier sans JavaScript) |
 | `robots.txt`, `sitemap.xml`, `favicon.ico` | pour Google : le droit de tout lire, le plan du site, l'icône |
 | `vercel.json`, `.vercelignore` | les réglages de la mise en ligne, et ce qui ne part pas en ligne |
-| `assets/` | le logo, les polices, les matières (parchemin, cadre, ruban, boutons), les icônes, les vidéos allégées et leurs affiches |
+| `assets/` | le logo, les polices, les matières (parchemin, cadre, ruban, boutons), les icônes, les vidéos allégées et leurs affiches ; `assets/casino/` (les écrans des bornes du casino, en pixels, agrandis au plus proche) et `assets/donjons/` (le sablier, les lampes et les coffrets du HUD des donjons) |
 
 ## Mettre en ligne sur Vercel (casteria.fr)
 
@@ -103,7 +106,8 @@ la ligne `Sitemap:` de `robots.txt`, et dans chaque page son adresse (`canonical
 
 - L'accueil n'a qu'une adresse, `https://casteria.fr/` : les liens vers l'accueil s'écrivent `./`, jamais `index.html`.
 - L'image de partage (`assets/images/casteria-decollage-partage.jpg`, le décollage de l'en-tête et le logo au dragon) fait 1200 x 630, le format des
-  réseaux ; `outils/domaine.js` l'écrit dans chaque page.
+  réseaux ; `outils/domaine.js` l'écrit dans chaque page. Le casino et les donjons ont la leur (`casteria-casino-partage.jpg`,
+  `casteria-donjon-partage.jpg`, le 4e champ de leur ligne dans `PAGES`).
 - Le logo affiché dans les pages est la copie légère (`casteria-logo-300.webp`) ; le grand `casteria-logo.png` reste
   l'original.
 - Les fichiers de `assets/` restent une semaine dans le navigateur des visiteurs : pour changer une image, donne un autre
@@ -147,7 +151,9 @@ en garde du pseudo si elle disparaissait.
 - La bande-annonce de l'accueil (`assets/videos/bande_annonce_casteria.mp4`, 1280 x 720, sans son) est le SEUL fichier qui
   peut dépasser 5 Mo (16 Mo au plus) : elle ne se charge qu'au clic du visiteur (`outils/verifier.js`, `LOURDS_PERMIS`).
   Les autres vidéos (12/10/2026) : 1280 x 720 pour l'accueil, 720 x 1280 pour la page des pirates, 5 Mo au plus chacune.
-- On ne dévoile pas tout : pas de secret du palais, pas de boss caché.
+- On ne dévoile pas tout : pas de secret du palais, pas de boss caché. Jamais l'Abyssarque, jamais le dernier boss, jamais la
+  salle du trône ; les donjons se montrent sans leurs boss ni leurs secrets (`outils/verifier.js` refuse leurs noms, aussi
+  dans le texte d'une image).
 - Le site parle d'un serveur où l'on joue : jamais « en développement », « bientôt », « pas encore ouvert ».
 - Avant de pousser : `npm run verifier` (un seul h1 par page, un texte pour chaque image, aucun lien cassé, aucun tiret long,
   aucun texte sombre sur un fond sombre ni clair sur le parchemin, aucun mot interdit, et le référencement : l'adresse

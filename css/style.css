@@ -292,6 +292,8 @@ button.bouton:disabled { filter: grayscale(1) brightness(.92); opacity: .6; curs
 footer { background: #120a1c; color: #CBB8DE; padding: 44px 0 30px; font-size: 15px; border-top: 4px solid var(--or-fonce); }
 footer .col { display: flex; flex-wrap: wrap; gap: 30px; align-items: center; justify-content: space-between; }
 footer a { color: var(--or-clair); text-decoration: none; margin-right: 16px; font-weight: 600; }
+/* (19/10/2026, neuf liens) un lien du pied ne se coupe jamais en deux lignes (« Le » puis « casino ») */
+footer nav a { display: inline-block; white-space: nowrap; line-height: 1.8; }
 footer a:hover { text-decoration: underline; }
 footer img { width: 70px; }
 footer small { display: block; margin-top: 20px; opacity: .7; }

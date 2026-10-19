@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Casteria : serveur Minecraft français moddé, de ton île au trou noir</title>
-<meta name="description" content="Casteria est un serveur Minecraft français moddé (1.21.1, NeoForge) : ton île sur la mer, tes machines et tes bêtes, 15 boss et leurs panoplies, des navires et des pirates, puis une planète sous un trou noir. Le launcher installe tout.">
+<meta name="description" content="Casteria est un serveur Minecraft français moddé (1.21.1, NeoForge) : ton île sur la mer, tes machines et tes bêtes, 15 boss, deux donjons, un casino à minerais, des navires pirates, puis une planète sous un trou noir. Le launcher installe tout.">
 <meta name="theme-color" content="#1B1028">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="fr_FR">
@@ -32,6 +32,7 @@
 <link rel="stylesheet" href="css/scene.css">
 <link rel="stylesheet" href="css/objets.css">
 <link rel="stylesheet" href="css/combat.css">
+<link rel="stylesheet" href="css/pages.css">
 <script type="application/ld+json">
 { "@context": "https://schema.org", "@graph": [
   { "@type": "WebSite", "@id": "https://casteria.fr/#site", "url": "https://casteria.fr/", "name": "Casteria", "inLanguage": "fr",
@@ -40,7 +41,7 @@
     "logo": "https://casteria.fr/assets/logo/casteria-logo.png" },
   { "@type": "VideoGame", "name": "Casteria", "inLanguage": "fr", "url": "https://casteria.fr/",
     "image": "https://casteria.fr/assets/images/casteria-decollage-partage.jpg",
-    "description": "Serveur Minecraft français moddé : une île sur la mer par joueur, une économie en jetons, 15 boss et leurs panoplies, des navires et des pirates, une planète sous un trou noir.",
+    "description": "Serveur Minecraft français moddé : une île sur la mer par joueur, une économie en jetons, 15 boss et leurs panoplies, deux donjons à faire en groupe, un casino à minerais, des navires et des pirates, une planète sous un trou noir.",
     "gamePlatform": ["PC", "Mac", "Linux"], "applicationCategory": "Game", "genre": ["Serveur Minecraft", "Île", "Économie", "Aventure"],
     "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
     "gameServer": { "@type": "GameServer", "name": "Casteria", "game": { "@type": "VideoGame", "name": "Minecraft Java Edition 1.21.1" } } }
@@ -137,7 +138,7 @@
       <svg class="fil" viewBox="0 0 1000 560" preserveAspectRatio="none" aria-hidden="true"><path d="M150 110 C 300 40, 420 260, 520 160 S 760 70, 850 140 M520 160 C 470 300, 300 330, 250 420 M520 160 C 600 300, 720 330, 760 430"/></svg>
       <article class="morceau m1 monte"><img src="assets/volume/yeti.png" alt="" width="520" height="520" loading="lazy"><b data-n="15">15</b><span>boss en arène</span></article>
       <article class="morceau m2 monte"><img class="pixel" src="assets/icones/jeton.png" alt="" width="64" height="64" loading="lazy"><b data-n="70">70</b><span>niveaux à gravir</span></article>
-      <article class="morceau m3 monte"><img src="assets/boutique/phenix.png" alt="" width="420" height="420" loading="lazy"><b data-n="31">31</b><span>familiers</span></article>
+      <article class="morceau m3 monte"><img src="assets/boutique/phenix.png" alt="" width="420" height="420" loading="lazy"><b data-n="36">36</b><span>familiers</span></article>
       <article class="morceau m4 monte"><img src="assets/volume/fregate.webp" alt="" width="855" height="1027" loading="lazy"><b data-n="5">5</b><span>navires à barrer</span></article>
       <article class="morceau m5 monte"><img src="assets/images/casteria-planete-trou-noir-esquif.jpg" class="rond" alt="" width="1280" height="720" loading="lazy"><b data-n="1">1</b><span>planète sous un trou noir</span></article>
     </div>
@@ -168,8 +169,38 @@
       <a class="monde monte" href="#boss" style="--teinte: #8E4CB8"><span class="monde-art"><img src="assets/affiches/voyage_boss.jpg" alt="" width="640" height="276" loading="lazy"><img class="deborde" src="assets/volume/oni_samourai.webp" alt="" width="774" height="849" loading="lazy"></span><span class="monde-titre">Les boss</span><span class="monde-texte">Quinze arènes, quinze boss. Chacun fait son entrée, et chacun a sa panoplie à pouvoir.</span><span class="monde-lien">Voir les boss <span aria-hidden="true">&#8250;</span></span></a>
       <a class="monde monte" href="pirates.html" style="--teinte: #2E8FB8"><span class="monde-art"><img src="assets/images/casteria-fregate-bateau-pirate-minecraft.jpg" alt="" width="1280" height="720" loading="lazy"><img class="deborde" src="assets/volume/fregate.webp" alt="" width="855" height="1027" loading="lazy"></span><span class="monde-titre">La mer</span><span class="monde-texte">Cinq navires, des pirates à couler, des trésors, et des boss de la mer, chacun sur son île.</span><span class="monde-lien">La mer et les pirates <span aria-hidden="true">&#8250;</span></span></a>
       <a class="monde monte" href="#planete" style="--teinte: #E0592A"><span class="monde-art"><img src="assets/images/casteria-planete-trou-noir-esquif.jpg" alt="" width="1280" height="720" loading="lazy"><img class="deborde" src="assets/volume/devoreur.webp" alt="" width="480" height="898" loading="lazy"></span><span class="monde-titre">La planète</span><span class="monde-texte">Rénove l'Esquif, la fusée de ton île, et pars sous le trou noir. L'air y est compté.</span><span class="monde-lien">Voir la planète <span aria-hidden="true">&#8250;</span></span></a>
-      <a class="monde monte" href="boutique.html" style="--teinte: #D7A421"><span class="monde-art"><img src="assets/affiches/casteria_12.jpg" alt="" width="540" height="960" loading="lazy"><img class="deborde" src="assets/boutique/phenix.png" alt="" width="420" height="420" loading="lazy"></span><span class="monde-titre">Les familiers</span><span class="monde-texte">Trente et un compagnons qui te suivent partout. Six ne s'achètent pas : tu les trouves en jouant, dans ta Mine, en mer, sur la planète et dans tes champs.</span><span class="monde-lien">Les voir <span aria-hidden="true">&#8250;</span></span></a>
-      <a class="monde monte" href="commencer.html" style="--teinte: #B07AE0"><span class="monde-art"><img src="assets/affiches/casteria_09.jpg" alt="" width="540" height="960" loading="lazy"><img class="deborde large" src="assets/volume/salamandre_braise.webp" alt="" width="912" height="500" loading="lazy"></span><span class="monde-titre">Les enclos</span><span class="monde-texte">Des bêtes communes, rares, légendaires, mythiques, et celles que tu captures à l'œuf.</span><span class="monde-lien">Par où commencer <span aria-hidden="true">&#8250;</span></span></a>
+      <a class="monde monte" href="boutique.html" style="--teinte: #D7A421"><span class="monde-art"><img src="assets/affiches/casteria_12.jpg" alt="" width="540" height="960" loading="lazy"><img class="deborde" src="assets/boutique/phenix.png" alt="" width="420" height="420" loading="lazy"></span><span class="monde-titre">Les familiers</span><span class="monde-texte">Trente-six compagnons qui te suivent partout. Certains ne s'achètent pas : tu les trouves dans ta Mine, en mer, sur la planète, dans tes champs, au casino ou au fond d'un donjon.</span><span class="monde-lien">Les voir <span aria-hidden="true">&#8250;</span></span></a>
+      <a class="monde monte" href="commencer.html" style="--teinte: #B07AE0"><span class="monde-art"><img src="assets/affiches/casteria_09.jpg" alt="" width="540" height="960" loading="lazy"><img class="deborde large" src="assets/volume/salamandre_braise.webp" alt="" width="912" height="500" loading="lazy"></span><span class="monde-titre">Les enclos</span><span class="monde-texte">Des bêtes communes, rares, épiques, légendaires et mythiques, des œufs mystères à faire éclore, et celles que tu captures à l'œuf.</span><span class="monde-lien">Par où commencer <span aria-hidden="true">&#8250;</span></span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ AU PALAIS, DEUX PORTES (19/10/2026) : le casino à minerais et les donjons, chacun sa page ; deux portes en
+     arche, l'une sous ses ampoules, l'autre entre deux torches ============ -->
+<section class="pan palais-portes" id="palais" aria-labelledby="palais-titre">
+  <div class="dedans">
+    <div class="tete monte">
+      <span class="sur-titre">Au palais</span>
+      <h2 id="palais-titre">Deux portes, deux façons de tenter ta chance</h2>
+      <p>Au cœur du palais, un casino où l'on mise ses minerais. Devant Anselme, deux donjons à faire seul ou à trois.</p>
+    </div>
+    <div class="portes">
+      <a class="porte porte-casino monte" href="casino.html">
+        <span class="porte-arche"><img src="assets/images/casteria-casino-allee-1280.webp" alt="" width="1280" height="720" loading="lazy"><i class="ampoules-arche" aria-hidden="true"></i></span>
+        <span class="porte-texte">
+          <span class="porte-titre">Le casino du palais</span>
+          <span class="porte-dit">Neuf jeux : la roulette européenne à plusieurs, le blackjack à quatre, les machines à sous, le Wagon fou... On y mise ses lingots, jamais ses jetons.</span>
+          <span class="porte-lien">Entrer au casino <span aria-hidden="true">&#8250;</span></span>
+        </span>
+      </a>
+      <a class="porte porte-donjons monte" href="donjons.html">
+        <span class="porte-arche"><img src="assets/images/casteria-donjon-plaques-1280.webp" alt="" width="1280" height="742" loading="lazy"><i class="torche g" aria-hidden="true"></i><i class="torche d" aria-hidden="true"></i></span>
+        <span class="porte-texte">
+          <span class="porte-titre">Les donjons</span>
+          <span class="porte-dit">Le Temple Creux et le Sanctuaire des Sables : trois niveaux chacun, de 1 à 3 joueurs, un coffre pour chacun et un classement par groupe.</span>
+          <span class="porte-lien">Voir les donjons <span aria-hidden="true">&#8250;</span></span>
+        </span>
+      </a>
     </div>
   </div>
 </section>
@@ -220,6 +251,40 @@
       </details>
     </div>
     <p class="esquif-objet monte">Et au bout du voyage, <a href="#planete">l'Esquif</a> : la fusée de ton île, qui t'emmène sur la planète.</p>
+  </div>
+</section>
+
+<!-- ============ LA GAZETTE DU PALAIS (19/10/2026) : tout ce qui fait vivre le serveur, en colonnes de journal (chaque
+     chiffre lu dans le jeu : les nouvelles des mises en ligne 112 à 126, /aide, le livre des quêtes) ============ -->
+<section class="pan gazette" id="gazette" aria-labelledby="gazette-titre">
+  <div class="dedans">
+    <div class="gazette-page">
+      <div class="gazette-une monte">
+        <p class="gazette-filet">Le journal des joueurs <i aria-hidden="true">&#183;</i> chaque jour sur Casteria</p>
+        <h2 id="gazette-titre">La Gazette du palais</h2>
+        <p class="gazette-sous">Tout ce qui fait vivre ton île, le palais et tes soirées</p>
+      </div>
+      <div class="gazette-colonnes">
+        <article class="g-article g-lead monte">
+          <img src="assets/images/casteria-ile-sur-la-mer-minecraft.jpg" alt="Une île de Casteria au bord de l'eau : un ponton de bois éclairé de lanternes, un enclos et ses bottes de foin" width="1080" height="608" loading="lazy">
+          <h3>Ton île ne dort jamais</h3>
+          <p>Toutes les 10 à 15 minutes, une épreuve tombe sur ton île : une machine qui surchauffe, des fuites, une bête évadée, une pie voleuse. Réussie, un bonus ; ratée, un malus.</p>
+          <p>Au niveau 17, la Mine s'ouvre sous tes pieds : cinq étages dans le noir, des gemmes pour tes machines, et deux familiers qu'on ne trouve que là. Au niveau 24, la Batterie côtière : un canon sur ta rive ouest. Au coucher du soleil, la cloche sonne : huit boulets pour couler la voile.</p>
+        </article>
+        <article class="g-article g-caisses monte">
+          <img src="assets/images/casteria-marche-caisses-mysteres-minecraft.jpg" alt="Les quatre caisses mystères du palais, de la Caisse de Vote au Trésor de Casteria, et Fortuné le Forain" width="1280" height="720" loading="lazy">
+          <h3>Les caisses s'ouvrent en grand</h3>
+          <p>Une bande dorée, cinq secondes de suspense, et ton gain en grand. Le carnet des caisses montre chaque lot, sa rareté et sa chance. Quatre caisses au palais, celle du Corsaire au port, et celle des Donjons près d'Anselme.</p>
+        </article>
+        <article class="g-article monte"><h3>103 quêtes chez Ludovic</h3><p>Dix chapitres, du niveau 1 au 60 : de 40 à 500 XP selon leurs étoiles, et au bout de chaque chapitre, des tickets et un objet qu'on ne trouve que là. Tape /qp.</p></article>
+        <article class="g-article monte"><h3>Trois missions par jour</h3><p>Une facile (1 ticket), une moyenne (2), une difficile (4), de nouvelles à minuit. Enchaîne les jours : des tickets en prime.</p></article>
+        <article class="g-article monte"><h3>Le soir, au palais</h3><p>18 h 30 : le Sol qui lâche. 21 h : la Bataille de neige. Tape /participer de partout : on vient te chercher 10 secondes avant.</p></article>
+        <article class="g-article monte"><h3>Le mode Héroïque</h3><p>Bats un boss une fois : son mode Héroïque s'ouvre. Le même boss, bien plus dur, avec une phase de plus ; la même armure à gagner, avec plus de chances pour chaque pièce.</p></article>
+        <article class="g-article monte"><h3>Ton île à plusieurs</h3><p>Avec /amis, invite tes amis et choisis leurs droits. Avec le droit Machines, un ami récolte tes machines même sans toi : sa récolte est pour lui.</p></article>
+        <article class="g-article monte"><h3>Le Bac, à l'Établi</h3><p>Il garde 16 piles d'un seul objet (64 et 256 pour les plus grands) et montre son compte sur sa façade.</p></article>
+        <article class="g-article monte"><h3>Objets et recettes</h3><p>/recettes ouvre le livre de chaque objet du serveur : sa recette, et à quoi il sert.</p></article>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -436,7 +501,7 @@
     <div class="col">
       <img src="assets/logo/casteria-logo-300.webp" alt="Casteria" width="70" height="70" loading="lazy">
       <nav aria-label="Le pied de page">
-        <a href="./">Accueil</a><a href="commencer.html">Par où commencer</a><a href="pirates.html">La mer et les pirates</a><a href="#combat">Le combat</a><a href="classement.html">Classement</a><a href="boutique.html">Boutique</a><a href="#telecharger">Télécharger</a>
+        <a href="./">Accueil</a><a href="commencer.html">Par où commencer</a><a href="pirates.html">La mer et les pirates</a><a href="donjons.html">Les donjons</a><a href="casino.html">Le casino</a><a href="#combat">Le combat</a><a href="classement.html">Classement</a><a href="boutique.html">Boutique</a><a href="#telecharger">Télécharger</a>
       </nav>
     </div>
     <small>Casteria est un serveur Minecraft indépendant, créé par des joueurs. Il n'est ni affilié à Mojang ni à Microsoft, ni approuvé par eux. Minecraft est une marque de Mojang Studios.</small>
