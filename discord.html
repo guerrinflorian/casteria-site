@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="refresh" content="1; url=https://discord.gg/JKyWQ55Nx">
+<title>Le Discord de Casteria, le serveur Minecraft français</title>
+<meta name="description" content="Le Discord de Casteria, le serveur Minecraft français moddé : retrouve les joueurs et le staff, pose tes questions. Cette page t'y emmène toute seule, ou tout de suite avec son bouton.">
+<meta name="theme-color" content="#1B1028">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:site_name" content="Casteria">
+<meta property="og:title" content="Le Discord de Casteria">
+<meta property="og:description" content="Retrouve les joueurs et le staff de Casteria, le serveur Minecraft français moddé, sur Discord.">
+<meta property="og:url" content="https://casteria.fr/discord">
+<link rel="canonical" href="https://casteria.fr/discord">
+<meta property="og:image" content="https://casteria.fr/assets/images/casteria-decollage-partage.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Casteria : de nuit, une fusée décolle de l'île du palais vers le trou noir ; le logo au dragon violet">
+<meta name="twitter:card" content="summary_large_image">
+<!-- cette page répond à /discord (vercel.json, « rewrites ») : ses fichiers sont cités depuis la racine (« / ») -->
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/logo/favicon-32.png">
+<link rel="icon" type="image/png" sizes="256x256" href="/assets/logo/icone-256.png">
+<link rel="apple-touch-icon" href="/assets/logo/icone-apple-180.png">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/discord.css">
+</head>
+<body>
+<main>
+<!-- casteria.fr/discord (19/10/2026, le propriétaire : « un casteria.fr/discord qui affiche et redirige vers
+     https://discord.gg/JKyWQ55Nx, simple beau efficace la page et direct le bouton pas de chichi ») : le logo, le titre, une
+     phrase et le grand bouton. La page part toute seule au bout d'une seconde : le refresh de la tête, et le script du bas
+     (location.replace : le retour arrière ne ramène pas ici). L'invitation n'est écrite qu'ici, à ces trois places (et dans
+     outils/verifier.js, qui les vérifie) : pour en changer, les quatre ensemble. -->
+<section class="heros vitrine-tete discord" id="haut">
+  <div class="fond plein-cadre" aria-hidden="true">
+    <picture>
+      <source media="(max-aspect-ratio: 2/3)" type="image/webp" srcset="/assets/images/casteria-decollage-portrait-720.webp 720w" sizes="100vw">
+      <source media="(max-aspect-ratio: 2/3)" srcset="/assets/images/casteria-decollage-portrait-1080.jpg 1080w" sizes="100vw">
+      <source type="image/webp" srcset="/assets/images/casteria-decollage-1280.webp 1280w" sizes="100vw">
+      <img src="/assets/images/casteria-decollage-1920.jpg" alt="" width="2752" height="1536" fetchpriority="high" decoding="async">
+    </picture>
+  </div>
+  <div class="discord-texte">
+    <a class="discord-logo" href="/" aria-label="Casteria, l'accueil"><img src="/assets/logo/casteria-logo-300.webp" alt="Logo de Casteria : un dragon violet sur une île" width="300" height="300"></a>
+    <h1>Le <span class="or">Discord</span> de Casteria</h1>
+    <p class="accroche">Les joueurs et le staff t'attendent : on t'y emmène dans un instant.</p>
+    <a class="bouton bouton-or grand" href="https://discord.gg/JKyWQ55Nx">Rejoindre le Discord</a>
+  </div>
+</section>
+</main>
+<script>setTimeout(function () { window.location.replace('https://discord.gg/JKyWQ55Nx') }, 1000)</script>
+</body>
+</html>

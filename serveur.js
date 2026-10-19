@@ -5,6 +5,8 @@
 'use strict'
 const http = require('http'), fs = require('fs'), path = require('path')
 const RACINE = __dirname, PORT = Number(process.env.PORT) || 3000
+const REECRITURES = new Map()
+try { for (const r of JSON.parse(fs.readFileSync(path.join(RACINE, 'vercel.json'), 'utf8')).rewrites || []) REECRITURES.set(r.source, r.destination) } catch (e) { /* sans vercel.json lisible : aucune */ }
 function indisponible(res) { if (!res.headersSent) res.writeHead(503, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' }); res.end('{"indisponible":true}') }
 const TYPES = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.json': 'application/json',
   '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.webp': 'image/webp', '.svg': 'image/svg+xml', '.ico': 'image/x-icon',
@@ -16,6 +18,8 @@ http.createServer((req, res) => {
   if (chemin === '/api/classement') {
     try { return Promise.resolve(require(path.join(RACINE, 'api', 'classement.js'))(req, res)).catch(() => indisponible(res)) } catch (e) { return indisponible(res) }
   }
+  // les réécritures de vercel.json, comme en ligne (/discord : discord.html)
+  if (REECRITURES.has(chemin)) chemin = REECRITURES.get(chemin)
   if (chemin.endsWith('/')) chemin += 'index.html'
   const fichier = path.join(RACINE, chemin)
   // jamais hors du dossier du site, jamais un fichier caché

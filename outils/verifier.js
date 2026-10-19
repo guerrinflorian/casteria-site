@@ -1,7 +1,7 @@
 // Les règles du site, vérifiées en une seconde : npm run verifier (code 0 : tout est bon)
 'use strict'
 const fs = require('fs'), path = require('path')
-const RACINE = path.join(__dirname, '..'), PAGES = ['index.html', 'commencer.html', 'pirates.html', 'casino.html', 'donjons.html', 'classement.html', 'boutique.html', 'merci.html', '404.html']
+const RACINE = path.join(__dirname, '..'), PAGES = ['index.html', 'commencer.html', 'pirates.html', 'casino.html', 'donjons.html', 'classement.html', 'boutique.html', 'discord.html', 'merci.html', '404.html']
 // LES FICHIERS LOURDS PERMIS (aucun depuis le 13/10/2026 : la bande-annonce de l'accueil a été retirée sur la demande du
 // propriétaire) : un fichier de plus de 5 Mo n'entre ici qu'avec son plafond en Mo, et la vidéo qui le cite porte
 // « data-clic » (chargée au clic du visiteur), jamais « data-auto »
@@ -150,6 +150,27 @@ const LIENS_FIGES = 'https://github.com/guerrinflorian/casteria-mc/releases/'
 // la boutique seulement, chargé sans bloquer la page (defer). Toute autre adresse, toute autre version, toute autre page :
 // refusé, comme avant.
 const TEBEX_JS = 'https://js.tebex.io/v/1.11.0.js'
+// LE DISCORD (19/10/2026, le propriétaire : « un casteria.fr/discord qui affiche et redirige vers https://discord.gg/JKyWQ55Nx,
+// simple beau efficace la page et direct le bouton pas de chichi ») : l'invitation n'est écrite que dans discord.html, à ses
+// trois places (le grand bouton, le refresh d'une seconde, le script qui part sans laisser la page dans l'historique) ; la
+// page répond à /discord (vercel.json, « rewrites »), son adresse sans « .html » (ADRESSES). Changer d'invitation : ici ET
+// les trois places de discord.html.
+const DISCORD = 'https://discord.gg/JKyWQ55Nx', ADRESSES = { 'discord.html': 'discord' }
+function verifierDiscord(faute) {
+  const s = lire('discord.html')
+  if (!s) return faute('discord.html manque (casteria.fr/discord)')
+  if (!s.includes('<a class="bouton bouton-or grand" href="' + DISCORD + '">Rejoindre le Discord</a>')) faute('discord.html : le grand bouton « Rejoindre le Discord » vers ' + DISCORD + ' manque')
+  if (!s.includes('<meta http-equiv="refresh" content="1; url=' + DISCORD + '">')) faute('discord.html : le départ tout seul au bout d\'une seconde manque (<meta http-equiv="refresh" content="1; url=' + DISCORD + '">)')
+  if (!s.includes("<script>setTimeout(function () { window.location.replace('" + DISCORD + "') }, 1000)</script>")) faute('discord.html : le départ par le script manque (location.replace, au bout d\'une seconde)')
+  // aucune autre invitation, sur aucune page ni dans aucun script : les autres pages mènent à /discord
+  const ailleurs = fs.readdirSync(RACINE).filter(n => /\.html$/.test(n)).concat(fs.readdirSync(path.join(RACINE, 'js')).map(n => 'js/' + n))
+  for (const n of ailleurs) for (const m of lire(n).match(/(?:https?:)?\/\/(?:[a-z0-9-]+\.)?discord(?:app)?\.(?:gg|com)\/[A-Za-z0-9_/-]*/gi) || []) if (n !== 'discord.html' || m !== DISCORD) faute(n + ' : une adresse de Discord (' + m + ') : l\'invitation n\'est écrite que dans discord.html, les autres pages mènent à /discord')
+  let vj = null
+  try { vj = JSON.parse(lire('vercel.json')) } catch (e) { vj = null }
+  if (!vj || !Array.isArray(vj.rewrites) || !vj.rewrites.some(r => r && r.source === '/discord' && r.destination === '/discord.html')) faute('vercel.json : /discord doit mener à discord.html (« rewrites » : { "source": "/discord", "destination": "/discord.html" })')
+  // jamais une pastille arrondie (le propriétaire) : aucun arrondi dans sa feuille
+  for (const r of reglesCss(lire('css/discord.css'))) for (const m of r.corps.matchAll(/border(?:-[a-z]+)*-radius\s*:\s*([^;]+)/g)) if (!/^0(px)?\s*$/.test(m[1].trim())) faute('css/discord.css, « ' + r.sel.slice(0, 60) + ' » : un arrondi (' + m[1].trim() + ') : jamais une pastille arrondie')
+}
 // le domaine du site : celui que outils/domaine.js a écrit dans robots.txt ; et le plan du site
 const lire = f => { try { return fs.readFileSync(path.join(RACINE, f), 'utf8') } catch (e) { return '' } }
 const DOMAINE = (lire('robots.txt').match(/^Sitemap: (https:\/\/[^/\s]+)\/sitemap\.xml$/m) || [])[1] || '', PLAN = lire('sitemap.xml')
@@ -185,12 +206,15 @@ for (const page of PAGES) {
   for (const m of s.matchAll(/(?:src|href|poster|data-src)="([^"#?]+)[^"]*"/g)) cites.add(m[1])
   // (14/10/2026) les tailles d'une image (srcset d'une <source> ou d'une <img>, imagesrcset d'un préchargement) : chacune
   for (const m of s.matchAll(/\s(?:srcset|imagesrcset)="([^"]*)"/g)) for (const t of m[1].split(',')) { const u = t.trim().split(/\s+/)[0]; if (u) cites.add(u.split(/[?#]/)[0]) }
+  // (19/10/2026) une adresse sans « .html » (ADRESSES : /discord) mène à son fichier
+  const existe = c => { const a = c.replace(/^\.?\//, ''); return fs.existsSync(path.join(RACINE, Object.keys(ADRESSES).find(f => ADRESSES[f] === a) || a)) }
   for (const c of cites) {
-    if (DOMAINE && c.startsWith(DOMAINE + '/')) { if (!fs.existsSync(path.join(RACINE, c.slice(DOMAINE.length)))) faute('une adresse du site qui n\'existe pas : ' + c); continue }
+    if (DOMAINE && c.startsWith(DOMAINE + '/')) { if (!existe(c.slice(DOMAINE.length))) faute('une adresse du site qui n\'existe pas : ' + c); continue }
     if (c === TEBEX_JS && page === 'boutique.html') { if (!s.includes('<script defer src="' + TEBEX_JS + '"></script>')) faute('boutique.html : le script de Tebex doit s\'écrire <script defer src="' + TEBEX_JS + '"></script>, tel quel'); continue }
+    if (c === DISCORD && page === 'discord.html') continue
     if (/^(https?:)?\/\//.test(c)) { if (!c.startsWith(LIENS_FIGES)) faute('un lien vers ailleurs que la release du launcher : ' + c); continue }
     if (/^(mailto:|data:)/.test(c)) continue
-    if (!fs.existsSync(path.join(RACINE, c))) faute('un fichier cité n\'existe pas : ' + c)
+    if (!existe(c)) faute('un fichier cité n\'existe pas : ' + c)
   }
   // aucun mot qui dise que le serveur n'est pas ouvert (le propriétaire, 05/10 : le site parle d'un serveur où l'on joue)
   const visible = s.replace(/<!--[\s\S]*?-->/g, '').replace(/<script[\s\S]*?<\/script>/g, '')
@@ -302,7 +326,7 @@ for (const page of PAGES) {
     if (page === '404.html' && /(?:src|href)="(?![/#]|https?:)/.test(s)) faute('la page 404 cite un fichier sans partir de la racine (« / »)')
     if (PLAN.includes('/' + page + '</loc>')) faute('sitemap.xml ne doit pas citer ' + page)
   } else if (DOMAINE) {
-    const adresse = DOMAINE + '/' + (page === 'index.html' ? '' : page)
+    const adresse = DOMAINE + '/' + (page === 'index.html' ? '' : ADRESSES[page] || page)
     if (!s.includes('<link rel="canonical" href="' + adresse + '">')) faute('l\'adresse de la page (canonical) devrait être ' + adresse)
     if (!s.includes('<meta property="og:url" content="' + adresse + '">')) faute('og:url devrait être ' + adresse)
     const image = (s.match(/<meta property="og:image" content="([^"]*)"/) || [])[1] || ''
@@ -335,7 +359,7 @@ else if ((PLAN.match(/<loc>/g) || []).length !== PAGES.length - HORS_GOOGLE.leng
   const GARDE = 'main img, main video { max-height: 100svh; }'
   if (!css.includes(GARDE)) faute('la règle garde manque, telle quelle : ' + GARDE)
   const regles = reglesCss(css).map(r => Object.assign({ f: 'css/style.css' }, r)).concat(reglesCss(lire('css/carrousel.css')).map(r => Object.assign({ f: 'css/carrousel.css' }, r)),
-    reglesCss(lire('css/classement.css')).map(r => Object.assign({ f: 'css/classement.css' }, r)))
+    reglesCss(lire('css/classement.css')).map(r => Object.assign({ f: 'css/classement.css' }, r)), reglesCss(lire('css/discord.css')).map(r => Object.assign({ f: 'css/discord.css' }, r)))
   for (const r of regles) {
     const sels = r.sel.split(',').map(x => x.trim()), ou = r.f + ', « ' + r.sel.slice(0, 70) + ' »' + (r.media ? ' (' + r.media + ')' : '')
     if (sels.some(x => /(^|[\s>+~])(img|video|picture)(?![\w-])[^\s>+~]*$/.test(x))) {
@@ -358,7 +382,7 @@ else if ((PLAN.match(/<loc>/g) || []).length !== PAGES.length - HORS_GOOGLE.leng
     if (!cible || px('min-width') < 44 || px('min-height') < 44) faute('css/style.css : sur téléphone, la coupe du classement doit être une cible de 44 px au moins (min-width et min-height)')
   }
 }
-for (const f of ['css/style.css', 'css/carrousel.css', 'css/classement.css', 'js/site.js', 'js/carrousel.js', 'js/boutique.js', 'js/boutique.config.js', 'js/classement.js', 'api/classement.js', 'outils/essai_classement.js', 'README.md', 'serveur.js']) {
+for (const f of ['css/style.css', 'css/carrousel.css', 'css/classement.css', 'css/discord.css', 'js/site.js', 'js/carrousel.js', 'js/boutique.js', 'js/boutique.config.js', 'js/classement.js', 'api/classement.js', 'outils/essai_classement.js', 'README.md', 'serveur.js']) {
   const s = fs.readFileSync(path.join(RACINE, f), 'utf8')
   for (const t of TIRETS) if (s.includes(t)) { console.log(f); faute('un tiret long ou moyen') }
 }
@@ -377,6 +401,8 @@ console.log('js/boutique.config.js')
 verifierBoutique(faute)
 console.log('api/classement.js, js/classement.js')
 verifierClassement(faute)
+console.log('discord.html, vercel.json')
+verifierDiscord(faute)
 console.log('le site pèse ' + (total / 1048576).toFixed(1) + ' Mo')
 console.log(fautes ? fautes + ' faute(s)' : 'tout est bon')
 process.exit(fautes ? 1 : 0)

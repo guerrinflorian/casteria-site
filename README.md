@@ -34,6 +34,7 @@ fichier sans eux s'affiche comme avant, une carte par catégorie.
 | `classement.html` | le classement : les mêmes catégories que `/top` en jeu, le Score de Casteria d'abord (son podium), puis l'île, les jeux, les boss, la mer et le progrès, les dix premiers de chacune ; lus à l'ouverture par `js/classement.js` dans le fichier `classement.json` du gist que le serveur du jeu publie ; habillage : `css/classement.css` |
 | `api/classement.js` | la fonction de Vercel du classement : elle lit la base du jeu (une requête SELECT, en lecture seule) et rend du JSON ; Vercel garde la réponse 5 minutes |
 | `boutique.html` | la boutique : à quoi servent les crédits, et tes packs de Tebex, lus en direct (`js/boutique.config.js`, `js/boutique.js`) |
+| `discord.html`, `css/discord.css` | `casteria.fr/discord` (19/10/2026) : le logo, le titre, une phrase et le grand bouton « Rejoindre le Discord », sur le décollage flouté ; la page part toute seule vers l'invitation au bout d'une seconde (le refresh de la tête et un petit script, qui ne la garde pas dans l'historique). L'adresse sans « .html » vient de `vercel.json` (`rewrites`, que `serveur.js` suit aussi) ; l'invitation n'est écrite que dans cette page (et dans `outils/verifier.js`, qui la vérifie) : une autre page mène à `/discord` |
 | `merci.html` | la page où Tebex ramène le joueur après son paiement (hors de Google) |
 | `404.html` | la page des adresses qui n'existent pas (Vercel l'affiche tout seul, le petit serveur aussi) |
 | `css/style.css`, `js/site.js` | l'habillage et ce qui bouge (le site se lit entier sans JavaScript) |
@@ -160,7 +161,8 @@ en garde du pseudo si elle disparaissait.
 - Avant de pousser : `npm run verifier` (un seul h1 par page, un texte pour chaque image, aucun lien cassé, aucun tiret long,
   aucun texte sombre sur un fond sombre ni clair sur le parchemin, aucun mot interdit, et le référencement : l'adresse
   complète de chaque page, son image de partage, le plan du site ; le classement : chaque menu y mène, sa fonction ne
-  prend ses identifiants que dans l'environnement et ne fait que lire, sa page n'écrit qu'en texte).
+  prend ses identifiants que dans l'environnement et ne fait que lire, sa page n'écrit qu'en texte ; le Discord : son
+  bouton, son départ tout seul, l'adresse `/discord`, et l'invitation écrite dans sa page seulement).
 
 ## Vérifier, photographier
 

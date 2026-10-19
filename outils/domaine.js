@@ -10,7 +10,9 @@ if (!/^https:\/\/[a-z0-9.-]+\.[a-z]{2,}$/i.test(domaine)) { console.log('Usage :
 // (19/10/2026) le casino et les donjons ont leur propre image de partage (le 4e champ) ; les autres pages, celle du décollage
 const PAGES = [['index.html', '', '1.0'], ['commencer.html', 'commencer.html', '0.8'], ['pirates.html', 'pirates.html', '0.8'],
   ['casino.html', 'casino.html', '0.8', 'assets/images/casteria-casino-partage.jpg'], ['donjons.html', 'donjons.html', '0.8', 'assets/images/casteria-donjon-partage.jpg'],
-  ['classement.html', 'classement.html', '0.7'], ['boutique.html', 'boutique.html', '0.6']]
+  ['classement.html', 'classement.html', '0.7'], ['boutique.html', 'boutique.html', '0.6'],
+  // (19/10/2026) le Discord répond à /discord, sans « .html » (vercel.json, « rewrites ») : c'est son adresse
+  ['discord.html', 'discord', '0.5']]
 // l'image de partage : 1200 x 630, le format des réseaux (l'image d'origine, plus large, y perdait ses bords)
 const IMAGE = 'assets/images/casteria-decollage-partage.jpg'
 const jour = new Date().toISOString().slice(0, 10)

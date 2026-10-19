@@ -1,0 +1,25 @@
+/* LA PAGE DU DISCORD, casteria.fr/discord (19/10/2026, le propriétaire : « simple beau efficace la page et direct le
+   bouton pas de chichi ») : le décollage de l'accueil, flouté et assombri ; au milieu, le logo (une seule fois), le
+   titre, une phrase et le grand bouton. La page part toute seule vers le Discord au bout d'une seconde (discord.html).
+   Aucun arrondi : jamais une pastille arrondie (le propriétaire). */
+.vitrine-tete.discord { min-height: 100svh; padding: 48px 0; display: grid; place-items: center; text-align: center; }
+.vitrine-tete.discord::before { background: radial-gradient(closest-side, rgba(14, 8, 24, .8) 0%, rgba(14, 8, 24, .58) 62%, rgba(14, 8, 24, .4) 100%), linear-gradient(0deg, rgba(14, 8, 24, .7) 0%, rgba(14, 8, 24, 0) 45%); }
+.vitrine-tete.discord::after { display: none; }
+.vitrine-tete.discord .fond { inset: 0; height: 100%; }
+.vitrine-tete.discord .fond picture { display: block; width: 100%; height: 100%; }
+.vitrine-tete.discord .fond img { object-position: 46% 50%; filter: blur(7px) saturate(1.15) brightness(.74); transform: scale(1.08); animation: none; }
+.discord-texte { width: min(680px, 100% - 32px); display: flex; flex-direction: column; align-items: center; }
+.discord-logo { display: block; }
+.discord-logo img { width: clamp(136px, 20vw, 188px); height: auto; filter: drop-shadow(0 16px 26px rgba(0, 0, 0, .55)); animation: flotte 5.5s ease-in-out infinite; }
+.vitrine-tete.discord h1 { margin: 12px 0 0; font-size: clamp(38px, 6vw, 66px); line-height: 1.04; text-wrap: balance; }
+.vitrine-tete.discord h1 .or { display: inline-block; font-size: 1em; margin: 0; line-height: inherit; color: var(--or-clair);
+  background: linear-gradient(180deg, #FFE895 8%, #FFC94A 58%, #F4A23A 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  text-shadow: none; filter: drop-shadow(0 3px 0 rgba(70, 24, 0, .55)) drop-shadow(0 12px 26px rgba(0, 0, 0, .5)); }
+.vitrine-tete.discord .accroche { margin: 14px auto 30px; max-width: 30em; }
+.vitrine-tete.discord .bouton.grand { font-size: 26px; border-width: 24px; border-image-width: 24px; padding: 6px 26px; }
+@media (max-width: 420px) {
+  .vitrine-tete.discord .accroche { font-size: 17px; margin-bottom: 24px; }
+  .vitrine-tete.discord .bouton.grand { font-size: 20px; border-width: 18px; border-image-width: 18px; padding: 4px 14px; }
+}
+@media (prefers-reduced-motion: reduce) { .discord-logo img { animation: none; } }
+html.photo .discord-logo img { animation: none; }

@@ -142,7 +142,18 @@ const MUTANTS = [
   ['le boss d un donjon nomme dans un texte d image', 'donjons.html', s => s.replace('alt="L\'écran du sceau', 'alt="Le sceau du Cœur Creux')],
   ['le dernier boss nomme sur l accueil', 'index.html', s => s.replace('</main>', '<p>Le Dragon Ancien t\'attend.</p></main>')],
   ['l Abyssarque nommee sur la page de la mer', 'pirates.html', s => s.replace('</main>', '<p>Et l\'Abyssarque, sur sa tortue.</p></main>')],
-  ['un nombre coupable en deux lignes (une espace ordinaire)', 'casino.html', s => s.replace('de 50&#160;000 jetons', 'de 50 000 jetons')]
+  ['un nombre coupable en deux lignes (une espace ordinaire)', 'casino.html', s => s.replace('de 50&#160;000 jetons', 'de 50 000 jetons')],
+
+  // ---------- (19/10/2026) le Discord : casteria.fr/discord, son bouton, son départ tout seul, l'invitation écrite là seulement ----------
+  ['le bouton du Discord vers une autre invitation', 'discord.html', s => s.replace('<a class="bouton bouton-or grand" href="https://discord.gg/JKyWQ55Nx">', '<a class="bouton bouton-or grand" href="https://discord.gg/autre">')],
+  ['la page du Discord sans son refresh', 'discord.html', s => s.replace('<meta http-equiv="refresh" content="1; url=https://discord.gg/JKyWQ55Nx">\n', '')],
+  ['la page du Discord sans le depart par le script', 'discord.html', s => s.replace(/<script>setTimeout[^\n]*<\/script>\n/, '')],
+  ['l adresse de la page du Discord (canonical) en .html', 'discord.html', s => s.replace('<link rel="canonical" href="https://casteria.fr/discord">', '<link rel="canonical" href="https://casteria.fr/discord.html">')],
+  ['/discord ne mene plus a la page (vercel.json)', 'vercel.json', s => s.replace(/\n  "rewrites": \[[\s\S]*?\n  \],/, '')],
+  ['l invitation du Discord ecrite sur une autre page', 'index.html', s => s.replace('</main>', '<p><a href="https://discord.gg/JKyWQ55Nx">Le Discord</a></p></main>')],
+  ['une invitation Discord dans un script du site', 'js/site.js', s => s + "\nvar DISCORD = 'https://discord.gg/autre'\n"],
+  ['la page du Discord retiree du plan du site', 'sitemap.xml', s => s.replace(/\s*<url><loc>https:\/\/casteria\.fr\/discord<\/loc>[^\n]*/, '')],
+  ['une pastille arrondie sur la page du Discord', 'css/discord.css', s => s + '\n.vitrine-tete.discord .bouton.grand { border-radius: 999px; }\n']
 ]
 
 let rates = 0, code = 0
