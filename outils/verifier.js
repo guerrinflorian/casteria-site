@@ -198,6 +198,12 @@ for (const page of PAGES) {
   for (const mot of MOTS_INTERDITS) if (new RegExp('(^|[^a-zà-ÿ])' + mot, 'i').test(visible)) faute('un mot interdit : « ' + mot + ' »')
   // (19/10/2026) aucun spoiler, dans le texte comme dans les textes des images (alt) : le nom d'un boss caché
   for (const nom of SPOILERS) if (visible.toLowerCase().includes(nom.toLowerCase())) faute('un spoiler : « ' + nom + ' » (jamais l\'Abyssarque, le dernier boss, la salle du trône, ni les boss des donjons)')
+  // (19/10/2026, « 300 » puis « 000 jetons » sur deux lignes) un nombre ne se coupe jamais en deux : les milliers séparés
+  // par une espace insécable (&#160;), jamais une espace ordinaire, dans le texte de la page (les dessins svg mis à part)
+  for (const m of visible.replace(/<svg[\s\S]*?<\/svg>/g, '').matchAll(/>([^<]+)</g)) {
+    const x = m[1].match(/\d \d{3}(?!\d)/)
+    if (x) faute('un nombre qui peut se couper en deux lignes (une espace ordinaire entre les milliers : &#160;) : « ' + m[1].trim().slice(0, 60) + ' »')
+  }
   // LE CONTRASTE : on suit le fond en descendant dans la page. Une section sombre (sombre, mer, heros, page-tete, le pied)
   // demande un texte clair ; le parchemin (clair, et les îlots carte, volet, cadre-bois, tebex, tableau) un texte sombre. Une couleur
   // écrite dans la page doit aller avec le fond où elle tombe.

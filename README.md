@@ -154,6 +154,8 @@ en garde du pseudo si elle disparaissait.
 - On ne dévoile pas tout : pas de secret du palais, pas de boss caché. Jamais l'Abyssarque, jamais le dernier boss, jamais la
   salle du trône ; les donjons se montrent sans leurs boss ni leurs secrets (`outils/verifier.js` refuse leurs noms, aussi
   dans le texte d'une image).
+- Un nombre ne se coupe jamais en deux lignes : les milliers se séparent par une espace insécable (`50&#160;000 jetons`) ;
+  le vérificateur refuse une espace ordinaire entre les milliers dans le texte d'une page.
 - Le site parle d'un serveur où l'on joue : jamais « en développement », « bientôt », « pas encore ouvert ».
 - Avant de pousser : `npm run verifier` (un seul h1 par page, un texte pour chaque image, aucun lien cassé, aucun tiret long,
   aucun texte sombre sur un fond sombre ni clair sur le parchemin, aucun mot interdit, et le référencement : l'adresse

@@ -141,7 +141,8 @@ const MUTANTS = [
   ['le boss d un donjon nomme sur la page des donjons', 'donjons.html', s => s.replace('</main>', "<p>Au fond t'attend le Sphinx d'Or.</p></main>")],
   ['le boss d un donjon nomme dans un texte d image', 'donjons.html', s => s.replace('alt="L\'écran du sceau', 'alt="Le sceau du Cœur Creux')],
   ['le dernier boss nomme sur l accueil', 'index.html', s => s.replace('</main>', '<p>Le Dragon Ancien t\'attend.</p></main>')],
-  ['l Abyssarque nommee sur la page de la mer', 'pirates.html', s => s.replace('</main>', '<p>Et l\'Abyssarque, sur sa tortue.</p></main>')]
+  ['l Abyssarque nommee sur la page de la mer', 'pirates.html', s => s.replace('</main>', '<p>Et l\'Abyssarque, sur sa tortue.</p></main>')],
+  ['un nombre coupable en deux lignes (une espace ordinaire)', 'casino.html', s => s.replace('de 50&#160;000 jetons', 'de 50 000 jetons')]
 ]
 
 let rates = 0, code = 0
