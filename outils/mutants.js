@@ -134,7 +134,7 @@ const MUTANTS = [
   ['la page du casino retiree du plan du site', 'sitemap.xml', s => s.replace(/<url>(?:(?!<\/url>)[\s\S])*casino\.html[\s\S]*?<\/url>\s*/, '')],
   ['la hero des donjons sans sa version pour un ecran etroit', 'donjons.html', s => s.replace(/(<div class="fond plein-cadre"[\s\S]*?<picture>)[\s\S]*?(<source type="image\/webp")/, '$1\n        $2')],
   ['l image de la hero du casino chargee en differe', 'casino.html', s => s.replace(/(<div class="fond plein-cadre"[\s\S]*?<img\b)/, '$1 loading="lazy"')],
-  ['l image de partage du casino qui n existe pas', 'casino.html', s => s.replace('/assets/images/casteria-casino-partage.jpg', '/assets/images/casteria-casino-absente.jpg')],
+  ['l image de partage du casino qui n existe pas', 'casino.html', s => s.replace('/assets/images/casteria-casino-salle-partage.jpg', '/assets/images/casteria-casino-absente.jpg')],
   ['l adresse de la page des donjons (canonical) fausse', 'donjons.html', s => s.replace(/<link rel="canonical" href="[^"]*">/, '<link rel="canonical" href="https://casteria.fr/donjon.html">')],
   ['un mot interdit sur la page du casino', 'casino.html', s => s.replace('</main>', '<p>Le casino ouvrira bientôt.</p></main>')],
   ['le carrousel des donjons sans son script', 'donjons.html', s => s.replace('<script src="js/carrousel.js" defer></script>', '')],
@@ -142,22 +142,22 @@ const MUTANTS = [
   ['le boss d un donjon nomme dans un texte d image', 'donjons.html', s => s.replace('alt="L\'écran du sceau', 'alt="Le sceau du Cœur Creux')],
   ['le dernier boss nomme sur l accueil', 'index.html', s => s.replace('</main>', '<p>Le Dragon Ancien t\'attend.</p></main>')],
   ['l Abyssarque nommee sur la page de la mer', 'pirates.html', s => s.replace('</main>', '<p>Et l\'Abyssarque, sur sa tortue.</p></main>')],
-  ['un nombre coupable en deux lignes (une espace ordinaire)', 'casino.html', s => s.replace('de 50&#160;000 jetons', 'de 50 000 jetons')],
+  ['un nombre coupable en deux lignes (une espace ordinaire)', 'casino.html', s => s.replace('de 800&#160;000 jetons', 'de 800 000 jetons')],
 
   // ---------- (19/10/2026) le Discord : casteria.fr/discord, son bouton, son départ tout seul, l'invitation écrite là seulement ----------
-  ['le bouton du Discord vers une autre invitation', 'discord.html', s => s.replace('<a class="bouton bouton-or grand" href="https://discord.gg/JKyWQ55Nx">', '<a class="bouton bouton-or grand" href="https://discord.gg/autre">')],
-  ['la page du Discord sans son refresh', 'discord.html', s => s.replace('<meta http-equiv="refresh" content="1; url=https://discord.gg/JKyWQ55Nx">\n', '')],
+  ['le bouton du Discord vers une autre invitation', 'discord.html', s => s.replace('<a class="bouton bouton-or grand" href="https://discord.gg/Xp325uTFe7">', '<a class="bouton bouton-or grand" href="https://discord.gg/autre">')],
+  ['la page du Discord sans son refresh', 'discord.html', s => s.replace('<meta http-equiv="refresh" content="1; url=https://discord.gg/Xp325uTFe7">\n', '')],
   ['la page du Discord sans le depart par le script', 'discord.html', s => s.replace(/<script>setTimeout[^\n]*<\/script>\n/, '')],
   ['l adresse de la page du Discord (canonical) en .html', 'discord.html', s => s.replace('<link rel="canonical" href="https://casteria.fr/discord">', '<link rel="canonical" href="https://casteria.fr/discord.html">')],
   ['/discord ne mene plus a la page (vercel.json)', 'vercel.json', s => s.replace(/\n  "rewrites": \[[\s\S]*?\n  \],/, '')],
-  ['l invitation du Discord ecrite sur une autre page', 'index.html', s => s.replace('</main>', '<p><a href="https://discord.gg/JKyWQ55Nx">Le Discord</a></p></main>')],
+  ['l invitation du Discord ecrite sur une autre page', 'index.html', s => s.replace('</main>', '<p><a href="https://discord.gg/Xp325uTFe7">Le Discord</a></p></main>')],
   ['une invitation Discord dans un script du site', 'js/site.js', s => s + "\nvar DISCORD = 'https://discord.gg/autre'\n"],
   ['la page du Discord retiree du plan du site', 'sitemap.xml', s => s.replace(/\s*<url><loc>https:\/\/casteria\.fr\/discord<\/loc>[^\n]*/, '')],
   ['une pastille arrondie sur la page du Discord', 'css/discord.css', s => s + '\n.vitrine-tete.discord .bouton.grand { border-radius: 999px; }\n'],
   // (19/10/2026) l'accueil mène au Discord, juste après « Jouer gratuitement » : /discord, le logo et le mot
   ['le bouton Discord retire de l accueil', 'index.html', s => s.replace(/<a class="bouton bouton-discord grand"[^\n]*<\/a>\n/, '')],
   ['le bouton Discord de l accueil sans son logo', 'index.html', s => s.replace(/<svg class="logo-discord"[\s\S]*?<\/svg>/, '')],
-  ['le bouton Discord de l accueil vers l invitation directe', 'index.html', s => s.replace('<a class="bouton bouton-discord grand" href="/discord"', '<a class="bouton bouton-discord grand" href="https://discord.gg/JKyWQ55Nx"')],
+  ['le bouton Discord de l accueil vers l invitation directe', 'index.html', s => s.replace('<a class="bouton bouton-discord grand" href="/discord"', '<a class="bouton bouton-discord grand" href="https://discord.gg/Xp325uTFe7"')],
 
   // ---------- (19/10/2026, le propriétaire : « faut pas dire le nombre ! ») aucun nombre de boss, nulle part ----------
   ['un nombre de boss dans la description de l accueil', 'index.html', s => s.replace('tes bêtes, des boss, deux donjons', 'tes bêtes, 15 boss, deux donjons')],

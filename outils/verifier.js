@@ -159,7 +159,9 @@ const TEBEX_JS = 'https://js.tebex.io/v/1.11.0.js'
 // trois places (le grand bouton, le refresh d'une seconde, le script qui part sans laisser la page dans l'historique) ; la
 // page répond à /discord (vercel.json, « rewrites »), son adresse sans « .html » (ADRESSES). Changer d'invitation : ici ET
 // les trois places de discord.html.
-const DISCORD = 'https://discord.gg/JKyWQ55Nx', ADRESSES = { 'discord.html': 'discord' }
+// (20/10/2026, la tête) l'invitation PERMANENTE (elle n'expire jamais ; le salon « jouer ») remplace celle de 30 jours citée
+// plus haut, qui expirait le 04/11
+const DISCORD = 'https://discord.gg/Xp325uTFe7', ADRESSES = { 'discord.html': 'discord' }
 function verifierDiscord(faute) {
   const s = lire('discord.html')
   if (!s) return faute('discord.html manque (casteria.fr/discord)')
