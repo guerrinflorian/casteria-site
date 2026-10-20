@@ -15,8 +15,8 @@ tout petit serveur Node qui sert les fichiers tels quels. Seul le classement lit
 fichier `classement.json` d'un gist GitHub, que le serveur du jeu réécrit lui-même au plus toutes les 5 minutes (son
 compte et son identifiant : `GIST_COMPTE` et `GIST_ID`, en tête de `js/classement.js`). Tant que `GIST_ID` est vide, ou si
 le fichier ne répond pas, la page dit « Le classement ne s'affiche pas pour l'instant. En jeu, tape /top. », et tout le
-reste du site marche. (La fonction `api/classement.js`, qui lisait la base du jeu, reste mais la page ne la lit plus : la
-base refuse les connexions venues de Vercel.) Depuis la 125 du jeu, un temps de donjon porte aussi `donjon` (`id`, `nom`,
+reste du site marche. (La fonction `api/classement.js`, qui lisait la base du jeu, est retirée le
+20/10/2026 : la base refuse les connexions venues de Vercel, et la page ne la lisait plus.) Depuis la 125 du jeu, un temps de donjon porte aussi `donjon` (`id`, `nom`,
 `niveau`) et `tailles` (les classements seul, à deux, à trois) : la page range les niveaux d'un donjon dans UNE carte, avec
 le niveau (I, II, III) et les joueurs du groupe (Tous, 1, 2, 3) à choisir, comme la rangée des donjons de `/top` ; un
 fichier sans eux s'affiche comme avant, une carte par catégorie.
@@ -32,7 +32,6 @@ fichier sans eux s'affiche comme avant, une carte par catégorie.
 | `donjons.html` | les donjons (19/10/2026) : Anselme, le Temple Creux et le Sanctuaire des Sables (leurs trois niveaux), dedans (une pile de cartes), le butin et le classement par taille de groupe ; jamais un boss ni une salle de boss |
 | `css/pages.css` | l'habillage du casino, des donjons, et sur l'accueil des deux portes du palais et de la Gazette du palais |
 | `classement.html` | le classement : les mêmes catégories que `/top` en jeu, le Score de Casteria d'abord (son podium), puis l'île, les jeux, les boss, la mer et le progrès, les dix premiers de chacune ; lus à l'ouverture par `js/classement.js` dans le fichier `classement.json` du gist que le serveur du jeu publie ; habillage : `css/classement.css` |
-| `api/classement.js` | la fonction de Vercel du classement : elle lit la base du jeu (une requête SELECT, en lecture seule) et rend du JSON ; Vercel garde la réponse 5 minutes |
 | `boutique.html`, `css/boutique.css` | la boutique : tes packs de Tebex, lus en direct (`js/boutique.config.js`, `js/boutique.js`), ce qui rassure (le paiement chez Tebex, les crédits à la connexion, le jeu gratuit) et à quoi servent les crédits. Redessinée le 20/10/2026 dans la nuit et l'or du site (plus de parchemin ni de bouton vert) : sur téléphone et tablette une ligne par pack, sur ordinateur les cinq côte à côte, le meilleur prix mis en avant à sa place |
 | `discord.html`, `css/discord.css` | `casteria.fr/discord` (19/10/2026) : le logo, le titre, une phrase et le grand bouton « Rejoindre le Discord », sur le décollage flouté ; la page part toute seule vers l'invitation au bout d'une seconde (le refresh de la tête et un petit script, qui ne la garde pas dans l'historique). L'adresse sans « .html » vient de `vercel.json` (`rewrites`, que `serveur.js` suit aussi) ; l'invitation n'est écrite que dans cette page (et dans `outils/verifier.js`, qui la vérifie) : une autre page mène à `/discord`. L'accueil y mène juste après « Jouer gratuitement » (`.bouton-discord`, `css/scene.css`) : la forme et le relief du bouton orange, au bleu de Discord, le logo de la marque en ligne et le mot sur un ordinateur, le logo seul sur un téléphone |
 | `merci.html` | la page où Tebex ramène le joueur après son paiement (hors de Google) |
@@ -45,8 +44,8 @@ fichier sans eux s'affiche comme avant, une carte par catégorie.
 ## Mettre en ligne sur Vercel (casteria.fr)
 
 Il n'y a rien à construire : Vercel sert les fichiers tels quels. `.vercelignore` garde hors ligne tout ce qui n'est pas
-le site (`serveur.js`, `outils/`, ce README). `package.json` et `package-lock.json` partent en ligne : Vercel y lit le
-pilote de la base (`mysql2`, une version exacte) et l'installe pour la fonction du classement (`api/`).
+le site (`serveur.js`, `outils/`, ce README). Le site n'a ni fonction ni dépendance (le 20/10/2026 : la fonction du
+classement et son pilote de la base sont retirés).
 
 1. Sur vercel.com : **Add New, Project**, importe le dépôt `casteria-site`. Ne touche à aucun réglage (Framework :
    **Other**, pas de commande de build, pas de dossier de sortie), puis **Deploy**.
@@ -65,38 +64,12 @@ Ensuite, chaque `git push` sur `main` remet le site en ligne.
 Chaque page y mène par son en-tête : le mot « Classement » sur ordinateur ; sur tablette et téléphone, sa coupe en
 pixels (`assets/icones/classement.png`), à côté de la Boutique et avant « Jouer », une cible de 44 px pour le doigt.
 
-La page `classement.html` montre les mêmes classements que `/top` en jeu. La fonction `api/classement.js` les lit dans
-la base du réseau de Casteria (MariaDB, la table `res_classement_stat` : une ligne par joueur et par chiffre, que les
-serveurs du jeu tiennent à jour ; un dossier retiré du classement n'y compte plus) :
-
-- **en lecture seule** : une seule requête SELECT, une connexion fermée à la fin, 8 secondes pour se connecter et 9 en
-  tout (Vercel en accorde 10 à la fonction : `maxDuration`) ;
-- **à Paris** (`vercel.json` : `"regions": ["cdg1"]`, au niveau du projet, la seule fonction du site) : au plus près
-  de la base, en France. Depuis Washington (la région de Vercel par défaut), la connexion tombait en `ETIMEDOUT` ;
-- **gardée 5 minutes par Vercel** (`Cache-Control: public, s-maxage=300, stale-while-revalidate=600`) : la base est lue
-  au plus une fois toutes les 5 minutes, quel que soit le nombre de visiteurs ;
-- **rien de privé** : les pseudos et les chiffres que `/top` montre déjà, jamais un identifiant ;
-- **en panne** (la base ne répond pas, une variable manque) : `{ "indisponible": true, "raison": ... }` et le code 503,
-  jamais gardé ; la page dit « Le classement ne s'affiche pas pour l'instant. En jeu, tape /top. » et propose « Réessayer ». La raison se lit
-  sans les journaux de Vercel (ouvrir `https://casteria.fr/api/classement`) : `variables` (une variable `CASTERIA_DB_*`
-  manque au déploiement), `calcul`, ou le code de l'erreur de la base tel quel (`ENOTFOUND` : l'hôte mal écrit ;
-  `ETIMEDOUT` : la base ne répond pas aux serveurs de Vercel, un pare-feu ; `ECONNREFUSED` : le port ;
-  `ER_ACCESS_DENIED_ERROR` : l'utilisateur ou le mot de passe, ou une connexion refusée depuis cette machine ;
-  `ER_DBACCESS_DENIED_ERROR`, `ER_BAD_DB_ERROR` : le nom de la base ; `MODULE_NOT_FOUND` : `mysql2` pas installé) ;
-  jamais un hôte, un nom ni le texte d'une erreur.
-
-Le Score de Casteria n'est pas rangé dans la base : chaque serveur du jeu le recalcule sur les autres chiffres, et la
-fonction fait le même calcul (`leaderboard.js` du jeu), avec les maximums du jeu écrits en tête du fichier : le niveau 60,
-les 15 boss, les 42 familiers et montures, les 234 étoiles des quêtes. **Quand le jeu en ajoute, ces chiffres suivent.**
-
-**Les cinq variables à régler dans Vercel** (Settings, Environment Variables, pour « Production ») : `CASTERIA_DB_HOST`,
-`CASTERIA_DB_PORT`, `CASTERIA_DB_USER`, `CASTERIA_DB_PASSWORD`, `CASTERIA_DB_NAME`. Leurs valeurs sont dans le fichier
-des clés de la base, hors du dépôt : elles ne s'écrivent JAMAIS ici. Une variable changée ne vaut qu'au déploiement
-suivant (Deployments, Redeploy).
-
-**L'essai sur ce PC** : `npm install`, puis `node outils/essai_classement.js <fichier des clés de la base> <sortie.json>`.
-La fonction est jouée contre la vraie base, sa réponse écrite dans `<sortie.json>` et relue (sa forme, aucun identifiant
-dedans), puis deux pannes (sans variables, une adresse qui n'existe pas : 503). Code 0 : tout est bon.
+La page `classement.html` montre les mêmes classements que `/top` en jeu : `js/classement.js` lit le fichier
+`classement.json` du gist que le serveur du jeu réécrit lui-même toutes les 5 minutes (`leaderboard.js` du jeu, sur son
+serveur maître) ; les catégories, leur ordre, les familles et le Score de Casteria viennent donc du jeu, jamais d'une
+copie ici. **La fonction `api/classement.js`, qui lisait la base du jeu, est retirée (le 20/10/2026)** : la base refuse
+les connexions venues de Vercel, la page ne la lisait plus, et sa copie du calcul du Score ne suivait plus le jeu ;
+`outils/verifier.js` refuse son retour.
 
 ## Le domaine et le référencement
 

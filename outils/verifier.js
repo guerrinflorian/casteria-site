@@ -66,35 +66,18 @@ function verifierBoutique(faute) {
   if (/class="[^"]*\b(?:cadre-bois|bouton-vert)\b/.test(page)) faute('boutique.html : le tableau de parchemin (cadre-bois) ou le bouton vert est revenu (la boutique est dans la nuit et l\'or du site)')
   for (const r of reglesCss(lire('css/boutique.css'))) for (const m of r.corps.matchAll(/border(?:-[a-z]+)*-radius\s*:\s*([^;]+)/g)) if (!/^0(px)?\s*$/.test(m[1].trim())) faute('css/boutique.css, « ' + r.sel.slice(0, 60) + ' » : un arrondi (' + m[1].trim() + ') : jamais une pastille arrondie')
 }
-// LE CLASSEMENT (14/10/2026 : classement.html, api/classement.js, js/classement.js) : la fonction lit la base du jeu avec
-// les identifiants de ses variables d'environnement SEULEMENT, en lecture seule (une requête SELECT), et Vercel garde sa
-// réponse 5 minutes ; une panne rend 503 et { indisponible: true }, jamais gardée. La page n'écrit jamais un texte reçu
-// comme du code de page ; (la 119) elle ne lit que le fichier brut classement.json du gist que le serveur du jeu publie
-// (la fonction reste, plus lue par la page).
+// LE CLASSEMENT (classement.html, js/classement.js) : (la 119) la page lit le fichier brut classement.json du gist que le
+// serveur du jeu publie, et rien d'autre ; elle n'écrit jamais un texte reçu comme du code de page. (le 20/10/2026) La
+// fonction /api/classement, qui lisait la base du jeu, est RETIRÉE (la base refuse Vercel, la page ne la lisait plus, et sa
+// copie du calcul du Score ne suivait plus le jeu) : elle ne revient pas.
 function verifierClassement(faute) {
-  const api = lire('api/classement.js'), js = lire('js/classement.js')
-  if (!api) return faute('api/classement.js manque (la page du classement le lit)')
+  const js = lire('js/classement.js')
   if (!js) return faute('js/classement.js manque')
-  for (const n of ['CASTERIA_DB_HOST', 'CASTERIA_DB_PORT', 'CASTERIA_DB_USER', 'CASTERIA_DB_PASSWORD', 'CASTERIA_DB_NAME']) if (!api.includes(n)) faute('api/classement.js : la variable ' + n + ' manque (les identifiants viennent de l\'environnement)')
-  if (/\b(host|user|password|database)\s*:\s*['"`]/.test(api)) faute('api/classement.js : un identifiant de la base écrit en clair (il ne vient que des variables CASTERIA_DB_*)')
-  if (/\b(INSERT|UPDATE|DELETE|REPLACE|CREATE|ALTER|DROP|TRUNCATE|GRANT|RENAME|LOCK|CALL|LOAD|HANDLER)\b/.test(api)) faute('api/classement.js : un ordre qui écrirait dans la base (lecture seule : SELECT)')
-  if (/multipleStatements\s*:\s*true/.test(api)) faute('api/classement.js : plusieurs ordres par requête sont interdits')
-  if (!/const SQL = 'SELECT /.test(api)) faute('api/classement.js : la requête doit être un SELECT')
-  if (!api.includes("'public, s-maxage=300, stale-while-revalidate=600'")) faute('api/classement.js : la réponse doit être gardée 5 minutes par Vercel (« public, s-maxage=300, stale-while-revalidate=600 »)')
-  // (14/10/2026) la panne dit sa raison : un mot (variables, calcul) ou le CODE de l'erreur, filtré (un mot en capitales),
-  // jamais le texte d'une erreur (il peut dire un hôte ou un nom)
-  const pannes = api.split('\n').filter(l => l.includes('repondre(res, 503,'))
-  if (!pannes.length || pannes.some(l => !/repondre\(res, 503, \{ indisponible: true, raison: [^}]*\}, 'no-store'\)/.test(l))) faute('api/classement.js : une panne rend 503 et { indisponible: true, raison }, jamais gardée (no-store)')
-  if (!api.includes('/^[A-Z][A-Z0-9_]{1,40}$/')) faute('api/classement.js : la raison d\'une panne n\'est que le code de l\'erreur, un mot en capitales (raisonDe)')
-  if (/\.(message|sqlMessage|stack)\b/.test(api)) faute('api/classement.js : le texte d\'une erreur ne sort jamais (il peut dire un hôte ou un nom)')
-  // (14/10/2026, en ligne : ETIMEDOUT depuis Washington) la fonction tourne à Paris, près de la base, et répond avant la
-  // limite que Vercel lui donne : 9 s en tout, 10 s accordées
+  if (lire('api/classement.js')) faute('api/classement.js est revenu : le classement vient du gist que le jeu publie (la fonction est retirée le 20/10/2026)')
   let vj = null
   try { vj = JSON.parse(lire('vercel.json')) } catch (e) { vj = null }
-  if (!vj || !Array.isArray(vj.regions) || vj.regions.join(',') !== 'cdg1') faute('vercel.json : la fonction du classement tourne à Paris (« regions »: ["cdg1"]), près de la base')
-  const fn = vj && vj.functions && vj.functions['api/classement.js']
-  const total = Number((api.match(/const DELAI_TOTAL_MS = (\d+)/) || [])[1]) || 0
-  if (!fn || !(fn.maxDuration > 0) || !(total > 0) || total >= fn.maxDuration * 1000) faute('api/classement.js : son délai total (DELAI_TOTAL_MS) doit tenir sous la limite de Vercel (vercel.json, maxDuration)')
+  if (!vj) faute('vercel.json illisible')
+  else if (vj.functions && Object.keys(vj.functions).length) faute('vercel.json : une fonction est revenue (« functions ») : le site n\'en a plus (le classement : le gist)')
   if (/innerHTML|outerHTML|insertAdjacentHTML|document\.write|\beval\(/.test(js)) faute('js/classement.js : un texte reçu ne s\'écrit jamais comme du code de page (textContent seulement)')
   // (la 119) la page lit le fichier brut du gist que le serveur du jeu publie, et rien d'autre : la seule adresse permise est
   // celle des fichiers bruts des gists ; elle ne lit plus /api/classement ; sans identifiant de gist, la panne
@@ -405,7 +388,7 @@ else if ((PLAN.match(/<loc>/g) || []).length !== PAGES.length - HORS_GOOGLE.leng
     if (!cible || px('min-width') < 44 || px('min-height') < 44) faute('css/style.css : sur téléphone, la coupe du classement doit être une cible de 44 px au moins (min-width et min-height)')
   }
 }
-for (const f of ['css/style.css', 'css/carrousel.css', 'css/classement.css', 'css/discord.css', 'css/boutique.css', 'js/site.js', 'js/carrousel.js', 'js/boutique.js', 'js/boutique.config.js', 'js/classement.js', 'api/classement.js', 'outils/essai_classement.js', 'README.md', 'serveur.js']) {
+for (const f of ['css/style.css', 'css/carrousel.css', 'css/classement.css', 'css/discord.css', 'css/boutique.css', 'js/site.js', 'js/carrousel.js', 'js/boutique.js', 'js/boutique.config.js', 'js/classement.js', 'README.md', 'serveur.js']) {
   const s = fs.readFileSync(path.join(RACINE, f), 'utf8')
   for (const t of TIRETS) if (s.includes(t)) { console.log(f); faute('un tiret long ou moyen') }
 }
@@ -422,7 +405,7 @@ let total = 0
 })(RACINE)
 console.log('js/boutique.config.js')
 verifierBoutique(faute)
-console.log('api/classement.js, js/classement.js')
+console.log('js/classement.js (api/classement.js retiré)')
 verifierClassement(faute)
 console.log('discord.html, vercel.json')
 verifierDiscord(faute)
