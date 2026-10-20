@@ -21,6 +21,9 @@
   var MEDAILLES = ['assets/classement/medaille_1.png', 'assets/classement/medaille_2.png', 'assets/classement/medaille_3.png']
   var PANNE = 'Le classement ne s\'affiche pas pour l\'instant. En jeu, tape /top.'
   var ROMAINS = ['I', 'II', 'III']
+  // (20/10/2026, l'audit du classement) un fichier plus vieux que cela est dit vieux : le jeu le republie toutes les 5 minutes, donc
+  // 30 minutes sans nouvelles, c'est une publication arretee (le serveur ou le jeton du gist), pas un classement qui dort
+  var VIEUX_MS = 30 * 60000
   var donnees = null, choisie = ''
 
   function el(nom, classe, texte) { var e = document.createElement(nom); if (classe) e.className = classe; if (texte !== undefined) e.textContent = texte; return e }
@@ -96,6 +99,8 @@
     try { t = new Intl.DateTimeFormat('fr-FR', { timeZone: 'Europe/Paris', hour: '2-digit', minute: '2-digit' }).format(new Date(iso)) } catch (e) { t = '' }
     // le serveur publie au plus toutes les 5 minutes, et GitHub garde le fichier jusqu'à 5 minutes de plus
     lu.textContent = (t ? 'Lu à ' + t + ', heure de Paris. ' : '') + 'Le classement se met à jour toutes les 5 à 10 minutes.'
+    var age = Date.now() - Date.parse(iso)
+    if (age > VIEUX_MS) lu.textContent += ' Ces chiffres datent de plus de 30 minutes : le serveur n\'en a pas envoyé de plus récents.'
     lu.hidden = false
   }
 
