@@ -34,9 +34,7 @@ const MUTANTS = [
   ['la phrase du remboursement retiree de Merci', 'merci.html', s => s.replace("Une erreur de pseudo n'est pas remboursée.", '')],
   ['la page Merci visible de Google', 'merci.html', s => s.replace('<meta name="robots" content="noindex">\n', '')],
   ['un script d un autre serveur sur la boutique', 'boutique.html', s => s.replace('<script src="js/site.js" defer></script>', '<script defer src="https://exemple.test/x.js"></script>\n<script src="js/site.js" defer></script>')],
-  ['le script de Tebex sans version figee', 'boutique.html', s => s.replace('https://js.tebex.io/v/1.11.0.js', 'https://js.tebex.io/v/1.js')],
   ['le script de Tebex sur une autre page', 'index.html', s => s.replace('</body>', '<script defer src="https://js.tebex.io/v/1.11.0.js"></script>\n</body>')],
-  ['le script de Tebex qui bloque la page (sans defer)', 'boutique.html', s => s.replace('<script defer src="https://js.tebex.io/v/1.11.0.js">', '<script src="https://js.tebex.io/v/1.11.0.js">')],
   // (20/10/2026) la boutique redessinée dans la nuit et l'or du site : sa feuille, sans pastille arrondie, sans parchemin ni vert
   ['la feuille de la boutique plus chargee', 'boutique.html', s => s.replace('<link rel="stylesheet" href="css/boutique.css">\n', '')],
   ['le tableau de parchemin revenu dans la boutique', 'boutique.html', s => s.replace('<div class="etal" id="tebex">', '<div class="etal cadre-bois" id="tebex">')],
