@@ -33,7 +33,7 @@ fichier sans eux s'affiche comme avant, une carte par catégorie.
 | `css/pages.css` | l'habillage du casino, des donjons, et sur l'accueil des deux portes du palais et de la Gazette du palais |
 | `classement.html` | le classement : les mêmes catégories que `/top` en jeu, le Score de Casteria d'abord (son podium), puis l'île, les jeux, les boss, la mer et le progrès, les dix premiers de chacune ; lus à l'ouverture par `js/classement.js` dans le fichier `classement.json` du gist que le serveur du jeu publie ; habillage : `css/classement.css` |
 | `api/classement.js` | la fonction de Vercel du classement : elle lit la base du jeu (une requête SELECT, en lecture seule) et rend du JSON ; Vercel garde la réponse 5 minutes |
-| `boutique.html` | la boutique : à quoi servent les crédits, et tes packs de Tebex, lus en direct (`js/boutique.config.js`, `js/boutique.js`) |
+| `boutique.html`, `css/boutique.css` | la boutique : tes packs de Tebex, lus en direct (`js/boutique.config.js`, `js/boutique.js`), ce qui rassure (le paiement chez Tebex, les crédits à la connexion, le jeu gratuit) et à quoi servent les crédits. Redessinée le 20/10/2026 dans la nuit et l'or du site (plus de parchemin ni de bouton vert) : sur téléphone et tablette une ligne par pack, sur ordinateur les cinq côte à côte, le meilleur prix mis en avant à sa place |
 | `discord.html`, `css/discord.css` | `casteria.fr/discord` (19/10/2026) : le logo, le titre, une phrase et le grand bouton « Rejoindre le Discord », sur le décollage flouté ; la page part toute seule vers l'invitation au bout d'une seconde (le refresh de la tête et un petit script, qui ne la garde pas dans l'historique). L'adresse sans « .html » vient de `vercel.json` (`rewrites`, que `serveur.js` suit aussi) ; l'invitation n'est écrite que dans cette page (et dans `outils/verifier.js`, qui la vérifie) : une autre page mène à `/discord`. L'accueil y mène juste après « Jouer gratuitement » (`.bouton-discord`, `css/scene.css`) : la forme et le relief du bouton orange, au bleu de Discord, le logo de la marque en ligne et le mot sur un ordinateur, le logo seul sur un téléphone |
 | `merci.html` | la page où Tebex ramène le joueur après son paiement (hors de Google) |
 | `404.html` | la page des adresses qui n'existent pas (Vercel l'affiche tout seul, le petit serveur aussi) |
@@ -133,6 +133,10 @@ d'abord le prix hors taxe, puis le même total que le site dès que le joueur é
 
 Si Tebex ne répond pas, la page reste entière et dit « La boutique revient dans un instant. », avec un bouton
 « Réessayer ».
+
+Les images des packs viennent de Tebex, ROGNÉES en bas sur le site (`css/boutique.css`, `.pack-image`) : elles portent
+un prix hors taxe (« 5 € », « 10 € »...) qui contredisait le prix payé, écrit dessous. Un nom de pack de la forme
+« 2200 crédits » se lit « 2 200 crédits » ; un autre nom reste tel quel.
 
 À régler CHEZ TEBEX, pas ici : couper les paiements d'essai avant d'envoyer des joueurs payer (tant qu'ils sont actifs,
 la page de paiement porte un bandeau « TEST PAYMENTS ACTIVE »), et choisir la langue de la page de paiement.

@@ -1,0 +1,233 @@
+/* Casteria, le site : LA BOUTIQUE (boutique.html), redessinée le 20/10/2026 (le propriétaire : « je trouve la boutique
+   affreuse, que ce soit en responsive ou même sur le site de base, avec les couleurs et tout »). Chargée après style.css
+   et scene.css.
+   - Tout dans la nuit violette et l'or du site : plus de tableau de parchemin au milieu, plus de bouton vert.
+   - D'abord le téléphone : les packs en LIGNES (l'image, le nom, le bonus, le prix et « Acheter » sous le pouce), sans
+     rien qui dépasse à 360 px ; à partir de 1024 px, les cinq packs côte à côte, tous de la même taille ; le meilleur
+     prix (calculé par js/boutique.js) a son ruban et sa lueur, à sa place dans la rangée.
+   - Les cadres sont carrés (jamais une pastille arrondie : outils/verifier.js le refuse dans cette feuille), en double
+     trait, l'or dehors et la nuit dedans, comme les écrans du casino.
+   - Tout ce qui bouge s'arrête sous « réduire les animations » et dans une capture (html.photo). */
+
+/* ---------- le haut de page : la photo du palais, le crédit en volume entre le phénix et le coffre ---------- */
+.boutique-tete { min-height: 0; padding: 112px 0 44px; }
+.boutique-tete h1 { font-size: clamp(38px, 4.6vw, 62px); }
+.boutique-tete .accroche { max-width: 31em; }
+.boutique-tete .gestes { gap: 14px 24px; }
+.boutique-tete .sur-titre, .boutique-etal .sur-titre, .boutique-offres .sur-titre { color: var(--or-clair); }
+.lien-doux { display: inline-flex; align-items: center; gap: 10px; padding: 4px 0 2px; font-weight: 700; font-size: 17px; color: #F1E6FF; text-decoration: none;
+  border-bottom: 2px solid rgba(255, 215, 94, .55); text-shadow: 0 2px 6px rgba(0, 0, 0, .6); transition: color .2s ease, border-color .2s ease; }
+.lien-doux::after { content: ""; width: 8px; height: 8px; border-right: 3px solid var(--or-clair); border-bottom: 3px solid var(--or-clair); transform: translateY(-3px) rotate(45deg); }
+.lien-doux:hover { color: var(--or-clair); border-bottom-color: var(--or-clair); }
+.boutique-tete .scene { height: 370px; }
+.boutique-tete .v-credit { width: 48%; left: 28%; top: 15%; z-index: 2; }
+.boutique-tete .v-phenix { width: 40%; left: -2%; top: -6%; z-index: 3; }
+.boutique-tete .v-caisse { width: 42%; right: -4%; bottom: -8%; z-index: 1; }
+.boutique-tete .v-credit img { animation: flotte 6s ease-in-out infinite; filter: drop-shadow(0 0 28px rgba(210, 156, 255, .55)) drop-shadow(0 18px 18px rgba(0, 0, 0, .45)); }
+.boutique-tete .v-phenix img { animation: flotte 4.4s ease-in-out -1.2s infinite; }
+.boutique-tete .v-caisse img { animation: flotte 7.5s ease-in-out -2.5s infinite; }
+
+/* ---------- l'étal : le titre, les trois gestes de l'achat ---------- */
+.boutique-etal { padding: 56px 0 84px;
+  background: radial-gradient(70% 40% at 50% 0%, rgba(142, 76, 184, .3), rgba(142, 76, 184, 0) 70%), linear-gradient(180deg, var(--nuit) 0%, #221236 100%); }
+.boutique-etal .tete, .boutique-offres .tete { margin-bottom: 0; }
+.pas-achat { list-style: none; margin: 24px auto 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; max-width: 900px; }
+.pas-achat li { display: flex; align-items: center; gap: 12px; padding: 10px 14px; text-align: left; font-weight: 600; font-size: 16px; line-height: 1.25; color: #F1E6FF;
+  background: rgba(255, 255, 255, .04); border: 2px solid rgba(215, 164, 33, .35); }
+.pas-achat b { flex: 0 0 auto; width: 30px; height: 30px; display: grid; place-items: center; font-family: "Lilita One", "Fredoka", sans-serif; font-weight: 400; font-size: 18px;
+  color: var(--bois-fonce); background: var(--or-clair); box-shadow: inset -3px -3px 0 var(--or-fonce); }
+.boutique-etal code, .boutique-offres code { color: var(--or-clair); }
+
+/* ---------- les packs : sur ordinateur, cinq cartes de la même taille ---------- */
+.etal { margin-top: 38px; }
+.packs { isolation: isolate; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 18px; align-items: stretch; }
+.packs.peu { grid-template-columns: repeat(auto-fit, minmax(190px, 230px)); justify-content: center; }
+.packs-etat { grid-column: 1 / -1; margin: 30px 0 14px; text-align: center; font-weight: 700; color: #E7D8F7; }
+/* pendant que les coffres s'ouvrent (ou si Tebex ne répond pas) : un crédit qui flotte au-dessus du mot */
+.packs-etat::before { content: ""; display: block; width: 48px; height: 48px; margin: 0 auto 10px; background: url("../assets/icones/credit.png") center / contain no-repeat;
+  image-rendering: pixelated; animation: flotte 1.8s ease-in-out infinite; }
+.packs > .bouton { grid-column: 1 / -1; justify-self: center; }
+.pack { position: relative; display: flex; flex-direction: column; align-items: center; min-width: 0; padding: 14px 14px 16px; text-align: center; color: #F4EAFF;
+  background: linear-gradient(180deg, #2F1B4A 0%, #1E1030 100%); border: 3px solid rgba(215, 164, 33, .45);
+  box-shadow: 0 0 0 3px #120A1C, 0 16px 30px rgba(0, 0, 0, .35); transition: transform .25s cubic-bezier(.2, .8, .2, 1), border-color .25s ease; }
+.pack:hover { transform: translateY(-6px); border-color: var(--or); }
+/* l'image du pack, lue chez Tebex : rognée en bas (les images portent un prix hors taxe, « 5 € », sur une plaque en
+   bas : il contredisait le prix payé, écrit dessous) ; un crédit dessiné tant qu'elle n'est pas là */
+.pack-image { position: relative; width: 100%; aspect-ratio: 100 / 84; overflow: hidden; background: #24143A url("../assets/icones/credit.png") center / 48px 48px no-repeat;
+  image-rendering: pixelated; box-shadow: inset 0 0 0 2px rgba(0, 0, 0, .35); }
+.pack-image img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 0; image-rendering: auto; }
+.pack-image::after { content: ""; position: absolute; top: -20%; bottom: -20%; left: -60%; width: 45%; pointer-events: none;
+  background: linear-gradient(100deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, .45), rgba(255, 255, 255, 0)); transform: skewX(-18deg); transition: left .7s ease; }
+.pack:hover .pack-image::after { left: 120%; }
+.pack-nom { margin: 12px 0 0; font-size: 23px; line-height: 1.1; color: #fff; }
+.pack-bonus { margin: 4px 0 0; min-height: 1.45em; font-size: 14px; font-weight: 700; line-height: 1.45; color: #9BE58A; }
+.pack-prix { margin: 8px 0 0; font-family: "Lilita One", "Fredoka", sans-serif; font-size: clamp(26px, 2.3vw, 32px); line-height: 1; color: var(--or-clair);
+  text-shadow: 0 3px 0 rgba(0, 0, 0, .35); white-space: nowrap; }
+.pack-taxe { margin: 4px 0 14px; font-size: 13px; font-weight: 600; color: #CDB8E6; }
+.pack .bouton { width: 100%; margin-top: auto; }
+/* le meilleur prix : la même carte, l'or plus vif, un ruban, une lueur qui respire derrière elle */
+.pack.meilleur { border-color: var(--or-clair);
+  background: radial-gradient(100% 55% at 50% 0%, rgba(255, 215, 94, .2), rgba(255, 215, 94, 0) 70%), linear-gradient(180deg, #3B2154 0%, #241238 100%);
+  box-shadow: 0 0 0 3px #120A1C, 0 0 0 6px rgba(255, 215, 94, .28), 0 16px 30px rgba(0, 0, 0, .35); }
+.pack.meilleur::before { content: ""; position: absolute; inset: -16px; z-index: -1; pointer-events: none;
+  background: radial-gradient(closest-side, rgba(255, 215, 94, .42), rgba(255, 215, 94, 0)); animation: pack-lueur 3.4s ease-in-out infinite; }
+@keyframes pack-lueur { 0%, 100% { opacity: .45; } 50% { opacity: 1; } }
+.pack-marque { position: absolute; z-index: 2; top: -15px; left: 50%; transform: translateX(-50%); margin: 0; padding: 3px 20px 4px; white-space: nowrap;
+  font-family: "Lilita One", "Fredoka", sans-serif; font-size: 15px; line-height: 1.3; color: #fff; background: var(--ruban); text-shadow: 0 2px 0 rgba(0, 0, 0, .3);
+  clip-path: polygon(0 0, 100% 0, calc(100% - 8px) 50%, 100% 100%, 0 100%, 8px 50%); }
+.pack.choisi { border-color: #fff; transform: translateY(-6px); box-shadow: 0 0 0 3px #120A1C, 0 0 0 7px var(--or-clair), 0 16px 30px rgba(0, 0, 0, .35); }
+
+/* ---------- tablette et téléphone : une ligne par pack, le prix et « Acheter » à droite ---------- */
+@media (max-width: 1023px) {
+  .packs, .packs.peu { grid-template-columns: minmax(0, 1fr); gap: 16px; max-width: 680px; margin: 0 auto; }
+  .pack { display: grid; grid-template-columns: 112px minmax(0, 1fr) auto; grid-template-areas: "img nom nom" "img bonus bonus" "img prix bouton" "img taxe bouton";
+    column-gap: 16px; align-items: center; padding: 12px 14px 12px 12px; text-align: left; }
+  .pack-image { grid-area: img; align-self: center; }
+  .pack-nom { grid-area: nom; margin: 0; font-size: 24px; }
+  .pack-bonus { grid-area: bonus; margin: 2px 0 0; }
+  .pack-prix { grid-area: prix; margin: 8px 0 0; font-size: 28px; }
+  .pack-taxe { grid-area: taxe; margin: 3px 0 0; }
+  .pack .bouton { grid-area: bouton; width: auto; margin: 0; align-self: center; }
+  .pack-marque { left: auto; right: 14px; transform: none; }
+  .pack:hover, .pack.choisi { transform: none; }
+  /* les gestes de l'achat et ce qui rassure, alignés sur la colonne des packs */
+  .pas-achat { max-width: 680px; }
+}
+@media (max-width: 640px) {
+  .etal { margin-top: 30px; }
+  .pas-achat { gap: 8px; margin-top: 20px; }
+  .pas-achat li { flex-direction: column; gap: 6px; padding: 10px 6px; text-align: center; font-size: 14px; }
+  .packs, .packs.peu { gap: 14px; }
+  .pack { grid-template-columns: 76px minmax(0, 1fr) auto; column-gap: 12px; padding: 10px 12px 10px 10px; }
+  .pack-nom { font-size: 20px; }
+  .pack-bonus { font-size: 13px; }
+  .pack-prix { margin-top: 6px; font-size: 23px; }
+  .pack-taxe { font-size: 12px; }
+  .pack .bouton { font-size: 16px; border-width: 12px; border-image-width: 12px; padding: 0 8px; white-space: nowrap; }
+  .pack-marque { top: -12px; right: 10px; padding: 2px 14px 3px; font-size: 13px; }
+}
+
+/* ---------- l'achat : le pseudo, relu lettre par lettre, puis « Payer » ---------- */
+.achat { margin: 32px auto 0; max-width: 680px; padding: 22px 24px 24px; text-align: left; color: #F4EAFF;
+  background: linear-gradient(180deg, #2B1843, #1C0F2E); border: 3px solid var(--or); box-shadow: 0 0 0 3px #120A1C, 0 18px 36px rgba(0, 0, 0, .4); }
+.achat-pack { margin: 0 0 16px; font-size: 25px; text-align: center; color: var(--or-clair); }
+.boutique-etal .alerte { padding: 12px 16px; color: #FFE3DC; background: #3A0D16; border: 3px solid #E0533F; border-left-width: 10px; }
+.boutique-etal .alerte b { color: #fff; }
+.achat-champ { display: block; margin: 20px 0 0; font-weight: 700; color: #fff; }
+.achat-champ input { display: block; width: 100%; margin-top: 6px; padding: 12px 14px; font: 700 24px/1.2 Consolas, "Courier New", monospace; letter-spacing: 1px; color: var(--encre);
+  background: #FFF8E7; border: 3px solid var(--or-fonce); border-radius: 0; }
+.achat-champ input:focus { outline: 3px solid var(--or-clair); outline-offset: 2px; border-color: var(--or); }
+.achat-erreur { margin: 10px 0 0; font-weight: 700; color: #FF9F8F; }
+.achat-merci { margin: 14px 0 0; padding: 12px 16px; font-weight: 700; color: #1F4D17; background: #DDF2D2; border: 3px solid var(--vert); border-left-width: 12px; }
+.relire { margin: 20px 0 0; text-align: center; }
+.relire-titre { margin: 0 0 8px; font-weight: 700; color: #fff; }
+.lettres { display: flex; flex-wrap: wrap; justify-content: center; gap: 5px; margin: 0; }
+.lettres span, .relire-legende .cle { display: inline-grid; place-items: center; width: 34px; height: 44px; font: 700 28px/1 Consolas, "Courier New", monospace; color: var(--encre);
+  background: #FFF8E7; border: 2px solid var(--or-fonce); }
+.lettres span.maj, .relire-legende .cle.maj { background: var(--or-clair); border-color: var(--or-fonce); }
+.lettres span.chiffre, .relire-legende .cle.chiffre { background: #CFE6F7; border-color: var(--bleu); }
+.lettres span.faux { background: #FBE0D8; border-color: var(--ruban); color: var(--ruban); }
+.relire-legende { margin: 10px 0 0; font-size: 14px; color: #CDB8E6; }
+.relire-legende .cle { width: 20px; height: 26px; font-size: 16px; margin: 0 4px 0 0; vertical-align: middle; }
+/* chaque repère avec son mot, jamais coupé de lui en bout de ligne */
+.relire-legende .leg { display: inline-block; white-space: nowrap; margin: 2px 6px; }
+.relire-case { display: inline-flex; align-items: center; gap: 10px; margin: 18px 0 0; font-weight: 700; color: #fff; cursor: pointer; }
+.relire-case input { width: 26px; height: 26px; accent-color: var(--or); flex: 0 0 auto; }
+.relire-case input:disabled { cursor: not-allowed; }
+.achat .note { margin: 16px 0 0; text-align: center; color: #CDB8E6; }
+.tebex-actions:empty { display: none; }
+@media (max-width: 640px) {
+  .achat { padding: 18px 14px 20px; }
+  .achat-pack { font-size: 21px; }
+  .boutique-etal .alerte { padding: 10px 12px; border-left-width: 8px; }
+  .relire-case { text-align: left; }
+  /* le pseudo relu tient sur UNE ligne jusqu'à 16 lettres (les cases rétrécissent), pour se relire d'un coup d'œil */
+  .lettres { flex-wrap: nowrap; gap: 3px; }
+  .lettres span { flex: 0 1 28px; min-width: 0; width: auto; height: 38px; font-size: 21px; }
+  .relire-legende { font-size: 13px; }
+  .relire-legende .cle { width: 18px; height: 24px; font-size: 15px; }
+  .relire-legende .leg { margin: 2px 4px; }
+  .achat-champ input { font-size: 21px; }
+}
+
+/* ---------- ce qui rassure, au moment de choisir ---------- */
+.rassure { list-style: none; margin: 46px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.rassure li { display: flex; gap: 14px; align-items: flex-start; padding: 16px 18px; background: rgba(255, 255, 255, .035); border: 2px solid rgba(215, 164, 33, .3); }
+.rassure .picto-pixel { flex: 0 0 auto; width: 40px; height: 40px; filter: drop-shadow(0 3px 0 rgba(0, 0, 0, .35)); }
+.rassure h3 { margin: 0 0 4px; font-size: 20px; color: var(--or-clair); }
+.rassure p { margin: 0; font-size: 15.5px; line-height: 1.5; color: #E7D8F7; }
+.rassure a { color: var(--or-clair); font-weight: 700; }
+@media (max-width: 1023px) { .rassure { grid-template-columns: minmax(0, 1fr); gap: 10px; max-width: 680px; margin: 34px auto 0; } }
+
+/* ---------- ce que les crédits offrent : six tuiles régulières, chaque chose en volume sur sa scène de couleur ---------- */
+.boutique-offres { padding: 76px 0 90px; border-top: 3px solid rgba(215, 164, 33, .35);
+  background: radial-gradient(60% 40% at 50% 0%, rgba(255, 180, 94, .1), rgba(255, 180, 94, 0) 70%), linear-gradient(180deg, #221236 0%, #140A22 100%); }
+.offres { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; margin-top: 38px; }
+.offre { display: flex; flex-direction: column; min-width: 0; background: #1E1030; border: 3px solid rgba(215, 164, 33, .45);
+  box-shadow: 0 0 0 3px #120A1C, 0 14px 26px rgba(0, 0, 0, .3); transition: transform .3s cubic-bezier(.2, .8, .2, 1), border-color .3s ease; }
+.offre:hover { transform: translateY(-6px); border-color: var(--or); }
+.offre-scene { position: relative; height: 210px; overflow: hidden; border-bottom: 3px solid rgba(0, 0, 0, .35);
+  background: radial-gradient(120% 90% at 50% 100%, var(--scene-1), var(--scene-2) 72%); }
+.offre.feu { --scene-1: #FFB24A; --scene-2: #7A2A1A; } .offre.ciel { --scene-1: #9AD8EA; --scene-2: #2A4A8C; } .offre.or { --scene-1: #FFD75E; --scene-2: #6B4423; }
+.offre.violet { --scene-1: #D29CFF; --scene-2: #2A1740; } .offre.vert { --scene-1: #A8E08A; --scene-2: #1F5A2A; } .offre.rouge { --scene-1: #FF8A6A; --scene-2: #5C1020; }
+.offre-scene img { position: absolute; height: auto; filter: drop-shadow(0 12px 10px rgba(0, 0, 0, .4)); transition: transform .5s cubic-bezier(.2, .8, .2, 1); }
+.offre .o-grand { width: min(230px, 62%); left: 50%; top: 50%; transform: translate(-50%, -50%); }
+.offre .o-petit { width: min(130px, 34%); }
+.offre .o-g { left: 3%; bottom: 0; } .offre .o-d { right: 3%; top: 6%; }
+.offre:hover .o-grand { transform: translate(-50%, -54%) scale(1.05); }
+.offre:hover .o-petit { transform: translateY(-6px) scale(1.05); }
+.offre .o-cle { width: 64px; height: 64px; right: 14%; bottom: 10%; z-index: 2; image-rendering: pixelated; transform: rotate(-18deg); }
+.offre:hover .o-cle { transform: rotate(-8deg) translateY(-6px) scale(1.08); }
+.offre-scene.passe { display: grid; place-items: center; }
+.ticket { display: grid; justify-items: center; gap: 2px; padding: 16px 40px 18px; color: var(--bois-fonce); background: linear-gradient(160deg, var(--or-clair), var(--or) 70%);
+  border: 4px solid var(--or-fonce); transform: rotate(-7deg); box-shadow: 0 14px 12px rgba(0, 0, 0, .35); transition: transform .4s cubic-bezier(.2, .8, .2, 1);
+  clip-path: polygon(0 0, 100% 0, 100% 38%, calc(100% - 12px) 50%, 100% 62%, 100% 100%, 0 100%, 0 62%, 12px 50%, 0 38%); }
+.ticket b { font-family: "Lilita One", "Fredoka", sans-serif; font-weight: 400; font-size: 40px; line-height: 1; letter-spacing: 3px; }
+.ticket i { font-style: normal; font-weight: 700; font-size: 14px; letter-spacing: 2px; text-transform: uppercase; }
+.offre:hover .ticket { transform: rotate(-2deg) scale(1.06); }
+.offre-scene.pseudos { display: grid; place-content: center; gap: 8px; }
+.pseudo { justify-self: center; padding: 5px 16px 7px; font-family: "Lilita One", "Fredoka", sans-serif; font-size: 26px; line-height: 1; background: rgba(20, 10, 30, .55);
+  text-shadow: 0 3px 0 rgba(0, 0, 0, .45); transition: transform .4s ease; }
+.pseudo.c1 { color: #FFD75E; transform: rotate(-3deg) translateX(-16px); } .pseudo.c2 { color: #7FE3FF; transform: rotate(2deg) translateX(20px); } .pseudo.c3 { color: #FF8FD0; transform: rotate(-1.5deg); }
+.offre:hover .pseudo.c1 { transform: rotate(-5deg) translateX(-24px) scale(1.06); } .offre:hover .pseudo.c2 { transform: rotate(4deg) translateX(28px) scale(1.06); }
+.offre-texte { flex: 1; padding: 14px 16px 18px; }
+.offre-texte h3 { margin: 0; font-size: 23px; color: #fff; }
+.offre-texte p { margin: 6px 0 0; font-size: 16px; line-height: 1.5; color: #E0D2F2; }
+@media (max-width: 960px) {
+  .boutique-tete { padding: 96px 0 40px; }
+  .boutique-tete .scene { height: 270px; max-width: 380px; }
+  .offres { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+/* sur téléphone : une tuile par ligne, sa scène carrée à gauche, son texte à droite (comme les packs) */
+@media (max-width: 640px) {
+  .boutique-tete h1 { font-size: clamp(32px, 9vw, 42px); }
+  .boutique-tete .accroche { font-size: 17px; margin: 14px auto 22px; }
+  .boutique-tete { padding: 84px 0 28px; }
+  .boutique-tete .scene { height: 190px; max-width: 300px; }
+  .boutique-etal { padding: 56px 0 64px; }
+  .boutique-offres { padding: 56px 0 64px; }
+  .offres { grid-template-columns: minmax(0, 1fr); gap: 14px; margin-top: 28px; }
+  .offre { flex-direction: row; }
+  .offre-scene { flex: 0 0 104px; height: auto; min-height: 104px; border-bottom: 0; border-right: 3px solid rgba(0, 0, 0, .35); }
+  .offre .o-grand { width: 86%; }
+  .offre .o-petit { display: none; }
+  .offre .o-cle { width: 34px; height: 34px; right: 6%; bottom: 8%; }
+  .ticket { padding: 8px 14px 9px; border-width: 3px; }
+  .ticket b { font-size: 20px; letter-spacing: 1px; } .ticket i { font-size: 9px; letter-spacing: 1px; }
+  .offre-scene.pseudos { gap: 4px; }
+  .pseudo { padding: 3px 8px 4px; font-size: 14px; }
+  .pseudo.c1 { transform: rotate(-3deg) translateX(-6px); } .pseudo.c2 { transform: rotate(2deg) translateX(8px); }
+  .offre-texte { padding: 10px 12px 12px; }
+  .offre-texte h3 { font-size: 19px; }
+  .offre-texte p { margin-top: 4px; font-size: 14.5px; line-height: 1.45; }
+}
+
+/* ---------- le mouvement, coupé pour une capture et pour qui en demande moins ---------- */
+html.photo .boutique-tete .vol img, html.photo .pack.meilleur::before, html.photo .packs-etat::before { animation: none; }
+/* dans une capture, les crédits qui montent derrière le texte n'ont pas de sens (figés, ils tomberaient sur les mots) */
+html.photo .boutique-tete .pluie { display: none; }
+@media (prefers-reduced-motion: reduce) {
+  .boutique-tete .vol img, .pack.meilleur::before, .packs-etat::before { animation: none; }
+  .pack, .offre, .offre-scene img, .pseudo, .ticket, .pack-image::after, .lien-doux { transition: none; }
+  .pack:hover, .offre:hover { transform: none; }
+}

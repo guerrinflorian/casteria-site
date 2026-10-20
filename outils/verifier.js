@@ -59,6 +59,12 @@ function verifierBoutique(faute) {
     for (const [quoi, motif] of [['la mise en garde « Une erreur de pseudo n\'est pas remboursée »', /Une erreur de pseudo n'est pas remboursée/], ['la case « je l\'ai vérifié »', /<input type="checkbox" id="pseudo-sur">/], ['le bouton « Payer » gris au départ', /id="achat-payer" disabled/], ['le champ du pseudo', /<input id="pseudo"/]]) if (!motif.test(page)) faute('boutique.html : ' + quoi + ' manque')
     if (!/Une erreur de pseudo n'est pas remboursée/.test(merci)) faute('merci.html : la phrase sur le remboursement manque')
   }
+  // (20/10/2026, le propriétaire : « je trouve la boutique affreuse [...] avec les couleurs et tout ») la boutique redessinée
+  // dans la nuit et l'or du site : sa feuille css/boutique.css, chargée par la page ; plus de tableau de parchemin
+  // (cadre-bois) ni de bouton vert au milieu de la nuit ; et dans sa feuille, jamais une pastille arrondie (le propriétaire)
+  if (!page.includes('<link rel="stylesheet" href="css/boutique.css">')) faute('boutique.html : sa feuille css/boutique.css n\'est pas chargée')
+  if (/class="[^"]*\b(?:cadre-bois|bouton-vert)\b/.test(page)) faute('boutique.html : le tableau de parchemin (cadre-bois) ou le bouton vert est revenu (la boutique est dans la nuit et l\'or du site)')
+  for (const r of reglesCss(lire('css/boutique.css'))) for (const m of r.corps.matchAll(/border(?:-[a-z]+)*-radius\s*:\s*([^;]+)/g)) if (!/^0(px)?\s*$/.test(m[1].trim())) faute('css/boutique.css, « ' + r.sel.slice(0, 60) + ' » : un arrondi (' + m[1].trim() + ') : jamais une pastille arrondie')
 }
 // LE CLASSEMENT (14/10/2026 : classement.html, api/classement.js, js/classement.js) : la fonction lit la base du jeu avec
 // les identifiants de ses variables d'environnement SEULEMENT, en lecture seule (une requête SELECT), et Vercel garde sa
@@ -375,7 +381,8 @@ else if ((PLAN.match(/<loc>/g) || []).length !== PAGES.length - HORS_GOOGLE.leng
   const GARDE = 'main img, main video { max-height: 100svh; }'
   if (!css.includes(GARDE)) faute('la règle garde manque, telle quelle : ' + GARDE)
   const regles = reglesCss(css).map(r => Object.assign({ f: 'css/style.css' }, r)).concat(reglesCss(lire('css/carrousel.css')).map(r => Object.assign({ f: 'css/carrousel.css' }, r)),
-    reglesCss(lire('css/classement.css')).map(r => Object.assign({ f: 'css/classement.css' }, r)), reglesCss(lire('css/discord.css')).map(r => Object.assign({ f: 'css/discord.css' }, r)))
+    reglesCss(lire('css/classement.css')).map(r => Object.assign({ f: 'css/classement.css' }, r)), reglesCss(lire('css/discord.css')).map(r => Object.assign({ f: 'css/discord.css' }, r)),
+    reglesCss(lire('css/boutique.css')).map(r => Object.assign({ f: 'css/boutique.css' }, r)))
   for (const r of regles) {
     const sels = r.sel.split(',').map(x => x.trim()), ou = r.f + ', « ' + r.sel.slice(0, 70) + ' »' + (r.media ? ' (' + r.media + ')' : '')
     if (sels.some(x => /(^|[\s>+~])(img|video|picture)(?![\w-])[^\s>+~]*$/.test(x))) {
@@ -398,7 +405,7 @@ else if ((PLAN.match(/<loc>/g) || []).length !== PAGES.length - HORS_GOOGLE.leng
     if (!cible || px('min-width') < 44 || px('min-height') < 44) faute('css/style.css : sur téléphone, la coupe du classement doit être une cible de 44 px au moins (min-width et min-height)')
   }
 }
-for (const f of ['css/style.css', 'css/carrousel.css', 'css/classement.css', 'css/discord.css', 'js/site.js', 'js/carrousel.js', 'js/boutique.js', 'js/boutique.config.js', 'js/classement.js', 'api/classement.js', 'outils/essai_classement.js', 'README.md', 'serveur.js']) {
+for (const f of ['css/style.css', 'css/carrousel.css', 'css/classement.css', 'css/discord.css', 'css/boutique.css', 'js/site.js', 'js/carrousel.js', 'js/boutique.js', 'js/boutique.config.js', 'js/classement.js', 'api/classement.js', 'outils/essai_classement.js', 'README.md', 'serveur.js']) {
   const s = fs.readFileSync(path.join(RACINE, f), 'utf8')
   for (const t of TIRETS) if (s.includes(t)) { console.log(f); faute('un tiret long ou moyen') }
 }

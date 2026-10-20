@@ -25,7 +25,7 @@ const MUTANTS = [
   ['une cle secrete dans la config', 'js/boutique.config.js', s => s.replace("adresse: '',", "adresse: '',\n  cle: 'a3f09c1b77e24d5f8a6b0c9d1e2f3a4b5c6d7e8f',")],
   ['une cle de 40 caracteres cachee dans un autre script', 'js/site.js', s => s + '\n// 9f8e7d6c5b4a39281706f5e4d3c2b1a098765432\n'],
   ['le jeton remplace par une cle sans prefixe', 'js/boutique.config.js', s => s.replace(/jeton: '[^']*'/, "jeton: 'fc5549d2437006fa9a4703bbde8dba60567fd478'")],
-  ['un texte de Tebex ecrit comme du code de page', 'js/boutique.js', s => s.replace("art.appendChild(el('h4', '', p.name))", "art.innerHTML += '<h4>' + p.name + '</h4>'")],
+  ['un texte de Tebex ecrit comme du code de page', 'js/boutique.js', s => s.replace("art.appendChild(el('h3', 'pack-nom', nom(p)))", "art.innerHTML += '<h3>' + p.name + '</h3>'")],
   ['le joueur envoye ailleurs que chez Tebex', 'js/boutique.js', s => s.replace('window.location.assign(lien)', 'window.location.href = lien')],
   ['un appel a un autre serveur', 'js/boutique.js', s => s.replace("var API = 'https://headless.tebex.io/api'", "var API = 'https://headless.tebex.io/api', AUTRE = 'https://exemple.test/api'")],
   ['la mise en garde du pseudo retiree', 'boutique.html', s => s.replace("Une erreur de pseudo n'est pas remboursée.", 'Relis bien.')],
@@ -37,6 +37,13 @@ const MUTANTS = [
   ['le script de Tebex sans version figee', 'boutique.html', s => s.replace('https://js.tebex.io/v/1.11.0.js', 'https://js.tebex.io/v/1.js')],
   ['le script de Tebex sur une autre page', 'index.html', s => s.replace('</body>', '<script defer src="https://js.tebex.io/v/1.11.0.js"></script>\n</body>')],
   ['le script de Tebex qui bloque la page (sans defer)', 'boutique.html', s => s.replace('<script defer src="https://js.tebex.io/v/1.11.0.js">', '<script src="https://js.tebex.io/v/1.11.0.js">')],
+  // (20/10/2026) la boutique redessinée dans la nuit et l'or du site : sa feuille, sans pastille arrondie, sans parchemin ni vert
+  ['la feuille de la boutique plus chargee', 'boutique.html', s => s.replace('<link rel="stylesheet" href="css/boutique.css">\n', '')],
+  ['le tableau de parchemin revenu dans la boutique', 'boutique.html', s => s.replace('<div class="etal" id="tebex">', '<div class="etal cadre-bois" id="tebex">')],
+  ['le bouton vert revenu dans la boutique', 'boutique.html', s => s.replace('<p class="tebex-actions" id="tebex-actions"></p>', '<p class="tebex-actions" id="tebex-actions"><a class="bouton bouton-vert" href="./#telecharger">Télécharge le launcher</a></p>')],
+  ['une pastille arrondie dans la boutique', 'css/boutique.css', s => s + '\n.pack .bouton { border-radius: 999px; }\n'],
+  ['une image trop haute dans la feuille de la boutique', 'css/boutique.css', s => s + '\n.offre-scene img { height: 1200px; }\n'],
+  ['un tiret long dans la feuille de la boutique', 'css/boutique.css', s => s + '\n/* les packs ' + String.fromCharCode(0x2014) + ' du plus petit au plus gros */\n'],
   ['le paiement par-dessus la page sans la redirection en secours', 'js/boutique.js', s => s.replace(/\n        \/\/ la page de paiement de Tebex en français[^\n]*\n[^\n]*\n        window\.location\.assign\(lien\)/, '')],
 
   // ---------- aucune image ni vidéo plus haute qu'un écran (le propriétaire, 05/10 au soir) ----------

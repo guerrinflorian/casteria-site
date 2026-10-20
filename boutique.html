@@ -24,6 +24,7 @@
 <link rel="apple-touch-icon" href="assets/logo/icone-apple-180.png">
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/scene.css">
+<link rel="stylesheet" href="css/boutique.css">
 <script type="application/ld+json">
 { "@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
   { "@type": "ListItem", "position": 1, "name": "Casteria", "item": "https://casteria.fr/" },
@@ -44,113 +45,148 @@
 </header>
 
 <main>
-<!-- LE HAUT DE PAGE : une vraie photo du jeu (le palais sur son rocher), un voile, et ce que les crédits offrent,
-     en volume : des rendus de nos modèles (assets/boutique). Tout le mouvement est en CSS, coupé si le visiteur le demande. -->
-<section class="heros vitrine-tete palais" id="haut">
+<!-- LA BOUTIQUE, REDESSINÉE (le propriétaire, 20/10/2026 : « je trouve la boutique affreuse, que ce soit en responsive ou
+     même sur le site de base, avec les couleurs et tout ») : tout dans la nuit violette et l'or du site, plus de tableau
+     de parchemin ; pensée d'abord pour le téléphone (les packs en lignes, une main suffit), puis pour l'ordinateur (les
+     cinq packs côte à côte, de la même famille, le meilleur prix mis en avant sans casser la rangée). Sa feuille :
+     css/boutique.css.
+     LE HAUT DE PAGE : une vraie photo du jeu (le palais sur son rocher), un voile sous le texte, et ce que les crédits
+     ouvrent, en volume : des rendus de nos modèles (assets/boutique). Le mouvement est en CSS, coupé si on le demande. -->
+<section class="heros vitrine-tete palais boutique-tete" id="haut">
   <div class="fond" aria-hidden="true"><img src="assets/images/casteria-palais-serveur-2010.jpg" alt="" width="1280" height="720" fetchpriority="high"></div>
-  <div class="pluie" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  <div class="pluie" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
   <div class="dedans grille">
     <div class="texte">
-      <span class="ruban">La boutique</span>
+      <span class="sur-titre">Les crédits de Casteria</span>
       <h1>La boutique de Casteria<b class="lu"> :</b> <span>les crédits, et tout ce qu'ils ouvrent</span></h1>
-      <p class="accroche">Un phénix qui te suit partout, une bête rare pour ton enclos, des clés pour les caisses mystères : avec les crédits, tu t'offres ce qu'on ne trouve nulle part ailleurs, et tu aides le serveur à vivre.</p>
+      <p class="accroche">Un phénix qui te suit partout, une monture dès le premier jour, des clés pour les caisses du palais : avec les crédits, tu t'offres ce qu'on ne trouve nulle part ailleurs, et tu aides le serveur à vivre.</p>
       <p class="gestes">
         <a class="bouton bouton-or grand" href="#acheter"><img class="pixel" src="assets/icones/credit.png" alt="" width="26" height="26">Choisir mon pack</a>
-        <a class="bouton bouton-bois" href="#offres">Voir ce qu'on s'offre</a>
+        <a class="lien-doux" href="#offres">Ce que tes crédits t'offrent</a>
       </p>
     </div>
     <div class="scene" aria-hidden="true">
       <span class="halo"></span>
-      <img class="s-wyverne" src="assets/boutique/baleine.png" alt="" width="420" height="420">
-      <img class="s-caisse" src="assets/boutique/caisse.png" alt="" width="420" height="420">
-      <img class="s-phenix" src="assets/boutique/phenix.png" alt="" width="420" height="420">
-      <i class="eclat e1"></i><i class="eclat e2"></i><i class="eclat e3"></i><i class="eclat e4"></i><i class="eclat e5"></i>
+      <span class="vol v-phenix" data-v="-0.16"><img src="assets/boutique/phenix.png" alt="" width="420" height="420"></span>
+      <span class="vol v-credit" data-v="-0.06"><img src="assets/boutique/credit.png" alt="" width="512" height="512"></span>
+      <span class="vol v-caisse" data-v="-0.1"><img src="assets/boutique/caisse.png" alt="" width="420" height="420"></span>
+      <i class="eclat e1"></i><i class="eclat e2"></i><i class="eclat e3"></i><i class="eclat e4"></i>
     </div>
   </div>
 </section>
 
-<section class="sombre etal" id="acheter">
+<section class="sombre boutique-etal" id="acheter">
   <div class="dedans">
     <div class="tete apparait">
-      <span class="ruban">Les packs de crédits</span>
+      <span class="sur-titre">Les packs de crédits</span>
       <h2>Choisis ton pack</h2>
-      <p>Choisis ton pack, écris ton pseudo, et paie sur la page sécurisée de Tebex, notre partenaire de paiement.</p>
+      <ol class="pas-achat">
+        <li><b>1</b><span>Choisis ton pack</span></li>
+        <li><b>2</b><span>Écris ton pseudo exact</span></li>
+        <li><b>3</b><span>Paie chez Tebex</span></li>
+      </ol>
     </div>
-    <div class="cadre-bois apparait grandit">
-      <!-- LES PACKS DE CRÉDITS : rien à écrire ici. Ils sont lus EN DIRECT chez Tebex à chaque visite (leurs noms, leurs
-           images, leurs prix) : change un prix ou ajoute un pack dans Tebex, la page suit toute seule, « le meilleur prix »
-           et « le juste milieu » compris (calculés depuis les prix lus, jamais écrits ici).
-           Le seul réglage : le jeton PUBLIC de la boutique, dans js/boutique.config.js. Aucune clé secrète ne s'écrit
-           dans ce dépôt, et aucun paiement ne se fait sur ce site : le joueur paie sur la page de Tebex. -->
-      <div class="tebex ouverte" id="tebex" style="color:var(--encre)">
-        <div class="tebex-dedans">
-          <h3 class="etal-titre">Les packs, du plus petit au plus gros</h3>
-          <div class="packs" id="packs" aria-live="polite">
-            <p class="packs-etat" id="packs-etat">On ouvre les coffres...</p>
-          </div>
-          <noscript><p class="packs-etat">Pour voir les packs et acheter des crédits, active JavaScript dans ton navigateur.</p></noscript>
-          <p class="etal-note">Tes crédits sont ajoutés à ton compte à ta prochaine connexion au serveur. En jeu, tape <code>/boutique</code> pour les dépenser et <code>/credits</code> pour voir ton solde.</p>
-
-          <form class="achat" id="achat" hidden novalidate>
-            <h4 class="achat-pack" id="achat-pack">Ton pack</h4>
-            <div class="alerte" role="note">
-              <p><b>Écris ton pseudo EXACT, celui du jeu : chaque majuscule et chaque caractère comptent.</b> «&nbsp;Florian&nbsp;» et «&nbsp;florian&nbsp;» sont deux joueurs différents.</p>
-              <p>Les crédits partent sur ce pseudo. <b>Une erreur de pseudo n'est pas remboursée.</b></p>
-            </div>
-            <label class="achat-champ" for="pseudo">Ton pseudo en jeu
-              <input id="pseudo" name="pseudo" type="text" maxlength="16" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="Ton pseudo exact">
-            </label>
-            <p class="achat-erreur" id="pseudo-erreur" role="alert" hidden></p>
-            <div class="relire" id="relire" hidden>
-              <p class="relire-titre">Relis-le, lettre par lettre :</p>
-              <p class="lettres" id="pseudo-lettres" aria-live="polite"></p>
-              <p class="relire-legende"><span class="cle maj">A</span> une MAJUSCULE <span class="cle">a</span> une minuscule <span class="cle chiffre">0</span> un chiffre</p>
-              <label class="relire-case"><input type="checkbox" id="pseudo-sur"> C'est bien mon pseudo, je l'ai vérifié</label>
-            </div>
-            <p class="achat-erreur" id="achat-erreur" role="alert" hidden></p>
-            <p class="achat-merci" id="achat-merci" role="status" hidden></p>
-            <p class="tebex-actions">
-              <button class="bouton bouton-or grand" type="submit" id="achat-payer" disabled>Payer</button>
-              <button class="bouton bouton-bois" type="button" id="achat-retour">Changer de pack</button>
-            </p>
-            <p class="note">Le paiement se fait sur la page sécurisée de Tebex, notre partenaire de paiement : aucune carte n'est demandée sur ce site.</p>
-          </form>
-
-          <p class="tebex-actions" id="tebex-actions"><a class="bouton bouton-vert" href="./#telecharger">Pas encore de compte ? Télécharge le launcher</a></p>
-        </div>
+    <!-- LES PACKS DE CRÉDITS : rien à écrire ici. Ils sont lus EN DIRECT chez Tebex à chaque visite (leurs noms, leurs
+         images, leurs prix) : change un prix ou ajoute un pack dans Tebex, la page suit toute seule, « le meilleur prix »
+         compris (calculé depuis les prix lus, jamais écrit ici).
+         Le seul réglage : le jeton PUBLIC de la boutique, dans js/boutique.config.js. Aucune clé secrète ne s'écrit
+         dans ce dépôt, et aucun paiement ne se fait sur ce site : le joueur paie sur la page de Tebex. -->
+    <div class="etal" id="tebex">
+      <div class="packs" id="packs" aria-live="polite">
+        <p class="packs-etat" id="packs-etat">On ouvre les coffres...</p>
       </div>
-      <div class="tebex-cadre" id="tebex-cadre" hidden></div>
+      <noscript><p class="packs-etat">Pour voir les packs et acheter des crédits, active JavaScript dans ton navigateur.</p></noscript>
+
+      <form class="achat" id="achat" hidden novalidate>
+        <h3 class="achat-pack" id="achat-pack">Ton pack</h3>
+        <div class="alerte" role="note">
+          <p><b>Écris ton pseudo EXACT, celui du jeu : chaque majuscule et chaque caractère comptent.</b> «&nbsp;Florian&nbsp;» et «&nbsp;florian&nbsp;» sont deux joueurs différents.</p>
+          <p>Les crédits partent sur ce pseudo. <b>Une erreur de pseudo n'est pas remboursée.</b></p>
+        </div>
+        <label class="achat-champ" for="pseudo">Ton pseudo en jeu
+          <input id="pseudo" name="pseudo" type="text" maxlength="16" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="Ton pseudo exact">
+        </label>
+        <p class="achat-erreur" id="pseudo-erreur" role="alert" hidden></p>
+        <div class="relire" id="relire" hidden>
+          <p class="relire-titre">Relis-le, lettre par lettre :</p>
+          <p class="lettres" id="pseudo-lettres" aria-live="polite"></p>
+          <p class="relire-legende"><span class="leg"><span class="cle maj">A</span> une MAJUSCULE</span> <span class="leg"><span class="cle">a</span> une minuscule</span> <span class="leg"><span class="cle chiffre">0</span> un chiffre</span></p>
+          <label class="relire-case"><input type="checkbox" id="pseudo-sur"> C'est bien mon pseudo, je l'ai vérifié</label>
+        </div>
+        <p class="achat-erreur" id="achat-erreur" role="alert" hidden></p>
+        <p class="achat-merci" id="achat-merci" role="status" hidden></p>
+        <p class="tebex-actions">
+          <button class="bouton bouton-or grand" type="submit" id="achat-payer" disabled>Payer</button>
+          <button class="bouton bouton-bois" type="button" id="achat-retour">Changer de pack</button>
+        </p>
+        <p class="note">Le paiement se fait sur la page sécurisée de Tebex, notre partenaire de paiement : aucune carte n'est demandée sur ce site.</p>
+      </form>
+
+      <p class="tebex-actions" id="tebex-actions"></p>
     </div>
-    <p class="note apparait" style="text-align:center;margin-top:26px">Casteria se joue sans rien payer : le launcher et le serveur sont gratuits.</p>
+    <div class="tebex-cadre" id="tebex-cadre" hidden></div>
+
+    <!-- CE QUI RASSURE, au moment de choisir : qui encaisse, quand les crédits arrivent, et que le jeu reste gratuit -->
+    <ul class="rassure">
+      <li class="apparait">
+        <svg class="picto-pixel" viewBox="0 0 12 12" aria-hidden="true" shape-rendering="crispEdges"><path fill="#FFD75E" d="M3 2h1v1H3zM4 1h4v1H4zM8 2h1v1H8zM3 3h1v2H3zM8 3h1v2H8z"/><path fill="#D7A421" d="M2 5h8v6H2z"/><path fill="#A57713" d="M2 10h8v1H2z"/><path fill="#3F2612" d="M5 6h2v2H5zM5.5 8h1v1.5h-1z"/></svg>
+        <div><h3>Un paiement sécurisé</h3><p>Tu paies sur la page de Tebex, notre partenaire de paiement : aucune carte n'est demandée sur ce site.</p></div>
+      </li>
+      <li class="apparait" style="--retard:.08s">
+        <img class="picto-pixel pixel" src="assets/icones/credit.png" alt="" width="48" height="48">
+        <div><h3>Tes crédits à ta connexion</h3><p>Ils arrivent sur ton pseudo à ta prochaine connexion au serveur. En jeu, <code>/credits</code> pour ton solde, <code>/boutique</code> pour les dépenser.</p></div>
+      </li>
+      <li class="apparait" style="--retard:.16s">
+        <svg class="picto-pixel" viewBox="0 0 12 12" aria-hidden="true" shape-rendering="crispEdges"><path fill="#FF8FB8" d="M2 2h3v1H2zM7 2h3v1H7zM1 3h5v1H1zM6 3h5v1H6zM1 4h10v3H1zM2 7h8v1H2zM3 8h6v1H3zM4 9h4v1H4zM5 10h2v1H5z"/><path fill="#FFFFFF" d="M2 4h1v1H2z"/><path fill="#C2416E" d="M8 6h2v1H8zM7 7h2v1H7z"/></svg>
+        <div><h3>Le jeu est gratuit</h3><p>Le launcher et le serveur ne coûtent rien : les crédits sont un plus. <a href="./#telecharger">Télécharger le launcher</a></p></div>
+      </li>
+    </ul>
   </div>
 </section>
 
-<section class="clair" id="offres">
+<section class="sombre boutique-offres" id="offres">
   <div class="dedans">
     <div class="tete apparait">
+      <span class="sur-titre">Dans la boutique du jeu</span>
       <h2>Ce que tes crédits t'offrent</h2>
       <p>En jeu, tape <code>/boutique</code> pour voir tous les rayons.</p>
     </div>
     <div class="offres">
-      <article class="offre grande feu apparait de-gauche">
+      <article class="offre feu apparait">
         <div class="offre-scene">
           <img class="o-grand" src="assets/boutique/phenix.png" alt="Le Phénix, un familier de la boutique de Casteria : un oiseau de feu aux plumes d'or" width="420" height="420" loading="lazy">
-          <img class="o-petit p1" src="assets/boutique/renard.png" alt="Le Renard des contes, un familier blanc aux trois queues de flamme bleue" width="420" height="420" loading="lazy">
-          <img class="o-petit p2" src="assets/boutique/baleine.png" alt="La petite Baleine du ciel de nuit, un familier qui souffle des étoiles" width="420" height="420" loading="lazy">
+          <img class="o-petit o-g" src="assets/boutique/renard.png" alt="Le Renard des contes, un familier blanc aux trois queues de flamme bleue" width="420" height="420" loading="lazy">
+          <img class="o-petit o-d" src="assets/boutique/baleine.png" alt="La petite Baleine du ciel de nuit, un familier qui souffle des étoiles" width="420" height="420" loading="lazy">
         </div>
-        <div class="offre-texte"><h3>Des familiers qu'on ne trouve qu'ici</h3><p>Un oiseau de feu, un renard des contes, une baleine du ciel de nuit : ils te suivent partout, à ton nom et pour toujours.</p></div>
+        <div class="offre-texte"><h3>Des familiers</h3><p>Un oiseau de feu, un renard des contes, une baleine du ciel de nuit : ils te suivent partout, à ton nom.</p></div>
       </article>
-      <article class="offre or apparait" style="--retard:.05s">
-        <div class="offre-scene"><img class="o-caisse" src="assets/boutique/caisse.png" alt="Le Trésor de Casteria, la caisse mystère légendaire, violette et or" width="420" height="420" loading="lazy"><img class="o-cle pixel" src="assets/boutique/cle.png" alt="Une clé légendaire" width="64" height="64"></div>
-        <div class="offre-texte"><h3>Des clés pour les caisses</h3><p>Une clé, une caisse, une surprise : au marché du palais.</p></div>
+      <article class="offre ciel apparait" style="--retard:.06s">
+        <div class="offre-scene">
+          <img class="o-grand" src="assets/boutique/wyverne.png" alt="La Wyverne royale, une monture volante de la boutique de Casteria" width="420" height="420" loading="lazy">
+          <img class="o-petit o-g" src="assets/boutique/destrier.png" alt="Le Destrier de castérium, une monture très rapide au sol" width="420" height="420" loading="lazy">
+        </div>
+        <div class="offre-texte"><h3>Des montures</h3><p>Une wyverne royale qui vole, un destrier de castérium très rapide au sol : à toi dès le premier jour.</p></div>
       </article>
-      <article class="offre violet apparait" style="--retard:.15s">
+      <article class="offre or apparait" style="--retard:.12s">
+        <div class="offre-scene">
+          <img class="o-grand" src="assets/boutique/caisse.png" alt="Le Trésor de Casteria, la caisse mystère légendaire, violette et or" width="420" height="420" loading="lazy">
+          <img class="o-cle pixel" src="assets/boutique/cle.png" alt="Une clé légendaire" width="64" height="64" loading="lazy">
+        </div>
+        <div class="offre-texte"><h3>Des clés pour les caisses</h3><p>Les clés des quatre caisses du palais : une clé, une caisse, une surprise.</p></div>
+      </article>
+      <article class="offre violet apparait" style="--retard:.18s">
         <div class="offre-scene pseudos" aria-hidden="true"><span class="pseudo c1">Capucine</span><span class="pseudo c2">Barnabé</span><span class="pseudo c3">Mirabelle</span></div>
         <div class="offre-texte"><h3>Ton pseudo en couleur</h3><p>Une couleur pour ton pseudo, et une aura à porter.</p></div>
       </article>
-      <article class="offre vert apparait" style="--retard:.25s">
+      <article class="offre vert apparait" style="--retard:.24s">
+        <div class="offre-scene">
+          <img class="o-grand" src="assets/boutique/oeuf.png" alt="Un œuf mystère dans son nid : il révèle une bête au hasard" width="512" height="512" loading="lazy">
+        </div>
+        <div class="offre-texte"><h3>Des bêtes et des œufs</h3><p>Des bêtes rares pour ton enclos, ou un œuf mystère qui en révèle une au hasard.</p></div>
+      </article>
+      <article class="offre rouge apparait" style="--retard:.3s">
         <div class="offre-scene passe" aria-hidden="true"><span class="ticket"><b>PASS</b><i>Casteria</i></span></div>
-        <div class="offre-texte"><h3>Des coups de pouce, et des cadeaux</h3><p>Des pass de quelques jours, des commandes pratiques, et même des cadeaux pour tout le serveur.</p></div>
+        <div class="offre-texte"><h3>Des pass et des cadeaux</h3><p>Un pass de 14 jours de commandes et de clés, et des cadeaux pour tous les joueurs connectés.</p></div>
       </article>
     </div>
   </div>
@@ -161,7 +197,7 @@
   <div class="dedans">
     <div class="col">
       <img src="assets/logo/casteria-logo-300.webp" alt="Casteria" width="70" height="70" loading="lazy">
-      <nav aria-label="Le pied de page"><a href="./">Accueil</a><a href="commencer.html">Par où commencer</a><a href="pirates.html">La mer et les pirates</a><a href="./#combat">Le combat</a><a href="classement.html">Classement</a><a href="boutique.html">Boutique</a><a href="./#telecharger">Télécharger</a></nav>
+      <nav aria-label="Le pied de page"><a href="./">Accueil</a><a href="commencer.html">Par où commencer</a><a href="pirates.html">La mer et les pirates</a><a href="donjons.html">Les donjons</a><a href="casino.html">Le casino</a><a href="./#combat">Le combat</a><a href="classement.html">Classement</a><a href="boutique.html">Boutique</a><a href="./#telecharger">Télécharger</a></nav>
     </div>
     <small>Casteria est un serveur Minecraft indépendant, créé par des joueurs. Il n'est ni affilié à Mojang ni à Microsoft, ni approuvé par eux. Minecraft est une marque de Mojang Studios.</small>
   </div>

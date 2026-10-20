@@ -53,13 +53,24 @@
   // les crédits d'un pack, lus dans son nom (« 400 crédits ») : 0 si son nom n'en dit pas ; et ses crédits par euro
   function credits(p) { var m = /(\d[\d \u00A0\u202F.]*)\s*cr[ée]dits?/i.exec(String(p.name || '')); return m ? parseInt(m[1].replace(/\D/g, ''), 10) || 0 : 0 }
   function taux(p) { return p.total_price > 0 ? credits(p) / p.total_price : 0 }
-  // marque : 'meilleur' (le plus de crédits par euro), 'milieu' (le pack du milieu de l'étal) ou '' ; bonus : ses
-  // crédits par euro en plus de ceux du plus petit pack, en pour cent (0 : rien à dire)
+  // le nom du pack tel que Tebex le donne ; seulement « 2200 crédits » tout court se lit « 2 200 crédits » (les milliers
+  // séparés, le nombre jamais coupé de son mot) ; un autre nom reste tel quel
+  function nom(p) {
+    var n = String(p.name), c = /^\s*\d[\d.]*\s*cr[ée]dits?\s*$/i.test(n) ? credits(p) : 0
+    if (!c) return n
+    // (l'espace fine que met le français entre les milliers est presque invisible dans la police des titres : une
+    // espace insécable ordinaire à la place)
+    try { return new Intl.NumberFormat('fr-FR').format(c).replace(/\s/g, String.fromCharCode(160)) + String.fromCharCode(160) + 'crédits' } catch (e) { return n }
+  }
+  // marque : 'meilleur' (le plus de crédits par euro : il est mis en avant, à sa place dans la rangée) ou '' ; bonus :
+  // ses crédits par euro en plus de ceux du plus petit pack, en pour cent (0 : la ligne reste vide, pour que les prix
+  // des cartes restent à la même hauteur)
   function carte(p, marque, bonus) {
     var art = el('article', 'pack' + (marque ? ' ' + marque : ''))
-    if (marque) art.appendChild(el('p', 'pack-marque', marque === 'meilleur' ? 'Le meilleur prix' : 'Le juste milieu'))
+    if (marque) art.appendChild(el('p', 'pack-marque', 'Le meilleur prix'))
     // l'image du pack : sa place est réservée (un crédit dessiné dessous), elle se charge tout de suite ; si elle manque
-    // ou ne répond pas, le crédit dessiné reste
+    // ou ne répond pas, le crédit dessiné reste. (20/10/2026) Elle est rognée en bas (css/boutique.css) : les images des
+    // packs portent un prix HORS TAXE (« 5 € ») qui contredisait le prix payé, écrit dessous
     var cadre = el('div', 'pack-image'), img = sure(p.image)
     if (img) {
       var i = el('img'); i.alt = 'Le pack ' + p.name; i.width = 160; i.height = 160; i.decoding = 'async'
@@ -67,19 +78,12 @@
       i.src = img; cadre.appendChild(i)
     }
     art.appendChild(cadre)
-    art.appendChild(el('h4', '', p.name))
+    art.appendChild(el('h3', 'pack-nom', nom(p)))
+    art.appendChild(el('p', 'pack-bonus', bonus > 0 ? '+' + bonus + String.fromCharCode(160) + '% de crédits' : ''))
     art.appendChild(el('p', 'pack-prix', prix(p)))
     if (p.sales_tax > 0) art.appendChild(el('p', 'pack-taxe', 'TVA comprise'))
-    if (bonus > 0) art.appendChild(el('p', 'pack-bonus', bonus + ' % de crédits en plus'))
-    // la grande carte : trois vignettes de ce qu'on s'offre (nos rendus, assets/boutique), sans rien chiffrer
-    if (marque === 'meilleur') {
-      var v = el('p', 'pack-offre')
-      ;['phenix', 'wyverne', 'caisse'].forEach(function (n) { var i = el('img'); i.alt = ''; i.width = 86; i.height = 86; i.loading = 'lazy'; i.src = 'assets/boutique/' + n + '.png'; v.appendChild(i) })
-      art.appendChild(v)
-      art.appendChild(el('p', 'pack-offre-mot', 'Familiers, montures, clés : à toi de choisir'))
-    }
     var b = el('button', 'bouton bouton-or', 'Acheter'); b.type = 'button'
-    b.setAttribute('aria-label', 'Acheter le pack ' + p.name + ' : ' + prix(p))
+    b.setAttribute('aria-label', 'Acheter le pack ' + nom(p) + ' : ' + prix(p))
     b.addEventListener('click', function () { choisir(p, art) })
     art.appendChild(b)
     return art
@@ -103,13 +107,13 @@
         // du moins cher au plus cher
         packs.sort(function (x, y) { return x.total_price - y.total_price })
         packsEl.textContent = ''
-        // la vitrine : le meilleur prix (le plus de crédits par euro) et le juste milieu, calculés sur les prix lus
+        // la vitrine : le meilleur prix (le plus de crédits par euro), calculé sur les prix lus. (20/10/2026) Plus de
+        // « juste milieu » : un seul pack mis en avant, la rangée reste nette
         var base = taux(packs[0]), meilleur = null
         packs.forEach(function (p) { if (taux(p) > base && (!meilleur || taux(p) > taux(meilleur))) meilleur = p })
-        var milieu = packs.length >= 3 ? packs[Math.floor(packs.length / 2)] : null
-        if (milieu === meilleur) milieu = null
+        packsEl.classList.toggle('peu', packs.length < 5)
         packs.forEach(function (p) {
-          packsEl.appendChild(carte(p, p === meilleur ? 'meilleur' : (p === milieu ? 'milieu' : ''), base > 0 && taux(p) > base ? Math.round((taux(p) / base - 1) * 100) : 0))
+          packsEl.appendChild(carte(p, p === meilleur ? 'meilleur' : '', base > 0 && taux(p) > base ? Math.round((taux(p) / base - 1) * 100) : 0))
         })
       })
       .catch(function () { clearTimeout(minuteur); panne() })
@@ -119,7 +123,7 @@
   function choisir(p, art) {
     choisi = p
     Array.prototype.forEach.call(packsEl.querySelectorAll('.pack'), function (x) { x.classList.toggle('choisi', x === art) })
-    titrePack.textContent = 'Le pack ' + p.name + ' : ' + prix(p) + (p.sales_tax > 0 ? ', TVA comprise' : '')
+    titrePack.textContent = 'Le pack ' + nom(p) + ' : ' + prix(p) + (p.sales_tax > 0 ? ', TVA comprise' : '')
     payer.textContent = 'Payer ' + prix(p)
     form.hidden = false
     erreurAchat.hidden = true
