@@ -26,7 +26,7 @@ fichier sans eux s'affiche comme avant, une carte par catégorie.
 | Fichier | Ce que c'est |
 |---|---|
 | `index.html` | l'accueil : le haut en cinéma, le launcher, la carte au trésor (les chiffres du jeu), les six mondes, les deux portes du palais (le casino, les donjons), les objets faits maison, la Gazette du palais (l'île, les caisses, les quêtes, les missions, les soirées, l'Héroïque...), les boss, le combat, la planète, la boutique, le téléchargement |
-| `commencer.html` | « Par où commencer » : les dix premières étapes du jeu, les tickets et la roue, les astuces |
+| `commencer.html` | « Par où commencer » : les onze premières étapes du jeu, les tickets et la roue, les astuces |
 | `pirates.html` | la mer : les bateaux, les pirates, les canons (la page qui vise « serveur Minecraft pirate ») |
 | `casino.html` | le casino du palais (19/10/2026) : le casino à minerais, la roulette européenne à plusieurs (ses cotes, ses derniers numéros), le blackjack et son double (seul depuis la 128), les bornes des autres jeux (un carrousel à glisser), les deux familiers du casino, Auguste et la règle de la maison |
 | `donjons.html` | les donjons (19/10/2026) : Anselme, le Temple Creux et le Sanctuaire des Sables (leurs trois niveaux), dedans (une pile de cartes), le butin et le classement par taille de groupe ; jamais un boss ni une salle de boss |
