@@ -163,7 +163,23 @@ const MUTANTS = [
   ['un nombre de boss dans la carte au tresor', 'index.html', s => s.replace('<b class="mot">Boss</b><span>en arène</span>', '<b data-n="15">15</b><span>boss en arène</span>')],
   ['un nombre de boss dans le JSON-LD de l accueil', 'index.html', s => s.replace('une économie en jetons, des boss et leurs panoplies', 'une économie en jetons, 15 boss et leurs panoplies')],
   ['un nombre d arenes sur une autre page', 'pirates.html', s => s.replace('</main>', '<p>Seize arènes t\'attendent.</p></main>')],
-  ['un nombre de boss dans un script du site', 'js/classement.js', s => s + "\nvar BOSS_TEXTE = 'les 15 boss'\n"]
+  ['un nombre de boss dans un script du site', 'js/classement.js', s => s + "\nvar BOSS_TEXTE = 'les 15 boss'\n"],
+
+  // ---------- (22/10/2026) le vote : sa page, ses sites (la seule adresse d'un autre domaine permise, dans leur liste), ses liens ----------
+  ['la page du vote retiree du plan du site', 'sitemap.xml', s => s.replace(/<url>(?:(?!<\/url>)[\s\S])*vote\.html[\s\S]*?<\/url>\s*/, '')],
+  ['le lien Voter retire du pied d une page', 'casino.html', s => s.replace('<a href="vote.html">Voter</a>', '')],
+  ['le lien Voter retire du menu d une page', 'donjons.html', s => s.replace(/\n\s*<a class="voter" href="vote\.html">Voter<\/a>/, '')],
+  ['un lien vers un autre site hors de la liste des sites de vote', 'vote.html', s => s.replace('</main>', '<p><a href="https://exemple.test/vote">Vote ici</a></p></main>')],
+  ['un site de vote sans rel="noopener"', 'vote.html', s => s.replace('aria-label="Les sites où voter pour Casteria"></ul>', 'aria-label="Les sites où voter pour Casteria"><li><a class="site-vote" href="https://exemple.test/vote" target="_blank"><b>Exemple</b><span>un vote toutes les 1 h 30</span></a></li></ul>')],
+  ['un site de vote en http', 'vote.html', s => s.replace('aria-label="Les sites où voter pour Casteria"></ul>', 'aria-label="Les sites où voter pour Casteria"><li><a class="site-vote" href="http://exemple.test/vote" target="_blank" rel="noopener"><b>Exemple</b><span>un vote toutes les 1 h 30</span></a></li></ul>')],
+  ['la liste des sites de vote avec une espace (vide, elle ne se cache plus)', 'vote.html', s => s.replace('aria-label="Les sites où voter pour Casteria"></ul>', 'aria-label="Les sites où voter pour Casteria">\n    </ul>')],
+  ['la phrase « tape /vote » retiree de la page du vote', 'vote.html', s => s.replace(/<p class="sites-vides[^\n]*<\/p>\n/, '')],
+  ['la liste vide des sites de vote plus cachee', 'css/vote.css', s => s.replace('.sites-vote:empty { display: none; }', '')],
+  ['une pastille arrondie sur la page du vote', 'css/vote.css', s => s + '\n.site-vote { border-radius: 999px; }\n'],
+  ['une image trop haute dans la feuille du vote', 'css/vote.css', s => s + '\n.vote-caisse img.photo { height: 1200px; }\n'],
+  ['la hero du vote sans sa version pour un ecran etroit', 'vote.html', s => s.replace(/(<div class="fond plein-cadre"[\s\S]*?<picture>)[\s\S]*?(<source type="image\/webp")/, '$1\n        $2')],
+  // (22/10/2026) le « retour arrière » invisible qui avait cassé la page ?photo (js/site.js, depuis le 05/10)
+  ['un caractere de controle dans un script du site', 'js/site.js', s => s.replace('/[?&]photo\\b/', '/[?&]photo' + String.fromCharCode(8) + '/')]
 ]
 
 let rates = 0, code = 0

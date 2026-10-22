@@ -7,10 +7,13 @@ const fs = require('fs'), path = require('path')
 const RACINE = path.join(__dirname, '..')
 const domaine = (process.argv[2] || '').replace(/\/+$/, '')
 if (!/^https:\/\/[a-z0-9.-]+\.[a-z]{2,}$/i.test(domaine)) { console.log('Usage : node outils/domaine.js https://ton-domaine.fr'); process.exit(1) }
-// (19/10/2026) le casino et les donjons ont leur propre image de partage (le 4e champ) ; les autres pages, celle du décollage
-const PAGES = [['index.html', '', '1.0'], ['commencer.html', 'commencer.html', '0.8'], ['pirates.html', 'pirates.html', '0.8'],
+// (19/10/2026) le casino et les donjons ont leur propre image de partage (le 4e champ) ; (22/10/2026) « Par où commencer », la
+// boutique et le vote aussi (leurs hauts en cinéma) ; les autres pages, celle du décollage
+const PAGES = [['index.html', '', '1.0'], ['commencer.html', 'commencer.html', '0.8', 'assets/images/casteria-commencer-palais-partage.jpg'], ['pirates.html', 'pirates.html', '0.8'],
   ['casino.html', 'casino.html', '0.8', 'assets/images/casteria-casino-salle-partage.jpg'], ['donjons.html', 'donjons.html', '0.8', 'assets/images/casteria-donjon-partage.jpg'],
-  ['classement.html', 'classement.html', '0.7'], ['boutique.html', 'boutique.html', '0.6'],
+  ['classement.html', 'classement.html', '0.7'], ['boutique.html', 'boutique.html', '0.6', 'assets/images/casteria-boutique-wyverne-partage.jpg'],
+  // (22/10/2026) la page du vote
+  ['vote.html', 'vote.html', '0.6', 'assets/images/casteria-vote-caisses-partage.jpg'],
   ['reglement.html', 'reglement.html', '0.6'],
   // (19/10/2026) le Discord répond à /discord, sans « .html » (vercel.json, « rewrites ») : c'est son adresse
   ['discord.html', 'discord', '0.5']]

@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://casteria.fr/</loc><lastmod>2026-10-20</lastmod><priority>1.0</priority></url>
-  <url><loc>https://casteria.fr/commencer.html</loc><lastmod>2026-10-20</lastmod><priority>0.8</priority></url>
-  <url><loc>https://casteria.fr/pirates.html</loc><lastmod>2026-10-20</lastmod><priority>0.8</priority></url>
-  <url><loc>https://casteria.fr/casino.html</loc><lastmod>2026-10-20</lastmod><priority>0.8</priority></url>
-  <url><loc>https://casteria.fr/donjons.html</loc><lastmod>2026-10-20</lastmod><priority>0.8</priority></url>
-  <url><loc>https://casteria.fr/classement.html</loc><lastmod>2026-10-20</lastmod><priority>0.7</priority></url>
-  <url><loc>https://casteria.fr/boutique.html</loc><lastmod>2026-10-20</lastmod><priority>0.6</priority></url>
-  <url><loc>https://casteria.fr/reglement.html</loc><lastmod>2026-10-20</lastmod><priority>0.6</priority></url>
-  <url><loc>https://casteria.fr/discord</loc><lastmod>2026-10-20</lastmod><priority>0.5</priority></url>
+  <url><loc>https://casteria.fr/</loc><lastmod>2026-10-22</lastmod><priority>1.0</priority></url>
+  <url><loc>https://casteria.fr/commencer.html</loc><lastmod>2026-10-22</lastmod><priority>0.8</priority></url>
+  <url><loc>https://casteria.fr/pirates.html</loc><lastmod>2026-10-22</lastmod><priority>0.8</priority></url>
+  <url><loc>https://casteria.fr/casino.html</loc><lastmod>2026-10-22</lastmod><priority>0.8</priority></url>
+  <url><loc>https://casteria.fr/donjons.html</loc><lastmod>2026-10-22</lastmod><priority>0.8</priority></url>
+  <url><loc>https://casteria.fr/classement.html</loc><lastmod>2026-10-22</lastmod><priority>0.7</priority></url>
+  <url><loc>https://casteria.fr/boutique.html</loc><lastmod>2026-10-22</lastmod><priority>0.6</priority></url>
+  <url><loc>https://casteria.fr/vote.html</loc><lastmod>2026-10-22</lastmod><priority>0.6</priority></url>
+  <url><loc>https://casteria.fr/reglement.html</loc><lastmod>2026-10-22</lastmod><priority>0.6</priority></url>
+  <url><loc>https://casteria.fr/discord</loc><lastmod>2026-10-22</lastmod><priority>0.5</priority></url>
 </urlset>

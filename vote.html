@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Voter pour Casteria : une Clé de Vote à chaque vote</title>
+<meta name="description" content="Vote pour Casteria, serveur Minecraft français moddé : chaque vote te donne une Clé de Vote, qui ouvre la Caisse de Vote du palais. Comment voter, ton pseudo exact, et /vote en jeu.">
+<meta name="theme-color" content="#1B1028">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:site_name" content="Casteria">
+<meta property="og:title" content="Voter pour Casteria">
+<meta property="og:description" content="Un vote, une Clé de Vote : elle ouvre la Caisse de Vote du palais. Tape /vote en jeu.">
+<meta property="og:url" content="https://casteria.fr/vote.html">
+<link rel="canonical" href="https://casteria.fr/vote.html">
+<meta property="og:image" content="https://casteria.fr/assets/images/casteria-vote-caisses-partage.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Casteria : au palais, la Caisse de Vote s'ouvre sous sa clé, à côté des autres caisses et de Fortuné le Forain">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/logo/favicon-32.png">
+<link rel="icon" type="image/png" sizes="256x256" href="assets/logo/icone-256.png">
+<link rel="apple-touch-icon" href="assets/logo/icone-apple-180.png">
+<link rel="preload" as="image" type="image/webp" media="(max-aspect-ratio: 2/3)" imagesrcset="assets/images/casteria-vote-caisses-portrait-720.webp 720w, assets/images/casteria-vote-caisses-portrait-1080.webp 1080w" imagesizes="100vw" fetchpriority="high">
+<link rel="preload" as="image" type="image/webp" media="(min-aspect-ratio: 2001/3000)" imagesrcset="assets/images/casteria-vote-caisses-1280.webp 1280w, assets/images/casteria-vote-caisses-1920.webp 1920w, assets/images/casteria-vote-caisses-2560.webp 2560w" imagesizes="100vw" fetchpriority="high">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/scene.css">
+<link rel="stylesheet" href="css/vote.css">
+<script type="application/ld+json">
+{ "@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
+  { "@type": "ListItem", "position": 1, "name": "Casteria", "item": "https://casteria.fr/" },
+  { "@type": "ListItem", "position": 2, "name": "Voter pour Casteria", "item": "https://casteria.fr/vote.html" } ] }
+</script>
+</head>
+<body>
+<div class="progres" aria-hidden="true"></div>
+<header class="barre verre posee">
+  <a class="marque" href="./" aria-label="Casteria, l'accueil"><img src="assets/logo/casteria-logo-300.webp" alt="Logo de Casteria" width="46" height="46"><span>Casteria</span></a>
+  <nav aria-label="Le menu">
+    <a href="./#voyage">Le jeu</a>
+    <a href="commencer.html">Par où commencer</a>
+    <a class="classement" href="classement.html" aria-label="Classement"><img class="pixel" src="assets/icones/classement.png" alt="" width="20" height="20">Classement</a>
+    <a class="voter" href="vote.html" aria-current="page">Voter</a>
+    <a class="boutique" href="boutique.html"><img class="pixel" src="assets/icones/credit.png" alt="" width="20" height="20">Boutique</a>
+    <a class="bouton bouton-or petit" href="./#telecharger">Jouer</a>
+  </nav>
+</header>
+
+<main>
+<!-- LA PAGE DU VOTE (22/10/2026). Tout vient de kubejs/server_scripts/vote.js du jeu : une Clé de Vote à chaque vote compté
+     (casinoblocs:cle_vote), 3 par jour au plus tous sites confondus (CLES_PAR_JOUR), au-delà le vote compte sans clé ; le
+     vote est VÉRIFIÉ par le site de vote, qui prévient la console du palais (« vote <pseudo> [site] ») : un pseudo jamais
+     venu sur le serveur est refusé ; un joueur absent reçoit sa clé à sa prochaine connexion ; /vote en jeu donne les
+     sites, cliquables, et le temps avant le prochain vote sur chacun.
+     LE HAUT DE PAGE EN CINÉMA : l'image du propriétaire (Gemini, sur une vraie photo du jeu) : au palais, la Caisse de Vote
+     qui s'ouvre sous sa clé, les trois autres caisses et Fortuné le Forain (sa version portrait sur un téléphone). -->
+<section class="heros vitrine-tete plein-cadre page-cinema portrait-entier" id="haut">
+  <div class="fond plein-cadre" aria-hidden="true">
+    <div class="plan">
+      <picture>
+        <source media="(max-aspect-ratio: 2/3)" type="image/webp" srcset="assets/images/casteria-vote-caisses-portrait-720.webp 720w, assets/images/casteria-vote-caisses-portrait-1080.webp 1080w" sizes="100vw">
+        <source media="(max-aspect-ratio: 2/3)" srcset="assets/images/casteria-vote-caisses-portrait-1080.jpg 1080w" sizes="100vw">
+        <source type="image/webp" srcset="assets/images/casteria-vote-caisses-1280.webp 1280w, assets/images/casteria-vote-caisses-1920.webp 1920w, assets/images/casteria-vote-caisses-2560.webp 2560w" sizes="100vw">
+        <img src="assets/images/casteria-vote-caisses-1920.jpg" alt="" width="2752" height="1536" fetchpriority="high" decoding="async">
+      </picture>
+    </div>
+  </div>
+  <div class="cinema-texte">
+    <div class="cinema-titre">
+    <p class="sur-ligne">Voter pour Casteria</p>
+    <h1>Un vote, <span class="or">une Clé de Vote</span></h1>
+    </div>
+    <div class="cinema-geste">
+    <p class="cinema-accroche">Chaque vote pour Casteria sur un site de classement te donne une Clé de Vote, qui ouvre la Caisse de Vote du palais. Et chaque vote fait monter Casteria dans les classements, là où de nouveaux joueurs le trouvent.</p>
+    <p class="gestes">
+      <a class="bouton bouton-or grand" href="#voter">Comment voter</a>
+      <a class="lien-doux" href="#gains">Ce que tu gagnes <span class="chevron" aria-hidden="true"></span></a>
+    </p>
+    </div>
+  </div>
+</section>
+
+<!-- COMMENT VOTER : trois gestes, puis les sites de vote -->
+<section class="clair vote-gestes" id="voter">
+  <div class="dedans">
+    <div class="tete apparait">
+      <span class="ruban">Trois gestes</span>
+      <h2>Comment voter</h2>
+      <p>Rien à taper en jeu après ton vote : c'est le site de vote qui prévient le serveur.</p>
+    </div>
+    <ol class="etapes trois fil">
+      <li class="apparait" style="--retard:.05s"><div class="carte"><h3>Tape /vote en jeu</h3><p>Le jeu te donne les sites où voter, chacun avec son lien et le temps qu'il te reste avant de pouvoir y revoter.</p></div></li>
+      <li class="apparait" style="--retard:.15s"><div class="carte"><h3>Écris ton pseudo exact</h3><p>Sur le site, écris ton pseudo du jeu, lettre pour lettre, puis valide ton vote.</p></div></li>
+      <li class="apparait" style="--retard:.25s"><div class="carte"><h3>Reçois ta clé</h3><p>Ta Clé de Vote arrive en jeu, là où tu es. Tu n'es pas en jeu ? Elle t'attend à ta prochaine connexion.</p></div></li>
+    </ol>
+    <!-- LES SITES DE VOTE : LA SEULE LISTE DU SITE, ici. Elle suit celle du jeu (« votesites » à la console du palais) : un
+         site par <li>, collé, sans espace entre les balises (la liste vide se cache toute seule, css/vote.css, et la phrase
+         « tape /vote » prend sa place). Le modèle d'un site, où l'on met l'adresse complète de sa page de vote, en https,
+         entre les guillemets de href (le lien s'ouvre à part ; outils/verifier.js n'admet une adresse d'un autre domaine que
+         dans cette liste, en https, avec target="_blank" et rel="noopener") :
+         <li><a class="site-vote" href=(l'adresse) target="_blank" rel="noopener"><b>Nom du site</b><span>un vote toutes les 1 h 30</span></a></li>
+         Le 22/10/2026, aucun site n'est inscrit dans le jeu : la liste est vide. -->
+    <ul class="sites-vote" id="sites-vote" aria-label="Les sites où voter pour Casteria"></ul>
+    <p class="sites-vides apparait">La liste des sites où voter est dans le jeu : tape <code>/vote</code>, clique sur un site, et vote.</p>
+  </div>
+</section>
+
+<!-- CE QUE TU GAGNES : la clé en grand, au-dessus de la Caisse de Vote -->
+<section class="sombre vote-gains" id="gains">
+  <div class="dedans deux-colonnes">
+    <figure class="vote-caisse apparait de-gauche">
+      <img class="photo" src="assets/images/casteria-marche-caisses-2010.jpg" alt="Au palais, les quatre caisses mystères sous leur enseigne : la Caisse de Vote verte à gauche, et Fortuné le Forain" width="1280" height="720" loading="lazy">
+      <img class="cle pixel" src="assets/icones/cle-vote.png" alt="" width="128" height="128" loading="lazy">
+    </figure>
+    <div class="texte apparait de-droite">
+      <span class="sur-titre">Ce que tu gagnes</span>
+      <h2>Une Clé de Vote à chaque vote</h2>
+      <p>Elle ouvre la Caisse de Vote, au palais, chez Fortuné le Forain : la bande dorée tourne, et ton lot s'affiche en grand.</p>
+      <ul class="vote-puces">
+        <li><b>3 Clés de Vote par jour au plus</b>, tous sites confondus. Au-delà, ton vote compte quand même : le serveur te remercie, sans clé.</li>
+        <li><b>/caisses</b> en jeu : chaque lot de chaque caisse, sa rareté et sa chance.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- TON PSEUDO EXACT : la pancarte du champ, comme sur un site de vote -->
+<section class="clair vote-pseudo">
+  <div class="dedans">
+    <div class="pancarte-pseudo apparait">
+      <p class="champ-exemple" aria-hidden="true"><span>Pseudo</span><b>TonPseudo</b></p>
+      <h2>Ton pseudo exact, lettre pour lettre</h2>
+      <p>Le site envoie ton vote au serveur sous le pseudo que tu écris. Écris celui de ton compte Casteria, celui que tu as choisi dans le launcher, sans une faute. Un pseudo qui n'est jamais venu sur Casteria ne reçoit rien.</p>
+    </div>
+  </div>
+</section>
+
+<!-- BON À SAVOIR -->
+<section class="sombre vote-savoir">
+  <div class="dedans">
+    <div class="tete apparait">
+      <span class="sur-titre">Bon à savoir</span>
+      <h2>Tes votes, en jeu</h2>
+    </div>
+    <div class="savoir">
+      <article class="apparait" style="--retard:.05s"><h3>Quand revoter ?</h3><p>Chaque site a son propre délai entre deux votes. <code>/vote</code> te le dit, site par site : « tu peux voter », ou le temps qu'il reste.</p></article>
+      <article class="apparait" style="--retard:.12s"><h3>Tes comptes</h3><p>Sous la liste, <code>/vote</code> compte tes Clés de Vote du jour et tes votes du mois.</p></article>
+      <article class="apparait" style="--retard:.19s"><h3>Tout le serveur le voit</h3><p>Quand tu votes, le serveur l'annonce à tous : «&#160;TonPseudo a voté ! Toi aussi : /vote&#160;».</p></article>
+      <article class="apparait" style="--retard:.26s"><h3>D'autres Clés de Vote</h3><p>Les premiers pas t'en offrent une, et elle s'achète aussi dans la boutique.</p></article>
+    </div>
+    <div class="tete vote-geste-tete apparait">
+      <h2>Pas encore sur Casteria ?</h2>
+      <p>Le launcher est gratuit et installe tout. Choisis ton pseudo, entre au palais, et ton premier vote t'attend.</p>
+    </div>
+    <p class="vote-geste apparait"><a class="bouton bouton-or grand" href="./#telecharger">Télécharger le launcher</a><a class="bouton-verre" href="commencer.html">Par où commencer <span class="fleche" aria-hidden="true">&#8250;</span></a></p>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="dedans">
+    <div class="col">
+      <img src="assets/logo/casteria-logo-300.webp" alt="Casteria" width="70" height="70" loading="lazy">
+      <nav aria-label="Le pied de page"><a href="./">Accueil</a><a href="commencer.html">Par où commencer</a><a href="pirates.html">La mer et les pirates</a><a href="donjons.html">Les donjons</a><a href="casino.html">Le casino</a><a href="./#combat">Le combat</a><a href="classement.html">Classement</a><a href="boutique.html">Boutique</a><a href="vote.html">Voter</a><a href="reglement.html">Le règlement</a><a href="./#telecharger">Télécharger</a></nav>
+    </div>
+    <small>Casteria est un serveur Minecraft indépendant, créé par des joueurs. Il n'est ni affilié à Mojang ni à Microsoft, ni approuvé par eux. Minecraft est une marque de Mojang Studios.</small>
+  </div>
+</footer>
+<script src="js/site.js" defer></script>
+<script src="js/scene.js" defer></script>
+</body>
+</html>

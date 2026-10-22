@@ -1,7 +1,7 @@
 // Les règles du site, vérifiées en une seconde : npm run verifier (code 0 : tout est bon)
 'use strict'
 const fs = require('fs'), path = require('path')
-const RACINE = path.join(__dirname, '..'), PAGES = ['index.html', 'commencer.html', 'pirates.html', 'casino.html', 'donjons.html', 'classement.html', 'boutique.html', 'reglement.html', 'discord.html', 'merci.html', '404.html']
+const RACINE = path.join(__dirname, '..'), PAGES = ['index.html', 'commencer.html', 'pirates.html', 'casino.html', 'donjons.html', 'classement.html', 'boutique.html', 'reglement.html', 'vote.html', 'discord.html', 'merci.html', '404.html']
 // LES FICHIERS LOURDS PERMIS (aucun depuis le 13/10/2026 : la bande-annonce de l'accueil a été retirée sur la demande du
 // propriétaire) : un fichier de plus de 5 Mo n'entre ici qu'avec son plafond en Mo, et la vidéo qui le cite porte
 // « data-clic » (chargée au clic du visiteur), jamais « data-auto »
@@ -151,6 +151,36 @@ const TEBEX_JS = 'https://js.tebex.io/v/1.11.0.js'
 // (20/10/2026, la tête) l'invitation PERMANENTE (elle n'expire jamais ; le salon « jouer ») remplace celle de 30 jours citée
 // plus haut, qui expirait le 04/11
 const DISCORD = 'https://discord.gg/Xp325uTFe7', ADRESSES = { 'discord.html': 'discord' }
+// LE VOTE (22/10/2026) : vote.html, sa page. LES SITES DE VOTE sont la seule adresse d'un autre domaine permise sur le site, et
+// seulement dans leur liste (<ul class="sites-vote">, la seule de la page : celle du jeu, « votesites » à la console du palais) :
+// chacun en https, ouvert à part (target="_blank") avec rel="noopener" ; la liste vide se cache (css/vote.css), la phrase
+// « tape /vote » la remplace. Chaque menu et chaque pied de page y mènent ; sa feuille css/vote.css n'a aucun arrondi.
+// Les liens de la liste (les commentaires de la page mis à part : le modèle d'un site y est écrit) :
+function sitesDeVote() {
+  const s = lire('vote.html').replace(/<!--[\s\S]*?-->/g, m => ' '.repeat(m.length)), i = s.indexOf('<ul class="sites-vote"')
+  if (i < 0) return { liste: null, liens: [] }
+  const liste = dedans(s, i, 'ul')
+  return { liste, liens: [...liste.matchAll(/<a\b[^>]*>/g)].map(m => m[0]) }
+}
+function verifierVote(faute) {
+  const s = lire('vote.html')
+  if (!s) return faute('vote.html manque (la page du vote)')
+  const nu = s.replace(/<!--[\s\S]*?-->/g, '')
+  if ((nu.match(/<ul class="sites-vote"/g) || []).length !== 1) faute('vote.html : la liste des sites de vote (<ul class="sites-vote">) doit y être, une seule fois')
+  else if (!/<ul class="sites-vote"[^>]*>(?:<li>(?:(?!<\/li>)[\s\S])*<\/li>)*<\/ul>/.test(nu)) faute('vote.html : la liste des sites de vote ne porte que des <li> collés (aucune espace entre les balises : vide, elle se cache toute seule)')
+  if (!/<p class="sites-vides[^"]*">(?:(?!<\/p>)[\s\S])*\/vote/.test(nu)) faute('vote.html : la phrase qui remplace une liste vide (<p class="sites-vides">, « tape /vote ») manque')
+  for (const a of sitesDeVote().liens) {
+    const href = (a.match(/\shref="([^"]*)"/) || [])[1] || ''
+    if (!/^https:\/\/[a-z0-9-]+(\.[a-z0-9-]+)+(\/[^\s"<>]*)?$/i.test(href)) faute('vote.html : un site de vote sans adresse https complète : ' + a.slice(0, 80))
+    if (!/\srel="noopener"/.test(a)) faute('vote.html : un site de vote sans rel="noopener" : ' + a.slice(0, 80))
+    if (!/\starget="_blank"/.test(a)) faute('vote.html : un site de vote qui ne s\'ouvre pas à part (target="_blank") : ' + a.slice(0, 80))
+  }
+  const css = lire('css/vote.css')
+  if (!css) return faute('css/vote.css manque')
+  if (!s.includes('<link rel="stylesheet" href="css/vote.css">')) faute('vote.html : sa feuille css/vote.css n\'est pas chargée')
+  if (!/\.sites-vote:empty\s*\{[^}]*display:\s*none/.test(css) || !/\.sites-vote:not\(:empty\)\s*\+\s*\.sites-vides\s*\{[^}]*display:\s*none/.test(css)) faute('css/vote.css : la liste vide des sites se cache, et la phrase « tape /vote » ne se montre que pour une liste vide')
+  for (const r of reglesCss(css)) for (const m of r.corps.matchAll(/border(?:-[a-z]+)*-radius\s*:\s*([^;]+)/g)) if (!/^0(px)?\s*$/.test(m[1].trim())) faute('css/vote.css, « ' + r.sel.slice(0, 60) + ' » : un arrondi (' + m[1].trim() + ') : jamais une pastille arrondie')
+}
 function verifierDiscord(faute) {
   const s = lire('discord.html')
   if (!s) return faute('discord.html manque (casteria.fr/discord)')
@@ -172,6 +202,8 @@ function verifierDiscord(faute) {
 // le domaine du site : celui que outils/domaine.js a écrit dans robots.txt ; et le plan du site
 const lire = f => { try { return fs.readFileSync(path.join(RACINE, f), 'utf8') } catch (e) { return '' } }
 const DOMAINE = (lire('robots.txt').match(/^Sitemap: (https:\/\/[^/\s]+)\/sitemap\.xml$/m) || [])[1] || '', PLAN = lire('sitemap.xml')
+// les adresses des sites de vote (leur liste de vote.html), comme la boucle des pages les lit (sans « ? » ni « # »)
+const SITES_VOTE = new Set(sitesDeVote().liens.map(a => ((a.match(/\shref="([^"]*)"/) || [])[1] || '').split(/[?#]/)[0]).filter(Boolean))
 let fautes = 0
 const faute = (m) => { fautes++; console.log('  FAUTE : ' + m) }
 const TIRETS = [String.fromCharCode(0x2014), String.fromCharCode(0x2013)]
@@ -210,6 +242,8 @@ for (const page of PAGES) {
     if (DOMAINE && c.startsWith(DOMAINE + '/')) { if (!existe(c.slice(DOMAINE.length))) faute('une adresse du site qui n\'existe pas : ' + c); continue }
     if (c === TEBEX_JS && page === 'boutique.html') { if (!s.includes('<script defer src="' + TEBEX_JS + '"></script>')) faute('boutique.html : le script de Tebex doit s\'écrire <script defer src="' + TEBEX_JS + '"></script>, tel quel'); continue }
     if (c === DISCORD && page === 'discord.html') continue
+    // (22/10/2026) un site de vote, dans sa liste de vote.html (verifierVote le juge)
+    if (page === 'vote.html' && SITES_VOTE.has(c)) continue
     if (/^(https?:)?\/\//.test(c)) { if (!c.startsWith(LIENS_FIGES)) faute('un lien vers ailleurs que la release du launcher : ' + c); continue }
     if (/^(mailto:|data:)/.test(c)) continue
     if (!existe(c)) faute('un fichier cité n\'existe pas : ' + c)
@@ -308,6 +342,9 @@ for (const page of PAGES) {
     const LIEN = /<a class="classement" href="\/?classement\.html"( aria-current="page")? aria-label="Classement"><img class="pixel" src="\/?assets\/icones\/classement\.png" alt="" width="20" height="20">Classement<\/a>/
     if (m >= 0 && !LIEN.test(dedans(nu, m, 'nav'))) faute('le menu du haut ne mène pas au classement avec sa coupe et son nom (<a class="classement" ... aria-label="Classement"><img ... assets/icones/classement.png ...>Classement</a>)')
     if (p >= 0 && !/<a href="\/?classement\.html">Classement<\/a>/.test(dedans(nu, p, 'nav'))) faute('le pied de page ne mène pas au classement (classement.html)')
+    // (22/10/2026) LE VOTE : le menu du haut et le pied de chaque page y mènent aussi
+    if (m >= 0 && !/<a class="voter" href="\/?vote\.html"( aria-current="page")?>Voter<\/a>/.test(dedans(nu, m, 'nav'))) faute('le menu du haut ne mène pas à la page du vote (<a class="voter" href="vote.html">Voter</a>)')
+    if (p >= 0 && !/<a href="\/?vote\.html">Voter<\/a>/.test(dedans(nu, p, 'nav'))) faute('le pied de page ne mène pas à la page du vote (vote.html)')
   }
   // LES CARROUSELS (css/carrousel.css, js/carrousel.js) : une des trois sortes, au moins deux vues, et la page charge
   // la feuille et le script
@@ -365,7 +402,7 @@ else if ((PLAN.match(/<loc>/g) || []).length !== PAGES.length - HORS_GOOGLE.leng
   if (!css.includes(GARDE)) faute('la règle garde manque, telle quelle : ' + GARDE)
   const regles = reglesCss(css).map(r => Object.assign({ f: 'css/style.css' }, r)).concat(reglesCss(lire('css/carrousel.css')).map(r => Object.assign({ f: 'css/carrousel.css' }, r)),
     reglesCss(lire('css/classement.css')).map(r => Object.assign({ f: 'css/classement.css' }, r)), reglesCss(lire('css/discord.css')).map(r => Object.assign({ f: 'css/discord.css' }, r)),
-    reglesCss(lire('css/boutique.css')).map(r => Object.assign({ f: 'css/boutique.css' }, r)))
+    reglesCss(lire('css/boutique.css')).map(r => Object.assign({ f: 'css/boutique.css' }, r)), reglesCss(lire('css/vote.css')).map(r => Object.assign({ f: 'css/vote.css' }, r)))
   for (const r of regles) {
     const sels = r.sel.split(',').map(x => x.trim()), ou = r.f + ', « ' + r.sel.slice(0, 70) + ' »' + (r.media ? ' (' + r.media + ')' : '')
     if (sels.some(x => /(^|[\s>+~])(img|video|picture)(?![\w-])[^\s>+~]*$/.test(x))) {
@@ -388,9 +425,12 @@ else if ((PLAN.match(/<loc>/g) || []).length !== PAGES.length - HORS_GOOGLE.leng
     if (!cible || px('min-width') < 44 || px('min-height') < 44) faute('css/style.css : sur téléphone, la coupe du classement doit être une cible de 44 px au moins (min-width et min-height)')
   }
 }
-for (const f of ['css/style.css', 'css/carrousel.css', 'css/classement.css', 'css/discord.css', 'css/boutique.css', 'js/site.js', 'js/carrousel.js', 'js/boutique.js', 'js/boutique.config.js', 'js/classement.js', 'README.md', 'serveur.js']) {
+for (const f of ['css/style.css', 'css/carrousel.css', 'css/classement.css', 'css/discord.css', 'css/boutique.css', 'css/vote.css', 'css/voyage.css', 'css/scene.css', 'js/site.js', 'js/carrousel.js', 'js/boutique.js', 'js/boutique.config.js', 'js/classement.js', 'README.md', 'serveur.js']) {
   const s = fs.readFileSync(path.join(RACINE, f), 'utf8')
   for (const t of TIRETS) if (s.includes(t)) { console.log(f); faute('un tiret long ou moyen') }
+  // (22/10/2026) aucun caractère de contrôle (un « retour arrière » U+0008 avait remplacé le \b de /[?&]photo\b/ dans
+  // js/site.js dès le 05/10 : la page ?photo des captures n'avait jamais marché)
+  if (/[\x00-\x08\x0B\x0C\x0E-\x1F]/.test(s)) { console.log(f); faute('un caractère de contrôle invisible (un \\b écrit à travers un shell ?)') }
 }
 // le poids : rien de lourd ne part dans le dépôt
 let total = 0
@@ -409,6 +449,8 @@ console.log('js/classement.js (api/classement.js retiré)')
 verifierClassement(faute)
 console.log('discord.html, vercel.json')
 verifierDiscord(faute)
+console.log('vote.html, css/vote.css (les sites de vote)')
+verifierVote(faute)
 console.log('le site pèse ' + (total / 1048576).toFixed(1) + ' Mo')
 console.log(fautes ? fautes + ' faute(s)' : 'tout est bon')
 process.exit(fautes ? 1 : 0)
