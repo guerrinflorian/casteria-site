@@ -213,3 +213,16 @@ html.photo .pack.meilleur::before, html.photo .packs-etat::before { animation: n
   .pack, .offre, .offre-scene img, .pseudo, .ticket, .pack-image::after, .lien-doux { transition: none; }
   .pack:hover, .offre:hover { transform: none; }
 }
+
+/* ---------- (la 140) les crédits gagnés en jouant : quatre tuiles carrées, l'icône du crédit en tête de chacune ---------- */
+.boutique-gagner { padding: 70px 0 76px; border-top: 3px solid rgba(215, 164, 33, .35); background: linear-gradient(180deg, #221236 0%, var(--nuit) 100%); }
+.boutique-gagner .tete { margin-bottom: 0; }
+.boutique-gagner .sur-titre { color: var(--or-clair); }
+.gagner { list-style: none; margin: 34px 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+.gagner li { position: relative; padding: 46px 18px 18px; background: rgba(255, 255, 255, .035); border: 2px solid rgba(215, 164, 33, .3); border-top: 4px solid var(--or-clair); }
+.gagner li::before { content: ""; position: absolute; left: 18px; top: 14px; width: 24px; height: 24px; background: url("../assets/icones/credit.png") center / contain no-repeat; image-rendering: pixelated; }
+.gagner h3 { margin: 0 0 6px; font-size: 20px; color: #fff; }
+.gagner p { margin: 0; font-size: 15.5px; line-height: 1.5; color: #E7D8F7; }
+.gagner a { color: var(--or-clair); font-weight: 700; }
+@media (max-width: 960px) { .gagner { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .boutique-gagner { padding: 56px 0 60px; } .gagner { grid-template-columns: minmax(0, 1fr); gap: 12px; margin-top: 26px; } }
