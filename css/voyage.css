@@ -121,3 +121,74 @@ html.photo .vitrine-tete.trou-noir { min-height: 900px; }
 /* la rangée des panoplies, sous la pile des entrées : une seule colonne (la bande des boss en a deux) */
 .boss-bande > .dedans.rang-panoplies { display: block; }
 .panoplies .pancarte h3 { font-size: clamp(24px, 2.4vw, 32px); }
+
+/* ============================ LA ROUTE DU JOUEUR (22/10/2026) ============================
+   Le propriétaire : « Six mondes, un seul serveur [...] c'est quoi le rapport 6 mondes, et y a un familier dedans, y a
+   aucun rapport ». La grille des « mondes » (des lieux, la boutique et un familier mêlés) devient la vraie route d'un
+   joueur : les grandes étapes dans l'ordre où le jeu les ouvre, chacune posée sur un chemin d'or en pointillés, avec sa
+   borne carrée (le niveau qui l'ouvre), sa photo du jeu et son texte, l'une à gauche, l'autre à droite ; la dernière, la
+   planète sous le trou noir, prend toute la largeur : c'est le bout de la route. Carré partout (jamais une pastille). */
+.route { position: relative; list-style: none; margin: 10px auto 0; padding: 0; max-width: 1080px; counter-reset: pas; }
+/* le chemin : des pas d'or qui avancent doucement vers le bas */
+.route::before { content: ""; position: absolute; left: 50%; top: 40px; bottom: 260px; width: 4px; margin-left: -2px;
+  background: repeating-linear-gradient(180deg, rgba(255, 215, 94, .75) 0 12px, rgba(255, 215, 94, 0) 12px 26px); animation: route-avance 2.6s linear infinite; }
+@keyframes route-avance { from { background-position: 0 0; } to { background-position: 0 26px; } }
+.route .pas { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0 108px; align-items: center; margin: 0 0 64px; }
+.route .pas-photo { grid-column: 1; grid-row: 1; position: relative; display: block; aspect-ratio: 16 / 10; border: 3px solid rgba(255, 215, 94, .55);
+  box-shadow: 0 0 0 4px #1D0A2E, 0 22px 44px rgba(0, 0, 0, .45); background: var(--nuit); transition: transform .3s ease, border-color .3s ease, box-shadow .3s ease; }
+.route .pas-photo > img:first-child { display: block; width: 100%; height: 100%; object-fit: cover; }
+.route .pas-photo:hover { transform: translateY(-5px) rotate(-.6deg); border-color: var(--or-clair); box-shadow: 0 0 0 4px #1D0A2E, 0 0 34px rgba(255, 215, 94, .3), 0 26px 48px rgba(0, 0, 0, .5); }
+/* le modèle du jeu qui sort du cadre (le boss, le navire) */
+.route .pas-photo .deborde { position: absolute; right: -7%; bottom: -12%; height: 84%; width: auto; filter: drop-shadow(0 14px 14px rgba(0, 0, 0, .55)); transition: transform .35s ease; pointer-events: none; }
+.route .pas-photo:hover .deborde { transform: translateY(-8px) rotate(-3deg); }
+.route .pas-mots { grid-column: 2; grid-row: 1; }
+/* une étape sur deux : la photo à droite, le texte à gauche (aligné vers le chemin) */
+.route .pas:nth-child(even) .pas-photo { grid-column: 2; }
+.route .pas:nth-child(even) .pas-photo .deborde { right: auto; left: -7%; transform: scaleX(-1); }
+.route .pas:nth-child(even) .pas-photo:hover .deborde { transform: scaleX(-1) translateY(-8px) rotate(-3deg); }
+.route .pas:nth-child(even) .pas-mots { grid-column: 1; text-align: right; }
+/* la borne : une pierre carrée sur le chemin, le niveau qui ouvre l'étape */
+.route .borne { position: absolute; left: 50%; top: 50%; z-index: 2; width: 66px; height: 66px; margin: -33px 0 0 -33px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: linear-gradient(180deg, #3A1D57, #24103A); border: 3px solid var(--or-clair); box-shadow: inset -4px -4px 0 rgba(0, 0, 0, .35), inset 3px 3px 0 rgba(255, 255, 255, .12), 0 0 0 5px #200C33, 0 0 22px rgba(255, 215, 94, .35); }
+.route .borne small { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--or-clair); line-height: 1; }
+.route .borne b { font-family: "Lilita One", sans-serif; font-weight: 400; font-size: 27px; line-height: 1.05; color: #fff; text-shadow: 0 2px 0 rgba(0, 0, 0, .5); }
+.route .pas-niveau { margin: 0 0 6px; font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--orange-clair); }
+.route .pas-mots h3 { margin: 0; font-family: "Lilita One", sans-serif; font-weight: 400; font-size: clamp(26px, 2.6vw, 34px); line-height: 1.05; color: #fff; text-shadow: 0 3px 0 rgba(20, 6, 34, .6); }
+.route .pas-mots p:not(.pas-niveau) { margin: 12px 0 0; font-size: 17px; line-height: 1.55; color: #E6D8F5; }
+.route .pas-lien { display: inline-flex; align-items: center; gap: 8px; margin-top: 14px; font-weight: 700; font-size: 16px; color: var(--or-clair); text-decoration: none; border-bottom: 2px solid rgba(255, 215, 94, .4); padding-bottom: 2px; transition: border-color .2s ease, color .2s ease; }
+.route .pas-lien:hover, .route .pas-lien:focus-visible { color: #FFF1C8; border-bottom-color: var(--or-clair); }
+/* le bout de la route : la planète en grand, le texte posé dessus, la borne en haut, au bout du chemin */
+.route .pas-fin { grid-template-columns: minmax(0, 1fr); margin: 40px 0 0; }
+.route .pas-fin .borne { top: 0; margin-top: -33px; }
+.route .pas-fin .pas-photo { grid-column: 1; aspect-ratio: 21 / 9; border-color: rgba(255, 138, 60, .7); box-shadow: 0 0 0 4px #1D0A2E, 0 0 60px rgba(255, 110, 40, .22), 0 26px 50px rgba(0, 0, 0, .55); }
+.route .pas-fin .pas-photo:hover { transform: translateY(-4px); }
+.route .pas-fin .pas-photo > img:first-child { object-position: 50% 40%; }
+.route .pas-fin .pas-photo::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(14, 4, 10, .88) 0%, rgba(14, 4, 10, .6) 38%, rgba(14, 4, 10, 0) 66%); pointer-events: none; }
+.route .pas-fin .pas-mots { grid-column: 1; grid-row: 1; position: relative; z-index: 1; align-self: end; max-width: 450px; padding: 0 0 34px 38px; pointer-events: none; }
+.route .pas-fin .pas-mots a { pointer-events: auto; }
+.route .pas-fin .pas-niveau { color: #FFB37A; }
+@media (max-width: 960px) {
+  .route .pas { gap: 0 84px; }
+  .route .pas-mots p:not(.pas-niveau) { font-size: 16px; }
+}
+/* sur un téléphone : le chemin à gauche, les bornes dessus, chaque étape en colonne (la photo, puis le texte) */
+@media (max-width: 760px) {
+  .route { margin-top: 0; }
+  .route::before { left: 23px; top: 20px; bottom: 30px; }
+  .route .pas, .route .pas-fin { grid-template-columns: minmax(0, 1fr); gap: 16px; margin: 0 0 44px; padding-left: 62px; }
+  .route .pas .pas-photo, .route .pas:nth-child(even) .pas-photo, .route .pas-fin .pas-photo { grid-column: 1; grid-row: 1; aspect-ratio: 16 / 10; }
+  .route .pas .pas-mots, .route .pas:nth-child(even) .pas-mots, .route .pas-fin .pas-mots { grid-column: 1; grid-row: 2; text-align: left; max-width: none; padding: 0; pointer-events: auto; }
+  .route .pas-fin .pas-photo::after { display: none; }
+  .route .borne, .route .pas-fin .borne { left: 23px; top: 0; width: 48px; height: 48px; margin: 0 0 0 -24px; }
+  .route .borne small { font-size: 7.5px; letter-spacing: .6px; }
+  .route .borne b { font-size: 20px; }
+  .route .pas-photo .deborde, .route .pas:nth-child(even) .pas-photo .deborde { height: 70%; right: -4%; left: auto; bottom: -8%; transform: none; }
+  .route .pas-niveau { font-size: 11px; letter-spacing: 1.4px; }
+  .route .pas-mots h3 { font-size: 25px; }
+  .route .pas-mots p:not(.pas-niveau) { font-size: 15.5px; margin-top: 8px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .route::before { animation: none; }
+  .route .pas-photo, .route .pas-photo .deborde { transition: none; }
+}
+html.photo .route::before { animation: none; }

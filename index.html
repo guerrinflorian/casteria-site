@@ -151,7 +151,11 @@
   <svg class="dechirure dessous" viewBox="0 0 1440 48" preserveAspectRatio="none" aria-hidden="true"><path d="M0 0V26l44-8 36 14 50-10 42 12 40-14 56 10 34-8 52 14 46-12 40 8 60-14 38 12 54-8 42 10 50-12 36 8 58-10 40 14 52-12 44 8 56-10 38 12 60-8 44 10 50-14 36 12 56-10 40 8 L1440 24V0z"/></svg>
 </section>
 
-<!-- ============ LE VOYAGE : une grille de cartes, chacune son monde (la grille des « jeux » de rinaorc) ============ -->
+<!-- ============ LE VOYAGE : la vraie route d'un joueur, niveau après niveau (22/10/2026, le propriétaire : « Six mondes, un
+     seul serveur [...] c'est quoi le rapport 6 mondes, et y a un familier dedans, y a aucun rapport ») : plus de grille de
+     « mondes » qui mêlait des lieux, la boutique et un familier ; les grandes étapes dans l'ordre où l'on joue, chacune avec
+     le niveau qui l'ouvre, lu dans le jeu (niveaux.js : boss_1 au 3, temple_1 au 16 ; ai_mer_table.js : la Chaloupe au 15 ;
+     ai_donjon_table.js : le Sanctuaire au 23 ; ai_planete_table.js : l'Esquif au 60, le max au 70, le Dévoreur au 68) ============ -->
 <section class="pan pan-violet voyage-cinema" id="voyage" aria-labelledby="voyage-titre">
   <!-- le grand voyage (14/10/2026) : la frégate sur sa vague, le phare, le kraken, et la fusée vers le trou noir ; le titre
        de la section se pose sur sa mer sombre -->
@@ -166,17 +170,61 @@
   <div class="dedans">
     <div class="tete monte">
       <span class="sur-titre">Le voyage de Casteria</span>
-      <h2 id="voyage-titre">Six mondes, un seul serveur</h2>
-      <p>Tout commence sur ton île. Tout finit sous un trou noir. Entre les deux, à toi de choisir ta route.</p>
+      <h2 id="voyage-titre">De ton île au trou noir, niveau après niveau</h2>
+      <p>Voici la route d'un joueur, dans l'ordre où elle s'ouvre : chaque grande étape a son niveau, du premier jour jusqu'au niveau 70.</p>
     </div>
-    <div class="grille-mondes">
-      <a class="monde monte" href="commencer.html" style="--teinte: #3E8E2F"><span class="monde-art"><img src="assets/affiches/voyage_ile-2010.jpg" alt="" width="640" height="276" loading="lazy"></span><span class="monde-titre">Ton île</span><span class="monde-texte">Des machines qui produisent toutes seules, une Mine sous tes pieds, un canon face aux navires pirates. Tu repousses les bords de ton île.</span><span class="monde-lien">Par où commencer <span aria-hidden="true">&#8250;</span></span></a>
-      <a class="monde monte" href="#boss" style="--teinte: #8E4CB8"><span class="monde-art"><img src="assets/affiches/voyage_boss.jpg" alt="" width="640" height="276" loading="lazy"><img class="deborde" src="assets/volume/oni_samourai.webp" alt="" width="774" height="849" loading="lazy"></span><span class="monde-titre">Les boss</span><span class="monde-texte">Arène après arène, boss après boss. Chacun fait son entrée, et chacun a sa panoplie à pouvoir.</span><span class="monde-lien">Voir les boss <span aria-hidden="true">&#8250;</span></span></a>
-      <a class="monde monte" href="pirates.html" style="--teinte: #2E8FB8"><span class="monde-art"><img src="assets/images/casteria-fregate-couchant-2010.jpg" alt="" width="1280" height="720" loading="lazy"><img class="deborde" src="assets/volume/fregate.webp" alt="" width="855" height="1027" loading="lazy"></span><span class="monde-titre">La mer</span><span class="monde-texte">Cinq navires, des pirates à couler, des trésors, et des boss de la mer, chacun sur son île.</span><span class="monde-lien">La mer et les pirates <span aria-hidden="true">&#8250;</span></span></a>
-      <a class="monde monte" href="#planete" style="--teinte: #E0592A"><span class="monde-art"><img src="assets/images/casteria-planete-trou-noir-esquif.jpg" alt="" width="1280" height="720" loading="lazy"><img class="deborde" src="assets/volume/devoreur.webp" alt="" width="480" height="898" loading="lazy"></span><span class="monde-titre">La planète</span><span class="monde-texte">Rénove l'Esquif, la fusée de ton île, et pars sous le trou noir. L'air y est compté.</span><span class="monde-lien">Voir la planète <span aria-hidden="true">&#8250;</span></span></a>
-      <a class="monde monte" href="boutique.html" style="--teinte: #D7A421"><span class="monde-art"><img src="assets/affiches/casteria_12.jpg" alt="" width="540" height="960" loading="lazy"><img class="deborde" src="assets/boutique/phenix.png" alt="" width="420" height="420" loading="lazy"></span><span class="monde-titre">Les familiers</span><span class="monde-texte">Trente-six compagnons qui te suivent partout. Certains ne s'achètent pas : tu les trouves dans ta Mine, en mer, sur la planète, dans tes champs, au casino ou au fond d'un donjon. Et onze montures, au sol, dans les airs ou dans l'eau, la première dès le niveau 25.</span><span class="monde-lien">Les voir <span aria-hidden="true">&#8250;</span></span></a>
-      <a class="monde monte" href="commencer.html" style="--teinte: #B07AE0"><span class="monde-art"><img src="assets/affiches/casteria_09.jpg" alt="" width="540" height="960" loading="lazy"><img class="deborde large" src="assets/volume/salamandre_braise.webp" alt="" width="912" height="500" loading="lazy"></span><span class="monde-titre">Les enclos</span><span class="monde-texte">Des bêtes communes, rares, épiques, légendaires et mythiques, des œufs mystères à faire éclore, et celles que tu captures à l'œuf.</span><span class="monde-lien">Par où commencer <span aria-hidden="true">&#8250;</span></span></a>
-    </div>
+    <ol class="route">
+      <li class="pas monte">
+        <span class="borne" aria-hidden="true"><small>Niveau</small><b>1</b></span>
+        <a class="pas-photo" href="commencer.html" tabindex="-1" aria-hidden="true"><img src="assets/images/casteria-route-ile-1280.webp" alt="" width="1280" height="627" loading="lazy"></a>
+        <div class="pas-mots">
+          <p class="pas-niveau">Niveau 1, dès ton arrivée</p>
+          <h3>Ton île sur la mer</h3>
+          <p>Gaspard t'accueille au palais, puis ton île t'attend : le Noyau au centre, deux Casse-cailloux dans ton sac. Tes machines produisent toutes seules, et chaque mur repoussé te donne de la place.</p>
+          <a class="pas-lien" href="commencer.html">Par où commencer <span aria-hidden="true">&#8250;</span></a>
+        </div>
+      </li>
+      <li class="pas monte">
+        <span class="borne" aria-hidden="true"><small>Niveau</small><b>3</b></span>
+        <a class="pas-photo" href="#boss" tabindex="-1" aria-hidden="true"><img src="assets/images/casteria-boss-arene-minecraft.jpg" alt="" width="1280" height="720" loading="lazy"><img class="deborde" src="assets/volume/oni_samourai.webp" alt="" width="774" height="849" loading="lazy"></a>
+        <div class="pas-mots">
+          <p class="pas-niveau">Niveau 3, ton premier boss</p>
+          <h3>Les boss, arène après arène</h3>
+          <p>Le Roi Champignon t'attend dès le niveau 3 : tape /boss. Chaque victoire ouvre le boss suivant, quand tu as son niveau, et chacun a son armure à gagner.</p>
+          <a class="pas-lien" href="#boss">Voir les boss <span aria-hidden="true">&#8250;</span></a>
+        </div>
+      </li>
+      <li class="pas monte">
+        <span class="borne" aria-hidden="true"><small>Niveau</small><b>15</b></span>
+        <a class="pas-photo" href="pirates.html" tabindex="-1" aria-hidden="true"><img src="assets/images/casteria-fregate-couchant-2010.jpg" alt="" width="1280" height="720" loading="lazy"><img class="deborde" src="assets/volume/fregate.webp" alt="" width="855" height="1027" loading="lazy"></a>
+        <div class="pas-mots">
+          <p class="pas-niveau">Niveau 15, ton premier navire</p>
+          <h3>La mer et ses pirates</h3>
+          <p>Ta Chaloupe s'achète à la Borne du port, à l'est du palais. Coule des pirates, remonte des cargaisons et des trésors. Quatre navires de plus t'attendent, jusqu'au Vaisseau amiral du niveau 60.</p>
+          <a class="pas-lien" href="pirates.html">La mer et les pirates <span aria-hidden="true">&#8250;</span></a>
+        </div>
+      </li>
+      <li class="pas monte">
+        <span class="borne" aria-hidden="true"><small>Niveau</small><b>16</b></span>
+        <a class="pas-photo" href="donjons.html" tabindex="-1" aria-hidden="true"><img src="assets/images/casteria-donjon-temple-feux.webp" alt="" width="610" height="350" loading="lazy"></a>
+        <div class="pas-mots">
+          <p class="pas-niveau">Niveau 16, ta première clé offerte</p>
+          <h3>Les donjons d'Anselme</h3>
+          <p>Au palais, Anselme t'ouvre le Temple Creux dès le niveau 16, puis le Sanctuaire des Sables au niveau 23. Seul ou à trois, trois niveaux chacun, et un coffre pour chaque joueur.</p>
+          <a class="pas-lien" href="donjons.html">Les donjons <span aria-hidden="true">&#8250;</span></a>
+        </div>
+      </li>
+      <li class="pas pas-fin monte">
+        <span class="borne" aria-hidden="true"><small>Niveau</small><b>60</b></span>
+        <a class="pas-photo" href="#planete" tabindex="-1" aria-hidden="true"><img src="assets/images/casteria-planete-vue-d-ensemble.jpg" alt="" width="1280" height="720" loading="lazy"></a>
+        <div class="pas-mots">
+          <p class="pas-niveau">Niveau 60, au bout de la route</p>
+          <h3>La planète sous le trou noir</h3>
+          <p>Sur ton île 2, l'Esquif, une fusée en ruine, se rénove en cinq paliers. Elle t'emmène sur une planète où l'air se compte et où le sol brûle. Du niveau 60 au 66, ses trois anneaux s'ouvrent l'un après l'autre, et au bord du vide t'attend le Dévoreur, que tu affrontes seul.</p>
+          <a class="pas-lien" href="#planete">Voir la planète <span aria-hidden="true">&#8250;</span></a>
+        </div>
+      </li>
+    </ol>
   </div>
 </section>
 
@@ -194,7 +242,7 @@
         <span class="porte-arche"><img src="assets/images/casteria-casino-salle-1280.webp" alt="" width="1280" height="720" loading="lazy"><i class="ampoules-arche" aria-hidden="true"></i></span>
         <span class="porte-texte">
           <span class="porte-titre">Le casino du palais</span>
-          <span class="porte-dit">Neuf jeux : la roulette européenne à plusieurs, le blackjack et son double, les machines à sous, le Wagon fou... On y mise ses lingots, jamais ses jetons.</span>
+          <span class="porte-dit">Neuf jeux : la roulette européenne à plusieurs, le blackjack et son double, les machines à sous, le Wagon fou... On y mise ses minerais, jamais ses jetons.</span>
           <span class="porte-lien">Entrer au casino <span aria-hidden="true">&#8250;</span></span>
         </span>
       </a>
@@ -202,7 +250,7 @@
         <span class="porte-arche"><img src="assets/images/casteria-donjon-plaques-1280.webp" alt="" width="1280" height="742" loading="lazy"><i class="torche g" aria-hidden="true"></i><i class="torche d" aria-hidden="true"></i></span>
         <span class="porte-texte">
           <span class="porte-titre">Les donjons</span>
-          <span class="porte-dit">Le Temple Creux et le Sanctuaire des Sables : trois niveaux chacun, de 1 à 3 joueurs, un coffre pour chacun et un classement par groupe.</span>
+          <span class="porte-dit">Le Temple Creux et le Sanctuaire des Sables : trois niveaux chacun, de 1 à 3 joueurs, un coffre pour chacun et un classement par taille de groupe.</span>
           <span class="porte-lien">Voir les donjons <span aria-hidden="true">&#8250;</span></span>
         </span>
       </a>
@@ -274,7 +322,7 @@
           <img src="assets/images/casteria-ile-sur-la-mer-2010.jpg" alt="Une île de Casteria vue du ciel : ses prés en terrasses, un enclos, ses chemins, son ponton et la mer autour" width="1080" height="608" loading="lazy">
           <h3>Ton île ne dort jamais</h3>
           <p>Quand tu y joues, une épreuve tombe sur ton île toutes les 10 à 15 minutes : une machine qui surchauffe, des fuites, une bête évadée, une pie voleuse. Réussie, un gain ; ratée, un malus.</p>
-          <p>Au niveau 17, la Mine s'ouvre sous tes pieds : cinq étages dans le noir, des gemmes pour tes machines, et deux familiers qu'on ne trouve que là. Au niveau 24, la Batterie côtière : un canon sur ta rive ouest. Au coucher du soleil, la cloche sonne : huit boulets pour couler la voile. Au niveau 30, la Tour du ciel : à son pupitre, tu choisis le ciel de ton île, un pour le jour, un pour la nuit.</p>
+          <p>Au niveau 17, la Mine s'ouvre sous tes pieds : cinq étages dans le noir, des gemmes pour tes machines, et deux familiers qu'on ne trouve que là. Au niveau 24, la Batterie côtière : un canon sur ta rive ouest. Au coucher du soleil, une fois par heure au plus, la cloche sonne : huit boulets pour couler la voile. Au niveau 30, la Tour du ciel : à son pupitre, tu choisis le ciel de ton île, un pour le jour, un pour la nuit.</p>
         </article>
         <article class="g-article g-caisses monte">
           <img src="assets/images/casteria-marche-caisses-2010.jpg" alt="Les quatre caisses mystères du palais sous leur enseigne, et Fortuné le Forain" width="1280" height="720" loading="lazy">
@@ -285,6 +333,7 @@
         <article class="g-article monte"><h3>Trois missions par jour</h3><p>Une facile (1 ticket), une moyenne (2), une difficile (4), de nouvelles à minuit. Enchaîne les jours : des tickets en prime.</p></article>
         <article class="g-article monte"><h3>Le soir, au palais</h3><p>18 h 30 : le Sol qui lâche. 21 h : la Bataille de neige. Tape /participer de partout : on vient te chercher 10 secondes avant.</p></article>
         <article class="g-article monte"><h3>Le mode Héroïque</h3><p>Bats un boss une fois : son mode Héroïque s'ouvre. Le même boss, bien plus dur, avec une phase de plus ; la même armure à gagner, avec plus de chances pour chaque pièce.</p></article>
+        <article class="g-article monte"><h3>Tes compagnons</h3><p>36 familiers te suivent partout. Certains ne s'achètent pas : tu les trouves dans ta Mine, en mer, sur la planète, dans tes champs, au casino ou au fond d'un donjon. Onze montures, au sol, dans les airs ou dans l'eau. Et dans tes enclos, des bêtes de commune à mythique.</p></article>
         <article class="g-article monte"><h3>Ton île à plusieurs</h3><p>Avec /amis, invite tes amis et choisis leurs droits. Avec le droit Machines, un ami récolte tes machines même sans toi : sa récolte est pour lui.</p></article>
         <article class="g-article monte"><h3>Le Bac, à l'Établi</h3><p>Il garde 16 piles d'un seul objet (64 et 256 pour les plus grands) et montre son compte sur sa façade.</p></article>
         <article class="g-article monte"><h3>Objets et recettes</h3><p>/recettes ouvre le livre de chaque objet du serveur : sa recette, et à quoi il sert.</p></article>
@@ -371,7 +420,7 @@
     <div class="texte monte">
       <span class="sur-titre">La boutique</span>
       <h2>Soutiens le serveur, fais-toi plaisir</h2>
-      <p>Les crédits sont la monnaie de la boutique, à part des jetons. Ils s'offrent des choses introuvables ailleurs.</p>
+      <p>Les crédits sont la monnaie de la boutique, à part des jetons. Avec eux, tu t'offres des familiers et des montures qu'on ne trouve qu'ici.</p>
       <ul class="puces">
         <li><img class="pixel" src="assets/icones/credit.png" alt="" width="24" height="24" loading="lazy">Des familiers et des bêtes rares</li>
         <li><img class="pixel" src="assets/icones/jeton.png" alt="" width="24" height="24" loading="lazy">Des clés de caisses et des couleurs de pseudo</li>

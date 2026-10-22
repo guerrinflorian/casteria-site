@@ -3,7 +3,7 @@
   'use strict'
   var calme = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches
   // index.html?photo : la page entière d'un coup, pour une capture (outils/capturer.sh)
-  if (/[?&]photo/.test(location.search)) { document.documentElement.classList.add('photo'); calme = true }
+  if (/[?&]photo\b/.test(location.search)) { document.documentElement.classList.add('photo'); calme = true }
 
   // la barre du haut : elle se pose quand on descend ; la ligne de progression ; le menu des petits écrans
   var barre = document.querySelector('.barre'), progres = document.querySelector('.progres')
