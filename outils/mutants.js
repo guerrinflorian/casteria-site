@@ -140,6 +140,9 @@ const MUTANTS = [
   ['le boss d un donjon nomme dans un texte d image', 'donjons.html', s => s.replace('alt="L\'écran du sceau', 'alt="Le sceau du Cœur Creux')],
   ['le dernier boss nomme sur l accueil', 'index.html', s => s.replace('</main>', '<p>Le Dragon Ancien t\'attend.</p></main>')],
   ['l Abyssarque nommee sur la page de la mer', 'pirates.html', s => s.replace('</main>', '<p>Et l\'Abyssarque, sur sa tortue.</p></main>')],
+  // (22/10/2026, la tête) aucun boss de la fin de partie, ni nommé ni montré
+  ['un boss de la fin de partie nomme sur l accueil', 'index.html', s => s.replace('</main>', '<p>Au bout, le Dévoreur t\'attend.</p></main>')],
+  ['le modele d un boss de la fin de partie montre sur l accueil', 'index.html', s => s.replace('src="assets/volume/fregate.webp" alt="" width="855" height="1027" loading="lazy"></div></div>', 'src="assets/volume/mecha_titan.webp" alt="" width="569" height="900" loading="lazy"></div></div>')],
   ['un nombre coupable en deux lignes (une espace ordinaire)', 'casino.html', s => s.replace('de 800&#160;000 jetons', 'de 800 000 jetons')],
 
   // ---------- (19/10/2026) le Discord : casteria.fr/discord, son bouton, son départ tout seul, l'invitation écrite là seulement ----------

@@ -12,7 +12,11 @@ const HORS_GOOGLE = ['404.html', 'merci.html']
 const MOTS_INTERDITS = ['en développement', 'bientôt', 'pas encore ouvert', 'ouvrira', "jour de l'ouverture"]
 // (19/10/2026, les pages du casino et des donjons) AUCUN SPOILER (le propriétaire) : jamais l'Abyssarque, jamais le dernier
 // boss, jamais la salle du trône ; les donjons se montrent sans leurs boss (ni leur nom)
-const SPOILERS = ['Abyssarque', 'Dragon Ancien', 'salle du trône', 'Cœur Creux', 'Coeur Creux', "Sphinx d'Or", 'Sphinx d’Or']
+const SPOILERS = ['Abyssarque', 'Dragon Ancien', 'salle du trône', 'Cœur Creux', 'Coeur Creux', "Sphinx d'Or", 'Sphinx d’Or',
+  // (22/10/2026, la tête) AUCUN BOSS DE LA FIN DE PARTIE, ni nommé ni montré (seuls le Yéti, le Kraken et l'Oni se montrent ;
+  // le Roi Champignon, le premier, reste dans les premiers pas) : leurs noms, et les fichiers de leurs modèles
+  'Dévoreur', 'devoreur', 'Mécha Titan', 'Mecha Titan', 'mecha_titan', 'IA Néon', 'Archimage', 'Chevalier Noir', 'Capitaine Fantôme',
+  'Minotaure', 'Djinn des Sables', 'djinn_sables', 'Colosse des Profondeurs', 'Dernier Amiral', 'Gaspard-des-Brumes', 'La Damnation']
 // (19/10/2026, le propriétaire : « ya pas que 15 boss y'en a plus, faut pas dire le nombre ! ») AUCUN NOMBRE DE BOSS, ni
 // d'arènes, en chiffres ou en lettres (« 15 boss », « quinze arènes », « 15</b><span>boss ») : dans le texte, les titres,
 // les descriptions, les textes des images, le JSON-LD et les scripts du site ; un rang (« le quatrième boss ») reste permis
