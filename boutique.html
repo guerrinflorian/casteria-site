@@ -13,10 +13,10 @@
 <meta property="og:description" content="Les crédits : pour soutenir le serveur et t'offrir des choses introuvables ailleurs.">
 <meta property="og:url" content="https://casteria.fr/boutique.html">
 <link rel="canonical" href="https://casteria.fr/boutique.html">
-<meta property="og:image" content="https://casteria.fr/assets/images/casteria-decollage-partage.jpg">
+<meta property="og:image" content="https://casteria.fr/assets/images/casteria-boutique-wyverne-partage.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Casteria : de nuit, une fusée décolle de l'île du palais vers le trou noir ; le logo au dragon violet">
+<meta property="og:image:alt" content="Casteria : au couchant, un joueur vole sur sa Wyverne royale, son Phénix d'or à côté de lui, au-dessus d'une île">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="favicon.ico" sizes="48x48">
 <link rel="icon" type="image/png" sizes="32x32" href="assets/logo/favicon-32.png">
@@ -50,27 +50,31 @@
      de parchemin ; pensée d'abord pour le téléphone (les packs en lignes, une main suffit), puis pour l'ordinateur (les
      cinq packs côte à côte, de la même famille, le meilleur prix mis en avant sans casser la rangée). Sa feuille :
      css/boutique.css.
-     LE HAUT DE PAGE : une vraie photo du jeu (le palais sur son rocher), un voile sous le texte, et ce que les crédits
-     ouvrent, en volume : des rendus de nos modèles (assets/boutique). Le mouvement est en CSS, coupé si on le demande. -->
-<section class="heros vitrine-tete palais boutique-tete" id="haut">
-  <div class="fond" aria-hidden="true"><img src="assets/images/casteria-palais-serveur-2010.jpg" alt="" width="1280" height="720" fetchpriority="high"></div>
-  <div class="pluie" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
-  <div class="dedans grille">
-    <div class="texte">
-      <span class="sur-titre">Les crédits de Casteria</span>
-      <h1>La boutique de Casteria<b class="lu"> :</b> <span>les crédits, et tout ce qu'ils ouvrent</span></h1>
-      <p class="accroche">Un phénix qui te suit partout, une monture dès le premier jour, des clés pour les caisses du palais : avec les crédits, tu t'offres ce qu'on ne trouve nulle part ailleurs, et tu aides le serveur à vivre.</p>
-      <p class="gestes">
-        <a class="bouton bouton-or grand" href="#acheter"><img class="pixel" src="assets/icones/credit.png" alt="" width="26" height="26">Choisir mon pack</a>
-        <a class="lien-doux" href="#offres">Ce que tes crédits t'offrent</a>
-      </p>
+     LE HAUT DE PAGE EN CINÉMA (22/10/2026, l'image du propriétaire, faite avec Gemini sur une vraie prise du jeu) : au
+     couchant, un joueur sur sa Wyverne royale, son Phénix à côté, deux articles de la boutique (sa version portrait sur un
+     téléphone) ; le texte en bas, sur la nuit. -->
+<section class="heros vitrine-tete plein-cadre page-cinema portrait-entier" id="haut">
+  <div class="fond plein-cadre" aria-hidden="true">
+    <div class="plan">
+      <picture>
+        <source media="(max-aspect-ratio: 2/3)" type="image/webp" srcset="assets/images/casteria-boutique-wyverne-portrait-720.webp 720w, assets/images/casteria-boutique-wyverne-portrait-1080.webp 1080w" sizes="100vw">
+        <source media="(max-aspect-ratio: 2/3)" srcset="assets/images/casteria-boutique-wyverne-portrait-1080.jpg 1080w" sizes="100vw">
+        <source type="image/webp" srcset="assets/images/casteria-boutique-wyverne-1280.webp 1280w, assets/images/casteria-boutique-wyverne-1920.webp 1920w, assets/images/casteria-boutique-wyverne-2560.webp 2560w" sizes="100vw">
+        <img src="assets/images/casteria-boutique-wyverne-1920.jpg" alt="" width="2752" height="1536" fetchpriority="high" decoding="async">
+      </picture>
     </div>
-    <div class="scene" aria-hidden="true">
-      <span class="halo"></span>
-      <span class="vol v-phenix" data-v="-0.16"><img src="assets/boutique/phenix.png" alt="" width="420" height="420"></span>
-      <span class="vol v-credit" data-v="-0.06"><img src="assets/boutique/credit.png" alt="" width="512" height="512"></span>
-      <span class="vol v-caisse" data-v="-0.1"><img src="assets/boutique/caisse.png" alt="" width="420" height="420"></span>
-      <i class="eclat e1"></i><i class="eclat e2"></i><i class="eclat e3"></i><i class="eclat e4"></i>
+  </div>
+  <div class="cinema-texte">
+    <div class="cinema-titre">
+    <p class="sur-ligne">Les crédits de Casteria</p>
+    <h1>La boutique de Casteria<b class="lu"> :</b> <span class="or">les crédits, et tout ce qu'ils ouvrent</span></h1>
+    </div>
+    <div class="cinema-geste">
+    <p class="cinema-accroche">Un phénix qui te suit partout, une wyverne qui vole dès le premier jour : avec les crédits, tu t'offres ce qu'on ne trouve qu'ici, et tu aides le serveur à vivre.</p>
+    <p class="gestes">
+      <a class="bouton bouton-or grand" href="#acheter"><img class="pixel" src="assets/icones/credit.png" alt="" width="26" height="26">Choisir mon pack</a>
+      <a class="lien-doux" href="#offres">Ce que tes crédits t'offrent</a>
+    </p>
     </div>
   </div>
 </section>
@@ -100,7 +104,7 @@
       <form class="achat" id="achat" hidden novalidate>
         <h3 class="achat-pack" id="achat-pack">Ton pack</h3>
         <div class="alerte" role="note">
-          <p><b>Écris ton pseudo EXACT, celui du jeu : chaque majuscule et chaque caractère comptent.</b> «&nbsp;Florian&nbsp;» et «&nbsp;florian&nbsp;» sont deux joueurs différents.</p>
+          <p><b>Écris ton pseudo EXACT, celui du jeu, lettre pour lettre.</b> Une seule lettre de travers, et les crédits partent sur un autre pseudo.</p>
           <p>Les crédits partent sur ce pseudo. <b>Une erreur de pseudo n'est pas remboursée.</b></p>
         </div>
         <label class="achat-champ" for="pseudo">Ton pseudo en jeu
@@ -134,7 +138,7 @@
       </li>
       <li class="apparait" style="--retard:.08s">
         <img class="picto-pixel pixel" src="assets/icones/credit.png" alt="" width="48" height="48">
-        <div><h3>Tes crédits à ta connexion</h3><p>Ils arrivent sur ton pseudo à ta prochaine connexion au serveur. En jeu, <code>/credits</code> pour ton solde, <code>/boutique</code> pour les dépenser.</p></div>
+        <div><h3>Tes crédits à ta connexion</h3><p>Ils arrivent sur ton pseudo de quelques secondes à 30 minutes après le paiement ; si tu n'es pas en jeu, tu les trouves à ta prochaine connexion. En jeu, <code>/credits</code> pour ton solde, <code>/boutique</code> pour les dépenser.</p></div>
       </li>
       <li class="apparait" style="--retard:.16s">
         <svg class="picto-pixel" viewBox="0 0 12 12" aria-hidden="true" shape-rendering="crispEdges"><path fill="#FF8FB8" d="M2 2h3v1H2zM7 2h3v1H7zM1 3h5v1H1zM6 3h5v1H6zM1 4h10v3H1zM2 7h8v1H2zM3 8h6v1H3zM4 9h4v1H4zM5 10h2v1H5z"/><path fill="#FFFFFF" d="M2 4h1v1H2z"/><path fill="#C2416E" d="M8 6h2v1H8zM7 7h2v1H7z"/></svg>
@@ -154,9 +158,9 @@
     <div class="offres">
       <article class="offre feu apparait">
         <div class="offre-scene">
-          <img class="o-grand" src="assets/boutique/phenix.png" alt="Le Phénix, un familier de la boutique de Casteria : un oiseau de feu aux plumes d'or" width="420" height="420" loading="lazy">
-          <img class="o-petit o-g" src="assets/boutique/renard.png" alt="Le Renard des contes, un familier blanc aux trois queues de flamme bleue" width="420" height="420" loading="lazy">
-          <img class="o-petit o-d" src="assets/boutique/baleine.png" alt="La petite Baleine du ciel de nuit, un familier qui souffle des étoiles" width="420" height="420" loading="lazy">
+          <img class="o-grand" src="assets/boutique/phenix.png" alt="Le Phénix d'or, un familier de la boutique de Casteria : un oiseau de feu aux plumes d'or" width="420" height="420" loading="lazy">
+          <img class="o-petit o-g" src="assets/boutique/renard.png" alt="Le Renard aux trois queues, un familier blanc aux queues de flamme bleue" width="420" height="420" loading="lazy">
+          <img class="o-petit o-d" src="assets/boutique/baleine.png" alt="La Baleine des étoiles, une petite baleine du ciel de nuit qui souffle des étoiles" width="420" height="420" loading="lazy">
         </div>
         <div class="offre-texte"><h3>Des familiers</h3><p>Un oiseau de feu, un renard des contes, une baleine du ciel de nuit : ils te suivent partout, à ton nom.</p></div>
       </article>
@@ -172,7 +176,7 @@
           <img class="o-grand" src="assets/boutique/caisse.png" alt="Le Trésor de Casteria, la caisse mystère légendaire, violette et or" width="420" height="420" loading="lazy">
           <img class="o-cle pixel" src="assets/boutique/cle.png" alt="Une clé légendaire" width="64" height="64" loading="lazy">
         </div>
-        <div class="offre-texte"><h3>Des clés pour les caisses</h3><p>Les clés des quatre caisses du palais : une clé, une caisse, une surprise.</p></div>
+        <div class="offre-texte"><h3>Des clés pour les caisses</h3><p>Les clés de Vote, de l'Aventurier, Royale et du Trésor : une clé, une caisse, une surprise.</p></div>
       </article>
       <article class="offre violet apparait" style="--retard:.18s">
         <div class="offre-scene pseudos" aria-hidden="true"><span class="pseudo c1">Capucine</span><span class="pseudo c2">Barnabé</span><span class="pseudo c3">Mirabelle</span></div>
@@ -186,7 +190,7 @@
       </article>
       <article class="offre rouge apparait" style="--retard:.3s">
         <div class="offre-scene passe" aria-hidden="true"><span class="ticket"><b>PASS</b><i>Casteria</i></span></div>
-        <div class="offre-texte"><h3>Des pass et des cadeaux</h3><p>Un pass de 14 jours de commandes et de clés, et des cadeaux pour tous les joueurs connectés.</p></div>
+        <div class="offre-texte"><h3>Des pass et des cadeaux</h3><p>Deux pass de 14 jours de commandes et de clés, et des cadeaux pour tous les joueurs connectés.</p></div>
       </article>
     </div>
   </div>

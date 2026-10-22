@@ -63,7 +63,8 @@ const MUTANTS = [
   ['une scene revenue par-dessus le haut en cinema des pirates', 'pirates.html', s => s.replace('<div class="cinema-texte">', '<div class="scene" aria-hidden="true"><img src="assets/volume/kraken.png" alt="" width="520" height="520"></div>\n  <div class="cinema-texte">')],
   ['la banniere du classement sans son image de repli', 'classement.html', s => s.replace(/(<div class="fond plein-cadre"[\s\S]*?)<img\b[^>]*>/, '$1')],
   ['une taille d image (srcset) qui n existe pas', 'index.html', s => s.replace('casteria-decollage-2560.webp 2560w" sizes', 'casteria-decollage-3840.webp 3840w" sizes')],
-  ['la hero d une page sans sa scene', 'commencer.html', s => s.replace('<div class="scene', '<div class="decor')],
+  // (22/10/2026) « Par où commencer » passe en cinéma (l'image du propriétaire) : la page à scène est le règlement
+  ['la hero d une page sans sa scene', 'reglement.html', s => s.replace('<div class="scene', '<div class="decor')],
   ['la hero d une page devenue une simple tete de page', 'commencer.html', s => s.replace('<section class="heros vitrine-tete', '<section class="page-tete')],
   ['la scene de la hero cachee sur un telephone', 'css/style.css', s => s + '\n@media (max-width: 600px) { .vitrine-tete .scene { display: none; } }\n'],
   ['le fond de la hero cache sous 960', 'css/style.css', s => s + '\n@media (max-width: 960px) { .heros .fond { display: none; } }\n'],

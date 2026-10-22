@@ -13,10 +13,10 @@
 <meta property="og:description" content="Tes onze premières étapes, ta première machine, les tickets et la roue : le guide du débutant.">
 <meta property="og:url" content="https://casteria.fr/commencer.html">
 <link rel="canonical" href="https://casteria.fr/commencer.html">
-<meta property="og:image" content="https://casteria.fr/assets/images/casteria-decollage-partage.jpg">
+<meta property="og:image" content="https://casteria.fr/assets/images/casteria-commencer-palais-partage.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Casteria : de nuit, une fusée décolle de l'île du palais vers le trou noir ; le logo au dragon violet">
+<meta property="og:image:alt" content="Casteria : l'arrivée au palais au lever du soleil, Gaspard le Majordome qui accueille, son plateau à la main">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="favicon.ico" sizes="48x48">
 <link rel="icon" type="image/png" sizes="32x32" href="assets/logo/favicon-32.png">
@@ -44,19 +44,26 @@
 </header>
 
 <main>
-<section class="heros vitrine-tete page" id="haut">
-  <div class="fond" aria-hidden="true"><img src="assets/images/casteria-arrivee-au-palais-2010.jpg" alt="" width="1280" height="720" fetchpriority="high" style="object-position: 50% 40%"></div>
-  <div class="dedans grille">
-    <div class="texte">
-      <span class="ruban">Le guide du débutant</span>
-      <h1>Par où commencer sur Casteria</h1>
-      <p class="accroche">Tu viens d'arriver ? Le jeu te prend par la main : onze étapes, une à la fois, avec une récompense à chacune. Les voici, puis ce qu'il faut savoir pour bien lancer ton île.</p>
+<!-- LE HAUT DE PAGE EN CINÉMA (22/10/2026, l'image du propriétaire, faite avec Gemini sur une vraie photo du jeu) : l'arrivée
+     au palais à l'aube, Gaspard qui accueille (sa version portrait sur un téléphone) ; le texte sur l'allée sombre, en bas -->
+<section class="heros vitrine-tete plein-cadre page-cinema portrait-entier" id="haut">
+  <div class="fond plein-cadre" aria-hidden="true">
+    <div class="plan">
+      <picture>
+        <source media="(max-aspect-ratio: 2/3)" type="image/webp" srcset="assets/images/casteria-commencer-palais-portrait-720.webp 720w, assets/images/casteria-commencer-palais-portrait-1080.webp 1080w" sizes="100vw">
+        <source media="(max-aspect-ratio: 2/3)" srcset="assets/images/casteria-commencer-palais-portrait-1080.jpg 1080w" sizes="100vw">
+        <source type="image/webp" srcset="assets/images/casteria-commencer-palais-1280.webp 1280w, assets/images/casteria-commencer-palais-1920.webp 1920w, assets/images/casteria-commencer-palais-2560.webp 2560w" sizes="100vw">
+        <img src="assets/images/casteria-commencer-palais-1920.jpg" alt="" width="2752" height="1536" fetchpriority="high" decoding="async">
+      </picture>
     </div>
-    <div class="scene" aria-hidden="true">
-      <span class="vol v-b" data-v="-0.18"><img src="assets/boutique/phenix.png" alt="" width="420" height="420"></span>
-      <span class="vol sol v-a" data-v="-0.05"><img src="assets/volume/roi_champignon.png" alt="" width="520" height="520"></span>
-      <span class="vol sol v-c" data-v="-0.08"><img src="assets/boutique/caisse.png" alt="" width="420" height="420"></span>
-      <i class="eclat e1"></i><i class="eclat e2"></i><i class="eclat e3"></i>
+  </div>
+  <div class="cinema-texte">
+    <div class="cinema-titre">
+    <p class="sur-ligne">Le guide du débutant</p>
+    <h1>Par où commencer <span class="or">sur Casteria</span></h1>
+    </div>
+    <div class="cinema-geste">
+    <p class="cinema-accroche">Tu viens d'arriver ? Gaspard t'accueille au palais, puis le jeu te prend par la main : onze étapes, une à la fois, avec une récompense à chacune. Les voici, puis ce qu'il faut savoir pour bien lancer ton île.</p>
     </div>
   </div>
 </section>
@@ -78,7 +85,7 @@
       <li class="apparait"><div class="carte"><h3>Agrandis ton île</h3><p>Clic droit sur la fiche du mur nord : tu repousses le bord de ton île, et tu gagnes de la place.</p><span class="gain">+300 jetons et 1 ticket</span></div></li>
       <li class="apparait"><div class="carte"><h3>Tourne la roue</h3><p>Tape <code>/roue</code> : un ticket, un tour. Tu mises un objet pour en gagner un plus précieux.</p><span class="gain">+300 jetons</span></div></li>
       <li class="apparait"><div class="carte"><h3>Découvre les lieux de ton île</h3><p>Tape <code>/ile</code> et ouvre l'onglet « Les lieux » : tu y vois tout ce qui se bâtit sur ton île.</p><span class="gain">+200 jetons et 1 Clé de Vote</span></div></li>
-      <li class="apparait"><div class="carte"><h3>Bats le Roi Champignon</h3><p>Ton premier boss, dans son arène : <code>/boss</code>. Si tu tombes, tu ne perds rien. Réessaie !</p><span class="gain">+1&#160;500 jetons et 1 Clé de l'Aventurier</span></div></li>
+      <li class="apparait"><div class="carte"><h3>Bats le Roi Champignon</h3><p>Ton premier boss, dès le niveau 3, dans son arène : <code>/boss</code>. Si tu tombes, tu ne perds rien. Réessaie !</p><span class="gain">+1&#160;500 jetons et 1 Clé de l'Aventurier</span></div></li>
     </ol>
   </div>
 </section>
@@ -128,7 +135,7 @@
       <article class="carte apparait"><h3>Surveille ton île</h3><p>Quand tu y joues, une épreuve arrive toutes les 10 à 15 minutes : une machine qui surchauffe, des fuites, une bête évadée, une pie voleuse. Réussie : un gain.</p></article>
       <article class="carte apparait"><h3>Entre dans un donjon</h3><p>Dès le niveau 16, le Temple Creux t'attend, seul ou à trois : Anselme t'y emmène depuis le palais, et ta première clé est offerte. <a href="donjons.html">Les donjons</a>.</p></article>
       <article class="carte apparait"><h3>Mise tes minerais</h3><p>Au palais, le casino se joue en minerais, jamais en jetons : roulette, blackjack, machines à sous, et six autres jeux. <a href="casino.html">Le casino</a>.</p></article>
-      <article class="carte apparait"><h3>Vise le port</h3><p>Quand ton île tourne, la mer t'attend : ton premier navire s'achète à la Borne, sur le quai, à l'est du palais. <a href="pirates.html">Tout sur la mer et les pirates</a>.</p></article>
+      <article class="carte apparait"><h3>Vise le port</h3><p>Dès le niveau 15, la mer t'attend : ta Chaloupe, ton premier navire, s'achète à la Borne, sur le quai, à l'est du palais. <a href="pirates.html">Tout sur la mer et les pirates</a>.</p></article>
     </div>
     <p style="text-align:center;margin:44px 0 0" class="apparait"><a class="bouton bouton-vert grand" href="./#telecharger">Télécharger le launcher <span class="fleche" aria-hidden="true">&#8681;</span></a></p>
   </div>

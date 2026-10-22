@@ -9,23 +9,13 @@
      trait, l'or dehors et la nuit dedans, comme les écrans du casino.
    - Tout ce qui bouge s'arrête sous « réduire les animations » et dans une capture (html.photo). */
 
-/* ---------- le haut de page : la photo du palais, le crédit en volume entre le phénix et le coffre ---------- */
-.boutique-tete { min-height: 0; padding: 112px 0 44px; }
-.boutique-tete h1 { font-size: clamp(38px, 4.6vw, 62px); }
-.boutique-tete .accroche { max-width: 31em; }
-.boutique-tete .gestes { gap: 14px 24px; }
-.boutique-tete .sur-titre, .boutique-etal .sur-titre, .boutique-offres .sur-titre { color: var(--or-clair); }
+/* ---------- le haut de page : le haut en cinéma des autres pages (css/scene.css, 22/10/2026 : la Wyverne royale et le
+   Phénix au couchant, l'image du propriétaire) ; son lien doux à la manière de la boutique ---------- */
+.boutique-etal .sur-titre, .boutique-offres .sur-titre { color: var(--or-clair); }
 .lien-doux { display: inline-flex; align-items: center; gap: 10px; padding: 4px 0 2px; font-weight: 700; font-size: 17px; color: #F1E6FF; text-decoration: none;
   border-bottom: 2px solid rgba(255, 215, 94, .55); text-shadow: 0 2px 6px rgba(0, 0, 0, .6); transition: color .2s ease, border-color .2s ease; }
 .lien-doux::after { content: ""; width: 8px; height: 8px; border-right: 3px solid var(--or-clair); border-bottom: 3px solid var(--or-clair); transform: translateY(-3px) rotate(45deg); }
 .lien-doux:hover { color: var(--or-clair); border-bottom-color: var(--or-clair); }
-.boutique-tete .scene { height: 370px; }
-.boutique-tete .v-credit { width: 48%; left: 28%; top: 15%; z-index: 2; }
-.boutique-tete .v-phenix { width: 40%; left: -2%; top: -6%; z-index: 3; }
-.boutique-tete .v-caisse { width: 42%; right: -4%; bottom: -8%; z-index: 1; }
-.boutique-tete .v-credit img { animation: flotte 6s ease-in-out infinite; filter: drop-shadow(0 0 28px rgba(210, 156, 255, .55)) drop-shadow(0 18px 18px rgba(0, 0, 0, .45)); }
-.boutique-tete .v-phenix img { animation: flotte 4.4s ease-in-out -1.2s infinite; }
-.boutique-tete .v-caisse img { animation: flotte 7.5s ease-in-out -2.5s infinite; }
 
 /* ---------- l'étal : le titre, les trois gestes de l'achat ---------- */
 .boutique-etal { padding: 56px 0 84px;
@@ -194,16 +184,10 @@
 .offre-texte h3 { margin: 0; font-size: 23px; color: #fff; }
 .offre-texte p { margin: 6px 0 0; font-size: 16px; line-height: 1.5; color: #E0D2F2; }
 @media (max-width: 960px) {
-  .boutique-tete { padding: 96px 0 40px; }
-  .boutique-tete .scene { height: 270px; max-width: 380px; }
   .offres { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 /* sur téléphone : une tuile par ligne, sa scène carrée à gauche, son texte à droite (comme les packs) */
 @media (max-width: 640px) {
-  .boutique-tete h1 { font-size: clamp(32px, 9vw, 42px); }
-  .boutique-tete .accroche { font-size: 17px; margin: 14px auto 22px; }
-  .boutique-tete { padding: 84px 0 28px; }
-  .boutique-tete .scene { height: 190px; max-width: 300px; }
   .boutique-etal { padding: 56px 0 64px; }
   .boutique-offres { padding: 56px 0 64px; }
   .offres { grid-template-columns: minmax(0, 1fr); gap: 14px; margin-top: 28px; }
@@ -223,11 +207,9 @@
 }
 
 /* ---------- le mouvement, coupé pour une capture et pour qui en demande moins ---------- */
-html.photo .boutique-tete .vol img, html.photo .pack.meilleur::before, html.photo .packs-etat::before { animation: none; }
-/* dans une capture, les crédits qui montent derrière le texte n'ont pas de sens (figés, ils tomberaient sur les mots) */
-html.photo .boutique-tete .pluie { display: none; }
+html.photo .pack.meilleur::before, html.photo .packs-etat::before { animation: none; }
 @media (prefers-reduced-motion: reduce) {
-  .boutique-tete .vol img, .pack.meilleur::before, .packs-etat::before { animation: none; }
+  .pack.meilleur::before, .packs-etat::before { animation: none; }
   .pack, .offre, .offre-scene img, .pseudo, .ticket, .pack-image::after, .lien-doux { transition: none; }
   .pack:hover, .offre:hover { transform: none; }
 }
