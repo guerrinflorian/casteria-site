@@ -16,7 +16,9 @@ const PAGES = [['index.html', '', '1.0'], ['commencer.html', 'commencer.html', '
   ['vote.html', 'vote.html', '0.6', 'assets/images/casteria-vote-caisses-partage.jpg'],
   ['reglement.html', 'reglement.html', '0.6'],
   // (19/10/2026) le Discord répond à /discord, sans « .html » (vercel.json, « rewrites ») : c'est son adresse
-  ['discord.html', 'discord', '0.5']]
+  ['discord.html', 'discord', '0.5'],
+  // (23/10/2026, 84) les trois pages légales
+  ['mentions-legales.html', 'mentions-legales.html', '0.3'], ['confidentialite.html', 'confidentialite.html', '0.3'], ['conditions.html', 'conditions.html', '0.3']]
 // l'image de partage : 1200 x 630, le format des réseaux (l'image d'origine, plus large, y perdait ses bords)
 const IMAGE = 'assets/images/casteria-decollage-partage.jpg'
 const jour = new Date().toISOString().slice(0, 10)
