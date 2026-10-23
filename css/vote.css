@@ -70,3 +70,10 @@
   .site-vote { transition: none; }
 }
 html.photo .vote-caisse .cle, html.photo .champ-exemple b::after { animation: none; }
+
+/* (23/10/2026) la consigne au-dessus des sites de vote : ce qu'on écrit sur la page du site, et quand la clé arrive */
+.vote-consigne { margin: 52px auto 0; max-width: 680px; text-align: center; font-size: 19px; font-weight: 600; line-height: 1.45; color: var(--encre); }
+.vote-consigne + .sites-vote { margin-top: 20px; }
+@media (max-width: 600px) { .vote-consigne { font-size: 17px; } }
+/* une liste vide (aucun site inscrit) : la consigne se tait avec elle */
+.vote-consigne:has(+ .sites-vote:empty) { display: none; }

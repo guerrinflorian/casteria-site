@@ -213,6 +213,9 @@ function verifierVote(faute) {
   if ((nu.match(/<ul class="sites-vote"/g) || []).length !== 1) faute('vote.html : la liste des sites de vote (<ul class="sites-vote">) doit y être, une seule fois')
   else if (!/<ul class="sites-vote"[^>]*>(?:<li>(?:(?!<\/li>)[\s\S])*<\/li>)*<\/ul>/.test(nu)) faute('vote.html : la liste des sites de vote ne porte que des <li> collés (aucune espace entre les balises : vide, elle se cache toute seule)')
   if (!/<p class="sites-vides[^"]*">(?:(?!<\/p>)[\s\S])*\/vote/.test(nu)) faute('vote.html : la phrase qui remplace une liste vide (<p class="sites-vides">, « tape /vote ») manque')
+  // (23/10/2026, le propriétaire : « j'ai mis sur Serveur Privé que ça demande le pseudo ») un site dans la liste : la
+  // consigne juste au-dessus dit d'écrire son pseudo du jeu (<p class="vote-consigne">, collée à la liste)
+  if (sitesDeVote().liens.length && !/<p class="vote-consigne[^"]*">(?:(?!<\/p>)[\s\S])*pseudo(?:(?!<\/p>)[\s\S])*<\/p>\s*<ul class="sites-vote"/.test(nu)) faute('vote.html : la consigne au-dessus des sites (<p class="vote-consigne">, « écris ton pseudo du jeu ») manque')
   for (const a of sitesDeVote().liens) {
     const href = (a.match(/\shref="([^"]*)"/) || [])[1] || ''
     if (!/^https:\/\/[a-z0-9-]+(\.[a-z0-9-]+)+(\/[^\s"<>]*)?$/i.test(href)) faute('vote.html : un site de vote sans adresse https complète : ' + a.slice(0, 80))

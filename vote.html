@@ -90,9 +90,9 @@
       <p>Rien à taper en jeu après ton vote : c'est le site de vote qui prévient le serveur.</p>
     </div>
     <ol class="etapes trois fil">
-      <li class="apparait" style="--retard:.05s"><div class="carte"><h3>Tape /vote en jeu</h3><p>Le jeu te donne les sites où voter, chacun avec son lien et le temps qu'il te reste avant de pouvoir y revoter.</p></div></li>
+      <li class="apparait" style="--retard:.05s"><div class="carte"><h3>Clique sur Serveur Privé</h3><p>Le bouton juste en dessous ouvre la page de vote de Casteria. En jeu, /vote te donne le même lien, et le temps qu'il te reste avant de revoter.</p></div></li>
       <li class="apparait" style="--retard:.15s"><div class="carte"><h3>Écris ton pseudo exact</h3><p>Sur le site, écris ton pseudo du jeu, lettre pour lettre, puis valide ton vote.</p></div></li>
-      <li class="apparait" style="--retard:.25s"><div class="carte"><h3>Reçois ta clé</h3><p>Ta Clé de Vote arrive en jeu, là où tu es. Tu n'es pas en jeu ? Elle t'attend à ta prochaine connexion.</p></div></li>
+      <li class="apparait" style="--retard:.25s"><div class="carte"><h3>Reçois ta clé</h3><p>Ta Clé de Vote arrive en jeu quelques secondes après ton vote, là où tu es. Tu n'es pas en jeu ? Elle t'attend à ta prochaine connexion.</p></div></li>
     </ol>
     <!-- LES SITES DE VOTE : LA SEULE LISTE DU SITE, ici. Elle suit celle du jeu (« votesites » à la console du palais) : un
          site par <li>, collé, sans espace entre les balises (la liste vide se cache toute seule, css/vote.css, et la phrase
@@ -100,8 +100,11 @@
          entre les guillemets de href (le lien s'ouvre à part ; outils/verifier.js n'admet une adresse d'un autre domaine que
          dans cette liste, en https, avec target="_blank" et rel="noopener") :
          <li><a class="site-vote" href=(l'adresse) target="_blank" rel="noopener"><b>Nom du site</b><span>un vote toutes les 1 h 30</span></a></li>
-         Le 22/10/2026, aucun site n'est inscrit dans le jeu : la liste est vide. -->
-    <ul class="sites-vote" id="sites-vote" aria-label="Les sites où voter pour Casteria"></ul>
+         (23/10/2026, le propriétaire : « sur le site, il faut pouvoir voter en étant redirigé ; j'ai mis sur Serveur Privé que
+         ça demande le pseudo ») Serveur Privé, le premier site : sa page demande le pseudo (aucune façon documentée de le
+         passer dans l'adresse) ; la clé arrive en 6 à 7 s par le pont des votes (casteria-moteur 1.0.19, la 141). -->
+    <p class="vote-consigne apparait">Sur la page du site, écris ton pseudo du jeu, exactement. Ta Clé de Vote arrive en jeu quelques secondes après ton vote.</p>
+    <ul class="sites-vote" id="sites-vote" aria-label="Les sites où voter pour Casteria"><li><a class="site-vote" href="https://serveur-prive.net/minecraft/casteria/vote" target="_blank" rel="noopener"><b>Voter sur Serveur Privé</b><span>un vote toutes les 1 h 30</span></a></li></ul>
     <p class="sites-vides apparait">La liste des sites où voter est dans le jeu : tape <code>/vote</code>, clique sur un site, et vote.</p>
   </div>
 </section>
@@ -132,7 +135,7 @@
     <div class="pancarte-pseudo apparait">
       <p class="champ-exemple" aria-hidden="true"><span>Pseudo</span><b>TonPseudo</b></p>
       <h2>Ton pseudo exact, lettre pour lettre</h2>
-      <p>Le site envoie ton vote au serveur sous le pseudo que tu écris. Écris celui de ton compte Casteria, celui que tu as choisi dans le launcher, sans une faute. Un pseudo qui n'est jamais venu sur Casteria ne reçoit rien.</p>
+      <p>Le site envoie ton vote au serveur sous le pseudo que tu écris. Écris celui de ton compte Casteria, celui que tu as choisi dans le launcher, sans une faute : sinon, ton vote part sous un autre nom. Pas encore venu sur Casteria ? Ton vote t'attend 7 jours : entre au palais, et il compte.</p>
     </div>
   </div>
 </section>
