@@ -12,7 +12,11 @@
 (function () {
   'use strict'
   // le gist du classement : son compte et son identifiant (la fin de son adresse sur gist.github.com) ; vide : la panne
-  var GIST_COMPTE = 'guerrinflorian', GIST_ID = '4337783e1d14963774decfe06f2709da'
+  // (23/10/2026, 84 ; le ménage avant l'arrivée des membres du Discord) VIDÉ tant que les comptes sont des comptes de
+  // test : le gist montrait leurs fortunes (comme 🥇・classement, masqué sur le Discord). LE JOUR DE L'OUVERTURE, après la
+  // remise à zéro : remettre l'identifiant d'avant (`git show 7cdc065:js/classement.js`, sa ligne GIST_ID ; ServeurMC,
+  // OUVERTURE.md)
+  var GIST_COMPTE = 'guerrinflorian', GIST_ID = ''
   var SOURCE = GIST_ID ? 'https://gist.githubusercontent.com/' + GIST_COMPTE + '/' + GIST_ID + '/raw/classement.json' : ''
   var DELAI = 12000
   var podium = document.getElementById('podium'), suite = document.getElementById('suite'), lu = document.getElementById('classement-lu')
