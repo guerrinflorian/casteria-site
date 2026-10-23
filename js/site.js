@@ -5,6 +5,51 @@
   // index.html?photo : la page entière d'un coup, pour une capture (outils/capturer.sh)
   if (/[?&]photo\b/.test(location.search)) { document.documentElement.classList.add('photo'); calme = true }
 
+  // (23/10/2026 ; le propriétaire : « oui bientôt ») LE SERVEUR N'EST PAS ENCORE OUVERT : un bandeau en bas de l'écran, sur
+  // chaque page, le même message que le Discord. LE JOUR DE L'OUVERTURE : OUVERT = true (cette ligne seule), le bandeau
+  // disparaît. Les mots qui disent la fermeture ne vivent QUE dans bandeauOuverture : partout ailleurs, ils restent
+  // interdits (outils/verifier.js, MOTS_INTERDITS). Écrit en texte (textContent), jamais comme du code de page.
+  var OUVERT = false
+  function bandeauOuverture() {
+    var b = document.createElement('div'), t = document.createElement('p'), a = document.createElement('a')
+    b.className = 'ouverture'
+    b.setAttribute('role', 'note')
+    t.appendChild(document.createTextNode('Casteria ouvre bientôt : le serveur n\'est pas encore ouvert à tous. Installe déjà le launcher ; l\'ouverture sera annoncée sur notre '))
+    a.href = '/discord'
+    a.textContent = 'Discord'
+    t.appendChild(a)
+    t.appendChild(document.createTextNode('.'))
+    b.appendChild(t)
+    document.body.appendChild(b)
+    document.documentElement.classList.add('avec-ouverture')
+  }
+  if (!OUVERT) bandeauOuverture()
+
+  // (23/10/2026 ; le propriétaire : « faudra aussi mettre le nombre de joueurs sur le serveur sur le site ») LES JOUEURS EN
+  // LIGNE, sur tout le réseau : le jeu les écrit dans le fichier qu'il publie déjà toutes les 5 minutes (le gist du
+  // classement : leaderboard.js, Site.publier), au premier niveau : « en_ligne » (un entier), son heure « en_ligne_lu » ou,
+  // sans elle, « lu ». Seuls ces champs sont lus ici (le classement, lui, reste caché tant que GIST_ID de classement.js est
+  // vide). Rien ne s'affiche si le champ manque, n'est pas un entier, vaut 0, ou date de plus de 15 minutes. Seulement sur
+  // une page qui a sa place (data-en-ligne).
+  var enLigne = document.querySelectorAll('[data-en-ligne]')
+  var GIST_COMPTE = 'guerrinflorian', GIST_ID = '4337783e1d14963774decfe06f2709da'
+  var SOURCE_EN_LIGNE = GIST_ID ? 'https://gist.githubusercontent.com/' + GIST_COMPTE + '/' + GIST_ID + '/raw/classement.json' : ''
+  var EN_LIGNE_VIEUX_MS = 15 * 60000
+  function montrerEnLigne(d) {
+    var n = d ? d.en_ligne : null, lu = d ? Date.parse(String(d.en_ligne_lu || d.lu || '')) : NaN
+    if (typeof n !== 'number' || n !== Math.floor(n) || n < 1 || isNaN(lu) || Date.now() - lu > EN_LIGNE_VIEUX_MS) return
+    Array.prototype.forEach.call(enLigne, function (e) {
+      e.textContent = n === 1 ? '1 joueur en ligne' : n.toLocaleString('fr-FR') + ' joueurs en ligne'
+      e.hidden = false
+    })
+  }
+  if (enLigne.length && SOURCE_EN_LIGNE && window.fetch) {
+    fetch(SOURCE_EN_LIGNE, { credentials: 'omit', cache: 'no-store' })
+      .then(function (r) { return r.ok ? r.json() : null })
+      .then(montrerEnLigne)
+      .catch(function () { /* rien ne s'affiche : la page se lit sans */ })
+  }
+
   // la barre du haut : elle se pose quand on descend ; la ligne de progression ; le menu des petits écrans
   var barre = document.querySelector('.barre'), progres = document.querySelector('.progres')
   var menu = document.querySelector('.menu'), liens = document.querySelector('.barre nav')

@@ -182,7 +182,22 @@ const MUTANTS = [
   ['une image trop haute dans la feuille du vote', 'css/vote.css', s => s + '\n.vote-caisse img.photo { height: 1200px; }\n'],
   ['la hero du vote sans sa version pour un ecran etroit', 'vote.html', s => s.replace(/(<div class="fond plein-cadre"[\s\S]*?<picture>)[\s\S]*?(<source type="image\/webp")/, '$1\n        $2')],
   // (22/10/2026) le « retour arrière » invisible qui avait cassé la page ?photo (js/site.js, depuis le 05/10)
-  ['un caractere de controle dans un script du site', 'js/site.js', s => s.replace('/[?&]photo\\b/', '/[?&]photo' + String.fromCharCode(8) + '/')]
+  ['un caractere de controle dans un script du site', 'js/site.js', s => s.replace('/[?&]photo\\b/', '/[?&]photo' + String.fromCharCode(8) + '/')],
+  // ---------- (23/10/2026) le bandeau de la fermeture (OUVERT) et les joueurs en ligne (js/site.js) ----------
+  ['le bandeau pose sans son interrupteur', 'js/site.js', s => s.replace('\n  if (!OUVERT) bandeauOuverture()\n', '\n  bandeauOuverture()\n')],
+  ['un mot de la fermeture hors du bandeau', 'js/site.js', s => s.replace('\n  var OUVERT = false\n', '\n  var OUVERT = false\n  document.title += \' (bientôt)\'\n')],
+  ['deux interrupteurs OUVERT', 'js/site.js', s => s.replace('\n  var OUVERT = false\n', '\n  var OUVERT = false\n  var OUVERT = true\n')],
+  ['le bandeau ecrit comme du code de page', 'js/site.js', s => s.replace("    t.appendChild(document.createTextNode('Casteria ouvre", "    t.innerHTML = '';\n    t.appendChild(document.createTextNode('Casteria ouvre")],
+  ['le bandeau qui ne dit plus bientot', 'js/site.js', s => s.replace('Casteria ouvre bientôt : ', 'Casteria : ')],
+  ['le bandeau qui n\'est plus fixe', 'css/style.css', s => s.replace('.ouverture { position: fixed;', '.ouverture { position: static;')],
+  ['la page qui ne garde pas la place du bandeau', 'css/style.css', s => s.replace('html.avec-ouverture body { padding-bottom: 64px; }', '')],
+  ['les joueurs en ligne ecrits comme du code de page', 'js/site.js', s => s.replace('      e.textContent = n === 1', '      e.innerHTML = n === 1')],
+  ['les joueurs en ligne sans limite de temps', 'js/site.js', s => s.replace('var EN_LIGNE_VIEUX_MS = 15 * 60000', 'var EN_LIGNE_VIEUX_MS = 1500 * 60000')],
+  ['les joueurs en ligne qui lisent le classement', 'js/site.js', s => s.replace('var n = d ? d.en_ligne : null', 'var n = d ? (d.en_ligne || d.categories.length) : null')],
+  ['les joueurs en ligne lus avec les cookies', 'js/site.js', s => s.replace("fetch(SOURCE_EN_LIGNE, { credentials: 'omit'", "fetch(SOURCE_EN_LIGNE, { credentials: 'include'")],
+  ['zero joueur affiche', 'js/site.js', s => s.replace('n < 1 ||', 'n < 0 ||')],
+  ['la place des joueurs en ligne visible au depart', 'index.html', s => s.replace('<p class="en-ligne" data-en-ligne hidden></p>', '<p class="en-ligne" data-en-ligne></p>')],
+  ['l\'identifiant du gist dans un autre script', 'js/carrousel.js', s => s + '\n// 4337783e1d14963774decfe06f2709da\n']
 ]
 
 let rates = 0, code = 0

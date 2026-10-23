@@ -42,11 +42,13 @@ function verifierBoutique(faute) {
   // seulement à sa place, la ligne GIST_ID de js/classement.js (ce n'est pas une clé : le jeton qui écrit le gist reste sur le
   // serveur du jeu)
   const gistId = ((fs.existsSync(path.join(RACINE, 'js', 'classement.js')) ? fs.readFileSync(path.join(RACINE, 'js', 'classement.js'), 'utf8') : '').match(/\n  var GIST_COMPTE = '[A-Za-z0-9-]{1,39}', GIST_ID = '([0-9a-f]{32})'\n/) || [])[1] || ''
+  // (23/10/2026) le même gist, lu par js/site.js pour les joueurs en ligne : permis à SA ligne GIST_ID de js/site.js
+  const gistIdSite = ((fs.existsSync(path.join(RACINE, 'js', 'site.js')) ? fs.readFileSync(path.join(RACINE, 'js', 'site.js'), 'utf8') : '').match(/\n  var GIST_COMPTE = '[A-Za-z0-9-]{1,39}', GIST_ID = '([0-9a-f]{32})'\n/) || [])[1] || ''
   const textes = fs.readdirSync(RACINE).filter(n => /\.(html|js|json|md|txt|xml)$/.test(n)).concat(fs.readdirSync(path.join(RACINE, 'js')).map(n => 'js/' + n), fs.readdirSync(path.join(RACINE, 'css')).map(n => 'css/' + n),
     fs.existsSync(path.join(RACINE, 'api')) ? fs.readdirSync(path.join(RACINE, 'api')).map(n => 'api/' + n) : [])
   for (const n of textes) {
     if (n === 'package-lock.json') continue
-    for (const m of fs.readFileSync(path.join(RACINE, n), 'utf8').match(/[A-Fa-f0-9]{32,}/g) || []) if (m !== permis && !(n === 'js/classement.js' && m === gistId)) faute(n + ' : une suite de ' + m.length + ' lettres et chiffres qui ressemble à une clé (« ' + m.slice(0, 6) + '... ») : aucune clé dans ce dépôt')
+    for (const m of fs.readFileSync(path.join(RACINE, n), 'utf8').match(/[A-Fa-f0-9]{32,}/g) || []) if (m !== permis && !(n === 'js/classement.js' && m === gistId) && !(n === 'js/site.js' && m === gistIdSite)) faute(n + ' : une suite de ' + m.length + ' lettres et chiffres qui ressemble à une clé (« ' + m.slice(0, 6) + '... ») : aucune clé dans ce dépôt')
   }
   // le script de la boutique : il ne s'adresse qu'à l'API publique de Tebex, n'écrit jamais du texte reçu comme du code de
   // page, et ne quitte le site que pour la page de paiement de Tebex
@@ -165,6 +167,44 @@ function sitesDeVote() {
   if (i < 0) return { liste: null, liens: [] }
   const liste = dedans(s, i, 'ul')
   return { liste, liens: [...liste.matchAll(/<a\b[^>]*>/g)].map(m => m[0]) }
+}
+// (23/10/2026 ; le propriétaire : « oui bientôt, mais faudra aussi mettre le nombre de joueurs sur le serveur sur le site »)
+// LE BANDEAU DE LA FERMETURE : les mots interdits (MOTS_INTERDITS) ne sont permis QUE dans la fonction bandeauOuverture de
+// js/site.js, appelée seulement sous l'interrupteur (« if (!OUVERT) bandeauOuverture() », OUVERT déclaré une fois, vrai ou
+// faux) ; partout ailleurs dans le script (le code seul), ils restent interdits ; le texte s'écrit en texte, jamais en code
+// de page. LES JOUEURS EN LIGNE : site.js lit le fichier brut classement.json du gist (sans cookie), n'en écrit qu'un nombre
+// en texte, se tait au-delà de 15 minutes, et seulement sur une page qui a sa place (data-en-ligne, cachée au départ).
+function verifierOuvertureEtEnLigne(faute) {
+  const brut = lire('js/site.js')
+  if (!brut) return faute('js/site.js manque')
+  const code = brut.split('\n').filter(l => !/^\s*\/\//.test(l)).join('\n')
+  const decl = code.match(/\n  var OUVERT = (true|false)(?=\n)/g) || [], affectations = (code.match(/\bOUVERT\s*=(?!=)/g) || []).length
+  if (decl.length !== 1 || affectations !== 1) faute('js/site.js : l\'interrupteur « var OUVERT = true|false » doit être déclaré une fois (' + decl.length + ')')
+  const appels = (code.match(/(?<!function )bandeauOuverture\(\)/g) || []).length
+  if (!code.includes('\n  if (!OUVERT) bandeauOuverture()\n') || appels !== 1) faute('js/site.js : le bandeau ne se pose que sous l\'interrupteur (« if (!OUVERT) bandeauOuverture() », et nulle part ailleurs)')
+  const debut = code.indexOf('\n  function bandeauOuverture() {\n'), fin = debut < 0 ? -1 : code.indexOf('\n  }\n', debut + 1)
+  if (debut < 0 || fin < 0) return faute('js/site.js : la fonction bandeauOuverture manque')
+  const corps = code.slice(debut, fin), dehors = code.slice(0, debut) + code.slice(fin)
+  if (/innerHTML|insertAdjacentHTML|document\.write/.test(corps)) faute('js/site.js : le bandeau s\'écrit en texte (createTextNode, textContent), jamais comme du code de page')
+  for (const mot of MOTS_INTERDITS) if (new RegExp('(^|[^a-zà-ÿ])' + mot, 'i').test(dehors)) faute('js/site.js : un mot interdit hors du bandeau : « ' + mot + ' »')
+  if (!/bientôt/.test(corps)) faute('js/site.js : le bandeau dit « Casteria ouvre bientôt » (le même message que le Discord)')
+  const css = lire('css/style.css')
+  if (!/\.ouverture\s*\{[^}]*position:\s*fixed/.test(css)) faute('css/style.css : le bandeau (.ouverture) est fixe en bas de l\'écran')
+  if (!/\nhtml\.avec-ouverture body \{ padding-bottom: \d+px; \}/.test(css)) faute('css/style.css : la page garde la place du bandeau (html.avec-ouverture body, padding-bottom)')
+  // les joueurs en ligne
+  if (!code.includes("'https://gist.githubusercontent.com/' + GIST_COMPTE + '/' + GIST_ID + '/raw/classement.json'")) faute('js/site.js : les joueurs en ligne se lisent dans le fichier brut classement.json du gist')
+  if (!/fetch\(SOURCE_EN_LIGNE, \{ credentials: 'omit'/.test(code)) faute('js/site.js : la lecture des joueurs en ligne part sans cookie (credentials: \'omit\')')
+  if (!code.includes('var EN_LIGNE_VIEUX_MS = 15 * 60000')) faute('js/site.js : un nombre de joueurs de plus de 15 minutes ne s\'affiche pas (EN_LIGNE_VIEUX_MS)')
+  const fEn = code.indexOf('\n  function montrerEnLigne('), fEnFin = fEn < 0 ? -1 : code.indexOf('\n  }\n', fEn + 1)
+  const corpsEn = fEn < 0 || fEnFin < 0 ? '' : code.slice(fEn, fEnFin)
+  if (!corpsEn) faute('js/site.js : la fonction montrerEnLigne manque')
+  else {
+    if (/innerHTML|insertAdjacentHTML/.test(corpsEn)) faute('js/site.js : le nombre de joueurs s\'écrit en texte (textContent), jamais comme du code de page')
+    if (!/d\.en_ligne\b/.test(corpsEn) || /d\.(categories|familles)\b/.test(corpsEn)) faute('js/site.js : les joueurs en ligne ne lisent que « en_ligne » et son heure, jamais le classement')
+    if (!/n < 1/.test(corpsEn)) faute('js/site.js : aucun nombre affiché sous 1 joueur')
+  }
+  const index = lire('index.html') || ''
+  if (!/<p class="en-ligne" data-en-ligne hidden><\/p>/.test(index)) faute('index.html : la place des joueurs en ligne (<p class="en-ligne" data-en-ligne hidden>), cachée au départ')
 }
 function verifierVote(faute) {
   const s = lire('vote.html')
@@ -455,6 +495,8 @@ console.log('discord.html, vercel.json')
 verifierDiscord(faute)
 console.log('vote.html, css/vote.css (les sites de vote)')
 verifierVote(faute)
+console.log('js/site.js (le bandeau de la fermeture, les joueurs en ligne)')
+verifierOuvertureEtEnLigne(faute)
 console.log('le site pèse ' + (total / 1048576).toFixed(1) + ' Mo')
 console.log(fautes ? fautes + ' faute(s)' : 'tout est bon')
 process.exit(fautes ? 1 : 0)
