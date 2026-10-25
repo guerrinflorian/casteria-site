@@ -29,25 +29,46 @@
   // LIGNE, sur tout le réseau : le jeu les écrit dans le fichier qu'il publie déjà toutes les 5 minutes (le gist du
   // classement : leaderboard.js, Site.publier), au premier niveau : « en_ligne » (un entier), son heure « en_ligne_lu » ou,
   // sans elle, « lu ». Seuls ces champs sont lus ici (le classement, lui, reste caché tant que GIST_ID de classement.js est
-  // vide). Rien ne s'affiche si le champ manque, n'est pas un entier, vaut 0, ou date de plus de 15 minutes. Seulement sur
-  // une page qui a sa place (data-en-ligne).
+  // vide). Seulement sur une page qui a sa place (data-en-ligne).
+  // (25/10/2026 ; le propriétaire : « y a pas le nombre de joueurs du serveur sur le site sur la hero section ») LE BADGE DU
+  // HAUT : « 3 joueurs en ligne », « 1 joueur en ligne » ; à 0 joueur, « Serveur en ligne » (jamais un « 0 » : le jeu qui
+  // publie, c'est le serveur allumé) ; rien si le champ manque, n'est pas un entier positif ou nul, ou date de plus de 15
+  // minutes (le serveur ne publie plus). Relu toutes les 5 minutes tant que la page est ouverte et visible.
   var enLigne = document.querySelectorAll('[data-en-ligne]')
   var GIST_COMPTE = 'guerrinflorian', GIST_ID = '4337783e1d14963774decfe06f2709da'
   var SOURCE_EN_LIGNE = GIST_ID ? 'https://gist.githubusercontent.com/' + GIST_COMPTE + '/' + GIST_ID + '/raw/classement.json' : ''
-  var EN_LIGNE_VIEUX_MS = 15 * 60000
+  var EN_LIGNE_VIEUX_MS = 15 * 60000, EN_LIGNE_RELIRE_MS = 5 * 60000
   function montrerEnLigne(d) {
     var n = d ? d.en_ligne : null, lu = d ? Date.parse(String(d.en_ligne_lu || d.lu || '')) : NaN
-    if (typeof n !== 'number' || n !== Math.floor(n) || n < 1 || isNaN(lu) || Date.now() - lu > EN_LIGNE_VIEUX_MS) return
+    var bon = typeof n === 'number' && n === Math.floor(n) && n >= 0 && !isNaN(lu) && Date.now() - lu <= EN_LIGNE_VIEUX_MS
     Array.prototype.forEach.call(enLigne, function (e) {
-      e.textContent = n === 1 ? '1 joueur en ligne' : n.toLocaleString('fr-FR') + ' joueurs en ligne'
+      if (!bon) { e.hidden = true; return }
+      e.textContent = ''
+      if (n === 0) e.appendChild(document.createTextNode('Serveur en ligne'))
+      else {
+        var b = document.createElement('b')
+        b.className = 'nombre'
+        // « 1 200 » : l'espace fine du français (U+202F) manque à la police du site, l'espace insécable (U+00A0) la remplace
+        b.textContent = n.toLocaleString('fr-FR').split('\u202f').join('\u00a0')
+        e.appendChild(b)
+        e.appendChild(document.createTextNode(n === 1 ? ' joueur en ligne' : ' joueurs en ligne'))
+      }
       e.hidden = false
     })
   }
-  if (enLigne.length && SOURCE_EN_LIGNE && window.fetch) {
+  var enLigneDernier = null
+  function lireEnLigne() {
+    if (document.hidden) return
     fetch(SOURCE_EN_LIGNE, { credentials: 'omit', cache: 'no-store' })
       .then(function (r) { return r.ok ? r.json() : null })
-      .then(montrerEnLigne)
-      .catch(function () { /* rien ne s'affiche : la page se lit sans */ })
+      .then(function (d) { enLigneDernier = d; montrerEnLigne(d) })
+      // le réseau coupé : la dernière lecture, jugée à l'heure qu'il est (elle s'efface après ses 15 minutes)
+      .catch(function () { montrerEnLigne(enLigneDernier) })
+  }
+  if (enLigne.length && SOURCE_EN_LIGNE && window.fetch) {
+    lireEnLigne()
+    setInterval(lireEnLigne, EN_LIGNE_RELIRE_MS)
+    document.addEventListener('visibilitychange', lireEnLigne)
   }
 
   // la barre du haut : elle se pose quand on descend ; la ligne de progression ; le menu des petits écrans

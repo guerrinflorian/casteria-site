@@ -201,10 +201,62 @@ function verifierOuvertureEtEnLigne(faute) {
   else {
     if (/innerHTML|insertAdjacentHTML/.test(corpsEn)) faute('js/site.js : le nombre de joueurs s\'écrit en texte (textContent), jamais comme du code de page')
     if (!/d\.en_ligne\b/.test(corpsEn) || /d\.(categories|familles)\b/.test(corpsEn)) faute('js/site.js : les joueurs en ligne ne lisent que « en_ligne » et son heure, jamais le classement')
-    if (!/n < 1/.test(corpsEn)) faute('js/site.js : aucun nombre affiché sous 1 joueur')
+    jouerEnLigne(corpsEn, faute)
   }
+  if (!/setInterval\(lireEnLigne, EN_LIGNE_RELIRE_MS\)/.test(code) || !code.includes('var EN_LIGNE_VIEUX_MS = 15 * 60000, EN_LIGNE_RELIRE_MS = 5 * 60000')) faute('js/site.js : le badge se relit toutes les 5 minutes (setInterval(lireEnLigne, EN_LIGNE_RELIRE_MS))')
   const index = lire('index.html') || ''
   if (!/<p class="en-ligne" data-en-ligne hidden><\/p>/.test(index)) faute('index.html : la place des joueurs en ligne (<p class="en-ligne" data-en-ligne hidden>), cachée au départ')
+  // (25/10/2026) le badge vit DANS la section du haut, juste au-dessus de l'accroche (là où l'oeil arrive après le titre)
+  const debutTete = index.indexOf('<section class="heros'), tete = debutTete < 0 ? '' : index.slice(debutTete, index.indexOf('</section>', debutTete))
+  if (!/<div class="cinema-geste">[\s\S]*?<p class="en-ligne" data-en-ligne hidden><\/p>\s*<p class="cinema-accroche">/.test(tete)) faute('index.html : le badge des joueurs en ligne est dans la section du haut, juste au-dessus de l\'accroche')
+  const style = lire('css/style.css') || ''
+  if (!/\n\.en-ligne\[hidden\] \{ display: none; \}/.test(style)) faute('css/style.css : « .en-ligne[hidden] { display: none; } » (sans lui, la plaque vide se voit au départ)')
+  const regle = (style.match(/\n\.en-ligne \{[^}]*\}/) || [''])[0]
+  const rayons = (regle.match(/border-radius:\s*[^;}]+/g) || []).map(r => r.replace(/border-radius:\s*/, '').trim())
+  if (!regle || rayons.some(r => r !== '0')) faute('css/style.css : le badge des joueurs en ligne a des angles droits (aucune pastille arrondie : une règle du propriétaire)')
+  if (!/\.en-ligne::before \{[^}]*animation: en-ligne-pouls/.test(style) || !/prefers-reduced-motion: reduce\) \{ \.en-ligne::before \{ animation: none; \}/.test(style)) faute('css/style.css : le carré vert du badge bat (en-ligne-pouls) et se calme sous prefers-reduced-motion')
+}
+// (25/10/2026) LE BADGE JOUÉ, pas seulement lu : montrerEnLigne tourne sur de faux éléments ; chaque cas doit dire ce qu'il
+// dit (ou rester caché), qu'il parte d'un badge caché ou d'un badge déjà montré (la relecture des 5 minutes).
+function jouerEnLigne(corpsEn, faute) {
+  const faux = () => ({
+    hidden: true, enfants: [],
+    set textContent(t) { this.enfants = t ? [{ textContent: String(t) }] : [] },
+    get textContent() { return this.enfants.map(c => c.textContent).join('') },
+    appendChild(c) { this.enfants.push(c); return c }
+  })
+  const doc = { createElement: () => ({ className: '', textContent: '' }), createTextNode: t => ({ textContent: String(t) }) }
+  let f
+  try { f = new Function('enLigne', 'EN_LIGNE_VIEUX_MS', 'document', corpsEn + '\n  }\nreturn montrerEnLigne') } catch (e) { return faute('js/site.js : montrerEnLigne ne se lit pas (' + e.message + ')') }
+  const maintenant = Date.now(), il = min => new Date(maintenant - min * 60000).toISOString()
+  const cas = [
+    ['3 joueurs', { en_ligne: 3, lu: il(2) }, '3 joueurs en ligne'],
+    ['1 joueur', { en_ligne: 1, lu: il(2) }, '1 joueur en ligne'],
+    ['1 200 joueurs', { en_ligne: 1200, lu: il(2) }, '1 200 joueurs en ligne'],
+    ['0 joueur', { en_ligne: 0, lu: il(2) }, 'Serveur en ligne'],
+    ['l\'heure propre au compteur', { en_ligne: 4, en_ligne_lu: il(1), lu: il(60) }, '4 joueurs en ligne'],
+    ['une lecture de 14 minutes', { en_ligne: 2, lu: il(14) }, '2 joueurs en ligne'],
+    ['une lecture de 16 minutes', { en_ligne: 2, lu: il(16) }, null],
+    ['0 joueur et vieux', { en_ligne: 0, lu: il(30) }, null],
+    ['sans heure', { en_ligne: 5 }, null],
+    ['sans nombre', { lu: il(1) }, null],
+    ['un nombre en texte', { en_ligne: '3', lu: il(1) }, null],
+    ['un nombre à virgule', { en_ligne: 2.5, lu: il(1) }, null],
+    ['un nombre négatif', { en_ligne: -1, lu: il(1) }, null],
+    ['aucune donnée', null, null]
+  ]
+  for (const [nom, d, attendu] of cas) {
+    for (const cache of [true, false]) {
+      const e = faux()
+      if (!cache) { e.textContent = '7 joueurs en ligne'; e.hidden = false }
+      try { f([e], 15 * 60000, doc)(d) } catch (er) { faute('js/site.js : montrerEnLigne lève sur « ' + nom + ' » (' + er.message + ')'); continue }
+      if (e.textContent.indexOf('\u202f') >= 0) faute('js/site.js : le badge écrit l\'espace fine (U+202F) que la police du site ne dessine pas (« 1200 » collé) : l\'espace insécable')
+      const lu = e.textContent.replace(/[\s\u00a0\u202f]+/g, ' ').trim()
+      if (attendu === null && !e.hidden) faute('js/site.js : le badge se montre sur « ' + nom + ' » (« ' + lu + ' ») : il doit rester caché')
+      if (attendu !== null && (e.hidden || lu !== attendu)) faute('js/site.js : sur « ' + nom + ' », le badge dit « ' + (e.hidden ? '(caché)' : lu) + ' » au lieu de « ' + attendu + ' »')
+      if (!e.hidden && /(^|\s)0 joueur/.test(lu)) faute('js/site.js : le badge écrit un « 0 » (« ' + lu + ' ») : à 0 joueur, « Serveur en ligne »')
+    }
+  }
 }
 function verifierVote(faute) {
   const s = lire('vote.html')

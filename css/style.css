@@ -648,6 +648,19 @@ html.photo .hublot, html.photo .launcher .perche, html.photo .plateformes.quai .
 html.avec-ouverture body { padding-bottom: 64px; }
 @media (max-width: 600px) { .ouverture { font-size: 14px; padding: 7px 12px; } html.avec-ouverture body { padding-bottom: 86px; } }
 
-/* ---------- (23/10/2026) les joueurs en ligne (js/site.js, data-en-ligne) : un carré vert qui luit, puis le nombre ---------- */
-.en-ligne { margin: 12px 0 0; font-size: 16px; font-weight: 600; color: var(--parchemin); text-shadow: 0 2px 6px rgba(0, 0, 0, .6); }
-.en-ligne::before { content: ""; display: inline-block; width: 10px; height: 10px; margin-right: 8px; background: var(--vert-clair); box-shadow: 0 0 8px var(--vert-clair); vertical-align: 1px; }
+/* ---------- (23/10/2026, puis 25/10 : le badge du haut) les joueurs en ligne (js/site.js, data-en-ligne) : une plaque de nuit
+   aux angles droits (jamais une pastille arrondie), un filet vert, un carré vert qui bat comme un pouls, puis le nombre ----------
+   [hidden] d'abord : le display de la plaque passerait sinon par-dessus l'attribut, et une plaque vide se verrait au départ */
+.en-ligne[hidden] { display: none; }
+.en-ligne { display: inline-flex; align-items: center; gap: 11px; margin: 0 0 18px; padding: 8px 15px 8px 13px; border-radius: 0;
+  background: rgba(10, 18, 12, .66); border: 2px solid rgba(108, 192, 74, .62); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .45), 0 8px 22px rgba(0, 0, 0, .4);
+  -webkit-backdrop-filter: blur(5px); backdrop-filter: blur(5px);
+  font-size: 16px; font-weight: 700; line-height: 1.2; letter-spacing: .2px; color: #F4FFE9; text-shadow: 0 1px 3px rgba(0, 0, 0, .8); white-space: nowrap; }
+.en-ligne .nombre { font-size: 1.3em; font-weight: 800; color: var(--vert-clair); text-shadow: 0 0 12px rgba(108, 192, 74, .55), 0 1px 3px rgba(0, 0, 0, .8); margin-right: -4px; }
+.en-ligne::before { content: ""; flex: 0 0 auto; width: 11px; height: 11px; background: var(--vert-clair); box-shadow: 0 0 0 0 rgba(108, 192, 74, .75), 0 0 9px var(--vert-clair); animation: en-ligne-pouls 1.8s ease-out infinite; }
+@keyframes en-ligne-pouls { 0% { box-shadow: 0 0 0 0 rgba(108, 192, 74, .75), 0 0 9px var(--vert-clair); } 70% { box-shadow: 0 0 0 9px rgba(108, 192, 74, 0), 0 0 9px var(--vert-clair); } 100% { box-shadow: 0 0 0 0 rgba(108, 192, 74, 0), 0 0 9px var(--vert-clair); } }
+@media (max-width: 600px) { .en-ligne { font-size: 15px; padding: 7px 13px 7px 11px; gap: 10px; margin-bottom: 14px; }
+  /* le bandeau « ouvre bientôt » (trois lignes sur un téléphone) couvrait la dernière ligne du haut : le texte monte d'autant */
+  html.avec-ouverture .vitrine-tete.plein-cadre .cinema-texte { padding-bottom: 112px; } }
+@media (prefers-reduced-motion: reduce) { .en-ligne::before { animation: none; } }
+html.photo .en-ligne::before { animation: none; }
