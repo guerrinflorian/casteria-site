@@ -192,3 +192,39 @@ html.photo .vitrine-tete.trou-noir { min-height: 900px; }
   .route .pas-photo, .route .pas-photo .deborde { transition: none; }
 }
 html.photo .route::before { animation: none; }
+
+/* ---------- (la 147) LA VICTOIRE EN 3D ET LES VOIX DES BOSS : un écran du jeu cerclé d'or, penché, et deux bulles de
+   parchemin (ce que le boss dit à son entrée, puis quand il tombe) qui débordent du cadre ; à côté, les trois temps ---------- */
+.boss-bande > .dedans.victoire { grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 46px; margin-top: 76px; }
+.victoire-ecran { margin: 22px 0; position: relative; border: 5px solid var(--or-fonce); transform: rotate(-1.2deg);
+  box-shadow: 0 0 0 2px var(--or-clair), 0 0 46px rgba(255, 215, 94, .28), 0 18px 34px rgba(0, 0, 0, .5); }
+.victoire-ecran img { width: 100%; height: auto; }
+.victoire-ecran .bulle { position: absolute; z-index: 2; margin: 0; max-width: 60%; padding: 10px 14px 11px; background: var(--parchemin);
+  color: var(--encre); border: 3px solid var(--bois-fonce); box-shadow: 5px 5px 0 rgba(0, 0, 0, .45); font-size: 15.5px; line-height: 1.35; font-weight: 600; }
+.victoire-ecran .bulle span { display: block; margin-bottom: 3px; font-family: "Lilita One", sans-serif; font-weight: 400; font-size: 13px;
+  letter-spacing: 1px; text-transform: uppercase; color: var(--ruban); }
+/* la queue de la bulle : deux marches de pixels, vers le boss */
+.victoire-ecran .bulle::after { content: ""; position: absolute; width: 14px; height: 14px; background: var(--parchemin);
+  border: 3px solid var(--bois-fonce); border-top: 0; border-left: 0; }
+.victoire-ecran .bulle-entree { left: -22px; top: -26px; transform: rotate(-2.4deg); animation: bulle-dit 5s ease-in-out infinite; }
+.victoire-ecran .bulle-entree::after { left: 34px; bottom: -10px; transform: rotate(45deg); }
+.victoire-ecran .bulle-defaite { right: -22px; bottom: -28px; transform: rotate(1.8deg); animation: bulle-dit 5s ease-in-out 2.5s infinite; }
+.victoire-ecran .bulle-defaite::after { right: 40px; top: -10px; transform: rotate(-135deg); }
+@keyframes bulle-dit { 0%, 100% { translate: 0 0; } 50% { translate: 0 -6px; } }
+.victoire-texte h3 { font-size: clamp(26px, 2.8vw, 36px); color: var(--or-clair); margin: 4px 0 14px; }
+.victoire-texte p { color: #F3E7FF; font-size: 17px; margin: 14px 0 0; }
+.victoire-temps { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; counter-reset: temps; }
+.victoire-temps li { counter-increment: temps; position: relative; padding: 2px 0 2px 46px; color: #FFF8E7; font-size: 17px; font-weight: 600; }
+.victoire-temps li::before { content: counter(temps); position: absolute; left: 0; top: -2px; width: 32px; height: 32px; display: grid; place-items: center;
+  font-family: "Lilita One", sans-serif; color: var(--encre); background: var(--or-clair); box-shadow: 0 0 0 3px var(--or-fonce), 3px 3px 0 3px rgba(0, 0, 0, .35); }
+/* sur tablette et téléphone : l'écran en entier, puis les bulles dessous, posées l'une après l'autre (rien ne sort de l'écran) */
+@media (max-width: 860px) {
+  .boss-bande > .dedans.victoire { grid-template-columns: minmax(0, 1fr); gap: 26px; margin-top: 54px; }
+  .victoire-ecran { transform: none; margin: 0; display: grid; gap: 14px; border: 0; box-shadow: none; }
+  .victoire-ecran img { border: 5px solid var(--or-fonce); box-shadow: 0 0 0 2px var(--or-clair), 0 12px 26px rgba(0, 0, 0, .5); }
+  .victoire-ecran .bulle { position: relative; inset: auto; max-width: none; transform: none; animation: none; }
+  .victoire-ecran .bulle-entree::after { left: 34px; bottom: auto; top: -10px; transform: rotate(-135deg); }
+  .victoire-ecran .bulle-defaite::after { right: 40px; }
+}
+@media (prefers-reduced-motion: reduce) { .victoire-ecran .bulle { animation: none; } }
+html.photo .victoire-ecran .bulle { animation: none; }
