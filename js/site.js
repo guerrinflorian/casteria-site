@@ -22,6 +22,15 @@
     b.appendChild(t)
     document.body.appendChild(b)
     document.documentElement.classList.add('avec-ouverture')
+    // (27/10/2026 ; le propriétaire : « c'est encore écrit sur le site serveur en ligne… ça devrait mettre ouverture bientôt
+    // partout ») LE BADGE DU HAUT (data-en-ligne) dit l'ouverture tant que le serveur est fermé, jamais « en ligne » ni un
+    // nombre de joueurs (les comptes de test) ; son carré passe à l'or (css/style.css, .en-ligne.ferme). Le jour de
+    // l'ouverture (OUVERT = true), il redevient le nombre de joueurs du réseau.
+    Array.prototype.forEach.call(document.querySelectorAll('[data-en-ligne]'), function (e) {
+      e.textContent = 'Ouverture bientôt'
+      e.classList.add('ferme')
+      e.hidden = false
+    })
   }
   if (!OUVERT) bandeauOuverture()
 
@@ -65,7 +74,8 @@
       // le réseau coupé : la dernière lecture, jugée à l'heure qu'il est (elle s'efface après ses 15 minutes)
       .catch(function () { montrerEnLigne(enLigneDernier) })
   }
-  if (enLigne.length && SOURCE_EN_LIGNE && window.fetch) {
+  // fermé : le badge garde l'ouverture que le bandeau y a écrite (aucune lecture du nombre de joueurs)
+  if (OUVERT && enLigne.length && SOURCE_EN_LIGNE && window.fetch) {
     lireEnLigne()
     setInterval(lireEnLigne, EN_LIGNE_RELIRE_MS)
     document.addEventListener('visibilitychange', lireEnLigne)

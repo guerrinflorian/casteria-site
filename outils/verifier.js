@@ -192,7 +192,11 @@ function verifierOuvertureEtEnLigne(faute) {
   const corps = code.slice(debut, fin), dehors = code.slice(0, debut) + code.slice(fin)
   if (/innerHTML|insertAdjacentHTML|document\.write/.test(corps)) faute('js/site.js : le bandeau s\'écrit en texte (createTextNode, textContent), jamais comme du code de page')
   for (const mot of MOTS_INTERDITS) if (new RegExp('(^|[^a-zà-ÿ])' + mot, 'i').test(dehors)) faute('js/site.js : un mot interdit hors du bandeau : « ' + mot + ' »')
-  if (!/bientôt/.test(corps)) faute('js/site.js : le bandeau dit « Casteria ouvre bientôt » (le même message que le Discord)')
+  if (!/Casteria ouvre bientôt/.test(corps)) faute('js/site.js : le bandeau dit « Casteria ouvre bientôt » (le même message que le Discord)')
+  // (27/10/2026 ; le propriétaire : « ça devrait mettre ouverture bientôt partout ») fermé, le badge du haut dit l'ouverture
+  // (écrit par bandeauOuverture) et le nombre de joueurs ne se lit jamais : la lecture ne part que si OUVERT
+  if (!/querySelectorAll\('\[data-en-ligne\]'\)[\s\S]*?e\.textContent = 'Ouverture bientôt'/.test(corps)) faute('js/site.js : fermé, le badge du haut dit « Ouverture bientôt » (bandeauOuverture)')
+  if (!code.includes('\n  if (OUVERT && enLigne.length && SOURCE_EN_LIGNE && window.fetch) {')) faute('js/site.js : fermé, le nombre de joueurs ne se lit pas (« if (OUVERT && enLigne.length ... ») : jamais « en ligne » avant l\'ouverture')
   const css = lire('css/style.css')
   if (!/\.ouverture\s*\{[^}]*position:\s*fixed/.test(css)) faute('css/style.css : le bandeau (.ouverture) est fixe en bas de l\'écran')
   if (!/\nhtml\.avec-ouverture body \{ padding-bottom: \d+px; \}/.test(css)) faute('css/style.css : la page garde la place du bandeau (html.avec-ouverture body, padding-bottom)')

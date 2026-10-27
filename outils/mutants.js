@@ -193,6 +193,9 @@ const MUTANTS = [
   ['deux interrupteurs OUVERT', 'js/site.js', s => s.replace('\n  var OUVERT = false\n', '\n  var OUVERT = false\n  var OUVERT = true\n')],
   ['le bandeau ecrit comme du code de page', 'js/site.js', s => s.replace("    t.appendChild(document.createTextNode('Casteria ouvre", "    t.innerHTML = '';\n    t.appendChild(document.createTextNode('Casteria ouvre")],
   ['le bandeau qui ne dit plus bientot', 'js/site.js', s => s.replace('Casteria ouvre bientôt : ', 'Casteria : ')],
+  // (27/10/2026) fermé, le badge du haut dit l'ouverture et ne lit jamais le nombre de joueurs
+  ['le badge qui ne dit plus l\'ouverture', 'js/site.js', s => s.replace("e.textContent = 'Ouverture bientôt'", "e.textContent = 'Serveur'")],
+  ['le badge qui lit les joueurs ferme', 'js/site.js', s => s.replace('  if (OUVERT && enLigne.length && SOURCE_EN_LIGNE && window.fetch) {', '  if (enLigne.length && SOURCE_EN_LIGNE && window.fetch) {')],
   ['le bandeau qui n\'est plus fixe', 'css/style.css', s => s.replace('.ouverture { position: fixed;', '.ouverture { position: static;')],
   ['la page qui ne garde pas la place du bandeau', 'css/style.css', s => s.replace('html.avec-ouverture body { padding-bottom: 64px; }', '')],
   ['les joueurs en ligne ecrits comme du code de page', 'js/site.js', s => s.replace("      e.textContent = ''\n", "      e.innerHTML = ''\n")],

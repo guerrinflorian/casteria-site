@@ -664,3 +664,5 @@ html.avec-ouverture body { padding-bottom: 64px; }
   html.avec-ouverture .vitrine-tete.plein-cadre .cinema-texte { padding-bottom: 112px; } }
 @media (prefers-reduced-motion: reduce) { .en-ligne::before { animation: none; } }
 html.photo .en-ligne::before { animation: none; }
+/* (27/10/2026) fermé : le badge dit « Ouverture bientôt » (js/site.js, bandeauOuverture) ; son carré est d'or, il ne bat pas (jamais le vert de « en ligne ») */
+.en-ligne.ferme::before { background: #E8B830; box-shadow: 0 0 9px #E8B830; animation: none; }
