@@ -6,7 +6,8 @@
     { "source": "/index.html", "destination": "/", "permanent": true }
   ],
   "rewrites": [
-    { "source": "/discord", "destination": "/discord.html" }
+    { "source": "/discord", "destination": "/discord.html" },
+    { "source": "/rejoindre", "destination": "/rejoindre.html" }
   ],
   "headers": [
     {

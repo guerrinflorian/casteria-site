@@ -1,13 +1,13 @@
 // Les règles du site, vérifiées en une seconde : npm run verifier (code 0 : tout est bon)
 'use strict'
 const fs = require('fs'), path = require('path')
-const RACINE = path.join(__dirname, '..'), PAGES = ['index.html', 'commencer.html', 'pirates.html', 'casino.html', 'donjons.html', 'classement.html', 'boutique.html', 'reglement.html', 'vote.html', 'discord.html', 'mentions-legales.html', 'confidentialite.html', 'conditions.html', 'merci.html', '404.html']
+const RACINE = path.join(__dirname, '..'), PAGES = ['index.html', 'commencer.html', 'pirates.html', 'casino.html', 'donjons.html', 'classement.html', 'boutique.html', 'reglement.html', 'vote.html', 'discord.html', 'rejoindre.html', 'mentions-legales.html', 'confidentialite.html', 'conditions.html', 'merci.html', '404.html']
 // LES FICHIERS LOURDS PERMIS (aucun depuis le 13/10/2026 : la bande-annonce de l'accueil a été retirée sur la demande du
 // propriétaire) : un fichier de plus de 5 Mo n'entre ici qu'avec son plafond en Mo, et la vidéo qui le cite porte
 // « data-clic » (chargée au clic du visiteur), jamais « data-auto »
 const LOURDS_PERMIS = {}
 // les pages qui restent hors de Google et hors du plan du site : la 404, et « Merci » (la page de retour après un achat)
-const HORS_GOOGLE = ['404.html', 'merci.html']
+const HORS_GOOGLE = ['404.html', 'merci.html', 'rejoindre.html']
 // les mots qui diraient que le serveur n'est pas ouvert (le propriétaire, 05/10) : les pages, et les phrases du classement
 const MOTS_INTERDITS = ['en développement', 'bientôt', 'pas encore ouvert', 'ouvrira', "jour de l'ouverture"]
 // (19/10/2026, les pages du casino et des donjons) AUCUN SPOILER (le propriétaire) : jamais l'Abyssarque, jamais le dernier
@@ -156,7 +156,11 @@ const TEBEX_JS = 'https://js.tebex.io/v/1.11.0.js'
 // les trois places de discord.html.
 // (20/10/2026, la tête) l'invitation PERMANENTE (elle n'expire jamais ; le salon « jouer ») remplace celle de 30 jours citée
 // plus haut, qui expirait le 04/11
-const DISCORD = 'https://discord.gg/Xp325uTFe7', ADRESSES = { 'discord.html': 'discord' }
+const DISCORD = 'https://discord.gg/Xp325uTFe7', ADRESSES = { 'discord.html': 'discord', 'rejoindre.html': 'rejoindre' }
+// (27/10/2026) LA PAGE DE LA PUBLICITE TIKTOK (le trailer ; le proprietaire : « le but est de hype des gens qui rejoignent le
+// Discord ») : rejoindre.html, a /rejoindre, SON invitation a elle (permanente, sur « general ») pour que le Discord compte a part
+// les arrivees venues de la publicite ; SANS depart tout seul (une publicite mene a une vraie page) ; hors de Google (noindex).
+const PUB = 'https://discord.gg/Xq9w5kYKvj'
 // LE VOTE (22/10/2026) : vote.html, sa page. LES SITES DE VOTE sont la seule adresse d'un autre domaine permise sur le site, et
 // seulement dans leur liste (<ul class="sites-vote">, la seule de la page : celle du jeu, « votesites » à la console du palais) :
 // chacun en https, ouvert à part (target="_blank") avec rel="noopener" ; la liste vide se cache (css/vote.css), la phrase
@@ -288,13 +292,21 @@ function verifierDiscord(faute) {
   if (!s.includes("<script>setTimeout(function () { window.location.replace('" + DISCORD + "') }, 1000)</script>")) faute('discord.html : le départ par le script manque (location.replace, au bout d\'une seconde)')
   // aucune autre invitation, sur aucune page ni dans aucun script : les autres pages mènent à /discord
   const ailleurs = fs.readdirSync(RACINE).filter(n => /\.html$/.test(n)).concat(fs.readdirSync(path.join(RACINE, 'js')).map(n => 'js/' + n))
-  for (const n of ailleurs) for (const m of lire(n).match(/(?:https?:)?\/\/(?:[a-z0-9-]+\.)?discord(?:app)?\.(?:gg|com)\/[A-Za-z0-9_/-]*/gi) || []) if (n !== 'discord.html' || m !== DISCORD) faute(n + ' : une adresse de Discord (' + m + ') : l\'invitation n\'est écrite que dans discord.html, les autres pages mènent à /discord')
+  for (const n of ailleurs) for (const m of lire(n).match(/(?:https?:)?\/\/(?:[a-z0-9-]+\.)?discord(?:app)?\.(?:gg|com)\/[A-Za-z0-9_/-]*/gi) || []) if (!((n === 'discord.html' && m === DISCORD) || (n === 'rejoindre.html' && m === PUB))) faute(n + ' : une adresse de Discord (' + m + ') : l\'invitation n\'est écrite que dans discord.html, les autres pages mènent à /discord')
   // (19/10/2026, le propriétaire : « mets-le dans la page d'accueil aussi, à côté / en dessous du Jouer gratuitement ») l'accueil
   // y mène juste après « Jouer gratuitement » : /discord, le logo de la marque (en ligne) et le mot
   if (!/Jouer gratuitement<\/a>\s*(?:<!--[\s\S]*?-->\s*)?<a class="bouton bouton-discord grand" href="\/discord" aria-label="[^"]*Discord[^"]*"><svg class="logo-discord"[^>]*>[\s\S]*?<\/svg><span class="mot">Discord<\/span><\/a>/.test(lire('index.html'))) faute('index.html : le bouton du Discord (vers /discord, son logo et le mot « Discord ») doit suivre « Jouer gratuitement »')
   let vj = null
   try { vj = JSON.parse(lire('vercel.json')) } catch (e) { vj = null }
   if (!vj || !Array.isArray(vj.rewrites) || !vj.rewrites.some(r => r && r.source === '/discord' && r.destination === '/discord.html')) faute('vercel.json : /discord doit mener à discord.html (« rewrites » : { "source": "/discord", "destination": "/discord.html" })')
+  // (27/10/2026) la page de la publicite : le grand bouton vers PUB, AUCUN depart tout seul, et /rejoindre dans vercel.json
+  const pub = lire('rejoindre.html')
+  if (!pub) faute('rejoindre.html manque (casteria.fr/rejoindre, la page de la publicite)')
+  else {
+    if (!pub.includes('<a class="bouton bouton-or grand" href="' + PUB + '">Rejoindre le Discord</a>')) faute('rejoindre.html : le grand bouton « Rejoindre le Discord » vers ' + PUB + ' manque')
+    if (/http-equiv="refresh"|location.(?:replace|assign|href)/.test(pub)) faute('rejoindre.html : la page de la publicite ne part jamais toute seule (ni refresh ni script)')
+  }
+  if (!vj || !vj.rewrites.some(r => r && r.source === '/rejoindre' && r.destination === '/rejoindre.html')) faute('vercel.json : /rejoindre doit mener a rejoindre.html')
   // jamais une pastille arrondie (le propriétaire) : aucun arrondi dans sa feuille
   for (const r of reglesCss(lire('css/discord.css'))) for (const m of r.corps.matchAll(/border(?:-[a-z]+)*-radius\s*:\s*([^;]+)/g)) if (!/^0(px)?\s*$/.test(m[1].trim())) faute('css/discord.css, « ' + r.sel.slice(0, 60) + ' » : un arrondi (' + m[1].trim() + ') : jamais une pastille arrondie')
 }
@@ -341,6 +353,7 @@ for (const page of PAGES) {
     if (DOMAINE && c.startsWith(DOMAINE + '/')) { if (!existe(c.slice(DOMAINE.length))) faute('une adresse du site qui n\'existe pas : ' + c); continue }
     if (c === TEBEX_JS && page === 'boutique.html') { if (!s.includes('<script defer src="' + TEBEX_JS + '"></script>')) faute('boutique.html : le script de Tebex doit s\'écrire <script defer src="' + TEBEX_JS + '"></script>, tel quel'); continue }
     if (c === DISCORD && page === 'discord.html') continue
+    if (c === PUB && page === 'rejoindre.html') continue
     // (22/10/2026) un site de vote, dans sa liste de vote.html (verifierVote le juge)
     if (page === 'vote.html' && SITES_VOTE.has(c)) continue
     if (/^(https?:)?\/\//.test(c)) { if (!c.startsWith(LIENS_FIGES)) faute('un lien vers ailleurs que la release du launcher : ' + c); continue }
