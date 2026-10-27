@@ -5,7 +5,8 @@ const RACINE = path.join(__dirname, '..'), PAGES = ['index.html', 'commencer.htm
 // LES FICHIERS LOURDS PERMIS (aucun depuis le 13/10/2026 : la bande-annonce de l'accueil a été retirée sur la demande du
 // propriétaire) : un fichier de plus de 5 Mo n'entre ici qu'avec son plafond en Mo, et la vidéo qui le cite porte
 // « data-clic » (chargée au clic du visiteur), jamais « data-auto »
-const LOURDS_PERMIS = {}
+// (27/10/2026) le trailer en 1080p : cite par AUCUNE page (le lien du Discord et de la publicite), 32 Mo au plus
+const LOURDS_PERMIS = { 'assets/videos/casteria-trailer.mp4': 32 }
 // les pages qui restent hors de Google et hors du plan du site : la 404, et « Merci » (la page de retour après un achat)
 const HORS_GOOGLE = ['404.html', 'merci.html', 'rejoindre.html']
 // les mots qui diraient que le serveur n'est pas ouvert (le propriétaire, 05/10) : les pages, et les phrases du classement
