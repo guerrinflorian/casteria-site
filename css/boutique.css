@@ -226,3 +226,44 @@ html.photo .pack.meilleur::before, html.photo .packs-etat::before { animation: n
 .gagner a { color: var(--or-clair); font-weight: 700; }
 @media (max-width: 960px) { .gagner { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 640px) { .boutique-gagner { padding: 56px 0 60px; } .gagner { grid-template-columns: minmax(0, 1fr); gap: 12px; margin-top: 26px; } }
+
+/* ---------- (la 150) les grades de joueur : leurs cinq emblèmes qui tournent (douze images de Blockbench, 96 px chacune,
+   en une ligne), le tableau qui compare tout (il défile en largeur sur téléphone, sa première colonne reste en place, la
+   page ne défile jamais en largeur), le Souverain en violet ; les couleurs des noms sont celles de leurs plaques en jeu ---------- */
+.boutique-grades { padding: 70px 0 80px; border-top: 3px solid rgba(215, 164, 33, .35);
+  background: radial-gradient(60% 40% at 50% 0%, rgba(160, 77, 255, .18), rgba(160, 77, 255, 0) 70%), linear-gradient(180deg, var(--nuit) 0%, #221236 100%); }
+.boutique-grades .tete { margin-bottom: 0; }
+.boutique-grades .sur-titre, .boutique-grades code { color: var(--or-clair); }
+.grades-tableau { margin: 34px 0 0; overflow-x: auto; background: #1E1030; border: 3px solid rgba(215, 164, 33, .45); box-shadow: 0 0 0 3px #120A1C, 0 14px 26px rgba(0, 0, 0, .3); }
+.grades-tableau:focus-visible { outline: 3px solid var(--or-clair); outline-offset: 3px; }
+.grades-tableau table { width: 100%; min-width: 760px; border-collapse: collapse; font-size: 15.5px; line-height: 1.35; color: #E7D8F7; }
+.grades-tableau th, .grades-tableau td { padding: 10px 12px; text-align: center; border-bottom: 1px solid rgba(215, 164, 33, .16); }
+.grades-tableau thead th { padding: 18px 8px 12px; vertical-align: bottom; font-family: "Lilita One", "Fredoka", sans-serif; font-weight: 400; font-size: 22px; text-shadow: 0 3px 0 rgba(0, 0, 0, .45); }
+.grades-tableau thead td, .grades-tableau tbody th { position: sticky; left: 0; z-index: 1; background: #1E1030; box-shadow: 6px 0 8px -6px rgba(0, 0, 0, .6); }
+.grades-tableau tbody th { min-width: 190px; text-align: left; font-weight: 700; color: #fff; }
+.grades-tableau .g1 { color: #D3D8DF; } .grades-tableau .g2 { color: #5AA8FF; } .grades-tableau .g3 { color: #AEB6FF; }
+.grades-tableau .g4 { color: #FFB938; } .grades-tableau .g5 { color: #D58BFF; }
+.grades-tableau th:nth-child(6), .grades-tableau td:nth-child(6) { background: rgba(160, 77, 255, .14); }
+.grades-tableau tr.prix td { font-family: "Lilita One", "Fredoka", sans-serif; font-size: 19px; color: var(--or-clair); }
+.grades-tableau tbody tr:last-child th, .grades-tableau tbody tr:last-child td { border-bottom: 0; }
+.embleme { display: block; width: 72px; height: 72px; margin: 0 auto 8px; background: no-repeat 0 0 / 864px 72px; animation: embleme-tourne 1.8s steps(12) infinite; }
+.e-chevalier { background-image: url("../assets/boutique/grades/embleme_chevalier.png"); }
+.e-comte { background-image: url("../assets/boutique/grades/embleme_comte.png"); }
+.e-marquis { background-image: url("../assets/boutique/grades/embleme_marquis.png"); }
+.e-duc { background-image: url("../assets/boutique/grades/embleme_duc.png"); }
+.e-souverain { background-image: url("../assets/boutique/grades/embleme_souverain.png"); }
+@keyframes embleme-tourne { to { background-position: -864px 0; } }
+.grades-sous-tableau { margin: 12px 0 0; font-size: 14.5px; line-height: 1.5; color: #CDB9E6; }
+.grades-notes { list-style: none; margin: 26px 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+.grades-notes li { padding: 16px 18px 18px; background: rgba(255, 255, 255, .035); border: 2px solid rgba(215, 164, 33, .3); border-top: 4px solid #D58BFF; }
+.grades-notes h3 { margin: 0 0 6px; font-size: 19px; color: #fff; }
+.grades-notes p { margin: 0; font-size: 15px; line-height: 1.5; color: #E7D8F7; }
+@media (max-width: 960px) { .grades-notes { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) {
+  .boutique-grades { padding: 56px 0 60px; }
+  .grades-tableau table { font-size: 14px; }
+  .grades-tableau tbody th { min-width: 130px; }
+  .grades-notes { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+}
+html.photo .embleme { animation: none; }
+@media (prefers-reduced-motion: reduce) { .embleme { animation: none; } }

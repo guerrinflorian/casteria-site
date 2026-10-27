@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>La boutique de Casteria : les crédits du serveur Minecraft</title>
-<meta name="description" content="La boutique du serveur Minecraft Casteria : les crédits, à quoi ils servent (familiers, bêtes, clés de caisses, couleurs de pseudo) et comment en obtenir.">
+<meta name="description" content="La boutique du serveur Minecraft Casteria : les crédits, à quoi ils servent (les cinq grades, familiers, bêtes, clés de caisses, couleurs de pseudo) et comment en obtenir.">
 <meta name="theme-color" content="#1B1028">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="fr_FR">
@@ -71,7 +71,7 @@
     <h1>La boutique de Casteria<b class="lu"> :</b> <span class="or">les crédits, et tout ce qu'ils ouvrent</span></h1>
     </div>
     <div class="cinema-geste">
-    <p class="cinema-accroche">Un phénix qui te suit partout, une wyverne qui vole dès le premier jour : avec les crédits, tu t'offres ce qu'on ne trouve qu'ici, et tu aides le serveur à vivre.</p>
+    <p class="cinema-accroche">Un grade pour toujours, un phénix qui te suit partout, une wyverne qui vole dès le premier jour : avec les crédits, tu t'offres ce qu'on ne trouve qu'ici, et tu aides le serveur à vivre.</p>
     <p class="gestes">
       <a class="bouton bouton-or grand" href="#acheter"><img class="pixel" src="assets/icones/credit.png" alt="" width="26" height="26">Choisir mon pack</a>
       <a class="lien-doux" href="#offres">Ce que tes crédits t'offrent</a>
@@ -163,6 +163,56 @@
       <li class="apparait" style="--retard:.12s"><h3>Ta série</h3><p>La mission facile et la moyenne faites 7 jours de suite : 5 crédits ; 14 jours : 10 ; 30 jours : 20. Dès le niveau 20.</p></li>
       <li class="apparait" style="--retard:.19s"><h3>Tes votes</h3><p>1 crédit tous les 2 votes du mois, 15 par mois au plus. <a href="vote.html">Comment voter</a></p></li>
       <li class="apparait" style="--retard:.26s"><h3>Les quêtes de Ludovic</h3><p>La fin des chapitres 2 à 5 : de 2 à 5 crédits ; toutes ses quêtes : 10. Une seule fois par compte.</p></li>
+    </ul>
+  </div>
+</section>
+
+<!-- LES GRADES DE JOUEUR (la 150, 27/10/2026 ; le propriétaire : « faut donner envie d'acheter les grades et montrer dans la
+     boutique le truc animé et les avantages et le comparatif ») : les chiffres de la table GRADES de grades_payants.js du jeu,
+     de hdv.js, ile_membres.js et coffre_grade.js, à suivre quand ils changent. Les emblèmes tournent : douze images rendues
+     dans Blockbench (assets/boutique/grades/), arrêtées sous « réduire les animations » et dans une capture. -->
+<section class="sombre boutique-grades" id="grades">
+  <div class="dedans">
+    <div class="tete apparait">
+      <span class="sur-titre">Dans la boutique du jeu</span>
+      <h2>Les grades de Casteria</h2>
+      <p>Cinq grades à toi pour toujours. Ta plaque brille devant ton pseudo, dans le tab et le tchat. En jeu : <code>/grades</code> pour tout voir et comparer, ou <code>/boutique</code>.</p>
+    </div>
+    <div class="grades-tableau apparait" role="region" aria-label="Ce que donne chaque grade" tabindex="0">
+      <table>
+        <thead>
+          <tr>
+            <td></td>
+            <th scope="col" class="g1"><span class="embleme e-chevalier" aria-hidden="true"></span>Chevalier</th>
+            <th scope="col" class="g2"><span class="embleme e-comte" aria-hidden="true"></span>Comte</th>
+            <th scope="col" class="g3"><span class="embleme e-marquis" aria-hidden="true"></span>Marquis</th>
+            <th scope="col" class="g4"><span class="embleme e-duc" aria-hidden="true"></span>Duc</th>
+            <th scope="col" class="g5"><span class="embleme e-souverain" aria-hidden="true"></span>Souverain</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="prix"><th scope="row">Pour toujours</th><td>300 crédits</td><td>600 crédits</td><td>1&#160;000 crédits</td><td>1&#160;600 crédits</td><td>2&#160;400 crédits</td></tr>
+          <tr><th scope="row">Chaque jour, <code>/kit</code></th><td>1 Clé de Vote</td><td>1 Clé de Vote</td><td>2 Clés de Vote</td><td>2 Clés de Vote</td><td>2 Clés de Vote</td></tr>
+          <tr><th scope="row">En plus, chaque semaine</th><td></td><td>1 Clé de l'Aventurier</td><td>1 Clé de l'Aventurier</td><td>2 Clés de l'Aventurier</td><td>1 Clé de l'Aventurier et 1 Clé Royale</td></tr>
+          <tr><th scope="row">Tes ventes</th><td>+1 %</td><td>+2 %</td><td>+3 %</td><td>+4 %</td><td>+5 %</td></tr>
+          <tr><th scope="row">Armures et armes des boss</th><td>+10 % de chances</td><td>+20 % de chances</td><td>+35 % de chances</td><td>+50 % de chances</td><td>2 fois plus de chances</td></tr>
+          <tr><th scope="row">Ton coffre (<code>/coffre</code>)</th><td>1 rangée</td><td>2 rangées</td><td>3 rangées</td><td>4 rangées</td><td>6 rangées</td></tr>
+          <tr><th scope="row">Hôtel : ventes à la fois</th><td>15</td><td>20</td><td>25</td><td>30</td><td>40</td></tr>
+          <tr><th scope="row">Hôtel : ta commission en achetant</th><td>10 % de moins</td><td>20 % de moins</td><td>30 % de moins</td><td>40 % de moins</td><td>moitié moins</td></tr>
+          <tr><th scope="row">Amis sur ton île</th><td>7</td><td>7</td><td>8</td><td>9</td><td>10</td></tr>
+          <tr><th scope="row">Commandes</th><td>/etabli</td><td>+ /reparer</td><td>+ /neuf</td><td>+ /eclore</td><td>les quatre</td></tr>
+          <tr><th scope="row">Couleurs de pseudo</th><td>jaune, vert</td><td>+ bleu clair, rose</td><td>toutes</td><td>toutes</td><td>toutes</td></tr>
+          <tr><th scope="row">Cadre au-dessus de ta tête</th><td>la corde</td><td>les ancres</td><td>les lanternes</td><td>le kraken</td><td>les ailes de cristal</td></tr>
+          <tr><th scope="row">Aura</th><td></td><td></td><td>argent</td><td>or</td><td>castérium</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="grades-sous-tableau">Le coffre s'ouvre partout, sauf en combat et sur la planète. Sans grade : 10 ventes à la fois à l'hôtel des ventes, 6 amis sur ton île.</p>
+    <ul class="grades-notes">
+      <li class="apparait" style="--retard:.05s"><h3>Passer au grade du dessus</h3><p>Tu paies seulement la différence : un Comte qui prend Duc paie 1&#160;000 crédits.</p></li>
+      <li class="apparait" style="--retard:.12s"><h3>À toi pour toujours</h3><p>Un grade ne se perd jamais, et ce que tu avais déjà acheté reste à toi.</p></li>
+      <li class="apparait" style="--retard:.19s"><h3>Les quatre commandes</h3><p>/etabli : l'Établi de Casteria à distance. /reparer : l'objet en main réparé, contre des jetons. /neuf : l'objet en main remis à neuf, gratuitement. /eclore : l'œuf mystère en main éclot tout de suite.</p></li>
+      <li class="apparait" style="--retard:.26s"><h3>Au féminin</h3><p>Chevalière, Comtesse, Marquise, Duchesse, Souveraine : tu choisis dans <code>/grades</code>.</p></li>
     </ul>
   </div>
 </section>
