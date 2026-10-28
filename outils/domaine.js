@@ -11,6 +11,8 @@ if (!/^https:\/\/[a-z0-9.-]+\.[a-z]{2,}$/i.test(domaine)) { console.log('Usage :
 // boutique et le vote aussi (leurs hauts en cinéma) ; les autres pages, celle du décollage
 const PAGES = [['index.html', '', '1.0'], ['commencer.html', 'commencer.html', '0.8', 'assets/images/casteria-commencer-palais-partage.jpg'], ['pirates.html', 'pirates.html', '0.8'],
   ['casino.html', 'casino.html', '0.8', 'assets/images/casteria-casino-salle-partage.jpg'], ['donjons.html', 'donjons.html', '0.8', 'assets/images/casteria-donjon-partage.jpg'],
+  // (28/10/2026) la page des evenements
+  ['evenements.html', 'evenements.html', '0.8', 'assets/images/casteria-palais-rade-couchant.jpg'],
   ['classement.html', 'classement.html', '0.7'], ['boutique.html', 'boutique.html', '0.6', 'assets/images/casteria-boutique-wyverne-partage.jpg'],
   // (22/10/2026) la page du vote
   ['vote.html', 'vote.html', '0.6', 'assets/images/casteria-vote-caisses-partage.jpg'],

@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Événements Minecraft chaque soir : le Défi Éclair et les mini-jeux | Casteria</title>
+<meta name="description" content="Sur Casteria, serveur Minecraft français moddé, des événements chaque jour au palais : le Défi Éclair (cinq jeux rapides tirés parmi quatorze), le Sol qui lâche, la Bataille de neige, l'heure dorée et la chasse au trésor. Rien à perdre, des clés à gagner.">
+<meta name="theme-color" content="#1B1028">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:site_name" content="Casteria">
+<meta property="og:title" content="Les événements de Casteria : chaque soir, au palais">
+<meta property="og:description" content="Le Défi Éclair, cinq jeux rapides tirés parmi quatorze ; le Sol qui lâche et la Bataille de neige ; l'heure dorée et la chasse au trésor.">
+<meta property="og:url" content="https://casteria.fr/evenements.html">
+<link rel="canonical" href="https://casteria.fr/evenements.html">
+<meta property="og:image" content="https://casteria.fr/assets/images/casteria-palais-rade-couchant.jpg">
+<meta property="og:image:width" content="2048">
+<meta property="og:image:height" content="1152">
+<meta property="og:image:alt" content="Le palais de Casteria sur son île, au coucher du soleil, son phare allumé sur la mer calme">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/logo/favicon-32.png">
+<link rel="icon" type="image/png" sizes="256x256" href="assets/logo/icone-256.png">
+<link rel="apple-touch-icon" href="assets/logo/icone-apple-180.png">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/carrousel.css">
+<link rel="stylesheet" href="css/scene.css">
+<link rel="stylesheet" href="css/pages.css">
+<link rel="stylesheet" href="css/evenements.css">
+<script type="application/ld+json">
+{ "@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
+  { "@type": "ListItem", "position": 1, "name": "Casteria", "item": "https://casteria.fr/" },
+  { "@type": "ListItem", "position": 2, "name": "Les événements", "item": "https://casteria.fr/evenements.html" } ] }
+</script>
+</head>
+<body>
+<div class="progres" aria-hidden="true"></div>
+<header class="barre verre posee">
+  <a class="marque" href="./" aria-label="Casteria, l'accueil"><img src="assets/logo/casteria-logo-300.webp" alt="Logo de Casteria" width="46" height="46"><span>Casteria</span></a>
+  <nav aria-label="Le menu">
+    <a href="./#voyage">Le jeu</a>
+    <a href="commencer.html">Par où commencer</a>
+    <a href="evenements.html" aria-current="page">Événements</a>
+    <a class="classement" href="classement.html" aria-label="Classement"><img class="pixel" src="assets/icones/classement.png" alt="" width="20" height="20">Classement</a>
+    <a class="voter" href="vote.html">Voter</a>
+    <a class="boutique" href="boutique.html"><img class="pixel" src="assets/icones/credit.png" alt="" width="20" height="20">Boutique</a>
+    <a class="bouton bouton-or petit" href="./#telecharger">Jouer</a>
+  </nav>
+</header>
+
+<main>
+<!-- LE HAUT DE PAGE EN CINÉMA : le palais au coucher du soleil, l'heure des événements du soir. Chaque heure, chaque gain
+     de cette page est lu dans le jeu (28/10/2026, la 152) : ev_eclair.js (CI_ECLAIR_HORAIRE, CI_ECLAIR_POINTS),
+     ai_evt_cadre.js (CI_JEU_LOTS, CI_JEU_REGLAGES), ai_evt_sol.js, ai_evt_neige.js, ah_evenements.js, loterie.js, la table de
+     la mer (ai_mer_table.js) et les pages de /aide ; à suivre quand ils changent -->
+<section class="heros vitrine-tete plein-cadre page-cinema page-palais evenements-tete" id="haut">
+  <div class="fond plein-cadre" aria-hidden="true">
+    <div class="plan">
+      <picture>
+        <source media="(max-aspect-ratio: 2/3)" type="image/webp" srcset="assets/images/casteria-evenements-couchant-portrait-768.webp 768w" sizes="100vw">
+        <source media="(max-aspect-ratio: 2/3)" srcset="assets/images/casteria-evenements-couchant-portrait-768.jpg 768w" sizes="100vw">
+        <source type="image/webp" srcset="assets/images/casteria-evenements-couchant-1280.webp 1280w, assets/images/casteria-evenements-couchant-1920.webp 1920w" sizes="100vw">
+        <img src="assets/images/casteria-evenements-couchant-1920.jpg" alt="" width="1920" height="1080" fetchpriority="high" decoding="async">
+      </picture>
+    </div>
+  </div>
+  <div class="cinema-texte">
+    <div class="cinema-titre">
+    <p class="sur-ligne">Chaque jour, au palais</p>
+    <h1>Les événements : <span class="or">tout le monde joue, personne ne perd</span></h1>
+    </div>
+    <div class="cinema-geste">
+    <p class="cinema-accroche">Le Défi Éclair, cinq jeux rapides tirés parmi quatorze. Le Sol qui lâche et la Bataille de neige. L'heure dorée, la chasse au trésor. Tape /participer de partout : on vient te chercher.</p>
+    <div class="gestes">
+      <a class="bouton bouton-orange grand" href="./#telecharger"><span class="triangle" aria-hidden="true"></span>Jouer gratuitement</a>
+      <a class="lien-doux" href="#programme">Le programme <span class="chevron" aria-hidden="true"></span></a>
+    </div>
+    <p class="preuves">Le Défi Éclair à 20&#160;h&#160;15 <i aria-hidden="true">&#183;</i> deux mini-jeux chaque soir <i aria-hidden="true">&#183;</i> des clés à gagner</p>
+    </div>
+  </div>
+</section>
+
+<!-- LE DÉFI ÉCLAIR, NOTRE ÉVÉNEMENT À NOUS : ses heures, son déroulé, ses points, ses gains -->
+<section class="pan defi" id="defi" aria-labelledby="defi-titre">
+  <div class="dedans deux-colonnes">
+    <div class="texte apparait">
+      <span class="sur-titre">Fait pour Casteria</span>
+      <h2 id="defi-titre">Le Défi Éclair</h2>
+      <p>Un jeu télévisé dans le palais. Cinq jeux tirés parmi quatorze, une règle avant chacun, et environ six minutes en tout. Entre deux jeux, le grand classement s'affiche ; ta place aussi, même loin du top 10.</p>
+      <ul class="cles">
+        <li><b>Du lundi au vendredi à 20&#160;h&#160;15</b> ; le samedi et le dimanche à 11&#160;h, 14&#160;h&#160;30 et 20&#160;h&#160;15.</li>
+        <li><b>100 points</b> par bonne réponse, et jusqu'à 50 de plus si tu es rapide. Trois bonnes de suite : 20 de plus à chacune.</li>
+        <li><b>Personne n'est éliminé</b>, rien à perdre : des jetons dès ta première réponse, à ton niveau, et de l'XP à la fin selon ta place.</li>
+      </ul>
+    </div>
+    <div class="podium apparait de-droite" aria-label="Les clés du podium">
+      <p class="podium-titre">Les clés du podium</p>
+      <ol>
+        <li class="p1"><b>1er</b><span>Clé Royale</span><small>Clé de l'Aventurier à 4 joueurs</small></li>
+        <li class="p2"><b>2e</b><span>Clé de l'Aventurier</span><small>Clé de Vote à 4 joueurs</small></li>
+        <li class="p3"><b>3e</b><span>Clé de Vote</span><small>dès 5 joueurs</small></li>
+      </ol>
+      <p class="podium-note">Les clés s'ouvrent dès 4 joueurs ; le podium entier dès 5.</p>
+    </div>
+  </div>
+  <figure class="defi-photo apparait"><picture><source type="image/webp" srcset="assets/evenements/photo-defi-salle.webp"><img src="assets/evenements/photo-defi-salle.jpg" alt="Le Défi Éclair dans le jeu : La Suite de laines, une laine s'allume, le palais flou derrière l'écran" width="1280" height="720" loading="lazy"></picture></figure>
+</section>
+
+<!-- LES QUATORZE JEUX DU DÉFI : l'écran de chacun, tel que le joueur le voit (les écrans du jeu, en pixels) ; chaque
+     légende est la règle que le jeu affiche avant la manche (le champ « regle » de ev_eclair_jeu_<id>.js) -->
+<section class="pan defi-jeux" id="jeux" aria-labelledby="jeux-titre">
+  <div class="dedans">
+    <div class="tete apparait">
+      <span class="sur-titre">Cinq jeux tirés parmi quatorze</span>
+      <h2 id="jeux-titre">Jamais deux fois le même Défi</h2>
+      <p>Mémoire, rapidité, culture Minecraft, réflexes : chaque soir, cinq de ces jeux, dans un ordre nouveau. Glisse pour les voir tous.</p>
+    </div>
+    <div class="monte-jeux" data-carrousel="glisse" data-nom="Les jeux du Défi Éclair" style="--vue: min(80vw, 420px)">
+      <figure class="vue jeu"><img class="pixel" src="assets/evenements/defi-laines.png" alt="L'écran de La Suite de laines : six laines de couleur, deux s'allument en or" width="808" height="480" loading="lazy"><figcaption><strong>La Suite de laines</strong>Regarde les laines s'allumer, puis clique-les dans l'ordre. Puis une suite neuve, plus longue.</figcaption></figure>
+      <figure class="vue jeu"><img class="pixel" src="assets/evenements/defi-bloc.png" alt="L'écran du Bon Bloc : un bloc vu de très près, et quatre noms à choisir" width="808" height="480" loading="lazy"><figcaption><strong>Le Bon Bloc</strong>Un bloc vu de près, puis de plus loin toutes les 3&#160;s. Trouve son nom : plus tu es rapide, plus tu gagnes.</figcaption></figure>
+      <figure class="vue jeu"><img class="pixel" src="assets/evenements/defi-quiz.png" alt="L'écran du Quiz Minecraft : une question et quatre réponses" width="808" height="480" loading="lazy"><figcaption><strong>Le Quiz Minecraft</strong>Une question sur Minecraft, quatre réponses. Plus tu réponds vite, plus tu gagnes.</figcaption></figure>
+      <figure class="vue jeu"><picture><source type="image/webp" srcset="assets/evenements/photo-quiestce.webp"><img src="assets/evenements/photo-quiestce.jpg" alt="L'écran de Qui est-ce ? dans le jeu : une créature dans l'ombre, à reconnaître" width="808" height="480" loading="lazy"></picture><figcaption><strong>Qui est-ce&#160;?</strong>Une créature dans l'ombre, en couleurs après 5&#160;s. Écris son nom puis Entrée : vite, ça rapporte plus.</figcaption></figure>
+      <figure class="vue jeu"><img class="pixel" src="assets/evenements/defi-paires.png" alt="L'écran des Paires : seize cartes retournées, huit paires sur huit trouvées" width="808" height="480" loading="lazy"><figcaption><strong>Les Paires</strong>Retourne les cartes deux par deux : 8 paires. Plus tu les trouves vite, plus tu gagnes.</figcaption></figure>
+      <figure class="vue jeu"><img class="pixel" src="assets/evenements/defi-intrus.png" alt="L'écran de L'Intrus : trois pelles et une hache, et quatre réponses" width="808" height="480" loading="lazy"><figcaption><strong>L'Intrus</strong>Quatre choses : trois vont ensemble. Trouve celle qui n'est pas de la famille.</figcaption></figure>
+      <figure class="vue jeu"><img class="pixel" src="assets/evenements/defi-calcul.png" alt="L'écran de Calcul Éclair : deux piles de diamants à additionner, et quatre totaux" width="808" height="480" loading="lazy"><figcaption><strong>Calcul Éclair</strong>Des piles d'objets du jeu : compte-les. Choisis le bon total, le plus vite possible.</figcaption></figure>
+      <figure class="vue jeu"><img class="pixel" src="assets/evenements/defi-compte.png" alt="L'écran de Compte-les ! : « Combien de lingots de fer ? », la bonne réponse en vert" width="808" height="480" loading="lazy"><figcaption><strong>Compte-les&#160;!</strong>Des créatures ou des objets s'affichent 3&#160;s. Compte ceux demandés, puis choisis le nombre.</figcaption></figure>
+      <figure class="vue jeu"><img class="pixel" src="assets/evenements/defi-lettres.png" alt="L'écran de Lettres mélangées : un mot aux lettres en désordre" width="808" height="480" loading="lazy"><figcaption><strong>Lettres mélangées</strong>Remets les lettres dans l'ordre, puis Entrée. Au bout de 6&#160;s, la première lettre s'affiche en or.</figcaption></figure>
+      <figure class="vue jeu"><img class="pixel" src="assets/evenements/defi-moment.png" alt="L'écran du Bon Moment : une aiguille qui balaie, et sa zone verte" width="808" height="480" loading="lazy"><figcaption><strong>Le Bon Moment</strong>Clique (ou Espace) quand l'aiguille est dans le vert. Trois coups par manche : chaque coup compte.</figcaption></figure>
+      <figure class="vue jeu"><img class="pixel" src="assets/evenements/defi-recette.png" alt="L'écran de La Recette : quatre recettes, une seule fait la pioche en diamant" width="808" height="480" loading="lazy"><figcaption><strong>La Recette</strong>Trouve la bonne recette, ou l'ingrédient caché. Un seul clic : plus tu es rapide, plus tu gagnes.</figcaption></figure>
+      <figure class="vue jeu"><img class="pixel" src="assets/evenements/defi-son.png" alt="L'écran de Devine le son : quatre réponses et le bouton Réécouter" width="808" height="480" loading="lazy"><figcaption><strong>Devine le son</strong>Écoute le son du jeu, puis choisis d'où il vient. « Réécouter » le rejoue pour toi seul.</figcaption></figure>
+      <figure class="vue jeu"><img class="pixel" src="assets/evenements/defi-trouve.png" alt="L'écran de Trouve-le ! : trente objets, un seul à trouver" width="808" height="480" loading="lazy"><figcaption><strong>Trouve-le&#160;!</strong>Trouve l'objet demandé parmi les 30 et clique-le. Trois erreurs et la manche est perdue.</figcaption></figure>
+      <figure class="vue jeu"><img class="pixel" src="assets/evenements/defi-unique.png" alt="L'écran du Nombre unique : vingt nombres, le 1 en vert, gagnant" width="808" height="480" loading="lazy"><figcaption><strong>Le Nombre unique</strong>Choisis un nombre de 1 à 20, en secret. Le plus petit que personne d'autre n'a pris gagne 150 points ; un autre pris par toi seul, 80.</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<!-- LES DEUX MINI-JEUX DU SOIR : le Sol qui lâche (18 h 30) et la Bataille de neige (21 h) ; l'arène est bâtie à la taille
+     des inscrits, puis effacée -->
+<section class="pan mini-jeux" id="mini-jeux" aria-labelledby="mini-titre">
+  <div class="dedans">
+    <div class="tete apparait">
+      <span class="sur-titre">Chaque soir, deux mini-jeux</span>
+      <h2 id="mini-titre">Une arène bâtie pour vous, à la taille du groupe</h2>
+      <p>Aucun dégât, rien à perdre. Il faut 2 inscrits ; l'arène se construit à votre mesure, puis s'efface.</p>
+    </div>
+    <div class="deux-jeux">
+      <article class="carte-jeu sol apparait de-gauche">
+        <p class="heure">18&#160;h&#160;30</p>
+        <h3>Le Sol qui lâche</h3>
+        <p>Chaque bloc où tu restes change de couleur, puis disparaît, et sauter ne protège pas. Celui qui tombe est éliminé : le dernier debout gagne.</p>
+        <p class="gains"><b>À gagner :</b> des jetons et de l'XP ; dès 4 joueurs, la Clé de l'Aventurier au 1er et la Clé de Vote au 2e ; dès 5, la Clé Royale, la Clé de l'Aventurier et la Clé de Vote aux trois premiers.</p>
+      </article>
+      <article class="carte-jeu neige apparait de-droite">
+        <p class="heure">21&#160;h</p>
+        <h3>La Bataille de neige</h3>
+        <p>Deux équipes, une boule toutes les 3&#160;secondes. Un joueur touché est éliminé ; au bout de 5&#160;minutes, l'équipe qui garde le plus de joueurs gagne.</p>
+        <p class="gains"><b>À gagner :</b> des jetons et de l'XP ; dès 4 joueurs, une Clé de Vote pour l'équipe gagnante (cinq au plus) et le meilleur tireur ; dès 6, des Clés de l'Aventurier ; dès 10, la Clé Royale au meilleur tireur.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- PARTICIPER : la file, jamais une salle d'attente (ai_evt_cadre.js : fileS 300, emmenerS 10) -->
+<section class="pan pan-parchemin participer" aria-labelledby="participer-titre">
+  <div class="dedans">
+    <div class="tete apparait">
+      <span class="sur-titre encre">Comment on joue</span>
+      <h2 id="participer-titre">Inscris-toi, puis continue à jouer</h2>
+    </div>
+    <ol class="etapes-jeu">
+      <li class="apparait" style="--retard:.05s"><b>1</b><h3>/participer</h3><p>Dès 5 minutes avant le départ, de partout, même depuis ton île.</p></li>
+      <li class="apparait" style="--retard:.15s"><b>2</b><h3>Joue tranquille</h3><p>Ta place est gardée. /quitter pour sortir de la file ; pendant ce temps, ni boss, ni duel, ni fusée.</p></li>
+      <li class="apparait" style="--retard:.25s"><b>3</b><h3>On vient te chercher</h3><p>10&#160;secondes avant le départ, tu es emmené. À la fin, tu reviens au palais ; un clic te ramène sur ton île.</p></li>
+    </ol>
+  </div>
+</section>
+
+<!-- LE PROGRAMME : une journée au palais, heure par heure, et les rendez-vous de la semaine -->
+<section class="pan programme" id="programme" aria-labelledby="programme-titre">
+  <div class="dedans">
+    <div class="tete apparait">
+      <span class="sur-titre">Le programme</span>
+      <h2 id="programme-titre">Une journée au palais</h2>
+      <p>Aux heures de Paris. En jeu, /events dit ce qui se passe et ce qui vient, et ton écran te prévient avant chaque rendez-vous.</p>
+    </div>
+    <ol class="journee">
+      <li class="apparait"><time>18&#160;h&#160;30</time><span><b>Le Sol qui lâche</b>tous les jours</span></li>
+      <li class="apparait"><time>19&#160;h&#160;30</time><span><b>L'heure dorée</b>jusqu'à 20&#160;h, tous les jours</span></li>
+      <li class="apparait"><time>20&#160;h</time><span><b>Le tirage de la loterie</b>et son feu d'artifice</span></li>
+      <li class="apparait vedette"><time>20&#160;h&#160;15</time><span><b>Le Défi Éclair</b>tous les jours ; le week-end aussi à 11&#160;h et 14&#160;h&#160;30</span></li>
+      <li class="apparait"><time>21&#160;h</time><span><b>La Bataille de neige</b>tous les jours</span></li>
+    </ol>
+    <div class="rendez-vous">
+      <article class="apparait">
+        <h3>L'heure dorée</h3>
+        <p>De 19&#160;h&#160;30 à 20&#160;h : un ciel doré sur le palais, tes ventes à +10&#160;% pour tous, le colporteur de passage, et le tirage de 20&#160;h finit en feu d'artifice.</p>
+      </article>
+      <article class="apparait" style="--retard:.1s">
+        <picture><source type="image/webp" srcset="assets/evenements/photo-chasse.webp"><img class="photo-rdv" src="assets/evenements/photo-chasse.jpg" alt="L'entrée du palais : à gauche, un coffre de la chasse au trésor sous sa colonne d'or ; Gaspard, le Majordome, sur l'allée" width="960" height="540" loading="lazy"></picture>
+        <h3>La chasse au trésor</h3>
+        <p>Le mercredi à 15&#160;h et le samedi à 16&#160;h : cinq coffres d'or apparaissent au palais, un toutes les 2 minutes, sous une colonne d'or. Le premier qui clique gagne des jetons ou une clé ; un coffre par joueur, et l'un des cinq est le gros lot : des jetons doublés et une clé.</p>
+      </article>
+      <article class="apparait" style="--retard:.2s">
+        <h3>La loterie</h3>
+        <p>Un tirage toutes les 4 heures, de minuit à 20&#160;h. Le billet coûte 100 jetons ; le gagnant prend 85&#160;% du pot, même s'il n'est plus là. Quand 5 joueurs ont pris chacun 10 billets ou plus, il reçoit aussi une Clé Royale (une par semaine au plus). /loterie</p>
+      </article>
+      <article class="apparait" style="--retard:.3s">
+        <h3>Le calcul du tchat</h3>
+        <p>Environ toutes les 40 minutes, une addition ou une soustraction tombe dans le tchat : le premier qui écrit le bon nombre, en moins d'une minute, gagne des jetons, à son niveau.</p>
+      </article>
+      <article class="apparait" style="--retard:.4s">
+        <h3>En mer</h3>
+        <p>Un convoi marchand et ses escortes, une razzia de pirates, et chaque soir de 19&#160;h à 20&#160;h la flotte de Morvan le Borgne au Large. <a href="pirates.html">La mer et les pirates</a></p>
+      </article>
+    </div>
+    <div class="gestes centre apparait"><a class="bouton bouton-orange grand" href="./#telecharger"><span class="triangle" aria-hidden="true"></span>Jouer gratuitement</a><a class="bouton bouton-bois grand" href="classement.html">Voir le classement</a></div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="dedans">
+    <div class="col">
+      <img src="assets/logo/casteria-logo-300.webp" alt="Casteria" width="70" height="70" loading="lazy">
+      <nav aria-label="Le pied de page"><a href="./">Accueil</a><a href="commencer.html">Par où commencer</a><a href="evenements.html">Les événements</a><a href="pirates.html">La mer et les pirates</a><a href="donjons.html">Les donjons</a><a href="casino.html">Le casino</a><a href="./#combat">Le combat</a><a href="classement.html">Classement</a><a href="boutique.html">Boutique</a><a href="vote.html">Voter</a><a href="reglement.html">Le règlement</a><a href="./#telecharger">Télécharger</a><a href="mentions-legales.html">Mentions légales</a><a href="confidentialite.html">Confidentialité</a><a href="conditions.html">Conditions</a></nav>
+    </div>
+    <small>Casteria est un serveur Minecraft indépendant, créé par des joueurs. Il n'est ni affilié à Mojang ni à Microsoft, ni approuvé par eux. Minecraft est une marque de Mojang Studios.</small>
+  </div>
+</footer>
+<script src="js/carrousel.js" defer></script>
+<script src="js/site.js" defer></script>
+</body>
+</html>

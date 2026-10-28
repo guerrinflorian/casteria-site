@@ -1,0 +1,87 @@
+/* LA PAGE DES ÉVÉNEMENTS (28/10/2026, la 152) : le Défi Éclair d'abord (son podium, ses quatorze jeux en carrousel), les
+   deux mini-jeux du soir, la file, puis le programme d'une journée et les rendez-vous de la semaine. Dans la nuit et l'or du
+   site ; aucun arrondi. */
+
+/* ---------- le haut : le palais au coucher du soleil ---------- */
+.evenements-tete .plan img { object-position: 46% 42%; }
+
+/* ---------- le Défi Éclair et son podium ---------- */
+.defi { color: #F4EAFF; background: radial-gradient(55% 60% at 85% 30%, rgba(255, 200, 80, .18), transparent 70%), linear-gradient(180deg, #1B0B2B, #2A1340); }
+.defi h2 { color: #FFF4D6; }
+.podium { padding: 28px 26px 22px; background: rgba(0, 0, 0, .3); border: 3px solid var(--or); box-shadow: 0 6px 0 rgba(0, 0, 0, .35); }
+.podium-titre { margin: 0 0 18px; text-align: center; font-family: "Lilita One", sans-serif; font-size: 26px; color: var(--or-clair); }
+.podium ol { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: end; gap: 10px; }
+.podium li { display: flex; flex-direction: column; justify-content: flex-end; gap: 4px; padding: 14px 8px 12px; text-align: center; border: 3px solid rgba(0, 0, 0, .4); }
+.podium li.p1 { order: 2; min-height: 190px; background: linear-gradient(180deg, #F2C64B, #B8861E); color: #3B2508; }
+.podium li.p2 { order: 1; min-height: 150px; background: linear-gradient(180deg, #D9DDE6, #9AA2B2); color: #22252C; }
+.podium li.p3 { order: 3; min-height: 120px; background: linear-gradient(180deg, #D79A63, #9A6034); color: #2A1608; }
+.podium b { font-family: "Lilita One", sans-serif; font-weight: 400; font-size: 34px; line-height: 1; }
+.podium span { font-weight: 700; font-size: 15.5px; line-height: 1.2; }
+.podium small { font-size: 13px; line-height: 1.25; opacity: .9; }
+.podium-note { margin: 16px 0 0; text-align: center; font-size: 15px; color: #F4EAFF; }
+
+/* ---------- les quatorze jeux : leurs écrans, en pixels ---------- */
+.defi-jeux { color: #F4EAFF; background: linear-gradient(180deg, #2A1340, #1B0B2B); }
+.defi-jeux [data-carrousel] { padding-top: 10px; }
+.defi-jeux [data-carrousel] > .vue.jeu { border-radius: 0; border: 3px solid var(--or); background: #160A22; color: #FFE9D6; }
+.defi-jeux [data-carrousel] > .vue.jeu img { object-fit: contain; background: #4A1530; }
+.defi-jeux [data-carrousel] > .vue.jeu img.pixel { image-rendering: pixelated; }
+.defi-jeux [data-carrousel] > .vue.jeu > figcaption { font-size: 15.5px; line-height: 1.4; }
+.defi-jeux [data-carrousel] > .vue.jeu > figcaption strong { color: var(--or-clair); font-family: "Lilita One", sans-serif; font-weight: 400; font-size: 21px; margin-bottom: 4px; }
+.defi-jeux .carrousel-commandes .fleche { background: #FFF1C2; }
+
+/* ---------- les deux mini-jeux du soir ---------- */
+.mini-jeux { color: #F1ECE4; background: radial-gradient(50% 50% at 20% 20%, rgba(255, 140, 60, .14), transparent 70%), radial-gradient(50% 50% at 80% 80%, rgba(150, 210, 255, .14), transparent 70%), linear-gradient(180deg, #1B0B2B, #14202E); }
+.deux-jeux { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 30px; }
+.carte-jeu { position: relative; padding: 30px 30px 26px; border: 4px solid; box-shadow: 0 22px 40px rgba(0, 0, 0, .45); overflow: hidden; }
+.carte-jeu picture { margin: -30px -30px 22px; border-bottom: 4px solid rgba(0, 0, 0, .35); }
+.carte-jeu .photo-jeu { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; }
+.carte-jeu .heure { margin: 0 0 6px; font-family: "Lilita One", sans-serif; font-size: 22px; letter-spacing: 1px; }
+.carte-jeu h3 { font-size: clamp(28px, 2.8vw, 38px); margin: 0 0 12px; }
+.carte-jeu p { font-size: 17px; }
+.carte-jeu .gains { margin: 18px 0 0; padding-top: 14px; font-size: 15.5px; border-top: 2px dashed currentColor; }
+/* le Sol : des carreaux de laine qui s'usent ; la neige : des flocons */
+.carte-jeu.sol { color: #FFF1E4; border-color: #E0703A; background: linear-gradient(180deg, rgba(60, 20, 10, .78), rgba(40, 14, 8, .92)), repeating-conic-gradient(#C2452A 0 25%, #E8A13A 0 50%) 0 0 / 48px 48px; }
+.carte-jeu.sol .heure, .carte-jeu.sol .gains b { color: #FFC07A; }
+.carte-jeu.neige { color: #EAF6FF; border-color: #8CC8F0; background: radial-gradient(circle at 20% 30%, rgba(255, 255, 255, .22) 0 3px, transparent 4px) 0 0 / 46px 46px, linear-gradient(180deg, rgba(14, 40, 66, .9), rgba(10, 26, 44, .95)); }
+.carte-jeu.neige .heure, .carte-jeu.neige .gains b { color: #BFE6FF; }
+
+/* ---------- participer : trois gestes sur le parchemin ---------- */
+.etapes-jeu { list-style: none; margin: 0 auto; padding: 0; max-width: 980px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; }
+.etapes-jeu li { position: relative; padding: 30px 20px 22px; text-align: center; background: rgba(255, 252, 240, .5); border: 3px solid #A57713; box-shadow: 0 5px 0 rgba(107, 68, 35, .35); }
+.etapes-jeu li > b { position: absolute; top: -20px; left: 50%; transform: translateX(-50%); width: 40px; height: 40px; line-height: 36px; font-family: "Lilita One", sans-serif; font-weight: 400; font-size: 24px; color: #3B2508; background: #F2C64B; border: 3px solid #8A5A10; }
+.etapes-jeu h3 { font-size: 26px; color: #5A3708; margin: 0 0 6px; }
+.etapes-jeu p { margin: 0; font-size: 16px; }
+
+/* ---------- le programme : la journée, heure par heure ---------- */
+.programme { color: #F4EAFF; background: radial-gradient(60% 50% at 50% 0%, rgba(255, 180, 94, .16), transparent 70%), linear-gradient(180deg, #2A0F40, #1B0B2B); }
+.journee { list-style: none; margin: 0 auto 50px; padding: 0; max-width: 820px; display: grid; gap: 10px; }
+.journee li { display: grid; grid-template-columns: 120px minmax(0, 1fr); align-items: center; gap: 18px; padding: 12px 18px; background: rgba(0, 0, 0, .25); border-left: 5px solid rgba(255, 215, 94, .45); }
+.journee li.vedette { background: rgba(255, 200, 80, .14); border-left-color: var(--or); }
+.journee time { font-family: "Lilita One", sans-serif; font-size: 24px; color: var(--or-clair); }
+.journee span { font-size: 16px; color: #E9DDF7; }
+.journee span b { display: block; font-size: 19px; color: #FFF4D6; }
+.rendez-vous { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 22px; margin-bottom: 44px; }
+.rendez-vous article { padding: 22px 22px 18px; background: rgba(0, 0, 0, .28); border: 2px solid rgba(255, 215, 94, .35); }
+.rendez-vous h3 { margin: 0 0 8px; font-size: 24px; color: var(--or-clair); }
+.rendez-vous p { margin: 0; font-size: 16px; }
+.rendez-vous a { color: var(--or-clair); }
+
+/* ---------- le téléphone ---------- */
+@media (max-width: 860px) {
+  .deux-jeux, .etapes-jeu { grid-template-columns: minmax(0, 1fr); }
+  .etapes-jeu { gap: 34px; }
+  .journee li { grid-template-columns: 92px minmax(0, 1fr); gap: 12px; }
+  .journee time { font-size: 20px; }
+  .podium li.p1 { min-height: 170px; } .podium li.p2 { min-height: 136px; } .podium li.p3 { min-height: 112px; }
+}
+
+/* les photos du jeu (b2, la course de la 152) : la salle du Défi sous son texte, et une photo en tête de deux rendez-vous */
+.defi-photo { margin: 50px auto 0; width: min(var(--large), 100% - 40px); border: 3px solid var(--or); box-shadow: 0 22px 40px rgba(0, 0, 0, .45); }
+.defi-photo img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; }
+.rendez-vous picture { margin: -22px -22px 16px; }
+.rendez-vous .photo-rdv { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; }
+.carte-jeu picture, .rendez-vous picture { display: block; }
+/* « Qui est-ce ? » sans photo : la boîte de l'ombre, un grand point d'interrogation sur le tapis du Défi */
+.defi-jeux .ombre-jeu { display: grid; place-items: center; aspect-ratio: 808 / 480; background: radial-gradient(40% 50% at 50% 45%, rgba(0, 0, 0, .55), transparent 70%), #4A1530; }
+.defi-jeux .ombre-jeu span { font-family: "Lilita One", sans-serif; font-size: 96px; line-height: 1; color: rgba(255, 233, 214, .85); text-shadow: 0 6px 0 rgba(0, 0, 0, .45); }

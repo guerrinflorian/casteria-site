@@ -1,7 +1,7 @@
 // Les règles du site, vérifiées en une seconde : npm run verifier (code 0 : tout est bon)
 'use strict'
 const fs = require('fs'), path = require('path')
-const RACINE = path.join(__dirname, '..'), PAGES = ['index.html', 'commencer.html', 'pirates.html', 'casino.html', 'donjons.html', 'classement.html', 'boutique.html', 'reglement.html', 'vote.html', 'discord.html', 'rejoindre.html', 'mentions-legales.html', 'confidentialite.html', 'conditions.html', 'merci.html', '404.html']
+const RACINE = path.join(__dirname, '..'), PAGES = ['index.html', 'commencer.html', 'pirates.html', 'casino.html', 'donjons.html', 'evenements.html', 'classement.html', 'boutique.html', 'reglement.html', 'vote.html', 'discord.html', 'rejoindre.html', 'mentions-legales.html', 'confidentialite.html', 'conditions.html', 'merci.html', '404.html']
 // LES FICHIERS LOURDS PERMIS (aucun depuis le 13/10/2026 : la bande-annonce de l'accueil a été retirée sur la demande du
 // propriétaire) : un fichier de plus de 5 Mo n'entre ici qu'avec son plafond en Mo, et la vidéo qui le cite porte
 // « data-clic » (chargée au clic du visiteur), jamais « data-auto »

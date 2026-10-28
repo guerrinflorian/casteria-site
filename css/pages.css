@@ -365,3 +365,6 @@ html.photo .gardien-scene img, html.photo .gardien-scene .runes, html.photo .gar
   .porte-arche img, .porte-texte { transition: none; }
 }
 html.photo .ampoules-arche, html.photo .torche::before { animation: none; }
+
+/* (28/10/2026) un lien dans un article de la Gazette (vers la page des événements) : l'encre rouge du journal */
+.g-article a { color: #8A3B12; font-weight: 700; }
