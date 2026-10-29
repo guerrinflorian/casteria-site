@@ -81,6 +81,7 @@
   function poserCarte(c) {
     var iles = (c.iles || []).filter(function (il) { return il && isFinite(il.i) && isFinite(il.j) && il.hote })
     if (!iles.length) return
+    if (window.IlePixel && window.IlePixel.noterDessins) window.IlePixel.noterDessins(iles)
     // la fenêtre : l'étendue des îles et une case de mer autour (une île jamais collée au cadre), entre le minimum et le plafond ;
     // centrée sur le milieu de l'étendue (pas la moyenne : une île au loin tirait la fenêtre vers un bord vide)
     var imin = 1e9, imax = -1e9, jmin = 1e9, jmax = -1e9
@@ -103,7 +104,7 @@
     }
     carte.style.setProperty('--cols', String(COLS)); carte.style.setProperty('--rangs', String(RANGS))
     A.vider(carte)
-    var dessin = !!(window.IlePixel && window.IlePixel.grande)
+    var dessin = !!(window.IlePixel && window.IlePixel.unique), vivantes = []
     carte.classList.toggle('dessinee', dessin)
     iles.forEach(function (il) {
       var x = Number(il.i) - i0, y = Number(il.j) - j0
@@ -118,10 +119,22 @@
       // (af, 22:3x) l'île DESSINÉE comme sur la grande carte (js/ile.js, IlePixel.grande : sa forme, sa plage, sa maison, ses
       // arbres, ses fleurs) et son ÉPINGLE : la tête de l'hôte et ses étoiles (aucune pour une île neuve)
       if (dessin) {
-        var cv = document.createElement('canvas'); cv.width = 20; cv.height = 20; cv.className = 'ilot-dessin'; cv.setAttribute('aria-hidden', 'true')
-        cv.getContext('2d').drawImage(window.IlePixel.grande(Number(il.i), Number(il.j), Math.max(0, Math.min(5, Math.floor(Number(il.etoiles) || 0))), !!il.ouverte), 0, 0)
+        // (af, 23:2x ; le propriétaire : « incroyables ») L'ÎLE UNIQUE de la grande carte (IlePixel.unique) : son écume bat, la nuit
+        // sa fenêtre s'allume (vivreCarte) ; l'épingle se pose sur le haut de sa terre
+        var un = window.IlePixel.unique(window.IlePixel.pourDessin(il))
+        var cv = document.createElement('canvas'); cv.width = un.U; cv.height = un.U; cv.className = 'ilot-dessin'; cv.setAttribute('aria-hidden', 'true')
         b.appendChild(cv)
+        // (af, 23:2x) une île OUVERTE déjà rendue en 3D (il.ciel) : sa vraie vue du ciel (/api/ile/i,j/ciel.png, 67), à la place
+        // du dessin dès qu'elle est lue ; une île fermée garde son dessin (l'API ne sert rien d'elle)
+        if (il.ciel === true) {
+          var im = document.createElement('img'); im.className = 'ilot-ciel'; im.alt = ''; im.decoding = 'async'
+          im.onload = function () { b.classList.add('vue-du-ciel') }
+          im.src = '/api/ile/' + Number(il.i) + ',' + Number(il.j) + '/ciel.png'
+          b.appendChild(im)
+        }
+        vivantes.push({ b: b, cv: cv, un: un, il: il, ph: (Number(il.i) * 0.37 + Number(il.j) * 0.61), vague: -1 })
         var ep = A.el('span', 'ilot-epingle'); ep.setAttribute('aria-hidden', 'true')
+        ep.style.top = il.ciel === true ? '21%' : (un.haut / un.U * 100) + '%'
         ep.appendChild(tete(A.el('span', 'tete-pixel'), il.peau, 16))
         if (Number(il.etoiles) > 0) ep.appendChild(A.el('span', '', '★ ' + String(Math.round(Number(il.etoiles) * 10) / 10).replace('.', ',')))
         b.appendChild(ep)
@@ -166,7 +179,97 @@
     var premiere = carte.querySelector('.ilot.belle') || carte.querySelector('button.ilot')
     if (premiere && fiche) premiere.dispatchEvent(new Event('mouseenter'))
     if (!dessin) poserPhare()
-    else { var vieux = carte.querySelector('.phare'); if (vieux) vieux.remove() }
+    else { var vieux = carte.querySelector('.phare'); if (vieux) vieux.remove(); vivreCarte(vivantes, prises) }
+  }
+  // ---------- (af, 23:2x) LA MER QUI VIT : l'écume de chaque île bat à son rythme (deux images ; on ne redessine qu'au changement),
+  // la nuit (l'heure de Paris) leur fenêtre s'allume ; au-dessus, un CIEL (une toile sans clic) : la fumée des îles où l'on joue,
+  // des mouettes rares, un navire qui passe sur une rangée de mer libre. Seulement quand la carte est à l'écran et l'onglet visible ;
+  // rien ne bouge pour qui demande moins de mouvement (l'écume reste, immobile). ----------
+  function nuitParis() {
+    var h = 12
+    try { h = Number(new Intl.DateTimeFormat('fr-FR', { timeZone: 'Europe/Paris', hour: 'numeric', hour12: false }).format(new Date())) % 24 } catch (e) { h = new Date().getHours() }
+    return h >= 21 || h < 6
+  }
+  var NAV = ['......W.......', '.....WWW......', '....WWPWW.....', '...WWWPWWW....', '......M.......', 'BBBBBBBBBBBBB.', '.BBBBBBBBBBB..', '..bbbbbbbbb...']
+  var NAV_T = { W: '#F4EAFF', P: '#8E4FB5', M: '#5A3A1C', B: '#8C5A2E', b: '#6B4423' }
+  var ciel = null, boucleCiel = 0
+  function poserVague(v, n, nuit) {
+    if (v.vague === n) return
+    v.vague = n
+    var k = v.cv.getContext('2d')
+    k.clearRect(0, 0, v.un.U, v.un.U); k.drawImage(v.un.f[n], 0, 0)
+    if (nuit && v.un.fenetre) { k.fillStyle = '#FFD75E'; k.fillRect(v.un.fenetre[0], v.un.fenetre[1], 1, 1) }
+  }
+  function vivreCarte(liste, prises) {
+    var nuit = nuitParis()
+    liste.forEach(function (v) { poserVague(v, 0, nuit) })
+    if (calme || !window.requestAnimationFrame) return
+    if (ciel) ciel.remove()
+    cancelAnimationFrame(boucleCiel)
+    ciel = document.createElement('canvas'); ciel.className = 'carte-iles-ciel'; ciel.setAttribute('aria-hidden', 'true')
+    carte.appendChild(ciel)
+    var g = ciel.getContext('2d'), L = 0, H = 0, dpr = 1, visible = false, t = 0, moi = ciel
+    var fumantes = liste.filter(function (v) { return Number(v.il.en_ligne) > 0 && v.un.cheminee })
+    // les rangées de mer sans île de la fenêtre : la route du navire
+    var routes = []
+    for (var y = 1; y < RANGS - 1; y++) { var vide = true; for (var x = 0; x < COLS; x++) if (prises[x + ',' + y]) vide = false; if (vide) routes.push(y) }
+    var volee = [], prochaineMouette = 3, passant = null, prochainNavire = 5
+    function taille() { var r = carte.getBoundingClientRect(); dpr = Math.min(2, window.devicePixelRatio || 1); L = r.width; H = r.height; moi.width = Math.round(L * dpr); moi.height = Math.round(H * dpr) }
+    taille(); window.addEventListener('resize', taille)
+    if (window.IntersectionObserver) new IntersectionObserver(function (es) { visible = es[0].isIntersecting }).observe(carte); else visible = true
+    function fumer(cr, v) {
+      var r = v.cv.getBoundingClientRect(), sc = r.width / v.un.U, cx = r.left - cr.left + (v.un.cheminee[0] + 0.5) * sc, cy = r.top - cr.top + v.un.cheminee[1] * sc
+      for (var k = 0; k < 3; k++) {
+        var age = (t * 0.55 + v.ph + k / 3) % 1, tl = Math.max(2, Math.round(sc * (1 + age * 1.4)))
+        g.fillStyle = 'rgba(225,228,235,' + (0.55 * (1 - age)).toFixed(2) + ')'
+        g.fillRect(Math.round(cx - tl / 2 + Math.sin(age * 5 + v.ph) * sc * 0.8), Math.round(cy - age * sc * 7 - tl), tl, tl)
+      }
+    }
+    function naviguer() {
+      if (!passant && routes.length && t > prochainNavire) passant = { y: (routes[Math.floor(Math.random() * routes.length)] + 0.5) / RANGS, sens: Math.random() < 0.5 ? 1 : -1, t0: t }
+      if (!passant) return
+      var u = Math.max(1, Math.round(L / 260)), lg = NAV[0].length, x0 = passant.sens > 0 ? -lg * u + (t - passant.t0) * 14 : L - (t - passant.t0) * 14
+      var y0 = Math.round(passant.y * H - 5 * u + Math.sin(t * 1.6) * u * 0.6), k
+      if (x0 < -lg * u - 40 || x0 > L + 40) { passant = null; prochainNavire = t + 30 + Math.random() * 20; return }
+      for (k = 1; k <= 5; k++) {
+        g.fillStyle = 'rgba(230,245,255,' + (0.34 - k * 0.06).toFixed(2) + ')'
+        var sx = passant.sens > 0 ? x0 - k * 4 * u : x0 + lg * u + (k * 4 - 3) * u
+        g.fillRect(Math.round(sx), y0 + 6 * u - Math.round(k * u * 0.5), 3 * u, u); g.fillRect(Math.round(sx), y0 + 7 * u + Math.round(k * u * 0.5), 3 * u, u)
+      }
+      for (var yy = 0; yy < NAV.length; yy++) for (var c = 0; c < lg; c++) {
+        var ch = NAV[yy][passant.sens > 0 ? c : lg - 1 - c]
+        if (ch !== '.') { g.fillStyle = NAV_T[ch]; g.fillRect(Math.round(x0 + c * u), y0 + yy * u, u, u) }
+      }
+    }
+    function voler() {
+      var k, m
+      if (t > prochaineMouette) {
+        var n = 1 + Math.floor(Math.random() * 3), sens = Math.random() < 0.5 ? 1 : -1, hy = H * (0.1 + Math.random() * 0.6)
+        for (k = 0; k < n; k++) volee.push({ y: hy + k * 8 - (k % 2) * 12, sens: sens, vit: 36 + Math.random() * 14, ph: k * 0.7, t0: t, x0: sens > 0 ? -16 - k * 18 : L + 16 + k * 18 })
+        prochaineMouette = t + 8 + Math.random() * 10
+      }
+      for (m = volee.length - 1; m >= 0; m--) {
+        var o = volee[m], mx = o.x0 + o.sens * (t - o.t0) * o.vit
+        if (mx < -50 || mx > L + 50) { volee.splice(m, 1); continue }
+        var my = o.y + Math.sin((t - o.t0) * 1.3 + o.ph) * 3, ailes = Math.floor(t * 5 + o.ph * 3) & 1, w = 2
+        g.fillStyle = 'rgba(4,20,32,.25)'; g.fillRect(Math.round(mx - 4), Math.round(my + 22), 8, 2)
+        g.fillStyle = '#F7F7F2'; g.fillRect(Math.round(mx - 1), Math.round(my), w, w)
+        g.fillRect(Math.round(mx - 3 * w), Math.round(my + (ailes ? -w : w)), 2 * w, w); g.fillRect(Math.round(mx + w), Math.round(my + (ailes ? -w : w)), 2 * w, w)
+      }
+    }
+    function image(maint) {
+      if (!moi.isConnected) return
+      boucleCiel = requestAnimationFrame(image)
+      if (!visible || document.hidden) return
+      t = maint / 1000
+      for (var k = 0; k < liste.length; k++) poserVague(liste[k], Math.floor(t * 1.15 + liste[k].ph) & 1, nuit)
+      g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, L, H); g.imageSmoothingEnabled = false
+      var cr = carte.getBoundingClientRect()
+      for (k = 0; k < fumantes.length; k++) fumer(cr, fumantes[k])
+      naviguer()
+      voler()
+    }
+    boucleCiel = requestAnimationFrame(image)
   }
   // (18:1x) LE PHARE au coin de la mer, et L'OUVERTURE : la caméra descend de la mer vers les îles (2,4 s), une fois par visite
   // (sessionStorage), seulement quand la carte entre à l'écran ; un clic, une touche ou un défilement la passent ; jamais pour qui

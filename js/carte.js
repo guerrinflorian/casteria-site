@@ -34,7 +34,10 @@
   var L = 0, H = 0, dpr = 1, sale = true, visible = true, t = 0
   var paves = {}, total = 0, etendue = null, choisie = null, libreChoisie = null, survolee = null, survolLibre = null, demande = null, enCours = false
   var lieux = null, navires = {}, relevePrec = 0, releveDernier = 0
-  var intro = null, etincelles = [], ilesDe = {}
+  // (af, 23:2x, la mesure : une île unique neuve coûte 1 ms, 7,6 au téléphone lent) les dessins neufs (îles uniques, épingles) ne
+  // se fabriquent que pendant les 4 premières ms d'une image ; la suite attend l'image suivante : rien ne saccade
+  var intro = null, etincelles = [], ilesDe = {}, debutImage = 0
+  function aLeTemps() { return performance.now() - debutImage < 4 }
 
   function ecrire(t2) { etat.textContent = t2; etat.hidden = !t2 }
   function cle(pi, pj) { return pi + ',' + pj }
@@ -93,6 +96,7 @@
         ilesDe[String(x.hote).toLowerCase()] = x
       }
       for (var c2 in neufs) paves[c2] = neufs[c2]
+      if (P.noterDessins) P.noterDessins(j.iles)
       if (j.total != null) total = j.total
       if (j.etendue) etendue = j.etendue
       ecrire(''); dire(); sale = true
@@ -211,6 +215,7 @@
     fondMer(s >= 18 ? s : s * 10, o[0] - s / 2, o[1] - s / 2)
     houle()
     var v = visibles(), pres = s >= 16, tout = s >= 44, pi, pj, p, k
+    if (pres) navirePassant(v)
     g.textAlign = 'center'; g.textBaseline = 'top'
     // les places libres : dans l'étendue de la grille, une case sans île (un pavé lu : on sait qu'elle est vide)
     if (pres && etendue) {
@@ -252,7 +257,7 @@
     }
     // (af, 22:5x) l'île choisie : quatre coins d'or (comme une case de jeu), sans cacher l'île
     if (choisie) {
-      var c = ecranI(choisie.i, choisie.j), r = Math.round(Math.max(7, s * .5)), lc = Math.max(5, Math.round(r * .38)), ep = Math.max(2, Math.round(s / 30))
+      var c = ecranI(choisie.i, choisie.j), r = Math.round(Math.max(7, s * .56)), lc = Math.max(5, Math.round(r * .38)), ep = Math.max(2, Math.round(s / 30))
       var x0 = Math.round(c[0] - r), y0 = Math.round(c[1] - r), x1 = Math.round(c[0] + r), y1 = Math.round(c[1] + r)
       g.fillStyle = 'rgba(0,0,0,.35)'
       coins(x0 + 2, y0 + 2, x1 + 2, y1 + 2, lc, ep)
@@ -260,6 +265,7 @@
       coins(x0, y0, x1, y1, lc, ep)
     }
     dessinerEtincelles(maint)
+    if (pres) mouettes()
   }
   function coins(x0, y0, x1, y1, lc, ep) {
     g.fillRect(x0, y0, lc, ep); g.fillRect(x0, y0, ep, lc)
@@ -291,23 +297,122 @@
       g.drawImage(halo, Math.round(px - hl / 2), Math.round(py - hl / 2 + berce), hl, hl)
       g.globalAlpha = 1
     }
-    // (af, 22:4x) l'île de 20 x 20 (IlePixel.grande : la plage, l'écume, la maison, les arbres, les fleurs de ses étoiles), un
-    // peu plus grande que sa case pour que l'écume touche presque la voisine ; de loin, la petite de 12 x 12
-    var big = P.grande && s >= 16, dg = big ? Math.round(s * .92) : d
-    if (big) { a = Math.round(px - dg / 2); b = Math.round(py - dg / 2 + berce); u = dg / 20 }
-    g.drawImage(big ? P.grande(x.i, x.j, niveauEtoiles(x.etoiles), x.ouverte) : P.sprite(x.i, x.j, niveauEtoiles(x.etoiles), x.ouverte), a, b, dg, dg)
-    if (amb.nuit) { g.fillStyle = '#FFD75E'; g.fillRect(Math.round(a + u * (big ? 9 : 5)), Math.round(b + u * (big ? 10 : 6)), Math.max(2, Math.round(u * 1.5)), Math.max(2, Math.round(u * 1.5))) }
-    d = dg
+    // (af, 23:1x ; le propriétaire : « incroyables ») L'ÎLE UNIQUE (IlePixel.unique, 28 x 28 : sa forme, ses maisons, ses arbres,
+    // ses fleurs, ses bêtes et ses machines si l'API les compte), un peu plus grande que sa case ; SON ÉCUME BAT (deux images, à
+    // son rythme) ; on y joue : sa cheminée fume ; la nuit, sa fenêtre s'allume ; de loin, la petite de 12 x 12
+    var un = null
+    // (af, 23:2x ; la tête : « sa vraie vue du ciel, fondue dans ta mer ») UNE ÎLE OUVERTE déjà rendue en 3D (x.ciel, l'API) : son
+    // image du ciel (67 : 320 x 320 par case, un pixel par bloc, le bord déjà fondu dans l'eau), agrandie pour que sa terre (le
+    // pont et l'île 2 compris, environ 200 blocs de large) ait la taille d'une île dessinée, centrée sur cette terre ; tant qu'elle
+    // n'est pas lue, le dessin ; une île fermée n'a jamais d'image (l'API répond 404 partout, le même mot)
+    var vc = x.ciel && s >= 40 ? cielDe(x) : null
+    if (vc) {
+      var tc = Math.round(s * 1.45), cx0 = Math.round(px - tc * (CIEL_X / 320 - 0.5)), cy0 = Math.round(py - tc * (CIEL_Y / 320 - 0.5) + berce)
+      // un peu plus vive que le rendu brut, pour tenir à côté des îles dessinées (le filtre : là où le navigateur le sait)
+      g.imageSmoothingEnabled = true
+      if (FILTRE) g.filter = 'saturate(1.3) brightness(1.12)'
+      g.drawImage(vc, Math.round(cx0 - tc / 2), Math.round(cy0 - tc / 2), tc, tc)
+      if (FILTRE) g.filter = 'none'
+      g.imageSmoothingEnabled = false
+      if (!tout) return
+      var ttc = Math.round(s * .12) * 2, epc = epingle(x, ttc), sommetC = cy0 - tc / 2 + tc * CIEL_HAUT / 320
+      if (epc) g.drawImage(epc, Math.round(px - (epc.width - 2) / 2), Math.round(sommetC - ttc - 6))
+      return
+    }
+    var xd = P.pourDessin ? P.pourDessin(x) : x
+    if (P.unique && s >= 40 && (P.uniqueDeja(xd) || aLeTemps())) un = P.unique(xd)
+    else if (P.grande && s >= 16 && (!P.grandeDeja || P.grandeDeja(x.i, x.j, niveauEtoiles(x.etoiles), x.ouverte) || aLeTemps())) { var gd = Math.round(s * .92); g.drawImage(P.grande(x.i, x.j, niveauEtoiles(x.etoiles), x.ouverte), Math.round(px - gd / 2), Math.round(py - gd / 2 + berce), gd, gd); if (tout) { var tt0 = Math.round(s * .12) * 2, ep0 = epingle(x, tt0); if (ep0) g.drawImage(ep0, Math.round(px - (ep0.width - 2) / 2), Math.round(py - gd / 2 + berce - tt0 - 6)) } return }
+    var dg = un ? Math.round(s * 1.18) : d, sc = un ? dg / un.U : u
+    if (un) {
+      a = Math.round(px - dg / 2); b = Math.round(py - dg / 2 + berce)
+      var vague = calme ? 0 : Math.floor(t * 1.15 + (x.i * 0.37 + x.j * 0.61)) & 1
+      g.drawImage(un.f[vague], a, b, dg, dg)
+      if (amb.nuit && un.fenetre) { g.fillStyle = '#FFD75E'; g.fillRect(Math.round(a + un.fenetre[0] * sc), Math.round(b + un.fenetre[1] * sc), Math.max(2, Math.round(sc)), Math.max(2, Math.round(sc))) }
+      if (x.en_ligne > 0 && un.cheminee && !calme && s >= 30) fumee(a + (un.cheminee[0] + 0.5) * sc, b + un.cheminee[1] * sc, sc, x.i * 1.7 + x.j)
+    } else {
+      g.drawImage(P.sprite(x.i, x.j, niveauEtoiles(x.etoiles), x.ouverte), a, b, d, d)
+      if (amb.nuit) { g.fillStyle = '#FFD75E'; g.fillRect(Math.round(a + u * 5), Math.round(b + u * 6), Math.max(2, Math.round(u * 1.5)), Math.max(2, Math.round(u * 1.5))) }
+    }
     if (!tout) return
     // (af, 22:5x) L'ÉPINGLE au-dessus de l'île (elle ne la cache plus) : la tête de l'hôte et, à côté, ses étoiles en petit (le
-    // propriétaire : « sans prendre de place » ; aucune pour une île neuve : son fanion gris le dit), sa pointe vers l'île
-    // (22:4x, la mesure : 24,7 ms par image avec les têtes) l'épingle se dessine UNE fois par île et par taille, puis se recopie
-    var tt = Math.round(s * .12) * 2, ep = epingle(x, tt)
-    g.drawImage(ep, Math.round(px - (ep.width - 2) / 2), Math.round(b - tt * 0.5))
+    // propriétaire : « sans prendre de place » ; aucune pour une île neuve : son fanion gris le dit), sa pointe sur le haut de
+    // l'île ; (22:4x, la mesure : 24,7 ms par image avec les têtes) dessinée UNE fois par île et par taille, puis recopiée
+    var tt = Math.round(s * .12) * 2, ep = epingle(x, tt), sommet = un ? b + un.haut * sc : b
+    if (ep) g.drawImage(ep, Math.round(px - (ep.width - 2) / 2), Math.round(sommet - tt - 6))
+    d = un ? Math.round((un.U - 4) * sc) : dg
     if (s < 110) return
     var f = Math.min(15, Math.max(12, Math.round(s / 8)))
     g.font = '600 ' + f + 'px Fredoka, system-ui, sans-serif'
     etiquette(x.nom, px, b + d + 12, f, '#fff')
+  }
+  // (af, 23:1x) LES PASSANTS : un NAVIRE qui traverse de temps en temps (toutes les 35 à 60 s, sur la mer, son sillage derrière
+  // lui ; dans le monde : il suit la carte quand on la glisse) et des MOUETTES rares (une à trois, toutes les 9 à 21 s, dans le
+  // ciel, leur ombre sur l'eau). Rien pour qui demande moins de mouvement, rien pendant la mesure. Des carrés, aucune image.
+  var NAV = ['......W.......', '.....WWW......', '....WWPWW.....', '...WWWPWWW....', '......M.......', 'BBBBBBBBBBBBB.', '.BBBBBBBBBBB..', '..bbbbbbbbb...']
+  var NAV_T = { W: '#F4EAFF', P: '#8E4FB5', M: '#5A3A1C', B: '#8C5A2E', b: '#6B4423' }
+  var passant = null, prochainNavire = 6, volee = [], prochaineMouette = 4
+  function navirePassant(v) {
+    if (calme || mesure) return
+    if (!passant && t > prochainNavire) {
+      var sens = Math.random() < 0.5 ? 1 : -1
+      passant = { i: sens > 0 ? v.i0 - 1 : v.i1 + 1, j: v.j0 + 1.5 + Math.random() * Math.max(1, v.j1 - v.j0 - 3), sens: sens, t0: t, i0: sens > 0 ? v.i0 - 1 : v.i1 + 1 }
+    }
+    if (!passant) return
+    var ip = passant.i0 + passant.sens * (t - passant.t0) * 0.22, e = ecranI(ip, passant.j)
+    if (e[0] < -120 || e[0] > L + 120 || ip < v.i0 - 3 || ip > v.i1 + 3) { passant = null; prochainNavire = t + 35 + Math.random() * 25; return }
+    var u = Math.max(1, Math.round(I.s / 26)), lg = NAV[0].length, y0 = Math.round(e[1] - 4 * u + Math.sin(t * 1.6) * u * 0.6), x0 = Math.round(e[0] - lg * u / 2)
+    // le sillage : des traits clairs derrière la poupe, qui s'ouvrent et s'effacent
+    for (var k = 1; k <= 5; k++) {
+      g.fillStyle = 'rgba(230,245,255,' + (0.34 - k * 0.06).toFixed(2) + ')'
+      var sx = passant.sens > 0 ? x0 - k * 4 * u : x0 + lg * u + (k * 4 - 3) * u
+      g.fillRect(sx, y0 + 6 * u - k * u * 0.5, 3 * u, u); g.fillRect(sx, y0 + 7 * u + k * u * 0.5, 3 * u, u)
+    }
+    for (var y = 0; y < NAV.length; y++) for (var c = 0; c < lg; c++) {
+      var ch = NAV[y][passant.sens > 0 ? c : lg - 1 - c]
+      if (ch === '.') continue
+      g.fillStyle = NAV_T[ch]; g.fillRect(x0 + c * u, y0 + y * u, u, u)
+    }
+  }
+  function mouettes() {
+    if (calme || mesure) return
+    if (t > prochaineMouette) {
+      var n = 1 + Math.floor(Math.random() * 3), sens = Math.random() < 0.5 ? 1 : -1, y = H * (0.12 + Math.random() * 0.6), vit = 46 + Math.random() * 20
+      for (var k = 0; k < n; k++) volee.push({ x: sens > 0 ? -20 - k * 22 : L + 20 + k * 22, y: y + k * 9 - (k % 2) * 14, sens: sens, vit: vit, ph: k * 0.7, t0: t })
+      prochaineMouette = t + 9 + Math.random() * 12
+    }
+    for (var m = volee.length - 1; m >= 0; m--) {
+      var o = volee[m], x = o.x + o.sens * (t - o.t0) * o.vit
+      if (x < -60 || x > L + 60) { volee.splice(m, 1); continue }
+      var yy = o.y + Math.sin((t - o.t0) * 1.3 + o.ph) * 4, haut = Math.floor((t * 5 + o.ph * 3)) & 1, u = 3
+      g.fillStyle = 'rgba(4,20,32,.28)'; g.fillRect(Math.round(x - 5), Math.round(yy + 30), 10, 3)
+      g.fillStyle = '#F7F7F2'
+      g.fillRect(Math.round(x - u / 2), Math.round(yy), u, u)
+      if (haut) { g.fillRect(Math.round(x - 3 * u), Math.round(yy - u), 2 * u, u); g.fillRect(Math.round(x + u), Math.round(yy - u), 2 * u, u) }
+      else { g.fillRect(Math.round(x - 3 * u), Math.round(yy + u), 2 * u, u); g.fillRect(Math.round(x + u), Math.round(yy + u), 2 * u, u) }
+      g.fillStyle = '#E8A33C'; g.fillRect(Math.round(x + (o.sens > 0 ? u : -u - 1)), Math.round(yy), 2, 2)
+    }
+  }
+  // les images du ciel : lues une fois par île (le cache de l'API : 5 minutes), seulement pour les îles qu'on voit de près ;
+  // CIEL_X, CIEL_Y : le milieu de la terre dans l'image (l'île 1, le pont, l'île 2 : 67, « l'emprise jusqu'à x 281 ») ;
+  // CIEL_HAUT : le haut de sa terre (où se pose l'épingle)
+  var CIEL_X = 200, CIEL_Y = 162, CIEL_HAUT = 95, ciels = {}, FILTRE = 'filter' in g
+  function cielDe(x) {
+    var k = x.i + ',' + x.j, c = ciels[k]
+    if (c) return c.pret ? c.img : null
+    c = ciels[k] = { img: new Image(), pret: false }
+    c.img.decoding = 'async'
+    c.img.onload = function () { c.pret = true; sale = true }
+    c.img.onerror = function () { x.ciel = false }
+    c.img.src = '/api/ile/' + Math.floor(x.i) + ',' + Math.floor(x.j) + '/ciel.png'
+    return null
+  }
+  // LA FUMÉE d'une île où l'on joue : trois bouffées qui montent de la cheminée, grandissent et s'effacent (quelques carrés)
+  function fumee(cx, cy, sc, ph) {
+    for (var k = 0; k < 3; k++) {
+      var age = ((t * 0.55 + ph + k / 3) % 1), tl = Math.max(2, Math.round(sc * (1 + age * 1.4)))
+      g.fillStyle = 'rgba(225,228,235,' + (0.55 * (1 - age)).toFixed(2) + ')'
+      g.fillRect(Math.round(cx - tl / 2 + Math.sin(age * 5 + ph) * sc * 0.8), Math.round(cy - age * sc * 7 - tl), tl, tl)
+    }
   }
   // l'image d'une épingle : son ombre, son fond, sa pointe, la tête de l'hôte et ses étoiles ; gardée (refaite une fois quand la
   // tête arrive) ; au-delà de 800 gardées, on repart de zéro
@@ -315,6 +420,7 @@
   function epingle(x, tt) {
     var et = Number(x.etoiles) > 0 ? etoilesTexte(x.etoiles) : '', cleE = x.hote + '|' + et + '|' + tt, deja = epingles[cleE]
     if (deja && (deja.t || !Tete.image(x.peau))) return deja.c
+    if (!aLeTemps()) return deja ? deja.c : null
     var te = Tete.image(x.peau, deja ? null : function () { sale = true })
     var c = document.createElement('canvas'), k = c.getContext('2d')
     k.font = '700 10px Fredoka, system-ui, sans-serif'
@@ -698,6 +804,7 @@
     avancerIntro(maint)
     if (!anime && !sale && !(intro && !intro.fini) && !etincelles.length) return
     sale = false
+    debutImage = performance.now()
     dessiner(maint)
     tPrec = maint
   }
@@ -724,10 +831,18 @@
     var res = []
     ;[[ZOOM_MIN, 'de loin'], [26, 'les îles dessinées'], [60, 'avec les têtes']].forEach(function (z) {
       I.s = z[0]; I.cx = 0; I.cy = 0
+      // (af, 23:2x) la première image (elle fabrique les îles uniques de la vue pendant ses 4 premières ms), puis le régime
+      var t1 = performance.now()
+      debutImage = performance.now(); dessiner(t1)
+      var premiere = performance.now() - t1
       var t0 = performance.now(), n = 60
-      for (var k = 0; k < n; k++) { t += 1 / 60; I.cx += 0.01; dessiner(t0) }
-      res.push(z[1] + ' : ' + String(Math.round((performance.now() - t0) / n * 10) / 10).replace('.', ',') + ' ms')
+      for (var k = 0; k < n; k++) { t += 1 / 60; I.cx += 0.01; debutImage = performance.now(); dessiner(t0) }
+      res.push(z[1] + ' : ' + String(Math.round((performance.now() - t0) / n * 10) / 10).replace('.', ',') + ' ms (la première ' + String(Math.round(premiere * 10) / 10).replace('.', ',') + ')')
     })
+    // le prix d'une île unique neuve (100 îles jamais vues)
+    var tu = performance.now()
+    for (var ku = 0; P.unique && ku < 100; ku++) P.unique({ i: 9000 + ku, j: 9000, hote: 'mesure' + ku, etoiles: ku % 6, amis: ku % 4, ouverte: ku % 2 === 0 })
+    res.push('une île unique : ' + String(Math.round((performance.now() - tu) / 100 * 100) / 100).replace('.', ',') + ' ms')
     var nb = 0
     for (var c in paves) nb += paves[c].iles.length
     ecrire(nb + ' îles lues ; une image ' + res.join(', '))

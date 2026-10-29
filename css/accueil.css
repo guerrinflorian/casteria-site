@@ -276,3 +276,14 @@ button.ilot:hover, button.ilot:focus-visible, button.ilot.choisi { animation-pla
 .etapes.trois.fil .carte { height: auto; }
 /* la carte de l'accueil : le nom d'une île n'apparaît plus sous elle (la fiche le dit, l'épingle montre son hôte) */
 .carte-iles.dessinee .ilot-nom { display: none; }
+/* (af, 23:2x) les îles uniques : un peu plus grandes que leur case (l'écume touche presque la voisine) ; l'épingle posée sur le
+   haut de la terre (js/accueil.js lui donne son « top ») ; le ciel au-dessus de la mer, sans clic (la fumée, les mouettes, le
+   navire qui passe) */
+.carte-iles.dessinee .ilot:not(.libre) { margin: -9%; }
+.carte-iles.dessinee .ilot-epingle { transform: translate(-50%, calc(-100% - 6px)); }
+.carte-iles-ciel { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 2; }
+/* (af, 23:2x) la vraie vue du ciel d'une île ouverte (js/accueil.js) : sa terre à la taille d'une île dessinée, centrée sur elle
+   (l'image : 320 blocs de côté, la terre au milieu de x 100 à 300) ; un peu plus vive ; le dessin caché quand elle est là */
+.ilot-ciel { position: absolute; left: -37.5%; top: -21%; width: 140%; height: 140%; max-width: none; pointer-events: none; opacity: 0; filter: saturate(1.3) brightness(1.12); transition: opacity .4s; }
+.ilot.vue-du-ciel .ilot-ciel { opacity: 1; }
+.ilot.vue-du-ciel .ilot-dessin { visibility: hidden; }

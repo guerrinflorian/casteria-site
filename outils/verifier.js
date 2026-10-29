@@ -633,11 +633,13 @@ for (const page of PAGES) {
   // téléphone, la coupe seule, à côté de la Boutique et avant « Jouer ») et son nom lu (aria-label) ; le pied aussi
   {
     const m = nu.indexOf('<nav aria-label="Le menu">'), p = nu.indexOf('<nav aria-label="Le pied de page">')
-    const LIEN = /<a class="classement" href="\/?classement\.html"( aria-current="page")? aria-label="Classement"><img class="pixel" src="\/?assets\/icones\/classement\.png" alt="" width="20" height="20">Classement<\/a>/
-    if (m >= 0 && !LIEN.test(dedans(nu, m, 'nav'))) faute('le menu du haut ne mène pas au classement avec sa coupe et son nom (<a class="classement" ... aria-label="Classement"><img ... assets/icones/classement.png ...>Classement</a>)')
+    // (29/10/2026, le style neuf validé par le propriétaire) la coupe peut être l'icône au trait du kit (le sprite de la barre, #i-coupe)
+    const LIEN = /<a class="classement" href="\/?classement\.html"( aria-current="page")? aria-label="Classement">(<img class="pixel" src="\/?assets\/icones\/classement\.png" alt="" width="20" height="20">|<svg class="ic" aria-hidden="true"><use href="#i-coupe"\/><\/svg>)Classement<\/a>/
+    if (m >= 0 && !LIEN.test(dedans(nu, m, 'nav'))) faute('le menu du haut ne mène pas au classement avec sa coupe et son nom (<a class="classement" ... aria-label="Classement"><img ... assets/icones/classement.png ...> ou <svg class="ic" ...#i-coupe...>Classement</a>)')
+    if (m >= 0 && /#i-/.test(dedans(nu, m, 'nav')) && !/<svg class="icones"[^>]*>[^]*?<symbol id="i-coupe"/.test(nu)) faute('la barre se sert des icônes du kit (#i-...) sans leur sprite (<svg class="icones">, b5_assembleur/barre.js)')
     if (p >= 0 && !/<a href="\/?classement\.html">Classement<\/a>/.test(dedans(nu, p, 'nav'))) faute('le pied de page ne mène pas au classement (classement.html)')
     // (22/10/2026) LE VOTE : le menu du haut et le pied de chaque page y mènent aussi
-    if (m >= 0 && !/<a class="voter" href="\/?vote\.html"( aria-current="page")?>Voter<\/a>/.test(dedans(nu, m, 'nav'))) faute('le menu du haut ne mène pas à la page du vote (<a class="voter" href="vote.html">Voter</a>)')
+    if (m >= 0 && !/<a class="voter" href="\/?vote\.html"( aria-current="page")?>(<svg class="ic" aria-hidden="true"><use href="#i-eclair"\/><\/svg>)?Voter<\/a>/.test(dedans(nu, m, 'nav'))) faute('le menu du haut ne mène pas à la page du vote (<a class="voter" href="vote.html">Voter</a>)')
     if (p >= 0 && !/<a href="\/?vote\.html">Voter<\/a>/.test(dedans(nu, p, 'nav'))) faute('le pied de page ne mène pas à la page du vote (vote.html)')
   }
   // LES CARROUSELS (css/carrousel.css, js/carrousel.js) : une des trois sortes, au moins deux vues, et la page charge
@@ -720,7 +722,8 @@ else if ((PLAN.match(/<loc>/g) || []).length !== PAGES.length - HORS_GOOGLE.leng
     // liste, en mots. La règle du 14/10 (sa coupe dans la barre) cède : son lien ne se cache dans la barre QUE si le menu
     // déroulant existe (js/site.js, menuTelephone, qui reprend chaque lien du menu) ; le bouton et chaque ligne : 44 px au moins ;
     // la liste se ferme à Échap
-    const site = lire('js/site.js'), menuOk = /\n  function menuTelephone\(\) \{/.test(site) && /\n  menuTelephone\(\)\n/.test(site) && /nav\.querySelectorAll\('a'\)/.test(site)
+    // (29/10/2026, le style neuf) le tiroir peut aussi poser ses cartes une à une : il doit alors porter le Classement
+    const site = lire('js/site.js'), menuOk = /\n  function menuTelephone\(\) \{/.test(site) && /\n  menuTelephone\(\)\n/.test(site) && (/nav\.querySelectorAll\('a'\)/.test(site) || /ligne\('classement\.html', 'Classement'/.test(site))
     if (!menuOk && regles.some(r => r.media && r.sel.split(',').some(x => /a\.classement\s*$/.test(x)) && /display\s*:\s*none/.test(r.corps))) faute('css/style.css : le lien du classement est caché sur un écran étroit, sans le menu déroulant qui le reprend (js/site.js, menuTelephone)')
     if (menuOk) {
       const haut = (sel) => { const r = regles.find(x => x.f === 'css/style.css' && /max-width:\s*960px/.test(x.media || '') && x.sel.trim() === sel), m = r ? r.corps.match(/(?:^|;|\s)min-height\s*:\s*(\d+)px/) : null; return m ? +m[1] : 0 }

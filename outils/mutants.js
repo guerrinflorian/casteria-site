@@ -143,14 +143,16 @@ const MUTANTS = [
   ['une pastille arrondie dans le compte', 'css/compte.css', s => s.replace('.mdp .voir { flex: 0 0 auto;', '.mdp .voir { border-radius: 8px; flex: 0 0 auto;')],
   ['une pastille arrondie dans l espace admin', 'css/admin.css', s => s.replace('.a-pause { min-height: 42px;', '.a-pause { border-radius: 20px; min-height: 42px;')],
   ['le lien Classement retire du menu d une page', 'pirates.html', s => s.replace(/\n\s*<a class="classement" href="classement\.html"[^\n]*<\/a>/, '')],
-  ['la coupe du classement retiree de l en-tete d une page', 'index.html', s => s.replace('<img class="pixel" src="assets/icones/classement.png" alt="" width="20" height="20">', '')],
+  ['la coupe du classement retiree de l en-tete d une page', 'index.html', s => s.replace('<svg class="ic" aria-hidden="true"><use href="#i-coupe"/></svg>Classement</a>', 'Classement</a>')],
+  ['le sprite des icones retire d une page qui s en sert', 'index.html', s => s.replace(/<svg class="icones"[^]*?<\/svg>/, '')],
+  ['le classement retire du tiroir du telephone', 'js/site.js', s => s.replace("    ligne('classement.html', 'Classement', 'coupe')\n", '')],
   ['le nom du lien du classement retire (aria-label)', 'commencer.html', s => s.replace(' aria-label="Classement"', '')],
   ['le lien du classement cache sur telephone', 'css/style.css', s => s.replace(':not(.boutique):not(.classement)', ':not(.boutique)')],
   ['la coupe du classement trop petite pour le doigt', 'css/style.css', s => s.replace('min-width: 44px; min-height: 44px;', 'min-width: 30px; min-height: 30px;')],
   // ---------- (29/10/2026) le menu déroulant du téléphone (js/site.js, css/style.css) et le kit des motifs (css/motifs.css) ----------
   ['le menu deroulant jamais pose (le classement cache sans lui)', 'js/site.js', s => s.replace('\n  menuTelephone()\n', '\n')],
   ['le menu deroulant qui ne se ferme plus a Echap', 'js/site.js', s => s.replace("if (e.key === 'Escape' && !tiroir.hidden) { ouvrir(false); bouton.focus() }", "if (e.key === 'Esc' && !tiroir.hidden) { ouvrir(false) }")],
-  ['le menu deroulant ecrit comme du code de page', 'js/site.js', s => s.replace('a.href = href; a.textContent = mot', 'a.href = href; a.innerHTML = mot')],
+  ['le menu deroulant ecrit comme du code de page', 'js/site.js', s => s.replace('a.appendChild(ic(icone)); a.appendChild(document.createTextNode(mot))', 'a.appendChild(ic(icone)); a.innerHTML += mot')],
   ['le bouton du menu trop petit pour le doigt', 'css/style.css', s => s.replace('gap: 10px; margin-left: auto; min-height: 44px;', 'gap: 10px; margin-left: auto; min-height: 30px;')],
   ['une ligne du menu trop petite pour le doigt', 'css/style.css', s => s.replace('.menu-tiroir a { display: flex; align-items: center; min-height: 48px;', '.menu-tiroir a { display: flex; align-items: center; min-height: 32px;')],
   ['un dessin du kit qui manque', 'css/motifs.css', s => s.replace('url("../assets/motifs/pierres.svg")', 'url("../assets/motifs/pierre.svg")')],
@@ -243,7 +245,7 @@ const MUTANTS = [
   // ---------- (22/10/2026) le vote : sa page, ses sites (la seule adresse d'un autre domaine permise, dans leur liste), ses liens ----------
   ['la page du vote retiree du plan du site', 'sitemap.xml', s => s.replace(/<url>(?:(?!<\/url>)[\s\S])*vote\.html[\s\S]*?<\/url>\s*/, '')],
   ['le lien Voter retire du pied d une page', 'casino.html', s => s.replace('<a href="vote.html">Voter</a>', '')],
-  ['le lien Voter retire du menu d une page', 'donjons.html', s => s.replace(/\n\s*<a class="voter" href="vote\.html">Voter<\/a>/, '')],
+  ['le lien Voter retire du menu d une page', 'donjons.html', s => s.replace(/\n\s*<a class="voter" href="vote\.html">(<svg class="ic" aria-hidden="true"><use href="#i-eclair"\/><\/svg>)?Voter<\/a>/, '')],
   ['un lien vers un autre site hors de la liste des sites de vote', 'vote.html', s => s.replace('</main>', '<p><a href="https://exemple.test/vote">Vote ici</a></p></main>')],
   // (23/10/2026) la liste porte Serveur Privé : les mutants touchent son lien
   ['un site de vote sans rel="noopener"', 'vote.html', s => s.replace('href="https://serveur-prive.net/minecraft/casteria/vote" target="_blank" rel="noopener"', 'href="https://serveur-prive.net/minecraft/casteria/vote" target="_blank"')],

@@ -1,0 +1,243 @@
+/* LE KIT DU STYLE NEUF (b5, le 29/10/2026 ; la maquette de la tête validée par le propriétaire à 23:1x : « c'est beaucoup mieux ») :
+   TOUT ARRONDI (panneaux de 18 à 24 px, boutons de 12 à 16 px), des ombres douces ; des BOUTONS DE JEU à lèvre (un dégradé, un bord du
+   bas plus foncé, ils s'enfoncent au clic) : orange pour Jouer, or pour la boutique et l'action, sombre, bleu pour le Discord ; la
+   police des titres dans UNE variable (--police-titre : Chewy, choisie par le propriétaire), Fredoka pour le texte ; une barre en
+   verre, flottante et arrondie ; un tiroir en cartes à icônes au téléphone ; des fenêtres en carte crème. NOS couleurs (la nuit
+   violette, l'or, l'orange de Jouer), nos images. Chargée par chaque page juste après css/motifs.css (b5_assembleur/barre.js). */
+
+@font-face { font-family: "Chewy"; src: url("../assets/polices/chewy.woff2") format("woff2"); font-display: swap; }
+
+:root {
+  --police-titre: "Chewy", "Lilita One", "Fredoka", sans-serif;
+  --police-bouton: "Lilita One", "Fredoka", sans-serif;
+  --nuit: #140D22; --nuit-2: #1D1430; --carte: #241A3A; --carte-2: #2D2247; --trait: rgba(255, 255, 255, .09);
+  --or-k: #FFCF5A; --or-k2: #F3A93A; --or-k-fonce: #B9741F; --orange: #FF8A3D; --orange-2: #EC6A1F; --orange-fonce: #B44A12;
+  --creme: #FBEFD6; --creme-2: #F2DCAF; --brun: #4A2F1C; --violet-k: #9B5DE5; --violet-trait: #C9A8FF; --rose: #FF5FA2; --vert-k: #46D27A;
+  --titre-creme: #FFF6DC; --ombre-titre: 0 4px 0 #3A1F12, 0 5px 0 #3A1F12, 0 12px 26px rgba(0, 0, 0, .45);
+  --r-panneau: 22px; --r-carte: 20px; --r-bouton: 14px; --r-champ: 14px;
+  --ombre-douce: 0 14px 30px rgba(0, 0, 0, .35);
+}
+body { background: var(--nuit); }
+
+/* ---------- LES TITRES : Chewy, crème, une ombre brune pleine dessous ---------- */
+h1, h2, h3 { font-family: var(--police-titre); font-weight: 400; letter-spacing: .3px; }
+h1, h2 { text-shadow: var(--ombre-titre); }
+.sur-titre { font-family: "Fredoka", sans-serif; }
+
+/* ---------- LES BOUTONS DE JEU (la classe .bouton de toutes les pages, et ses couleurs) ---------- */
+.bouton {
+  border: 0; border-image: none; image-rendering: auto; border-radius: var(--r-bouton); padding: 12px 22px 13px; min-height: 48px;
+  font-family: var(--police-bouton); font-weight: 400; font-size: 17px; letter-spacing: .4px; text-transform: uppercase; color: #fff;
+  background: linear-gradient(180deg, #3F2C60, #2A1C42); box-shadow: 0 5px 0 #120A1E, 0 10px 22px rgba(0, 0, 0, .3), inset 0 1px 0 rgba(255, 255, 255, .16);
+  transition: transform .1s ease, box-shadow .1s ease, filter .15s ease;
+}
+.bouton:hover { filter: brightness(1.08); transform: translateY(-1px); }
+.bouton:active { transform: translateY(4px); box-shadow: 0 1px 0 #120A1E, 0 4px 10px rgba(0, 0, 0, .3), inset 0 1px 0 rgba(255, 255, 255, .16); filter: none; }
+.bouton:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+.bouton-or { color: #4A2B07; background: linear-gradient(180deg, #FFE08A, var(--or-k) 45%, var(--or-k2)); box-shadow: 0 5px 0 var(--or-k-fonce), 0 10px 22px rgba(243, 169, 58, .28), inset 0 1px 0 rgba(255, 255, 255, .5); text-shadow: none; }
+.bouton-or:active { box-shadow: 0 1px 0 var(--or-k-fonce), 0 4px 10px rgba(243, 169, 58, .25), inset 0 1px 0 rgba(255, 255, 255, .5); }
+.bouton-orange { color: #fff; background: linear-gradient(180deg, #FFA35C, var(--orange) 45%, var(--orange-2)); box-shadow: 0 5px 0 var(--orange-fonce), 0 10px 22px rgba(236, 106, 31, .35), inset 0 1px 0 rgba(255, 255, 255, .35); text-shadow: 0 2px 0 rgba(120, 40, 0, .35); }
+.bouton-orange:active { box-shadow: 0 1px 0 var(--orange-fonce), 0 4px 10px rgba(236, 106, 31, .3), inset 0 1px 0 rgba(255, 255, 255, .35); }
+.bouton-bois, .bouton-sombre { color: #fff; background: rgba(28, 19, 46, .9); border: 2px solid rgba(255, 255, 255, .16); box-shadow: 0 5px 0 rgba(0, 0, 0, .5), 0 10px 22px rgba(0, 0, 0, .25); text-shadow: none; }
+.bouton-bois:active, .bouton-sombre:active { box-shadow: 0 1px 0 rgba(0, 0, 0, .5); }
+.bouton-vert { color: #fff; background: linear-gradient(180deg, #7BE59C, var(--vert-k) 45%, #2FA95E); box-shadow: 0 5px 0 #1E6E3C, 0 10px 22px rgba(46, 169, 94, .3), inset 0 1px 0 rgba(255, 255, 255, .35); text-shadow: 0 2px 0 rgba(10, 60, 30, .4); }
+.bouton-rouge { color: #fff; background: linear-gradient(180deg, #FF7A6B, #E8463A 45%, #C73328); box-shadow: 0 5px 0 #7E1C14, 0 10px 22px rgba(199, 51, 40, .3), inset 0 1px 0 rgba(255, 255, 255, .3); text-shadow: 0 2px 0 rgba(90, 15, 10, .4); }
+.bouton-discord { color: #fff; background: linear-gradient(180deg, #7A86FF, #5865F2 50%, #4752D6); box-shadow: 0 5px 0 #323A9C, 0 10px 22px rgba(88, 101, 242, .35), inset 0 1px 0 rgba(255, 255, 255, .3); text-shadow: 0 2px 0 rgba(20, 20, 80, .35); }
+.bouton-discord:active { box-shadow: 0 1px 0 #323A9C; }
+.bouton.grand { font-size: 21px; padding: 15px 28px 16px; min-height: 58px; border-radius: 16px; border-width: 0; }
+.bouton.petit { font-size: 15px; padding: 9px 15px 10px; min-height: 42px; border-radius: 12px; border-width: 0; }
+.bouton-bois.grand, .bouton-sombre.grand, .bouton-bois.petit, .bouton-sombre.petit { border-width: 2px; }
+.bouton[disabled], .bouton[aria-disabled="true"] { filter: grayscale(.6) brightness(.8); cursor: not-allowed; transform: none; }
+
+/* les icônes au trait (le sprite que chaque page porte dans sa barre) */
+svg.ic { width: 20px; height: 20px; flex: none; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+svg.ic.plein { fill: currentColor; stroke: none; }
+svg.icones { position: absolute; width: 0; height: 0; overflow: hidden; }
+
+/* ---------- LES PANNEAUX ET LES CARTES : arrondis, ombres douces ---------- */
+.panneau-nuit { border-radius: var(--r-panneau); border: 1px solid var(--trait); background: linear-gradient(180deg, var(--carte-2), var(--carte)); box-shadow: var(--ombre-douce), inset 0 1px 0 rgba(255, 255, 255, .05); }
+.panneau-bois { border-radius: var(--r-panneau); border: 1px solid rgba(255, 255, 255, .1); box-shadow: var(--ombre-douce), inset 0 1px 0 rgba(255, 255, 255, .06); }
+.panneau-bois::before { display: none; }
+.coins-or::after { display: none; }
+.carte { border-radius: var(--r-carte); }
+
+/* ---------- LA BARRE : du verre sombre, flottante, arrondie ---------- */
+.barre { top: 12px; left: 0; right: 0; margin: 0 auto; width: min(1240px, calc(100% - 24px)); gap: 6px; padding: 8px 8px 8px 12px;
+  border-radius: 22px; background: rgba(22, 15, 38, .74); border: 1px solid var(--trait); box-shadow: 0 18px 40px rgba(0, 0, 0, .4), inset 0 1px 0 rgba(255, 255, 255, .06);
+  backdrop-filter: blur(14px) saturate(1.2); -webkit-backdrop-filter: blur(14px) saturate(1.2); }
+.barre.posee { padding: 8px 8px 8px 12px; background: rgba(22, 15, 38, .9); box-shadow: 0 14px 34px rgba(0, 0, 0, .45), inset 0 1px 0 rgba(255, 255, 255, .06); }
+.barre .marque { font-family: var(--police-titre); font-size: 26px; text-shadow: 0 3px 0 #3A1F12; }
+.barre nav { gap: 2px; }
+.barre nav a { position: relative; display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 9px 13px; border-radius: 14px; border: 0;
+  font-family: var(--police-bouton); font-weight: 400; font-size: 15px; letter-spacing: .4px; text-transform: uppercase; color: #F4ECFF; }
+.barre nav a:not(.bouton):hover, .barre nav a:not(.bouton)[aria-current="page"] { background: rgba(255, 255, 255, .08); color: #fff; border: 0; }
+.barre nav a:not(.bouton)[aria-current="page"] { box-shadow: inset 0 -3px 0 var(--or-k); }
+.barre nav a:focus-visible { outline: 3px solid var(--or-k); outline-offset: 2px; }
+.barre nav a .ic { color: var(--violet-trait); }
+.barre nav a.bouton .ic { color: currentColor; }
+.barre nav a.bouton { margin: 0 4px; padding: 9px 15px 10px; border-bottom: 0; }
+.barre nav a.bouton, .barre nav a.bouton:hover { border-bottom: 0; }
+.barre nav a.boutique.bouton { color: #4A2B07; }
+.barre nav a.classement { gap: 8px; }
+.barre .pastille { position: absolute; top: -9px; left: 50%; transform: translateX(-50%); padding: 2px 8px; border-radius: 999px; font: 400 10px var(--police-bouton); letter-spacing: .5px;
+  color: #fff; background: var(--rose); box-shadow: 0 2px 0 #B8326D; white-space: nowrap; pointer-events: none; }
+/* le compte : un carré d'or arrondi (connecté : sa tête) */
+.barre nav a.barre-compte { width: 46px; min-width: 46px; height: 46px; min-height: 46px; padding: 0; margin-left: 4px; justify-content: center; border-radius: 14px; border: 0;
+  color: #4A2B07; background: linear-gradient(180deg, #FFE08A, var(--or-k) 50%, var(--or-k2)); box-shadow: 0 4px 0 var(--or-k-fonce), inset 0 1px 0 rgba(255, 255, 255, .5); }
+.barre nav a.barre-compte:hover, .barre nav a.barre-compte[aria-current="page"] { color: #4A2B07; background: linear-gradient(180deg, #FFE9A8, #FFD777 50%, #F7B653); border: 0; }
+.barre nav a.barre-compte:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--or-k-fonce); }
+.barre nav a.barre-compte .ic { color: #4A2B07; width: 22px; height: 22px; }
+.barre nav a.barre-compte .barre-mot { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.barre-tete { width: 30px; height: 30px; border-radius: 8px; background-size: 240px 240px; background-position: -150px -30px, -30px -30px; box-shadow: 0 0 0 2px rgba(74, 43, 7, .45); }
+.barre-pseudo { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+/* de 961 à 1240 px : les icônes des liens partent (le mot reste), le nom du logo aussi */
+@media (min-width: 961px) and (max-width: 1240px) {
+  .barre nav a:not(.bouton):not(.barre-compte) .ic { display: none; }
+  .barre nav a { padding: 9px 10px; font-size: 14px; }
+  .barre .marque span { display: none; }
+}
+@media (min-width: 961px) and (max-width: 1060px) { .barre nav a { padding: 9px 8px; font-size: 13.5px; } .barre nav a.bouton { padding: 9px 12px 10px; } }
+
+/* ---------- LE TIROIR DU TÉLÉPHONE : un panneau qui glisse, des cartes à icônes ---------- */
+@media (max-width: 960px) {
+  .barre { top: 10px; width: calc(100% - 20px); padding: 6px 6px 6px 10px; border-radius: 18px; }
+  .barre .marque { font-size: 22px; }
+  .barre nav a.bouton.jouer { display: inline-flex; }
+  .barre nav a:not(.bouton):not(.barre-compte) { display: none; }
+  .barre nav a.barre-compte { display: none; }
+  .menu-bouton { order: 2; margin-left: 0; min-height: 42px; padding: 0 12px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, .16); background: rgba(255, 255, 255, .06);
+    font: 400 15px var(--police-bouton); letter-spacing: .4px; text-transform: uppercase; color: #fff; }
+  .barre nav { order: 3; margin-left: 6px; }
+  .barre .marque { margin-right: auto; }
+  .menu-tiroir { position: fixed; top: 0; right: 0; bottom: 0; left: auto; width: min(360px, 100%); max-height: none; margin: 0; padding: 18px 16px 22px; border: 0; border-radius: 0;
+    overflow-y: auto; overscroll-behavior: contain; background: linear-gradient(180deg, #1B1330, #150E25); border-left: 1px solid var(--trait); box-shadow: -20px 0 50px rgba(0, 0, 0, .55); z-index: 80;
+    display: flex; flex-direction: column; animation: tiroir-entre .22s cubic-bezier(.2, .8, .2, 1); }
+  .menu-tiroir[hidden] { display: none; }
+  .menu-voile { position: fixed; inset: 0; z-index: 75; background: rgba(8, 4, 14, .55); backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); }
+  .menu-voile[hidden] { display: none; }
+  html.tiroir-ouvert, html.tiroir-ouvert body { overflow: hidden; }
+  .menu-bouton .ic { width: 20px; height: 20px; }
+  .menu-tiroir .tiroir-haut { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  .menu-tiroir .tiroir-haut img { width: 120px; height: auto; }
+  .menu-tiroir .tiroir-fermer { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 13px; border: 2px solid rgba(255, 255, 255, .14); background: transparent; color: #E8DCFF; cursor: pointer; }
+  .menu-tiroir ul { display: grid; grid-template-columns: minmax(0, 1fr); gap: 9px; }
+  .menu-tiroir li a { position: relative; display: flex; align-items: center; gap: 14px; min-height: 54px; padding: 12px 16px; border-radius: 16px; border: 1px solid var(--trait); border-left-width: 1px;
+    background: rgba(255, 255, 255, .045); font: 400 17px var(--police-bouton); letter-spacing: .5px; text-transform: uppercase; color: #F3ECFF; }
+  .menu-tiroir li a .ic { width: 22px; height: 22px; color: var(--violet-trait); }
+  .menu-tiroir li a .pastille { position: static; transform: none; margin-left: auto; padding: 2px 8px; border-radius: 999px; font: 400 11px var(--police-bouton); letter-spacing: .5px; color: #fff; background: var(--rose); box-shadow: 0 2px 0 #B8326D; }
+  .menu-tiroir li a:hover, .menu-tiroir li a:focus-visible { background: rgba(255, 255, 255, .09); border-color: rgba(255, 207, 90, .5); border-left-color: rgba(255, 207, 90, .5); color: #fff; }
+  .menu-tiroir li a[aria-current="page"] { background: rgba(155, 93, 229, .22); border-color: rgba(201, 168, 255, .45); color: #fff; }
+  .menu-tiroir a.t-boutique { margin-top: 4px; color: #4A2B07; border: 0; background: linear-gradient(180deg, #FFE08A, var(--or-k) 50%, var(--or-k2)); box-shadow: 0 5px 0 var(--or-k-fonce); }
+  .menu-tiroir a.t-boutique .ic { color: #4A2B07; }
+  .menu-tiroir .tiroir-bas { display: grid; gap: 12px; margin-top: auto; padding-top: 18px; }
+  .menu-tiroir .tiroir-bas .bouton { width: 100%; }
+  /* (les vieilles règles du tiroir, css/style.css « .menu-tiroir a », ne touchent plus ses deux boutons) */
+  .menu-tiroir .tiroir-bas a.bouton { min-height: 58px; padding: 14px 20px 15px; border: 0; border-left: 0; font: 400 19px var(--police-bouton); letter-spacing: .4px; }
+  .menu-tiroir .tiroir-bas a.bouton-orange { color: #fff; background: linear-gradient(180deg, #FFA35C, var(--orange) 45%, var(--orange-2)); }
+  .menu-tiroir .tiroir-bas a.bouton-discord { color: #fff; background: linear-gradient(180deg, #7A86FF, #5865F2 50%, #4752D6); }
+  .menu-tiroir .tiroir-bas a.bouton:hover, .menu-tiroir .tiroir-bas a.bouton:focus-visible { border: 0; filter: brightness(1.08); }
+}
+@keyframes tiroir-entre { from { transform: translateX(40px); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .menu-tiroir { animation: none; } .bouton, .barre nav a.barre-compte { transition: none; } }
+
+/* ---------- LE PIED : arrondi, ses colonnes, « Retour en haut » ---------- */
+footer { border-top: 0; background: linear-gradient(180deg, #120B1E, #0D0816); }
+footer .pied { padding: 8px 0 0; }
+.pied-titre { font-family: var(--police-titre); font-size: 20px; border-bottom: 0; padding-bottom: 2px; text-shadow: 0 2px 0 #3A1F12; }
+footer .pied-colonne a { color: #E7DCF7; font-weight: 600; }
+footer .pied-colonne a:hover { color: var(--or-k); text-decoration: none; }
+.pied-phrase b { font-family: var(--police-titre); font-size: 28px; text-shadow: 0 3px 0 #3A1F12; }
+.pied-gestes a.bouton { text-decoration: none; }
+.pied-bas { border-top: 1px solid var(--trait); }
+
+/* ---------- LES CHAMPS ET LA FENÊTRE CRÈME ---------- */
+.fenetre-creme { position: relative; border-radius: 26px; color: var(--brun); background: linear-gradient(180deg, var(--creme), var(--creme-2)); box-shadow: 0 8px 0 #C9A66B, 0 26px 50px rgba(0, 0, 0, .45); overflow: hidden; }
+.fenetre-creme .f-tete { display: flex; align-items: center; gap: 14px; padding: 20px 22px 16px; border-bottom: 1px solid rgba(74, 47, 28, .14); }
+.fenetre-creme .f-icone { display: grid; place-items: center; width: 50px; height: 50px; flex: none; border-radius: 15px; background: #F6E3B9; border: 2px solid #E2C48A; color: #8A5A24; }
+.fenetre-creme .f-icone .ic { width: 24px; height: 24px; }
+.fenetre-creme h2 { font-size: 30px; color: var(--brun); text-shadow: none; text-transform: none; }
+.fenetre-creme .f-corps { padding: 14px 22px 4px; }
+.fenetre-creme label { display: block; margin: 14px 0 7px; font-weight: 700; font-size: 15px; color: var(--brun); }
+.fenetre-creme .f-pied { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 22px 18px; font-size: 14px; color: #7B5A3D; text-align: center; }
+.champ-k { position: relative; display: flex; align-items: center; }
+.champ-k input { width: 100%; min-height: 54px; padding: 0 16px; border-radius: var(--r-champ); border: 3px solid #D9B373; background: #FFFAF0; font: 600 18px "Fredoka", sans-serif; color: #3B2615;
+  outline: none; box-shadow: 0 0 0 3px rgba(217, 179, 115, .22); transition: border-color .15s ease, box-shadow .15s ease; }
+.champ-k input::placeholder { color: #A88A64; }
+.champ-k input:focus { border-color: var(--or-k-fonce); box-shadow: 0 0 0 4px rgba(243, 169, 58, .38); }
+.champ-k input[aria-invalid="true"] { border-color: #D2483C; box-shadow: 0 0 0 4px rgba(210, 72, 60, .22); }
+.champ-k.avec-voir input { padding-right: 92px; }
+.champ-k .voir { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); min-height: 38px; padding: 0 13px; border: 0; border-radius: 11px; cursor: pointer;
+  font: 400 14px var(--police-bouton); letter-spacing: .4px; text-transform: uppercase; color: #8A5A24; background: #F3DFB4; }
+.champ-k .voir:hover { background: #EED29A; }
+.champ-k .voir:focus-visible { outline: 3px solid var(--or-k-fonce); outline-offset: 2px; }
+.champ-k .voir[aria-pressed="true"] { color: #fff; background: #8A5A24; }
+
+/* ---------- LA CONNEXION (connexion.html ; b5_assembleur/connexion_kit.js) : une scène du jeu qui vit derrière, le texte et ses atouts
+   en cartes, la FENÊTRE CRÈME du formulaire, « Pas encore de compte ? » en carte à part. Des sélecteurs par #connexion : plus forts
+   que les règles d'avant (css/compte.css, chargée après le kit) ---------- */
+.connexion { position: relative; isolation: isolate; overflow: hidden; background: var(--nuit); }
+.connexion::before { content: ""; position: absolute; inset: -3%; z-index: -2; background: url("../assets/images/casteria-commencer-palais-1920.webp") center 35% / cover no-repeat; animation: connexion-respire 22s ease-in-out infinite alternate; }
+.connexion::after { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background: radial-gradient(40% 35% at 78% 30%, rgba(255, 207, 90, .22), transparent 70%), radial-gradient(45% 40% at 15% 70%, rgba(155, 93, 229, .3), transparent 70%),
+              linear-gradient(180deg, rgba(20, 13, 34, .82), rgba(20, 13, 34, .62) 40%, rgba(20, 13, 34, .9) 85%, var(--nuit)); }
+@keyframes connexion-respire { to { transform: scale(1.06) translate(-1%, -1%); } }
+@media (prefers-reduced-motion: reduce) { .connexion::before { animation: none; } }
+.connexion-texte h1 { color: var(--titre-creme); }
+.connexion-texte .sur-titre { display: inline-flex; padding: 5px 12px; border-radius: 999px; background: rgba(255, 207, 90, .14); border: 1px solid rgba(255, 207, 90, .35); color: var(--or-k); }
+.connexion-texte .sur-titre::before { display: none; }
+.atouts-compte li { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 16px; background: rgba(36, 26, 58, .78); border: 1px solid var(--trait); backdrop-filter: blur(6px); }
+.atouts-compte li::before { display: none; }
+.atouts-compte li .ic { width: 24px; height: 24px; color: var(--or-k); }
+.connexion .pas-de-compte { margin-top: 18px; padding: 18px 18px 20px; border: 1px solid rgba(255, 207, 90, .3); border-top: 1px solid rgba(255, 207, 90, .3); border-radius: var(--r-panneau);
+  background: linear-gradient(180deg, rgba(45, 34, 71, .92), rgba(36, 26, 58, .92)); box-shadow: var(--ombre-douce); }
+.connexion .pas-de-compte h2 { margin: 0 0 6px; display: flex; align-items: center; gap: 10px; font-size: 24px; color: var(--titre-creme); text-shadow: 0 2px 0 #3A1F12; }
+.connexion .pas-de-compte h2 .ic { width: 24px; height: 24px; color: var(--or-k); }
+.connexion .pas-de-compte .bouton { margin-top: 2px; }
+#connexion.fenetre-creme { padding: 0; border: 0; }
+#connexion h2 { margin: 0; font-size: 32px; color: var(--brun); }
+#connexion .consigne { margin: 2px 0 4px; font-size: 15.5px; color: #6B4A2E; }
+#connexion code { color: #8A5A24; background: rgba(138, 90, 36, .12); padding: 0 6px; border-radius: 6px; }
+#connexion label { margin: 14px 0 7px; font-size: 15px; color: var(--brun); }
+#connexion .champ-k input { min-height: 54px; padding: 0 16px; border: 3px solid #D9B373; border-radius: var(--r-champ); background: #FFFAF0; color: #3B2615; outline: none; }
+#connexion .champ-k input:focus { border-color: var(--or-k-fonce); box-shadow: 0 0 0 4px rgba(243, 169, 58, .38); outline: none; }
+#connexion .champ-k input[aria-invalid="true"] { border-color: #D2483C; box-shadow: 0 0 0 4px rgba(210, 72, 60, .2); }
+#connexion .champ-k.avec-voir input { padding-right: 92px; }
+#connexion .mdp { display: flex; gap: 0; }
+#connexion .mdp .voir { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); min-width: 0; min-height: 38px; padding: 0 13px; border: 0; border-radius: 11px;
+  font: 400 14px var(--police-bouton); letter-spacing: .4px; text-transform: uppercase; color: #8A5A24; background: #F3DFB4; }
+#connexion .mdp .voir:hover { background: #EED29A; }
+#connexion .mdp .voir[aria-pressed="true"] { color: #FFF6DC; background: #8A5A24; }
+#connexion .aide-champ { color: #8B6B4C; }
+#connexion .erreur { border-radius: 14px; color: #6E1A14; background: #FFE3DD; border: 2px solid #E0574C; border-left-width: 2px; }
+#connexion .envoyer { width: 100%; margin-top: 20px; }
+#connexion .oubli { color: #7B5A3D; }
+#connexion .oubli a { color: #8A5A24; text-decoration: underline; text-underline-offset: 3px; }
+#connexion .f-pied .ic { width: 16px; height: 16px; }
+.deja-connecte { border-radius: var(--r-panneau); border: 1px solid var(--trait); box-shadow: var(--ombre-douce); }
+@media (max-width: 960px) {
+  .connexion-grille > form { order: -1; }
+  #connexion h2 { font-size: 28px; }
+  .fenetre-creme .f-tete { padding: 16px 18px 14px; }
+  .fenetre-creme .f-corps { padding: 10px 18px 4px; }
+}
+.connexion .pas-de-compte code { padding: 0 6px; border-radius: 6px; color: var(--or-k); background: rgba(255, 207, 90, .12); }
+
+/* ---------- LES BOÎTES DES PAGES, ARRONDIES (le compte, les fiches, le classement, la FAQ) : « html body » passe devant leurs feuilles,
+   chargées après le kit ; chaque page garde ses couleurs ---------- */
+html body .compte-tuiles li { border-radius: 18px; border: 1px solid var(--trait); border-top: 3px solid var(--or-k); box-shadow: var(--ombre-douce); }
+html body .compte-themes a { border-radius: 14px; border: 1px solid rgba(255, 207, 90, .28); }
+html body .compte-themes a:hover, html body .compte-themes a:focus-visible { border-color: var(--or-k); }
+html body .fiche-grille li { border-radius: 10px; }
+html body .cl-choix { border-radius: 999px; }
+html body .faq-liste details { border-radius: 16px; overflow: hidden; border: 1px solid rgba(255, 207, 90, .3); }
+html body .compte-sanction, html body .compte-monter, html body .essai-comptes { border-radius: 14px; }
+html body .num-etape { border-radius: 12px; }
+/* la boutique : ses packs, ses offres, ses notes et son tableau des grades, arrondis ; le pack choisi garde son or */
+html body .pack { border-radius: 20px; }
+html body .pack-image { border-radius: 14px; }
+html body .pack-marque { border-radius: 999px; }
+html body .offre { border-radius: 20px; overflow: hidden; }
+html body .rassure li, html body .gagner li, html body .grades-notes li { border-radius: 16px; }
+html body .grades-tableau { border-radius: 20px; overflow: hidden; }
+html body .achat-champ input { border-radius: 14px; }
+html body .boutique-etal .alerte, html body .achat-merci, html body .ticket { border-radius: 16px; }

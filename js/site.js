@@ -101,72 +101,107 @@
     if (/(?:^|;\s*)casteria_connecte=1(?:;|$)/.test(document.cookie || '')) return true
     try { return !!sessionStorage.getItem('casteria_essai_session') } catch (e) { return false }
   }
-  // (la tête, 22:2x ; le propriétaire : « sur ordi on se connecte où à son compte ? ») LE COMPTE DANS LA BARRE, sur toutes les
-  // pages : juste avant « Jouer », « Connexion » ; connecté, sa tête et son pseudo (lus dans /api/moi), vers Mon compte. Le lien
-  // « Mon compte » que certaines pages avaient dans leur Menu devient celui-ci (jamais deux). Au téléphone, le tiroir le reprend.
+  // (la tête, 22:2x puis 23:1x, le style neuf) LE COMPTE DANS LA BARRE, sur toutes les pages : le carré d'or du compte (son icône ;
+  // le mot « Connexion » lu par les lecteurs d'écran), vers la connexion ; connecté, vers Mon compte, et sa tête (la face et le
+  // chapeau de sa peau, /api/moi puis /api/peau). Le lien est dans le HTML de chaque page (b5_assembleur/barre.js).
   function barreCompte() {
     var nav = document.querySelector('.barre nav[aria-label="Le menu"]')
     if (!nav) return
-    // le lien est dans le HTML de chaque page (« Connexion », sans JavaScript aussi) ; une page d'avant : il est créé
-    var jouer = nav.querySelector('a.bouton'), a = nav.querySelector('a.barre-compte'), ici = /\/(compte|connexion)\.html$/.test(location.pathname)
+    var a = nav.querySelector('a.barre-compte'), ici = /\/(compte|connexion)\.html$/.test(location.pathname)
     Array.prototype.forEach.call(nav.querySelectorAll('a.compte:not(.barre-compte)'), function (x) { x.parentNode.removeChild(x) })
-    if (!a) { a = document.createElement('a'); a.className = 'compte barre-compte'; nav.insertBefore(a, jouer || null) }
+    if (!a) return
+    var mot = a.querySelector('.barre-mot')
     // la 404 (servie depuis n'importe quelle adresse) écrit ses liens depuis « / » : le lien du compte suit
-    var racine = (a.getAttribute('href') || (jouer && jouer.getAttribute('href')) || '').charAt(0) === '/' ? '/' : ''
-    if (!connecte()) { a.href = racine + 'connexion.html'; a.textContent = 'Connexion' } else { a.href = racine + 'compte.html'; a.textContent = 'Mon compte' }
+    var racine = (a.getAttribute('href') || '').charAt(0) === '/' ? '/' : ''
+    function dire(href, texte) { a.href = racine + href; a.setAttribute('aria-label', texte); a.title = texte; if (mot) mot.textContent = texte }
+    if (!connecte()) dire('connexion.html', 'Connexion'); else dire('compte.html', 'Mon compte')
     if (ici) a.setAttribute('aria-current', 'page')
     if (!connecte() || !window.fetch) return
     fetch('/api/moi', { credentials: 'same-origin', headers: { Accept: 'application/json' } }).then(function (r) {
-      if (r.status === 401) { a.href = 'connexion.html'; a.textContent = 'Connexion'; return null }
+      if (r.status === 401) { dire('connexion.html', 'Connexion'); return null }
       return r.ok ? r.json() : null
     }).then(function (m) {
       if (!m || typeof m.pseudo !== 'string' || !/^[A-Za-z0-9_]{3,16}$/.test(m.pseudo)) return
-      var t = document.createElement('span'), u = '/api/peau/' + m.pseudo, n = document.createElement('span')
+      var t = document.createElement('span'), u = '/api/peau/' + m.pseudo, ic = a.querySelector('svg.ic')
       t.className = 'barre-tete'; t.setAttribute('aria-hidden', 'true')
-      // la face (8 x 8) et le chapeau, découpés de la peau à 3 px le pixel
+      // la face (8 x 8) et le chapeau, découpés de la peau (30 px : 3,75 px le pixel de peau)
       t.style.backgroundImage = 'url("' + u + '"), url("' + u + '")'
-      n.className = 'barre-pseudo'; n.textContent = m.pseudo
-      a.textContent = ''; a.appendChild(t); a.appendChild(n)
-      a.setAttribute('aria-label', 'Mon compte : ' + m.pseudo)
+      if (ic) ic.parentNode.replaceChild(t, ic); else a.insertBefore(t, a.firstChild)
+      dire('compte.html', 'Mon compte : ' + m.pseudo)
     }).catch(function () {})
   }
   barreCompte()
+
+  // LE TIROIR DU TÉLÉPHONE ET DE LA TABLETTE (960 px et moins ; css/kit.css) : le bouton « Menu » dans la barre ouvre un panneau qui
+  // glisse de la droite, posé dans <body> (la barre en verre serait le repère d'un élément fixe en elle) : le logo et la croix, une
+  // carte par page (son icône, ses mots), « Connexion » ou « Mon compte », la Boutique en or, puis « Jouer gratuitement » et le
+  // Discord. Il se ferme par la croix, au clic sur le voile, à la touche Échap (le bouton reprend la main), après un choix, et quand
+  // l'écran s'élargit ; à l'ouverture, la croix prend la main.
   function menuTelephone() {
-    var barre = document.querySelector('.barre'), nav = barre ? barre.querySelector('nav') : null
+    var barre = document.querySelector('.barre'), nav = barre ? barre.querySelector('nav[aria-label="Le menu"]') : null
     if (!barre || !nav || barre.querySelector('.menu-bouton')) return
-    var bouton = document.createElement('button'), tiroir = document.createElement('div'), liste = document.createElement('ul'), barres = document.createElement('span'), compte = null
+    var jouer = nav.querySelector('a.jouer'), racine = ((jouer && jouer.getAttribute('href')) || '').charAt(0) === '/' ? '/' : ''
+    var accueil = /(^|\/)(index\.html)?$/.test(location.pathname)
+    var page = (location.pathname.split('/').pop() || 'index.html')
+    var bouton = document.createElement('button'), tiroir = document.createElement('div'), voile = document.createElement('div'), liste = document.createElement('ul')
+    function ic(nom, plein) {
+      var s = document.createElementNS('http://www.w3.org/2000/svg', 'svg'), u = document.createElementNS('http://www.w3.org/2000/svg', 'use')
+      s.setAttribute('class', 'ic' + (plein ? ' plein' : '')); s.setAttribute('aria-hidden', 'true')
+      u.setAttribute('href', '#i-' + nom); s.appendChild(u)
+      return s
+    }
     bouton.type = 'button'; bouton.className = 'menu-bouton'
     bouton.setAttribute('aria-expanded', 'false'); bouton.setAttribute('aria-controls', 'menu-tiroir')
-    barres.className = 'menu-barres'; barres.setAttribute('aria-hidden', 'true')
-    bouton.appendChild(barres); bouton.appendChild(document.createTextNode('Menu'))
+    bouton.appendChild(ic('menu')); bouton.appendChild(document.createTextNode('Menu'))
     tiroir.className = 'menu-tiroir'; tiroir.id = 'menu-tiroir'; tiroir.hidden = true
+    tiroir.setAttribute('role', 'dialog'); tiroir.setAttribute('aria-label', 'Le menu')
+    voile.className = 'menu-voile'; voile.hidden = true
+    var haut = document.createElement('div'), logo = document.createElement('img'), fermer = document.createElement('button')
+    haut.className = 'tiroir-haut'
+    logo.src = racine + 'assets/logo/casteria-logo-300.webp'; logo.alt = 'Casteria'; logo.width = 120; logo.height = 120
+    fermer.type = 'button'; fermer.className = 'tiroir-fermer'; fermer.setAttribute('aria-label', 'Fermer le menu'); fermer.appendChild(ic('croix'))
+    haut.appendChild(logo); haut.appendChild(fermer)
     liste.setAttribute('aria-label', 'Les pages de Casteria')
-    function ligne(href, mot, ici) {
-      var li = document.createElement('li'), a = document.createElement('a')
-      a.href = href; a.textContent = mot
-      if (ici) a.setAttribute('aria-current', 'page')
+    function ligne(href, mot, icone, classe, pastille) {
+      var li = document.createElement('li'), a = document.createElement('a'), cible = href.split('#')[0] || 'index.html'
+      a.href = racine + href
+      if (classe) a.className = classe
+      a.appendChild(ic(icone)); a.appendChild(document.createTextNode(mot))
+      if (pastille) { var p = document.createElement('span'); p.className = 'pastille'; p.setAttribute('aria-hidden', 'true'); p.textContent = pastille; a.appendChild(p) }
+      if (href.indexOf('#') < 0 && cible === page) a.setAttribute('aria-current', 'page')
       li.appendChild(a); liste.appendChild(li)
       return a
     }
-    Array.prototype.forEach.call(nav.querySelectorAll('a'), function (a) {
-      if (a.classList.contains('bouton')) return
-      var l = ligne(a.getAttribute('href'), a.classList.contains('barre-compte') ? (connecte() ? 'Mon compte' : 'Connexion') : (a.getAttribute('aria-label') || a.textContent).trim(), !!a.getAttribute('aria-current'))
-      if (a.classList.contains('compte')) compte = l
-    })
-    // « Connexion » ou « Mon compte » (le dernier mot de la liste)
-    if (!compte) compte = ligne('compte.html', 'Mon compte', /compte\.html$/.test(location.pathname))
-    if (!connecte()) { compte.href = 'connexion.html'; compte.textContent = 'Connexion'; if (/connexion\.html$/.test(location.pathname)) compte.setAttribute('aria-current', 'page') }
-    tiroir.appendChild(liste)
+    var ici = accueil ? '' : './'
+    ligne(accueil ? '#' : './', 'Accueil', 'maison')
+    ligne(ici + '#voyage', 'Le jeu', 'jeu')
+    ligne('commencer.html', 'Par où commencer', 'drapeau')
+    ligne('evenements.html', 'Événements', 'etoiles')
+    ligne('classement.html', 'Classement', 'coupe')
+    ligne('carte.html', 'La carte', 'carte', '', 'NOUVEAU')
+    ligne('exploits.html', 'Les exploits', 'medaille')
+    ligne('vote.html', 'Voter', 'eclair')
+    if (connecte()) ligne('compte.html', 'Mon compte', 'moi'); else ligne('connexion.html', 'Connexion', 'moi')
+    ligne('boutique.html', 'Boutique', 'boutique', 't-boutique')
+    var bas = document.createElement('div'), j = document.createElement('a'), d = document.createElement('a')
+    bas.className = 'tiroir-bas'
+    j.className = 'bouton bouton-orange grand'; j.href = racine + ici + '#telecharger'; j.appendChild(ic('jouer', true)); j.appendChild(document.createTextNode('Jouer gratuitement'))
+    d.className = 'bouton bouton-discord grand'; d.href = racine + 'discord.html'; d.appendChild(ic('discord')); d.appendChild(document.createTextNode('Rejoindre le Discord'))
+    bas.appendChild(j); bas.appendChild(d)
+    tiroir.appendChild(haut); tiroir.appendChild(liste); tiroir.appendChild(bas)
     barre.insertBefore(bouton, nav)
-    barre.insertBefore(tiroir, nav)
+    document.body.appendChild(voile); document.body.appendChild(tiroir)
     function ouvrir(oui) {
-      tiroir.hidden = !oui
+      tiroir.hidden = !oui; voile.hidden = !oui
       bouton.setAttribute('aria-expanded', oui ? 'true' : 'false')
       barre.classList.toggle('menu-ouvert', oui)
+      document.documentElement.classList.toggle('tiroir-ouvert', oui)
+      if (oui) fermer.focus()
     }
     bouton.addEventListener('click', function () { ouvrir(tiroir.hidden) })
-    tiroir.addEventListener('click', function (e) { if (e.target.tagName === 'A') ouvrir(false) })
-    document.addEventListener('click', function (e) { if (!tiroir.hidden && !tiroir.contains(e.target) && !bouton.contains(e.target)) ouvrir(false) })
+    fermer.addEventListener('click', function () { ouvrir(false); bouton.focus() })
+    voile.addEventListener('click', function () { ouvrir(false) })
+    tiroir.addEventListener('click', function (e) { if (e.target.closest && e.target.closest('a')) ouvrir(false) })
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !tiroir.hidden) { ouvrir(false); bouton.focus() } })
     window.addEventListener('resize', function () { if (!tiroir.hidden && window.innerWidth > 960) ouvrir(false) })
   }
