@@ -78,9 +78,9 @@
 </section>
 
 <div class="frise frise-vague" aria-hidden="true"></div>
-<section class="sombre fond-carte relief carte-section" id="carte">
+<section class="sombre fond-carte relief carte-section" id="carte" data-ancre-defaut>
   <div class="dedans">
-    <div class="carte-outils">
+    <div class="carte-outils" data-ancre-titre>
       <div class="onglets" role="tablist" aria-label="La carte">
         <button type="button" role="tab" class="onglet" id="onglet-iles" aria-selected="true" aria-controls="carte-vue" data-zone="iles">Les îles</button>
         <button type="button" role="tab" class="onglet" id="onglet-mer" aria-selected="false" aria-controls="carte-vue" data-zone="mer">La mer</button>
@@ -173,5 +173,6 @@
 <script src="js/ile.js" defer></script>
 <script src="js/carte.js" defer></script>
 <script src="js/carte_appel.js" defer></script>
+<script src="js/ancres.js" defer></script>
 </body>
 </html>

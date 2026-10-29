@@ -169,3 +169,6 @@
 .cartes-combat figure, .cartes-planete figure { border-top: 0; border-radius: var(--r-carte); overflow: hidden; border: 1px solid var(--trait); box-shadow: var(--ombre-douce); }
 .cartes-combat figure { background: linear-gradient(180deg, var(--carte-2), var(--carte)); box-shadow: var(--ombre-douce), inset 0 -3px 0 rgba(255, 207, 90, .55); }
 .cartes-planete figure { box-shadow: var(--ombre-douce), inset 0 -3px 0 rgba(255, 138, 60, .6); }
+/* les commandes à copier (l'aide du launcher) : arrondies */
+.reponses pre { border-radius: 10px; }
+.reponses { border-top: 1px solid rgba(74, 47, 28, .18); }

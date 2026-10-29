@@ -134,7 +134,7 @@
       j.themes.forEach(function (t) {
         if (!(t.rang >= 1)) return
         var li = el('li', 'place' + (t.rang <= 3 ? ' podium p' + t.rang : '')), a = el('a')
-        a.href = 'classement.html#' + encodeURIComponent(t.categorie)
+        a.href = 'classement.html#' + encodeURIComponent(t.cle || 'general') + '/' + encodeURIComponent(t.categorie)
         a.appendChild(el('span', 'theme', t.nom))
         a.appendChild(el('span', 'rang-place', rang(t.rang)))
         a.appendChild(el('span', 'cat', t.titre))

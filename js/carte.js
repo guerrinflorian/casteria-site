@@ -818,8 +818,8 @@
   var m = location.hash.match(/^#ile=(-?\d+),(-?\d+)$/)
   if (m) {
     intro = { fini: true }
-    // (af, 22:5x) venu d'un lien vers une île (l'accueil, un profil) : la page descend tout de suite sur la carte, sous la grande image
-    var sec = document.getElementById('carte'); if (sec && sec.scrollIntoView) sec.scrollIntoView()
+    // (af, 23:5x) venu d'un lien vers une île (l'accueil, un profil) : la page descend sur la carte (#carte, data-ancre-defaut),
+    // posée sous la barre par js/ancres.js (avant : scrollIntoView, la carte sous la barre)
     I.s = 60; I.cx = +m[1]; I.cy = +m[2] + sousLaFiche()
     V.carte('iles', { de: [+m[1], +m[2]], a: [+m[1], +m[2]] }).then(function (r) { if (r.statut === 200 && r.corps.iles && r.corps.iles[0]) montrer(r.corps.iles[0], false) })
   } else if (location.hash === '#mer') { intro = { fini: true }; choisirZone('mer') }

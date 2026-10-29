@@ -33,6 +33,7 @@
 <link rel="stylesheet" href="css/kit.css">
 <link rel="stylesheet" href="css/scene.css">
 <link rel="stylesheet" href="css/objets.css">
+<link rel="stylesheet" href="css/pages_k.css">
 <!-- LES DONNÉES POUR GOOGLE : le fil d'Ariane, la FAQ de la page (mot pour mot), et le jeu, la même entité que sur l'accueil.
      (29/10/2026, la tête) le même « @id » (https://casteria.fr/#jeu) et le même « operatingSystem » sont sur le VideoGame de
      index.html : Google lit une seule entité. -->
@@ -108,7 +109,6 @@
     </div>
   </div>
 </section>
-<div class="frise frise-creneaux" aria-hidden="true"></div>
 
 <!-- UN SERVEUR MODDÉ FAIT MAISON : les objets du serveur, chacun en volume (les rendus de assets/objets, ceux de l'accueil),
      trois par famille ; leurs mots lus dans le jeu (index.html, « Tout est fait pour Casteria » ; aide.js : les machines, le
@@ -152,7 +152,6 @@
     <p class="esquif-objet apparait">Et ce n'est qu'un début : des familiers te suivent partout, des montures t'emmènent au sol, dans les airs ou dans l'eau, et cinq navires se pilotent pour de bon, de la Chaloupe au Vaisseau amiral.</p>
   </div>
 </section>
-<div class="frise frise-etoiles" aria-hidden="true"></div>
 
 <!-- UNE SURVIE MODDÉE AVEC UNE VRAIE PROGRESSION : aide.js, « Les niveaux » (tout rapporte de l'expérience ; chaque niveau ouvre
      un outil, un palier, un bonus ou un boss), « Le castérium » (du Réacteur à la Forge de Casteria, plus fort que la
@@ -179,7 +178,6 @@
     </figure>
   </div>
 </section>
-<div class="frise frise-parchemin" aria-hidden="true"></div>
 
 <!-- LE LAUNCHER INSTALLE LES MODS POUR TOI : CasteriaLauncher/LISEZMOI.md (Minecraft, NeoForge et le Java de Mojang, une fois),
      page_github/page_installateur.md (il ne touche jamais au dossier Minecraft habituel ; il se met à jour tout seul),
@@ -213,7 +211,6 @@
     <p class="apparait">Chaque étape, système par système, et les réponses aux soucis d'installation : <a href="launcher-minecraft-modde.html">le launcher Minecraft moddé de Casteria</a>. Les mêmes fichiers sont aussi sur <a href="./#telecharger">la page de téléchargement de l'accueil</a>.</p>
   </div>
 </section>
-<div class="frise frise-etoiles" aria-hidden="true"></div>
 
 <!-- LA CONFIGURATION REQUISE : seulement ce qui est écrit. Windows 64 bits (CasteriaLauncher/package.json, build.win : l'arch x64
      seule) ; macOS 13 et la puce Apple ou Intel (index.html, l'aide Mac ; page_installateur.md) ; les Linux (index.html, l'aide
@@ -240,7 +237,6 @@
     </div>
   </div>
 </section>
-<div class="frise frise-parchemin" aria-hidden="true"></div>
 
 <!-- LA FAQ : les mêmes questions et réponses, mot pour mot, dans le bloc FAQPage du JSON-LD (en tête de page) -->
 <section class="clair" id="faq" aria-labelledby="faq-titre">
@@ -259,7 +255,6 @@
     </div>
   </div>
 </section>
-<div class="frise frise-etoiles" aria-hidden="true"></div>
 
 <!-- LE BAS DE PAGE : « Jouer gratuitement » une seconde fois, le Discord, et la page de l'île -->
 <section class="final" id="final" aria-labelledby="final-titre">
@@ -299,5 +294,6 @@
 </footer>
 <script src="js/site.js" defer></script>
 <script src="js/objets.js" defer></script>
+<script src="js/ancres.js" defer></script>
 </body>
 </html>
