@@ -390,6 +390,14 @@ html, body { overflow-x: clip; }
 .lien-doux:hover .chevron { transform: translateY(1px) rotate(45deg); }
 .plein-cadre .preuves { margin: 16px 0 0; font-size: 13.5px; line-height: 1.4; color: #E9DDF5; text-shadow: 0 1px 6px rgba(0, 0, 0, .85); }
 .plein-cadre .preuves i { font-style: normal; margin: 0 7px; color: var(--or-clair); }
+/* (29/10/2026, le propriétaire) « Crack accepté », bien visible sous les boutons : une pastille d'or sur verre sombre */
+.crack-accepte { display: inline-flex; align-items: center; gap: 9px; margin: 18px 0 0; padding: 8px 16px 8px 12px;
+  border: 2px solid var(--or); border-radius: 999px; background: rgba(20, 10, 34, .72); color: #FFF6DA; font-weight: 700;
+  font-size: 15.5px; line-height: 1.25; text-shadow: 0 1px 3px rgba(0, 0, 0, .8); box-shadow: 0 0 0 4px rgba(215, 164, 33, .18), 0 6px 18px rgba(0, 0, 0, .45); }
+.crack-accepte .coche { flex: none; width: 20px; height: 20px; border-radius: 50%; background: var(--vert-clair); position: relative; }
+.crack-accepte .coche::after { content: ""; position: absolute; left: 7px; top: 3px; width: 5px; height: 10px;
+  border-right: 3px solid #12300b; border-bottom: 3px solid #12300b; transform: rotate(45deg); }
+@media (max-width: 560px) { .crack-accepte { font-size: 13.5px; padding: 7px 12px 7px 10px; gap: 7px; } }
 /* l'arrivée : le texte monte en fondu, l'un après l'autre (du CSS seul : sans script, il arrive quand même) */
 .cinema-titre > *, .cinema-geste > * { animation: cinema-entree 1.1s cubic-bezier(.2, .75, .2, 1) both; }
 .plein-cadre .sur-ligne { animation-delay: .15s; } .vitrine-tete.plein-cadre h1 { animation-delay: .3s; } .cinema-accroche { animation-delay: .6s; }
