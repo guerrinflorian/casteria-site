@@ -350,3 +350,8 @@ a.cl-apercu:hover, a.cl-apercu:focus-visible { transform: translateY(-2px); box-
 /* au podium : sous la valeur, au milieu du socle */
 .cl-socle .cl-apercu { margin-top: 8px; }
 @media (prefers-reduced-motion: reduce) { .cl-apercu { transition: none; } }
+
+/* (67, 29/10 ; le style neuf) le bouton d'ile, arrondi, et sa bulle */
+.cl-apercu { border-radius: 10px; overflow: visible; }
+.cl-apercu-ile { border-radius: 6px; }
+.cl-apercu[data-bulle]:hover::before, .cl-apercu[data-bulle]:focus::before { border-radius: 10px; }

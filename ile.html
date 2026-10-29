@@ -46,7 +46,7 @@
 
 <main>
 <!-- LE HAUT : le nom de l'île, son hôte et ses amis, ses étoiles, sa place au Classement des îles -->
-<section class="fond-ciel relief ile-tete" id="haut">
+<section class="bande-k bande-haut ile-tete" id="haut">
   <div class="dedans ile-haut">
     <div class="ile-qui">
       <p class="sur-ligne" id="case">Une île de Casteria</p>
@@ -62,8 +62,7 @@
   </div>
 </section>
 
-<div class="frise frise-vague" aria-hidden="true"></div>
-<section class="fond-mer relief ile-vue-section">
+<section class="bande-k bande-mer ile-vue-section">
   <div class="dedans">
     <div class="ile-cadre panneau-nuit coins-or">
       <div class="ile-vue" id="vue">
@@ -86,8 +85,7 @@
 
 <!-- (67, 29/10 ; le propriétaire : « les profils île bâclés, pas complets ») L'ÎLE EN CHIFFRES ET QUI Y VIT (js/ile_fiche.js) :
      seulement ce que le jeu publie ; une partie sans donnée reste cachée -->
-<div class="frise frise-parchemin" aria-hidden="true"></div>
-<section class="fond-carte relief ile-fiche-section" id="fiche" hidden>
+<section class="bande-k ile-fiche-section" id="fiche" hidden>
   <div class="dedans ile-fiche">
     <div class="panneau-nuit coins-or ile-mesures" id="mesures" hidden>
       <h2>Ses chiffres</h2>
@@ -104,8 +102,7 @@
   </div>
 </section>
 
-<div class="frise frise-vague" aria-hidden="true"></div>
-<section class="fond-mer relief ile-carte-section" id="place-carte" hidden>
+<section class="bande-k bande-mer ile-carte-section" id="place-carte" hidden>
   <div class="dedans alterne"><div class="rangee">
     <div class="panneau-nuit coins-or ile-minicarte"><canvas id="minicarte" width="320" height="320" role="img" aria-label="L'archipel de Casteria, l'île en or"></canvas></div>
     <div class="panneau-bois ile-carte-texte">
@@ -116,8 +113,7 @@
   </div></div>
 </section>
 
-<div class="frise frise-corde" aria-hidden="true"></div>
-<section class="fond-bois relief ile-betes-section" id="betes" hidden>
+<section class="bande-k bande-chaude ile-betes-section" id="betes" hidden>
   <div class="dedans">
     <div class="panneau-bois ile-betes">
       <h2>Ses bêtes</h2>
@@ -127,9 +123,8 @@
   </div>
 </section>
 
-<div class="frise frise-parchemin" aria-hidden="true"></div>
 <!-- CE QUI SE VOIT, CE QUI NE SE VOIT PAS (les mots de l'agent de la 3D, qui sait ce que la vue dessine) -->
-<section class="fond-carte relief ile-savoir">
+<section class="bande-k ile-savoir">
   <div class="dedans une-grande">
     <div class="panneau-nuit savoir">
       <h2>Ce qui se voit</h2>
@@ -151,8 +146,7 @@
   </div>
 </section>
 
-<div class="frise frise-corde" aria-hidden="true"></div>
-<section class="fond-bois relief ile-appel" id="appel" hidden>
+<section class="bande-k bande-chaude ile-appel" id="appel" hidden>
   <div class="dedans alterne"><div class="rangee">
     <div class="appel-dessin" aria-hidden="true"><canvas id="appel-ile" width="12" height="12"></canvas></div>
     <div class="panneau-bois appel-texte">
@@ -164,7 +158,6 @@
 </section>
 </main>
 
-<div class="frise frise-corde" aria-hidden="true"></div>
 <footer>
   <div class="dedans pied">
     <div class="pied-marque">

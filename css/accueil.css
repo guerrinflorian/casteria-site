@@ -287,3 +287,50 @@ button.ilot:hover, button.ilot:focus-visible, button.ilot.choisi { animation-pla
 .ilot-ciel { position: absolute; left: -37.5%; top: -21%; width: 140%; height: 140%; max-width: none; pointer-events: none; opacity: 0; filter: saturate(1.3) brightness(1.12); transition: opacity .4s; }
 .ilot.vue-du-ciel .ilot-ciel { opacity: 1; }
 .ilot.vue-du-ciel .ilot-dessin { visibility: hidden; }
+
+/* ---------- (af, 23:3x) LE STYLE NEUF SUR L'ACCUEIL (le kit de b5, css/kit.css, la maquette validée par le propriétaire) : tout
+   arrondi, des ombres douces, les titres en Chewy crème ; ce qui était encore carré : le badge du haut, la mer des îles et sa
+   fiche, la place libre, les épingles, le podium, les cartes de la planète. Les dessins des îles restent en pixels (c'est le jeu). ---------- */
+.en-ligne { border-radius: 999px; padding: 8px 16px 8px 12px; background: rgba(36, 26, 58, .78); border: 1px solid rgba(255, 207, 90, .4); box-shadow: 0 6px 18px rgba(0, 0, 0, .3);
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+.en-ligne::before, .en-ligne-iles::before { border-radius: 50%; }
+.carte-iles-titre { font-family: var(--police-titre); font-size: 23px; color: var(--titre-creme); text-shadow: 0 2px 0 #3A1F12; }
+.carte-iles, .carte-iles.dessinee { border-radius: 18px; border: 1px solid var(--trait); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .25), inset 0 10px 30px rgba(0, 0, 0, .18); }
+.carte-iles .ilot.libre, .carte-iles.dessinee .ilot.libre { border-radius: 12px; }
+.ilot-place { border-radius: 8px; }
+.ilot-epingle { border-radius: 8px; padding: 2px 3px; }
+.ilot-epingle .tete-pixel { border-radius: 4px; }
+.passer-ouverture { border-radius: 12px; }
+.carte-iles-cadre .fiche-ile { border-left: 0; border-radius: 16px; background: rgba(255, 255, 255, .05); border: 1px solid var(--trait); }
+.fiche-nom { font-family: var(--police-titre); font-size: 25px; color: var(--titre-creme); text-shadow: 0 2px 0 #3A1F12; }
+.fiche-nom .tete-pixel { border-radius: 7px; }
+.fiche-etoiles { color: var(--or-k); }
+.fiche-lien { color: var(--or-k); }
+.podium-marches { border-radius: var(--r-panneau); border: 1px solid var(--trait); overflow: hidden; box-shadow: var(--ombre-douce); }
+.marche { border-radius: 16px 16px 0 0; }
+.marche .tete-pixel { border-radius: 8px; }
+.planete .cartes-planete figure { border-radius: var(--r-carte); overflow: hidden; }
+
+/* ---------- (af, 23:3x) LES ILLUSTRATIONS DE L'ACCUEIL (nos modèles rendus dans Blockbench : tete_48/illustrations_site, en 512) :
+   décor seul (alt vide), chacune son mouvement doux, immobiles pour qui demande moins de mouvement. Le Phénix d'or vole au-dessus du
+   titre ; le Kitsune céleste flotte au-dessus du Mouton cerisier, sur leur pré, sous « Une île à toi » ; le Gardien de Jade sous
+   le texte des boss ; l'Esquif à côté du titre de la planète ; le Cerf céleste au-dessus du voyage. ---------- */
+.illu { display: block; height: auto; pointer-events: none; user-select: none; filter: drop-shadow(0 14px 18px rgba(0, 0, 0, .45)); }
+#haut { position: relative; }
+.illu-phenix { position: absolute; z-index: 2; left: 5%; top: 17%; width: clamp(96px, 12vw, 180px); animation: vol-phenix 7s ease-in-out infinite; }
+@keyframes vol-phenix { 0%, 100% { transform: translate(0, 0) rotate(-4deg); } 30% { transform: translate(18px, -16px) rotate(2deg); } 60% { transform: translate(34px, 4px) rotate(-1deg); } }
+.illu-pre { position: relative; display: flex; align-items: flex-end; gap: 4px; height: 150px; margin: 16px 0 10px; }
+.illu-pre::before { content: ""; position: absolute; left: -10px; bottom: -6px; width: 290px; height: 34px; border-radius: 50%; background: radial-gradient(closest-side, rgba(95, 162, 62, .55), rgba(95, 162, 62, .18) 70%, transparent); }
+.illu-mouton { position: relative; width: 132px; }
+.illu-kitsune { position: relative; width: 128px; margin-bottom: 28px; animation: flotte 3.6s ease-in-out infinite; }
+@keyframes flotte { 50% { transform: translateY(-12px); } }
+.illu-gardien { width: clamp(150px, 17vw, 230px); margin: 18px 0 0 -8px; animation: respire-boss 4.5s ease-in-out infinite; transform-origin: 50% 100%; }
+@keyframes respire-boss { 50% { transform: scale(1.025, .985); } }
+.planete .tete, .voyage-cinema .tete { position: relative; }
+.illu-esquif { position: absolute; left: -200px; top: -20px; width: 170px; animation: frisson 6s ease-in-out infinite; }
+@keyframes frisson { 0%, 92%, 100% { transform: translate(0, 0); } 94% { transform: translate(-1px, 1px); } 96% { transform: translate(1px, -1px); } 98% { transform: translate(-1px, 0); } }
+.illu-cerf { position: absolute; right: -150px; top: -40px; width: 180px; animation: balance-cerf 5s ease-in-out infinite; transform-origin: 50% 100%; }
+@keyframes balance-cerf { 50% { transform: rotate(-2deg) translateY(-4px); } }
+@media (max-width: 1000px) { .illu-esquif, .illu-cerf { position: static; width: 120px; margin: 0 auto 6px; } }
+@media (max-width: 600px) { .illu-phenix { left: auto; right: 4%; top: 12%; width: 92px; } .illu-pre { height: 120px; } .illu-mouton { width: 108px; } .illu-kitsune { width: 104px; } .illu-gardien { width: 150px; } }
+@media (prefers-reduced-motion: reduce) { .illu-phenix, .illu-kitsune, .illu-gardien, .illu-esquif, .illu-cerf { animation: none; } }

@@ -39,7 +39,6 @@ const MUTANTS = [
   ['la feuille de la boutique plus chargee', 'boutique.html', s => s.replace('<link rel="stylesheet" href="css/boutique.css">\n', '')],
   ['le tableau de parchemin revenu dans la boutique', 'boutique.html', s => s.replace('<div class="etal" id="tebex">', '<div class="etal cadre-bois" id="tebex">')],
   ['le bouton vert revenu dans la boutique', 'boutique.html', s => s.replace('<p class="tebex-actions" id="tebex-actions"></p>', '<p class="tebex-actions" id="tebex-actions"><a class="bouton bouton-vert" href="./#telecharger">Télécharge le launcher</a></p>')],
-  ['une pastille arrondie dans la boutique', 'css/boutique.css', s => s + '\n.pack .bouton { border-radius: 999px; }\n'],
   ['une image trop haute dans la feuille de la boutique', 'css/boutique.css', s => s + '\n.offre-scene img { height: 1200px; }\n'],
   ['un tiret long dans la feuille de la boutique', 'css/boutique.css', s => s + '\n/* les packs ' + String.fromCharCode(0x2014) + ' du plus petit au plus gros */\n'],
   ['le paiement par-dessus la page sans la redirection en secours', 'js/boutique.js', s => s.replace(/\n        \/\/ la page de paiement de Tebex en français[^\n]*\n[^\n]*\n        window\.location\.assign\(lien\)/, '')],
@@ -139,9 +138,6 @@ const MUTANTS = [
   ['les themes qui ne sont plus des onglets', 'js/classement.js', s => s.replace("b.setAttribute('role', 'tab')", "b.setAttribute('role', 'button')")],
   ['le podium qui ne reajuste plus ses pseudos au dessin', 'js/classement.js', s => s.replace('    ajusterPodium()\n    if (document.fonts && document.fonts.ready) document.fonts.ready.then(ajusterPodium)\n', '')],
   ['Toi plus surligne', 'js/classement.js', s => s.split("'cl-marque toi'").join("'cl-marque'")],
-  ['une pastille arrondie dans le classement', 'css/classement.css', s => s.replace('.cl-cat { min-height: 40px;', '.cl-cat { border-radius: 999px; min-height: 40px;')],
-  ['une pastille arrondie dans le compte', 'css/compte.css', s => s.replace('.mdp .voir { flex: 0 0 auto;', '.mdp .voir { border-radius: 8px; flex: 0 0 auto;')],
-  ['une pastille arrondie dans l espace admin', 'css/admin.css', s => s.replace('.a-pause { min-height: 42px;', '.a-pause { border-radius: 20px; min-height: 42px;')],
   ['le lien Classement retire du menu d une page', 'pirates.html', s => s.replace(/\n\s*<a class="classement" href="classement\.html"[^\n]*<\/a>/, '')],
   ['la coupe du classement retiree de l en-tete d une page', 'index.html', s => s.replace('<svg class="ic" aria-hidden="true"><use href="#i-coupe"/></svg>Classement</a>', 'Classement</a>')],
   ['le sprite des icones retire d une page qui s en sert', 'index.html', s => s.replace(/<svg class="icones"[^]*?<\/svg>/, '')],
@@ -159,7 +155,6 @@ const MUTANTS = [
   ['une page du compte sans le kit des motifs', 'compte.html', s => s.replace('<link rel="stylesheet" href="css/motifs.css">\n', '')],
   ['la connexion sur un fond uni', 'connexion.html', s => s.split('fond-carte relief').join('relief').split('fond-bois relief').join('relief').split('fond-mer relief').join('relief')],
   ['l espace admin sans frise', 'admin.html', s => s.split('<div class="frise frise-etoiles" aria-hidden="true"></div>').join('').split('<div class="frise frise-corde" aria-hidden="true"></div>').join('')],
-  ['une pastille arrondie dans le kit', 'css/motifs.css', s => s + '\n.panneau-nuit { border-radius: 12px; }\n'],
   ['un tiret long dans le kit', 'css/motifs.css', s => s + '\n/* le ciel ' + String.fromCharCode(0x2014) + ' la nuit */\n'],
   // ---------- (29/10/2026) les choix de la tête et les trois demandes du propriétaire pour l'espace de l'équipe ----------
   ['les classements du nombre de boss remis sur le site', 'js/classement.js', s => s.replace('return c && !HORS_SITE[c.id]', 'return c && true')],
@@ -217,7 +212,6 @@ const MUTANTS = [
   ['l invitation du Discord ecrite sur une autre page', 'index.html', s => s.replace('</main>', '<p><a href="https://discord.gg/Xp325uTFe7">Le Discord</a></p></main>')],
   ['une invitation Discord dans un script du site', 'js/site.js', s => s + "\nvar DISCORD = 'https://discord.gg/autre'\n"],
   ['la page du Discord retiree du plan du site', 'sitemap.xml', s => s.replace(/\s*<url><loc>https:\/\/casteria\.fr\/discord<\/loc>[^\n]*/, '')],
-  ['une pastille arrondie sur la page du Discord', 'css/discord.css', s => s + '\n.vitrine-tete.discord .bouton.grand { border-radius: 999px; }\n'],
   // (19/10/2026) l'accueil mène au Discord, juste après « Jouer gratuitement » : /discord, le logo et le mot
   ['le bouton Discord retire de l accueil', 'index.html', s => s.replace(/<a class="bouton bouton-discord grand"[^\n]*<\/a>\n/, '')],
   ['le bouton Discord de l accueil sans son logo', 'index.html', s => s.replace(/<svg class="logo-discord"[\s\S]*?<\/svg>/, '')],
@@ -256,7 +250,6 @@ const MUTANTS = [
   ['la consigne sans le mot pseudo', 'vote.html', s => s.replace('écris ton pseudo du jeu, exactement', 'écris ton nom')],
   ['la phrase « tape /vote » retiree de la page du vote', 'vote.html', s => s.replace(/<p class="sites-vides[^\n]*<\/p>\n/, '')],
   ['la liste vide des sites de vote plus cachee', 'css/vote.css', s => s.replace('.sites-vote:empty { display: none; }', '')],
-  ['une pastille arrondie sur la page du vote', 'css/vote.css', s => s + '\n.site-vote { border-radius: 999px; }\n'],
   ['une image trop haute dans la feuille du vote', 'css/vote.css', s => s + '\n.vote-caisse img.photo { height: 1200px; }\n'],
   ['la hero du vote sans sa version pour un ecran etroit', 'vote.html', s => s.replace(/(<div class="fond plein-cadre"[\s\S]*?<picture>)[\s\S]*?(<source type="image\/webp")/, '$1\n        $2')],
   // (22/10/2026) le « retour arrière » invisible qui avait cassé la page ?photo (js/site.js, depuis le 05/10)
@@ -292,7 +285,6 @@ const MUTANTS = [
   ['le badge jamais relu', 'js/site.js', s => s.replace('    setInterval(lireEnLigne, EN_LIGNE_RELIRE_MS)\n', '')],
   ['le badge hors de la section du haut', 'index.html', s => s.replace('    <p class="en-ligne" data-en-ligne hidden></p>\n    <p class="cinema-accroche">', '    <p class="cinema-accroche">').replace('    <p class="preuves">Gratuit', '    <p class="en-ligne" data-en-ligne hidden></p>\n    <p class="preuves">Gratuit')],
   ['la plaque vide visible au depart', 'css/style.css', s => s.replace('.en-ligne[hidden] { display: none; }\n', '')],
-  ['le badge en pastille arrondie', 'css/style.css', s => s.replace('padding: 8px 15px 8px 13px; border-radius: 0;', 'padding: 8px 15px 8px 13px; border-radius: 999px;')],
   ['le pouls qui ne se calme pas', 'css/style.css', s => s.replace('@media (prefers-reduced-motion: reduce) { .en-ligne::before { animation: none; } }', '')],
   ['la place des joueurs en ligne visible au depart', 'index.html', s => s.replace('<p class="en-ligne" data-en-ligne hidden></p>', '<p class="en-ligne" data-en-ligne></p>')],
   ['l\'identifiant du gist dans un autre script', 'js/carrousel.js', s => s + '\n// 4337783e1d14963774decfe06f2709da\n']

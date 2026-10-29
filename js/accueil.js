@@ -128,7 +128,18 @@
         // du dessin dès qu'elle est lue ; une île fermée garde son dessin (l'API ne sert rien d'elle)
         if (il.ciel === true) {
           var im = document.createElement('img'); im.className = 'ilot-ciel'; im.alt = ''; im.decoding = 'async'
-          im.onload = function () { b.classList.add('vue-du-ciel') }
+          im.onload = function () {
+            // la terre de l'image (67 : elle change d'une île à l'autre) : son milieu au milieu du bouton, la même échelle que la
+            // grande carte (140 %, réduite si la terre dépasse 120 % de la case), l'épingle sur son haut
+            var bx = window.IlePixel.boiteCiel ? window.IlePixel.boiteCiel(im) : null
+            if (bx) {
+              var k = Math.min(1.4, 1.2 * 320 / bx.large)
+              im.style.width = im.style.height = (k * 100) + '%'
+              im.style.left = (50 - bx.cx / 320 * k * 100) + '%'; im.style.top = (50 - bx.cy / 320 * k * 100) + '%'
+              ep.style.top = (50 - (bx.cy - bx.haut) / 320 * k * 100) + '%'
+            }
+            b.classList.add('vue-du-ciel')
+          }
           im.src = '/api/ile/' + Number(il.i) + ',' + Number(il.j) + '/ciel.png'
           b.appendChild(im)
         }
@@ -174,7 +185,9 @@
     }
     var titre = document.querySelector('[data-carte-titre]'), lu = document.querySelector('[data-carte-lu]')
     if (titre) titre.textContent = 'La mer des îles, en direct'
-    if (lu && c.lu) lu.textContent = 'relue ' + A.ilYa(c.lu)
+    // (af, 23:3x ; b5 et la tête : « en direct » et « relue il y a 1 h » se contredisaient) le « lu » de l'API est la date du DERNIER
+    // CHANGEMENT d'une île, pas celle de la lecture (l'API relit la base toutes les 2 minutes) : le titre dit « en direct », sans ligne
+    if (lu) lu.textContent = ''
     // la première île montrée : la plus belle de la fenêtre
     var premiere = carte.querySelector('.ilot.belle') || carte.querySelector('button.ilot')
     if (premiere && fiche) premiere.dispatchEvent(new Event('mouseenter'))

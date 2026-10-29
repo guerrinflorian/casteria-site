@@ -13,8 +13,10 @@
   // les trois caméras (le hash de BlueMap : carte:x:y:z:distance:rotation:angle:inclinaison:ortho:mode) autour du centre de
   // l'emprise (36 blocs à l'est du centre de la case, comme la démo de l'agent)
   var REGARDS = {
-    trois_quarts: function (x, z) { return [x, 64, z + 8, 175, 0.75, 0.95, 0, 0, 'perspective'] },
-    ciel: function (x, z) { return [x, 64, z, 260, 0, 0, 0, 1, 'flat'] },
+    trois_quarts: function (x, z) { return [x, 63, z + 2, 145, 0.75, 0.92, 0, 0, 'perspective'] },
+    // (67, 29/10 ; le proprietaire : « Du ciel » montrait un cadre bleu vide : la vue a plat, orthographique, de BlueMap ne
+    // dessine rien ici) d'en haut EN PERSPECTIVE, presque a la verticale : l'ile entiere au centre
+    ciel: function (x, z) { return [x, 63, z + 2, 230, 0, 0.01, 0, 0, 'perspective'] },
     promenade: function (x, z) { return [x, 66, z + 20, 56, 0.35, 1.32, 0, 0, 'perspective'] }
   }
   var iframe = null, fiche = null, i = 0, j = 0
@@ -32,8 +34,12 @@
     $('geste').hidden = true
   }
   function hashDe(nom) {
-    var x = i * ESPACE + 36, z = j * ESPACE
-    return '#' + [fiche.carte || 'iles'].concat(REGARDS[nom](x, z)).join(':')
+    var x = i * ESPACE + 36, z = j * ESPACE, r = REGARDS[nom](x, z)
+    // (67, 29/10) une vue ETROITE (le telephone) : BlueMap garde l'angle vertical, l'ile serait coupee sur les cotes ; la
+    // camera recule a la mesure de la largeur (jusqu'a deux fois plus loin)
+    var v = $('vue'), l = v ? v.clientWidth : 0, hh = v ? v.clientHeight : 0
+    if (l > 0 && hh > 0 && l / hh < 1.4) r[3] = Math.round(r[3] * Math.min(2, 1.4 / (l / hh)))
+    return '#' + [fiche.carte || 'iles'].concat(r).join(':')
   }
   function regarder(nom) {
     if (!iframe || !REGARDS[nom]) return
@@ -99,9 +105,10 @@
     A.vider(h)
     var t = A.el('span', 'ile-hote-tete'); h.appendChild(t)
     if (window.Tete) Tete.poser(t, x && x.peau ? x.peau : '/api/peau/' + f.hote)
-    h.appendChild(document.createTextNode('L\'île de '))
-    var a = A.el('a', '', f.hote); a.href = 'joueur/' + encodeURIComponent(f.hote); h.appendChild(a)
-    if (x && x.amis) h.appendChild(document.createTextNode(', avec ' + x.amis + ' ami' + (x.amis > 1 ? 's' : '')))
+    // (67, 29/10 ; la tete : sous le titre « Île de _Floskyl_ », la ligne « L'île de _Floskyl_ » repetait le nom) le chef de
+    // l'ile seul : sa tete, son pseudo, « Chef de l'île » ; ses amis sont dans « Qui y vit »
+    var a = A.el('a', 'ile-chef', f.hote); a.href = 'joueur/' + encodeURIComponent(f.hote); h.appendChild(a)
+    h.appendChild(A.el('span', 'ile-chef-role', 'Chef de l\'île'))
     var b = $('badges')
     A.vider(b)
     b.appendChild(A.el('span', 'badge ' + (f.ouverte ? 'ouverte' : 'fermee'), f.ouverte ? 'Ouverte aux visites' : 'Fermée aux visites'))

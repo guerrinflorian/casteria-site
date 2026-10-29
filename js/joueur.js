@@ -17,6 +17,15 @@
     oeuf_mythique: ['🥚', 'Œuf mythique'], casino_gros_gain: ['🎰', 'Casino'], minijeu_victoire: ['🏆', 'Mini-jeu'] }
 
   function nombre(n) { return A.nombre(n) }
+  // (5c, le kit) une icône au trait du sprite que porte la barre (svg.ic, <use href="#i-…">)
+  function ic(id, plein) {
+    var NS = 'http://www.w3.org/2000/svg', sv = document.createElementNS(NS, 'svg'), u = document.createElementNS(NS, 'use')
+    sv.setAttribute('class', 'ic' + (plein ? ' plein' : '')); sv.setAttribute('aria-hidden', 'true'); u.setAttribute('href', '#i-' + id)
+    sv.appendChild(u)
+    return sv
+  }
+  // (5c) le portrait des boss que le site nomme (les illustrations de nos modèles, tete_48/illustrations_site, réduites à 128 px)
+  var PORTRAITS = { roi_champignon: 1, kraken_abysses: 1, yeti_glaces: 1 }
   function pluriel(n, mot, mots) { return nombre(n) + ' ' + (n > 1 ? (mots || mot + 's') : mot) }
   // (5c, l'audit du site : « 0e » sur la fiche du propriétaire) un rang de 0 ou moins ne s'écrit jamais
   function rang(r) { return !(r >= 1) ? '-' : r === 1 ? '1er' : A.nombre(r) + 'e' }
@@ -150,8 +159,8 @@
       tx.appendChild(faits)
       if (ile.i != null) {
         var gs = el('p', 'ile-gestes')
-        var b3 = el('a', 'bouton bouton-or', 'La voir en 3D'); b3.href = 'ile/' + ile.i + ',' + ile.j; gs.appendChild(b3)
-        var bt = el('a', 'bouton bouton-bois', 'Sur la carte'); bt.href = 'carte.html#ile=' + ile.i + ',' + ile.j; gs.appendChild(bt)
+        var b3 = el('a', 'bouton bouton-or', 'La voir en 3D'); b3.href = 'ile/' + ile.i + ',' + ile.j; b3.insertBefore(ic('jeu'), b3.firstChild); gs.appendChild(b3)
+        var bt = el('a', 'bouton bouton-sombre', 'Sur la carte'); bt.href = 'carte.html#ile=' + ile.i + ',' + ile.j; bt.insertBefore(ic('carte'), bt.firstChild); gs.appendChild(bt)
         tx.appendChild(gs)
       }
       if (window.IlePixel) {
@@ -178,7 +187,7 @@
     if (f.length) {
       montrerBloc('faits')
       var fu = $('faits')
-      f.forEach(function (x) { var li = el('li', 'panneau-bois'); li.appendChild(el('span', 'ico', x[0])); li.appendChild(el('b', '', x[1])); if (x[2]) li.appendChild(document.createTextNode(' ' + x[2])); fu.appendChild(li) })
+      f.forEach(function (x) { var li = el('li', 'fait panneau-nuit'); li.appendChild(el('span', 'ico', x[0])); li.appendChild(el('b', '', x[1])); if (x[2]) li.appendChild(document.createTextNode(' ' + x[2])); fu.appendChild(li) })
     }
     // SES DERNIERS EXPLOITS
     if (j.exploits && j.exploits.length) {
@@ -223,7 +232,7 @@
     montrerBloc('boss')
     var ul = $('trophees')
     t.forEach(function (x) {
-      var li = el('li', 'trophee panneau-nuit coins-or'), im = el('img')
+      var li = el('li', 'trophee panneau-nuit'), im = el('img')
       im.src = x[0]; im.alt = ''; im.width = 64; im.height = 64; im.className = 'pixel'; im.loading = 'lazy'
       li.appendChild(im)
       var n = Number(x[1])
@@ -236,6 +245,10 @@
       var ol = $('records-liste')
       recs.forEach(function (r) {
         var li = el('li', 'record' + (r.mode === 'heroique' ? ' heroique' : ''))
+        if (PORTRAITS[r.boss]) {
+          var pt = el('img', 'record-portrait'); pt.src = 'assets/illustrations/boss_' + r.boss + '_128.png'; pt.alt = ''; pt.width = 56; pt.height = 56; pt.loading = 'lazy'
+          li.appendChild(pt)
+        } else li.appendChild(el('span', 'record-portrait vide', '⚔'))
         li.appendChild(el('span', 'record-boss', r.nom))
         li.appendChild(el('span', 'record-mode', r.mode === 'heroique' ? 'Héroïque' : 'Normal'))
         var tm = el('b', 'record-temps', r.temps); tm.setAttribute('aria-label', r.temps.replace(':', ' min ') + ' s')
@@ -262,7 +275,7 @@
     }
     var ul = $('compagnons')
     l.forEach(function (x) {
-      var li = el('li', 'compagnon panneau-bois')
+      var li = el('li', 'compagnon panneau-nuit')
       li.appendChild(el('span', 'ico', x[0]))
       var tx = el('span', 'compagnon-texte')
       tx.appendChild(el('b', '', x[1]))
@@ -276,10 +289,11 @@
   function faceAFace(j, moi) {
     var box = $('face-a-face'), el = A.el
     A.vider(box)
+    box.className = 'face-a-face panneau-nuit'
     if (moi && String(moi.pseudo).toLowerCase() === String(j.pseudo).toLowerCase()) {
       box.appendChild(el('h2', '', 'C\'est ton profil'))
       box.appendChild(el('p', '', 'C\'est ce que les autres voient de toi. Partage-le : ton lien montre ton île' + (classe(j) ? ' et ta place.' : '.')))
-      var c = el('a', 'bouton bouton-bois', 'Mon compte'); c.href = 'compte.html'; box.appendChild(c)
+      var c = el('a', 'bouton bouton-sombre', 'Mon compte'); c.href = 'compte.html'; c.insertBefore(ic('moi'), c.firstChild); box.appendChild(c)
     } else if (moi) {
       box.appendChild(el('h2', '', 'Toi face à ' + j.pseudo))
       var t = el('table', 'duel')
@@ -300,10 +314,20 @@
       var ecart = gm && gj ? gm.rang - gj.rang : 0
       if (gm && gj) box.appendChild(el('p', 'duel-mot', ecart > 0 ? 'Il te reste ' + pluriel(ecart, 'place') + ' pour le rattraper.' : (ecart < 0 ? 'Tu es devant : garde ta place.' : 'Vous êtes au coude à coude.')))
     } else {
-      box.appendChild(el('h2', '', 'Toi aussi, construis ton île'))
-      box.appendChild(el('p', '', 'Une île rien qu\'à toi au milieu de la mer, des boss, des bêtes, des machines : et ta place au classement' + (classe(j) ? ', à côté de la sienne.' : '.')))
-      var a = el('a', 'bouton bouton-or', 'Jouer gratuitement'); a.href = './#telecharger'; box.appendChild(a)
-      var cx = el('a', 'lien-or', 'Déjà joueur ? Connecte-toi'); cx.href = 'connexion.html'; box.appendChild(cx)
+      // (5c, le kit) la fenêtre crème : sa tête (l'icône, le titre), son corps, son pied
+      box.className = 'face-a-face fenetre-creme'
+      var tete = el('div', 'f-tete'), ico = el('span', 'f-icone')
+      ico.appendChild(ic('maison'))
+      tete.appendChild(ico)
+      tete.appendChild(el('h2', '', 'Toi aussi, construis ton île'))
+      box.appendChild(tete)
+      var corps = el('div', 'f-corps')
+      corps.appendChild(el('p', '', 'Une île rien qu\'à toi au milieu de la mer, des boss, des bêtes, des machines : et ta place au classement' + (classe(j) ? ', à côté de la sienne.' : '.')))
+      var a = el('a', 'bouton bouton-orange', 'Jouer gratuitement'); a.href = './#telecharger'; a.insertBefore(ic('jouer', true), a.firstChild); corps.appendChild(a)
+      box.appendChild(corps)
+      var pied = el('div', 'f-pied'), cx = el('a', '', 'Déjà joueur ? Connecte-toi'); cx.href = 'connexion.html'
+      pied.appendChild(cx)
+      box.appendChild(pied)
     }
     box.hidden = false
   }

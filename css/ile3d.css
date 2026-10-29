@@ -144,3 +144,62 @@
 .ile-se-dessine { font-size: 20px; font-weight: 700; color: #FFD75E; }
 .etoiles-aucune { font-size: 17px; color: #E3D3F5; }
 @media (prefers-reduced-motion: reduce) { .ile-berce { animation: none; } }
+
+/* ==== (67, 29/10 ; LE STYLE NEUF, le kit de b5, css/kit.css) : tout arrondi, des pilules, des bandes de nuit en degrades doux,
+   plus de frise ni de fond de pixels ==== */
+.bande-k { position: relative; background: var(--nuit, #140D22); }
+.bande-k + .bande-k { border-top: 1px solid var(--trait, rgba(255, 255, 255, .09)); }
+.bande-haut { background: radial-gradient(70% 120% at 15% 0%, rgba(155, 93, 229, .28), transparent 60%), radial-gradient(60% 90% at 90% 10%, rgba(255, 138, 61, .12), transparent 60%), var(--nuit, #140D22); }
+.bande-mer { background: radial-gradient(80% 70% at 50% 40%, rgba(46, 143, 184, .22), transparent 70%), linear-gradient(180deg, var(--nuit, #140D22), #0F1C33 60%, var(--nuit, #140D22)); }
+.bande-chaude { background: radial-gradient(70% 90% at 50% 100%, rgba(255, 138, 61, .12), transparent 65%), var(--nuit-2, #1D1430); }
+/* le chef de l'ile, sous le titre */
+.ile-hote { gap: 6px 12px; }
+.ile-hote-tete { border-radius: 10px; box-shadow: 0 0 0 2px rgba(255, 255, 255, .14); overflow: hidden; }
+.ile-chef { color: var(--or-k, #FFCF5A); font-family: var(--police-bouton, "Lilita One", sans-serif); font-size: 22px; text-decoration: none; }
+.ile-chef:hover { text-decoration: underline; }
+.ile-chef-role { font-size: 13px; font-weight: 700; color: #1B1028; background: var(--creme-2, #F2DCAF); border-radius: 999px; padding: 3px 11px; }
+/* les badges : des pastilles */
+.badge { border-radius: 999px; padding: 5px 14px; font-size: 14px; }
+.badge.ouverte { box-shadow: 0 3px 0 #2E8A4E; background: #7BE59C; }
+.badge.fermee { box-shadow: 0 3px 0 #8C5A2E; }
+.badge.vivante { box-shadow: 0 3px 0 var(--or-k-fonce, #B9741F); background: var(--or-k, #FFCF5A); }
+/* le haut a droite : sa carte */
+.ile-chiffres { border-radius: var(--r-panneau, 22px); }
+/* LA VUE : un grand cadre arrondi, ses regards en pilules, son pied en verre */
+.ile-cadre { border-radius: 26px; padding: 8px; background: linear-gradient(180deg, var(--carte-2, #2D2247), var(--carte, #241A3A)); border: 1px solid var(--trait, rgba(255, 255, 255, .09)); box-shadow: var(--ombre-douce, 0 14px 30px rgba(0, 0, 0, .35)); }
+.ile-vue { border-radius: 20px; }
+.ile-regards { gap: 8px; }
+.regard { border-radius: 999px; border: 0; padding: 8px 16px; min-height: 40px; font-family: var(--police-bouton, "Lilita One", sans-serif); font-weight: 400; letter-spacing: .3px; background: rgba(20, 13, 34, .78); color: #F3E7FF; box-shadow: 0 3px 0 rgba(0, 0, 0, .45), inset 0 0 0 1px rgba(255, 255, 255, .14); backdrop-filter: blur(6px); }
+.regard:hover { color: var(--or-k, #FFCF5A); border: 0; }
+.regard[aria-pressed="true"] { color: #4A2B07; background: linear-gradient(180deg, #FFE08A, var(--or-k, #FFCF5A) 45%, var(--or-k2, #F3A93A)); box-shadow: 0 3px 0 var(--or-k-fonce, #B9741F); }
+.ile-pied { border-radius: 14px; background: rgba(20, 13, 34, .78); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .12); backdrop-filter: blur(6px); }
+.ile-message { border-radius: 20px; }
+.ile-berce { filter: drop-shadow(0 10px 18px rgba(0, 0, 0, .35)); }
+/* SES CHIFFRES, QUI Y VIT, SES BETES : des cartes */
+.mesure { border-radius: 16px; background: rgba(255, 255, 255, .05); box-shadow: inset 0 0 0 1px var(--trait, rgba(255, 255, 255, .09)); }
+.mesure-icone { border-radius: 12px; box-shadow: none; background: rgba(155, 93, 229, .22); }
+.mesure-rang { border-radius: 12px; font-family: var(--police-bouton, "Lilita One", sans-serif); background: linear-gradient(180deg, #FFE08A, var(--or-k, #FFCF5A) 45%, var(--or-k2, #F3A93A)); box-shadow: 0 3px 0 var(--or-k-fonce, #B9741F); color: #4A2B07; }
+.habitant-tete { border-radius: 8px; box-shadow: 0 0 0 2px rgba(255, 255, 255, .14); overflow: hidden; }
+.habitant-role { border-radius: 999px; padding: 2px 10px; }
+.bete { border-radius: 14px; background: rgba(0, 0, 0, .2); box-shadow: inset 0 0 0 1px rgba(255, 215, 94, .2); }
+.bete-rarete { border-radius: 999px; padding: 2px 9px; }
+.ile-minicarte canvas { border-radius: 16px; }
+.savoir ul { font-size: 16px; }
+.ile-geste { color: rgba(243, 231, 255, .72); }
+/* au telephone : les trois regards sur une ligne, jamais un mot coupe */
+@media (max-width: 768px) {
+  .regard { white-space: nowrap; font-size: 13px; padding: 7px 10px; min-height: 38px; }
+}
+/* (67, 29/10 ; « la 3D au premier regard ») au telephone, l'en-tete serre : la vue se voit des le premier ecran */
+@media (max-width: 768px) {
+  .ile-tete { padding: 84px 0 14px; }
+  .ile-qui h1 { font-size: clamp(32px, 9vw, 44px); }
+  .ile-hote { margin-top: 8px; }
+  .ile-badges { margin-top: 8px; }
+  .ile-haut { gap: 10px; }
+  .ile-chiffres { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 2px 12px; padding: 10px 14px; text-align: left; }
+  .ile-etoiles { font-size: 20px; margin: 0; }
+  .ile-place { font-size: 14px; margin: 0; flex: 1 1 100%; }
+  .ile-chiffres .lien-or { font-size: 14px; }
+  .ile-vue-section { padding-top: 14px; }
+}

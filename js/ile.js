@@ -311,5 +311,22 @@
     x._dv = versionD
     return x._d
   }
-  window.IlePixel = { sprite: sprite, grande: grande, grandeDeja: grandeDeja, unique: unique, uniqueDeja: uniqueDeja, noterDessins: noterDessins, pourDessin: pourDessin, COULEURS: COULEURS }
+  // (af, 23:3x ; 67 : « l'emprise change d'une île à l'autre », une île agrandie va de x 10 à 282, la Batterie la pousse à
+  // l'ouest) LA TERRE D'UNE IMAGE DU CIEL : la boîte de ses pixels pleins (alpha 255 : la terre ; la mer ne l'est qu'à 3 blocs de
+  // la côte), lue UNE fois par île ; rend { cx, cy, haut, large } en pixels de l'image (320 de côté), ou null
+  var lecteur = null
+  function boiteCiel(img) {
+    try {
+      var n = img.naturalWidth || 320, m = img.naturalHeight || 320
+      if (!lecteur) { lecteur = document.createElement('canvas') }
+      lecteur.width = n; lecteur.height = m
+      var k = lecteur.getContext('2d', { willReadFrequently: true })
+      k.clearRect(0, 0, n, m); k.drawImage(img, 0, 0)
+      var d = k.getImageData(0, 0, n, m).data, x0 = n, x1 = -1, y0 = m, y1 = -1
+      for (var y = 0; y < m; y++) for (var x = 0; x < n; x++) if (d[(y * n + x) * 4 + 3] === 255) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y }
+      if (x1 < 0) return null
+      return { cx: (x0 + x1 + 1) / 2 * 320 / n, cy: (y0 + y1 + 1) / 2 * 320 / m, haut: y0 * 320 / m, large: Math.max(x1 - x0 + 1, y1 - y0 + 1) * 320 / n }
+    } catch (e) { return null }
+  }
+  window.IlePixel = { sprite: sprite, grande: grande, grandeDeja: grandeDeja, boiteCiel: boiteCiel, unique: unique, uniqueDeja: uniqueDeja, noterDessins: noterDessins, pourDessin: pourDessin, COULEURS: COULEURS }
 })()

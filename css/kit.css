@@ -241,3 +241,50 @@ html body .rassure li, html body .gagner li, html body .grades-notes li { border
 html body .grades-tableau { border-radius: 20px; overflow: hidden; }
 html body .achat-champ input { border-radius: 14px; }
 html body .boutique-etal .alerte, html body .achat-merci, html body .ticket { border-radius: 16px; }
+
+/* ---------- LES LUTINS QUI FLOTTENT (nos modèles rendus dans Blockbench, détourés : assets/illustrations/) : ils bercent doucement,
+   jamais devant un texte ni un geste ; immobiles pour qui demande moins de mouvement ; au téléphone, ils se retirent ---------- */
+.lutin { position: absolute; z-index: 0; height: auto; pointer-events: none; user-select: none; filter: drop-shadow(0 18px 18px rgba(0, 0, 0, .45)); animation: lutin-flotte 6s ease-in-out infinite; }
+@keyframes lutin-flotte { 50% { transform: translateY(-14px) rotate(-1.5deg); } }
+.connexion .dedans { position: relative; z-index: 1; }
+.lutin-phenix { width: 170px; left: calc(50% - 140px); top: 96px; animation-duration: 5s; }
+.lutin-capybara { width: 140px; right: max(8px, calc(50% - 560px)); bottom: -6px; animation-delay: -2s; animation-duration: 7s; }
+@media (max-width: 1200px) { .lutin-phenix { left: calc(50% - 90px); width: 140px; } .lutin-capybara { display: none; } }
+@media (max-width: 960px) { .lutin { display: none; } }
+@media (prefers-reduced-motion: reduce) { .lutin { animation: none; } }
+/* la boutique : le Lion ailé du grade Souverain qui plane au-dessus des grades ; au téléphone, le tableau dit qu'il glisse */
+.boutique-grades { position: relative; overflow: hidden; }
+.boutique-grades .dedans { position: relative; z-index: 1; }
+.lutin-lion { width: 230px; right: max(8px, calc(50% - 640px)); top: 20px; animation-duration: 7s; }
+@media (max-width: 1240px) { .lutin-lion { width: 170px; top: 6px; } }
+.glisse-indice { display: none; }
+@media (max-width: 1000px) {
+  .glisse-indice { display: flex; justify-content: flex-end; margin: 22px 0 -24px; font: 400 14px var(--police-bouton); letter-spacing: .4px; text-transform: uppercase; color: var(--or-k); }
+  html body .grades-tableau { -webkit-mask-image: linear-gradient(90deg, #000 88%, rgba(0, 0, 0, .35)); mask-image: linear-gradient(90deg, #000 88%, rgba(0, 0, 0, .35)); }
+}
+/* la 404 : le Capybara perdu en mer, sur l'eau à côté du Kraken */
+.page .v-c.perdu { width: 26%; left: 2%; bottom: 2%; z-index: 3; }
+.page .v-c.perdu img { animation: flotte 5.5s ease-in-out -2s infinite; filter: drop-shadow(0 16px 14px rgba(0, 0, 0, .5)); }
+@media (prefers-reduced-motion: reduce) { .page .v-c.perdu img { animation: none; } }
+
+/* ---------- (le propriétaire, 23:3x : « PAS DE SCROLL dans le menu mobile ! ») LE TIROIR TIENT SANS DÉFILER à 390 x 664 et 360 x 640 :
+   toute la largeur au téléphone, le logo plus petit, les pages en deux colonnes de cartes de 44 px, la Boutique sur toute la
+   largeur, puis Jouer et le Discord ; jamais de barre de défilement ---------- */
+@media (max-width: 960px) {
+  .menu-tiroir { width: min(420px, 100%); padding: 12px 14px 14px; scrollbar-width: none; }
+  .menu-tiroir::-webkit-scrollbar { display: none; }
+  .menu-tiroir .tiroir-haut { margin-bottom: 10px; }
+  .menu-tiroir .tiroir-haut img { width: 62px; height: 62px; }
+  .menu-tiroir ul { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .menu-tiroir li a { min-height: 44px; padding: 0 10px; gap: 8px; border-radius: 12px; font-size: 14px; letter-spacing: .2px; white-space: nowrap; }
+  .menu-tiroir li a .ic { width: 18px; height: 18px; }
+  .menu-tiroir li a .pastille { margin-left: auto; padding: 1px 6px; font-size: 9px; }
+  .menu-tiroir li:has(> a.t-boutique) { grid-column: 1 / -1; }
+  .menu-tiroir a.t-boutique { margin-top: 2px; justify-content: center; }
+  .menu-tiroir .tiroir-bas { gap: 10px; margin-top: 12px; padding-top: 0; }
+  .menu-tiroir .tiroir-bas a.bouton { min-height: 48px; padding: 10px 16px 11px; font-size: 16px; border-radius: 14px; }
+}
+@media (max-width: 370px) { .menu-tiroir li a { padding: 0 8px; gap: 6px; font-size: 13px; letter-spacing: 0; } .menu-tiroir li a .ic { width: 16px; height: 16px; } }
+@media (max-width: 340px) { .menu-tiroir li a { padding: 0 6px; gap: 5px; font-size: 12px; } .menu-tiroir li a .ic { width: 15px; height: 15px; } .menu-tiroir li a .pastille { display: none; } }
+/* (b5, 23:5x) à 380 px et moins, le logo seul dans la barre : son nom passait sous le bouton « Menu » (la page d un joueur, à 360) */
+@media (max-width: 380px) { .barre .marque span { display: none; } .barre { gap: 4px; } }

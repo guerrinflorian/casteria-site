@@ -75,7 +75,7 @@ function verifierBoutique(faute) {
   // (cadre-bois) ni de bouton vert au milieu de la nuit ; et dans sa feuille, jamais une pastille arrondie (le propriétaire)
   if (!page.includes('<link rel="stylesheet" href="css/boutique.css">')) faute('boutique.html : sa feuille css/boutique.css n\'est pas chargée')
   if (/class="[^"]*\b(?:cadre-bois|bouton-vert)\b/.test(page)) faute('boutique.html : le tableau de parchemin (cadre-bois) ou le bouton vert est revenu (la boutique est dans la nuit et l\'or du site)')
-  for (const r of reglesCss(lire('css/boutique.css'))) for (const m of r.corps.matchAll(/border(?:-[a-z]+)*-radius\s*:\s*([^;]+)/g)) if (!/^0(px)?\s*$/.test(m[1].trim())) faute('css/boutique.css, « ' + r.sel.slice(0, 60) + ' » : un arrondi (' + m[1].trim() + ') : jamais une pastille arrondie')
+  // (29/10/2026, le style neuf validé par le propriétaire : tout arrondi) la règle « aucun arrondi » est retirée : css/boutique.css
 }
 // LE CLASSEMENT ET LES PAGES DU COMPTE (le prototype du 29/10/2026 ; le contrat : API.md, à côté du site). Le classement ne lit
 // plus le gist : TOUT passe par l'API du site (le VPS de casteria.fr, la même origine : /api/...), par UN seul script,
@@ -141,7 +141,7 @@ function verifierClassement(faute) {
   if (!/function ajusterPodium\(/.test(code) || code.split('ajusterPodium').length < 6 || !code.includes("'loadingdone'")) faute('js/classement.js : un pseudo du podium tient sur une ligne (ajusterPodium : au dessin, quand les polices arrivent, quand la fenêtre change de taille)')
   if (!code.includes('A.moi()') || !code.includes("'cl-marque toi'")) faute('js/classement.js : « Toi » se surligne quand le joueur est connecté (CasteriaApi.moi)')
   // jamais une pastille arrondie (le propriétaire) : aucun arrondi dans les feuilles du classement, du compte et de l'espace admin
-  for (const f of ['css/classement.css', 'css/compte.css', 'css/admin.css', 'css/motifs.css']) for (const r of reglesCss(lire(f))) for (const m of r.corps.matchAll(/border(?:-[a-z]+)*-radius\s*:\s*([^;]+)/g)) if (!/^0(px)?\s*$/.test(m[1].trim())) faute(f + ', « ' + r.sel.slice(0, 60) + ' » : un arrondi (' + m[1].trim() + ') : jamais une pastille arrondie')
+  // (29/10/2026, le style neuf validé par le propriétaire : tout arrondi) la règle « aucun arrondi » est retirée : classement, compte, admin, motifs
   // (29/10/2026 ; le propriétaire : « pas faire tout moche fond violet simple ») LE KIT DES MOTIFS (css/motifs.css, le
   // KIT_MOTIFS.md du kit) : chaque dessin appelé par une feuille existe (sinon le fond redevient uni sans rien dire) ; les
   // pages du compte chargent le kit après style.css, posent un fond dessiné et une frise entre deux sections
@@ -386,8 +386,8 @@ function verifierOuvertureEtEnLigne(faute) {
   const style = lire('css/style.css') || ''
   if (!/\n\.en-ligne\[hidden\] \{ display: none; \}/.test(style)) faute('css/style.css : « .en-ligne[hidden] { display: none; } » (sans lui, la plaque vide se voit au départ)')
   const regle = (style.match(/\n\.en-ligne \{[^}]*\}/) || [''])[0]
-  const rayons = (regle.match(/border-radius:\s*[^;}]+/g) || []).map(r => r.replace(/border-radius:\s*/, '').trim())
-  if (!regle || rayons.some(r => r !== '0')) faute('css/style.css : le badge des joueurs en ligne a des angles droits (aucune pastille arrondie : une règle du propriétaire)')
+  // (29/10/2026, le style neuf validé par le propriétaire : tout arrondi) la règle « aucun arrondi » est retirée : le badge des joueurs en ligne (sa règle doit exister, ligne suivante)
+  if (!regle) faute('css/style.css : la règle du badge des joueurs en ligne (.en-ligne) manque')
   if (!/\.en-ligne::before \{[^}]*animation: en-ligne-pouls/.test(style) || !/prefers-reduced-motion: reduce\) \{ \.en-ligne::before \{ animation: none; \}/.test(style)) faute('css/style.css : le carré vert du badge bat (en-ligne-pouls) et se calme sous prefers-reduced-motion')
 }
 // (25/10/2026) LE BADGE JOUÉ, pas seulement lu : montrerEnLigne tourne sur de faux éléments ; chaque cas doit dire ce qu'il
@@ -464,7 +464,7 @@ function verifierVote(faute) {
   if (!/\.sites-vote\[data-serveursminecraft="eteint"\] \.site-sm \{ display: none; \}/.test(css)) faute('css/vote.css : le drapeau « eteint » cache la carte de serveursminecraft.org')
   if (!s.includes('<link rel="stylesheet" href="css/vote.css">')) faute('vote.html : sa feuille css/vote.css n\'est pas chargée')
   if (!/\.sites-vote:empty\s*\{[^}]*display:\s*none/.test(css) || !/\.sites-vote:not\(:empty\)\s*\+\s*\.sites-vides\s*\{[^}]*display:\s*none/.test(css)) faute('css/vote.css : la liste vide des sites se cache, et la phrase « tape /vote » ne se montre que pour une liste vide')
-  for (const r of reglesCss(css)) for (const m of r.corps.matchAll(/border(?:-[a-z]+)*-radius\s*:\s*([^;]+)/g)) if (!/^0(px)?\s*$/.test(m[1].trim())) faute('css/vote.css, « ' + r.sel.slice(0, 60) + ' » : un arrondi (' + m[1].trim() + ') : jamais une pastille arrondie')
+  // (29/10/2026, le style neuf validé par le propriétaire : tout arrondi) la règle « aucun arrondi » est retirée : css/vote.css
 }
 function verifierDiscord(faute) {
   const s = lire('discord.html')
@@ -490,7 +490,7 @@ function verifierDiscord(faute) {
   }
   if (!vj || !vj.rewrites.some(r => r && r.source === '/rejoindre' && r.destination === '/rejoindre.html')) faute('vercel.json : /rejoindre doit mener a rejoindre.html')
   // jamais une pastille arrondie (le propriétaire) : aucun arrondi dans sa feuille
-  for (const r of reglesCss(lire('css/discord.css'))) for (const m of r.corps.matchAll(/border(?:-[a-z]+)*-radius\s*:\s*([^;]+)/g)) if (!/^0(px)?\s*$/.test(m[1].trim())) faute('css/discord.css, « ' + r.sel.slice(0, 60) + ' » : un arrondi (' + m[1].trim() + ') : jamais une pastille arrondie')
+  // (29/10/2026, le style neuf validé par le propriétaire : tout arrondi) la règle « aucun arrondi » est retirée : css/discord.css
 }
 // le domaine du site : celui que outils/domaine.js a écrit dans robots.txt ; et le plan du site
 const lire = f => { try { return fs.readFileSync(path.join(RACINE, f), 'utf8') } catch (e) { return '' } }

@@ -307,7 +307,8 @@
     // n'est pas lue, le dessin ; une île fermée n'a jamais d'image (l'API répond 404 partout, le même mot)
     var vc = x.ciel && s >= 40 ? cielDe(x) : null
     if (vc) {
-      var tc = Math.round(s * 1.45), cx0 = Math.round(px - tc * (CIEL_X / 320 - 0.5)), cy0 = Math.round(py - tc * (CIEL_Y / 320 - 0.5) + berce)
+      var bc = ciels[x.i + ',' + x.j].boite || { cx: CIEL_X, cy: CIEL_Y, haut: CIEL_HAUT, large: 200 }
+      var tc = Math.round(s * Math.min(1.45, 1.25 * 320 / bc.large)), cx0 = Math.round(px - tc * (bc.cx / 320 - 0.5)), cy0 = Math.round(py - tc * (bc.cy / 320 - 0.5) + berce)
       // un peu plus vive que le rendu brut, pour tenir à côté des îles dessinées (le filtre : là où le navigateur le sait)
       g.imageSmoothingEnabled = true
       if (FILTRE) g.filter = 'saturate(1.3) brightness(1.12)'
@@ -315,7 +316,7 @@
       if (FILTRE) g.filter = 'none'
       g.imageSmoothingEnabled = false
       if (!tout) return
-      var ttc = Math.round(s * .12) * 2, epc = epingle(x, ttc), sommetC = cy0 - tc / 2 + tc * CIEL_HAUT / 320
+      var ttc = Math.round(s * .12) * 2, epc = epingle(x, ttc), sommetC = cy0 - tc / 2 + tc * bc.haut / 320
       if (epc) g.drawImage(epc, Math.round(px - (epc.width - 2) / 2), Math.round(sommetC - ttc - 6))
       return
     }
@@ -393,15 +394,15 @@
     }
   }
   // les images du ciel : lues une fois par île (le cache de l'API : 5 minutes), seulement pour les îles qu'on voit de près ;
-  // CIEL_X, CIEL_Y : le milieu de la terre dans l'image (l'île 1, le pont, l'île 2 : 67, « l'emprise jusqu'à x 281 ») ;
-  // CIEL_HAUT : le haut de sa terre (où se pose l'épingle)
+  // la terre de chaque image est lue à sa lecture (IlePixel.boiteCiel : son milieu, son haut, sa largeur) ; CIEL_X, CIEL_Y,
+  // CIEL_HAUT : ceux d'une île neuve (l'île 1, le pont, l'île 2), si la lecture échoue
   var CIEL_X = 200, CIEL_Y = 162, CIEL_HAUT = 95, ciels = {}, FILTRE = 'filter' in g
   function cielDe(x) {
     var k = x.i + ',' + x.j, c = ciels[k]
     if (c) return c.pret ? c.img : null
     c = ciels[k] = { img: new Image(), pret: false }
     c.img.decoding = 'async'
-    c.img.onload = function () { c.pret = true; sale = true }
+    c.img.onload = function () { c.boite = P.boiteCiel ? P.boiteCiel(c.img) : null; c.pret = true; sale = true }
     c.img.onerror = function () { x.ciel = false }
     c.img.src = '/api/ile/' + Math.floor(x.i) + ',' + Math.floor(x.j) + '/ciel.png'
     return null

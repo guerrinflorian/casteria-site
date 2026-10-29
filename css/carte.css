@@ -110,3 +110,26 @@
 /* (af, 22:4x) la légende des îles dessinée (js/carte.js) : de petites îles comme sur la carte, au pixel près */
 .pastille-dessin { width: 30px; height: 30px; image-rendering: pixelated; flex: none; }
 .pastille-dessin.vivante { filter: drop-shadow(0 0 3px #FFD75E) drop-shadow(0 0 6px rgba(255, 200, 80, .7)); }
+
+/* ---------- (af, 23:3x) LE STYLE NEUF SUR LA CARTE (le kit de b5, css/kit.css) : les onglets en boutons de jeu (l'or pour celui
+   choisi), le champ arrondi, la carte dans un cadre arrondi, les boutons du zoom, la fiche en carte sombre, la légende en
+   pastilles ; les îles restent en pixels ---------- */
+.onglets { border-radius: 16px; background: rgba(22, 15, 38, .7); box-shadow: inset 0 0 0 1px rgba(255, 207, 90, .3); }
+.onglet { border-radius: 12px; border-bottom: 0; font-family: var(--police-bouton); font-weight: 400; text-transform: uppercase; letter-spacing: .4px; min-height: 42px; }
+.onglet[aria-selected="true"] { color: #4A2B07; background: linear-gradient(180deg, #FFE08A, var(--or-k) 50%, var(--or-k2)); box-shadow: 0 3px 0 var(--or-k-fonce); }
+.trouver input { min-height: 46px; border-radius: var(--r-champ); border: 2px solid rgba(255, 207, 90, .35); background: rgba(20, 13, 34, .7); }
+.trouver input:focus { border-color: var(--or-k); box-shadow: 0 0 0 3px rgba(255, 207, 90, .25); }
+.carte-vue { border-radius: 18px; box-shadow: 0 0 0 1px var(--trait), var(--ombre-douce); }
+.carte-vue:focus-visible { box-shadow: 0 0 0 3px var(--or-k), var(--ombre-douce); }
+.carte-zoom button { border-radius: 12px; border: 1px solid var(--trait); background: rgba(22, 15, 38, .85); color: var(--or-k); box-shadow: 0 3px 0 rgba(0, 0, 0, .5); }
+.carte-zoom button:hover { border-color: rgba(255, 207, 90, .6); color: #fff; }
+.carte-zoom button:active { transform: translateY(2px); box-shadow: 0 1px 0 rgba(0, 0, 0, .5); }
+.carte-etat, .bulle { border-radius: 12px; box-shadow: 0 0 0 1px rgba(255, 207, 90, .35); }
+.fiche-ile { border-radius: 18px; border: 1px solid var(--trait); background: rgba(29, 20, 48, .95); box-shadow: var(--ombre-douce); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+.fiche-ile h2 { font-family: var(--police-titre); color: var(--titre-creme); text-shadow: 0 2px 0 #3A1F12; }
+.fiche-ile .fermer { border-radius: 10px; color: var(--or-k); }
+.fiche-tete { border-radius: 12px; overflow: hidden; box-shadow: 0 0 0 2px rgba(255, 207, 90, .45), 0 4px 0 2px rgba(0, 0, 0, .3); }
+.fiche-faits li::before { border-radius: 50%; background: var(--or-k); }
+.legende li { padding: 4px 12px 4px 6px; border-radius: 999px; background: rgba(255, 255, 255, .05); border: 1px solid var(--trait); }
+.pastille.libre { border-radius: 4px; }
+.carte-fil .fil-ligne { border-radius: 12px; }

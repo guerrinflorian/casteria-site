@@ -50,7 +50,7 @@
 <main>
 <!-- LE HAUT : le joueur en 3D (de face tout de suite), son nom, son grade, son niveau ; à droite, « toi face à lui » quand
      on est connecté, sinon « Toi aussi, construis ton île » -->
-<section class="fond-ciel relief profil-tete" id="haut">
+<section class="profil-tete" id="haut">
   <div class="dedans profil-haut">
     <div class="profil-statue" id="statue" aria-hidden="true"></div>
     <div class="identite">
@@ -64,20 +64,19 @@
       </div>
       <p class="prochain" id="prochain" hidden></p>
       <p class="gestes" id="gestes" hidden>
-        <button type="button" class="bouton bouton-or" id="partager">Partager ce profil</button>
-        <a class="bouton bouton-bois" id="vers-ile" href="carte.html" hidden>Voir son île</a>
+        <button type="button" class="bouton bouton-or" id="partager"><svg class="ic" aria-hidden="true"><use href="#i-etoiles"/></svg>Partager ce profil</button>
+        <a class="bouton bouton-sombre" id="vers-ile" href="carte.html" hidden><svg class="ic" aria-hidden="true"><use href="#i-carte"/></svg>Voir son île</a>
       </p>
       <p class="copie" id="copie" role="status" hidden></p>
     </div>
-    <aside class="face-a-face panneau-nuit coins-or" id="face-a-face" hidden aria-live="polite"></aside>
+    <aside class="face-a-face panneau-nuit" id="face-a-face" hidden aria-live="polite"></aside>
   </div>
 </section>
 
 <div id="contenu" class="en-lecture">
-  <div class="frise frise-creneaux" aria-hidden="true" data-bloc="general" hidden></div>
-  <section class="fond-pierres relief profil-bloc" id="bloc-general" hidden>
+  <section class="profil-bloc teinte-or" id="bloc-general" hidden>
     <div class="dedans une-grande">
-      <div class="general-place panneau-nuit coins-or">
+      <div class="general-place panneau-nuit">
         <h2>Le classement général</h2>
         <p class="general-rang" id="general-rang"></p>
         <p class="general-points" id="general-points"></p>
@@ -91,17 +90,15 @@
     </div>
   </section>
 
-  <div class="frise frise-etoiles" aria-hidden="true" data-bloc="themes" hidden></div>
-  <section class="fond-ciel profil-bloc" id="bloc-themes" hidden>
+  <section class="profil-bloc" id="bloc-themes" hidden>
     <div class="dedans">
       <h2 class="bloc-titre">Ses meilleures places</h2>
-      <ul class="places decalees" id="places"></ul>
+      <ul class="places" id="places"></ul>
     </div>
   </section>
 
   <!-- SES BOSS (5c, 29/10) : ses victoires en trois trophées, puis ses records (seulement les boss que le site nomme : l'API) -->
-  <div class="frise frise-creneaux" aria-hidden="true" data-bloc="boss" hidden></div>
-  <section class="fond-pierres relief profil-bloc" id="bloc-boss" hidden>
+  <section class="profil-bloc teinte-rose" id="bloc-boss" hidden>
     <div class="dedans">
       <h2 class="bloc-titre">Ses boss</h2>
       <ul class="trophees" id="trophees"></ul>
@@ -112,8 +109,7 @@
     </div>
   </section>
 
-  <div class="frise frise-vague" aria-hidden="true" data-bloc="ile" hidden></div>
-  <section class="fond-mer relief profil-bloc" id="bloc-ile" hidden>
+  <section class="profil-bloc teinte-mer" id="bloc-ile" hidden>
     <div class="dedans alterne"><div class="rangee">
       <div class="ile-dessin" id="ile-dessin" aria-hidden="true"></div>
       <div class="ile-texte" id="ile-texte"></div>
@@ -121,34 +117,31 @@
   </section>
 
   <!-- SES BÊTES ET COMPAGNONS (5c, 29/10) : sa plus belle bête, ses enclos, ses familiers, ses montures -->
-  <div class="frise frise-corde" aria-hidden="true" data-bloc="betes" hidden></div>
-  <section class="fond-bois relief profil-bloc" id="bloc-betes" hidden>
+  <section class="profil-bloc teinte-vert" id="bloc-betes" hidden>
     <div class="dedans">
       <h2 class="bloc-titre">Ses bêtes et compagnons</h2>
       <div class="betes-rangee">
-        <div class="belle panneau-nuit coins-or" id="belle" hidden></div>
+        <div class="belle panneau-nuit" id="belle" hidden></div>
         <ul class="compagnons" id="compagnons"></ul>
       </div>
     </div>
   </section>
 
-  <div class="frise frise-etoiles" aria-hidden="true" data-bloc="faits" hidden></div>
-  <section class="fond-ciel relief profil-bloc" id="bloc-faits" hidden>
+  <section class="profil-bloc" id="bloc-faits" hidden>
     <div class="dedans">
       <h2 class="bloc-titre">Ses aventures</h2>
       <ul class="faits" id="faits"></ul>
     </div>
   </section>
 
-  <div class="frise frise-parchemin" aria-hidden="true" data-bloc="exploits" hidden></div>
-  <section class="fond-carte relief profil-bloc" id="bloc-exploits" hidden>
+  <section class="profil-bloc teinte-mer" id="bloc-exploits" hidden>
     <div class="dedans">
       <div class="bloc-titre-ligne"><h2 class="bloc-titre">Ses derniers exploits</h2><a class="lien-or" href="exploits.html">Tous les exploits du serveur</a></div>
       <ol class="fil" id="fil"></ol>
     </div>
   </section>
 
-  <section class="fond-ciel relief profil-bloc profil-absent" id="bloc-absent" hidden>
+  <section class="profil-bloc profil-absent" id="bloc-absent" hidden>
     <div class="dedans">
       <h2 id="absent-titre">Ce joueur n'existe pas</h2>
       <p id="absent-texte">Aucun joueur de Casteria ne porte ce pseudo. Vérifie son orthographe : les majuscules ne comptent pas.</p>
@@ -161,12 +154,11 @@
   </section>
 
   <!-- L'APPEL, pour un visiteur : le rejoindre -->
-  <div class="frise frise-etoiles" aria-hidden="true" data-bloc="appel" hidden></div>
-  <section class="fond-ciel relief profil-bloc profil-appel" id="bloc-appel" hidden>
+  <section class="profil-bloc profil-appel" id="bloc-appel" hidden>
     <div class="dedans">
       <h2 id="appel-titre">Rejoins-le sur Casteria</h2>
       <p id="appel-texte">Ton île au milieu de la mer, tes machines, tes bêtes, des boss à vaincre : et ta place au classement, juste à côté de la sienne.</p>
-      <p class="gestes"><a class="bouton bouton-or grand" href="./#telecharger">Jouer gratuitement</a><a class="bouton bouton-bois" href="carte.html">Voir les îles</a></p>
+      <p class="gestes"><a class="bouton bouton-orange grand" href="./#telecharger"><svg class="ic plein" aria-hidden="true"><use href="#i-jouer"/></svg>Jouer gratuitement</a><a class="bouton bouton-sombre grand" href="carte.html"><svg class="ic" aria-hidden="true"><use href="#i-carte"/></svg>Voir les îles</a></p>
     </div>
   </section>
 </div>
