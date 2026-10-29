@@ -355,3 +355,27 @@ a.cl-apercu:hover, a.cl-apercu:focus-visible { transform: translateY(-2px); box-
 .cl-apercu { border-radius: 10px; overflow: visible; }
 .cl-apercu-ile { border-radius: 6px; }
 .cl-apercu[data-bulle]:hover::before, .cl-apercu[data-bulle]:focus::before { border-radius: 10px; }
+
+/* ==== (67, 29/10 ; b5 : « sur classement.html, il reste de l'ancien style ») LE STYLE NEUF (css/kit.css) pour le badge de
+   l'ouverture, le ruban « Les champions » et les onglets des thèmes ==== */
+/* le badge du haut : une pastille de verre, son point rond (comme l'accueil) */
+.en-ligne { border-radius: 999px; padding: 8px 16px 8px 12px; background: rgba(36, 26, 58, .78); border: 1px solid rgba(255, 207, 90, .4); box-shadow: 0 6px 18px rgba(0, 0, 0, .3);
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+.en-ligne::before { border-radius: 50%; }
+/* le ruban : une pastille rose arrondie, plus de pixels */
+.ruban { height: auto; min-height: 36px; padding: 7px 20px 8px; border: 0; border-image: none; border-radius: 999px; image-rendering: auto;
+  background: linear-gradient(180deg, #FF7FB6, var(--rose, #FF5FA2) 55%, #E0438A); box-shadow: 0 4px 0 #A92A66, 0 10px 22px rgba(255, 95, 162, .3);
+  font-family: var(--police-bouton, "Lilita One", sans-serif); font-size: 16px; letter-spacing: .8px; text-transform: uppercase; color: #fff; text-shadow: 0 2px 0 rgba(110, 20, 60, .45); }
+/* les onglets des thèmes : des boutons de jeu sombres ; le thème choisi en or, à lèvre (comme la carte d'af) */
+.cl-theme { border: 0; border-image: none; border-radius: 14px; padding: 9px 16px 10px; min-height: 44px; image-rendering: auto;
+  font-family: var(--police-bouton, "Lilita One", sans-serif); font-size: 16px; letter-spacing: .4px; text-transform: uppercase; color: #fff;
+  background: rgba(28, 19, 46, .9); box-shadow: 0 5px 0 rgba(0, 0, 0, .5), inset 0 0 0 2px rgba(255, 255, 255, .14); text-shadow: none; }
+.cl-theme:hover { filter: brightness(1.12); transform: translateY(-1px); }
+.cl-theme:active { transform: translateY(4px); box-shadow: 0 1px 0 rgba(0, 0, 0, .5), inset 0 0 0 2px rgba(255, 255, 255, .14); }
+.cl-theme[aria-selected="true"] { color: #4A2B07; border: 0; background: linear-gradient(180deg, #FFE08A, var(--or-k, #FFCF5A) 45%, var(--or-k2, #F3A93A));
+  box-shadow: 0 5px 0 var(--or-k-fonce, #B9741F), 0 10px 22px rgba(243, 169, 58, .28), inset 0 1px 0 rgba(255, 255, 255, .5); }
+.cl-theme[aria-selected="true"]::after { display: none; }
+@media (max-width: 600px) {
+  .cl-themes { gap: 8px; }
+  .cl-theme { font-size: 14px; padding: 8px 12px 9px; min-height: 40px; border-radius: 12px; }
+}

@@ -288,3 +288,42 @@ html body .boutique-etal .alerte, html body .achat-merci, html body .ticket { bo
 @media (max-width: 340px) { .menu-tiroir li a { padding: 0 6px; gap: 5px; font-size: 12px; } .menu-tiroir li a .ic { width: 15px; height: 15px; } .menu-tiroir li a .pastille { display: none; } }
 /* (b5, 23:5x) à 380 px et moins, le logo seul dans la barre : son nom passait sous le bouton « Menu » (la page d un joueur, à 360) */
 @media (max-width: 380px) { .barre .marque span { display: none; } .barre { gap: 4px; } }
+
+/* ---------- LES PIÈCES COMMUNES DE TOUTES LES PAGES, AU STYLE NEUF (la tête, 23:5x ; le propriétaire : « TOUTES LES PAGES du site avec le
+   nouveau style ») : les sections claires (.clair, .pan-parchemin) deviennent une crème douce, sans grain de pixels ; leurs titres
+   SANS OMBRE DÉCALÉE (le propriétaire : sur fond clair, le titre brun à l'ombre brune se lisait en double) ; les cartes de parchemin
+   deviennent des cartes crème arrondies ; le ruban rouge, une pastille ; les frises en pixels, un filet doux entre deux sections ---------- */
+.clair, .pan-parchemin { background: linear-gradient(180deg, #FBF2DE 0%, #F4E4C3 100%); image-rendering: auto; color: var(--brun); }
+.clair h1, .clair h2, .clair h3, .pan-parchemin h1, .pan-parchemin h2, .pan-parchemin h3 { color: var(--brun); text-shadow: 0 1px 0 rgba(255, 255, 255, .55); }
+.clair .tete p, .pan-parchemin .tete p { color: #6B4A2E; opacity: 1; }
+.clair .sur-titre, .pan-parchemin .sur-titre { color: #A0621A; }
+/* les cartes : crème, arrondies, une ombre douce ; leurs titres sans ombre */
+.carte { border: 0; border-image: none; border-radius: var(--r-carte); image-rendering: auto; background: linear-gradient(180deg, #FFFBF1, #FBF0D9);
+  box-shadow: 0 10px 24px rgba(40, 22, 10, .18), 0 0 0 1px rgba(74, 47, 28, .08); color: var(--brun); }
+.carte:hover { filter: none; box-shadow: 0 16px 30px rgba(40, 22, 10, .24), 0 0 0 1px rgba(255, 207, 90, .45); }
+.carte h3 { color: var(--brun); text-shadow: none; }
+.carte p { color: #5A3E26; }
+.etapes li::before { border-radius: 14px; border: 0; color: #4A2B07; background: linear-gradient(180deg, #FFE08A, var(--or-k) 50%, var(--or-k2)); box-shadow: 0 4px 0 var(--or-k-fonce); text-shadow: none; }
+.astuces.notes .carte::before { width: 14px; height: 14px; margin-left: -7px; border: 0; border-radius: 50%; transform: none; background: var(--rose); box-shadow: 0 2px 0 #B8326D; }
+/* le ruban rouge en pixels devient une pastille rose à lèvre */
+.ruban { height: auto; min-height: 34px; padding: 6px 18px 7px; border: 0; border-image: none; border-radius: 999px; image-rendering: auto;
+  font: 400 15px var(--police-bouton); letter-spacing: .6px; text-transform: uppercase; color: #fff; text-shadow: 0 1px 0 rgba(120, 20, 60, .4);
+  background: linear-gradient(180deg, #FF8CC0, var(--rose) 55%, #E8478C); box-shadow: 0 4px 0 #B8326D, 0 10px 20px rgba(255, 95, 162, .25); }
+/* les frises en pixels : un filet doux (les pages en gardent la place, verifier.js les compte) */
+.frise, .frise-vague, .frise-corde, .frise-creneaux, .frise-etoiles, .frise-parchemin { height: 1px; border: 0; background: linear-gradient(90deg, transparent, rgba(255, 207, 90, .28) 30%, rgba(201, 168, 255, .28) 70%, transparent); background-color: transparent; background-size: auto; }
+/* les Événements, le Vote et le Règlement : leurs boîtes arrondies, leurs bords d'or adoucis (leurs couleurs gardées) */
+html body .carte-prochain, html body .ensuite, html body .rendez-vous article, html body .savoir article, html body .vote-caisse .photo,
+html body .defi-photo, html body .podium { border-radius: var(--r-panneau); overflow: hidden; }
+html body .carte-jeu { border-radius: var(--r-carte); overflow: hidden; }
+html body .carte-jeu picture { border-radius: 0; }
+html body .compte .case, html body .prochain-gain, html body .semaine .jour, html body .podium li, html body .carte-jeu .gains, html body .etapes-jeu li,
+html body .journee li, html body .vote-puces li, html body .pancarte-pseudo .champ-exemple, html body .regles-groupe p { border-radius: 14px; }
+html body .etapes-jeu li > b { border-radius: 10px; }
+html body .puce, html body .puce-eclair, html body .puce-sol, html body .puce-neige, html body .puce-doree, html body .puce-flotte, html body .puce-chasse { border-radius: 999px; }
+html body .ensuite li { border-radius: 10px; }
+/* les vues des carrousels (les jeux du Défi, et celles des pages de 67 s il ne les reprend pas) : arrondies, un bord doux */
+html body [data-carrousel] > .vue { border-radius: var(--r-carte); border: 1px solid rgba(255, 207, 90, .4); box-shadow: var(--ombre-douce); }
+html body .carrousel-commandes .fleche { border-radius: 12px; }
+html body .site-vote { border-radius: 16px; }
+html body .pancarte-pseudo { border-radius: var(--r-panneau); border-width: 2px; box-shadow: 0 14px 30px rgba(40, 22, 10, .18); }
+html body .pancarte-pseudo .champ-exemple { border-radius: 12px; overflow: hidden; }
