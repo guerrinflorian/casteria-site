@@ -339,3 +339,5 @@ html body .en-ligne { border-radius: 999px; border-width: 1px; }
 html body .en-ligne::before { border-radius: 50%; }
 /* (af, lot 4 : les ancres) le secours sans JavaScript : un titre visé arrive sous la barre flottante (js/ancres.js fait le reste) */
 [id] { scroll-margin-top: 92px; }
+html body .pas-achat li { border-radius: 16px; }
+html body .pas-achat b { border-radius: 10px; }
