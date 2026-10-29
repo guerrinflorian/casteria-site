@@ -77,3 +77,70 @@
 @media (prefers-reduced-motion: reduce) { .appel-dessin canvas { animation: none; } }
 /* un bouton cache reste cache (.bouton impose son display) */
 .bouton[hidden] { display: none !important; }
+
+/* (67, 29/10 ; le propriétaire : « les profils île bâclés, pas complets ») L'ÎLE EN CHIFFRES, QUI Y VIT, SA PLACE, SES BÊTES */
+.ile-fiche-section, .ile-carte-section, .ile-betes-section { padding: 44px 0; }
+.ile-fiche-section[hidden], .ile-carte-section[hidden], .ile-betes-section[hidden], .ile-mesures[hidden] { display: none; }
+.ile-fiche { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 24px; align-items: start; }
+.ile-mesures, .ile-habitants, .ile-betes, .ile-carte-texte { padding: 20px 24px; }
+.ile-mesures { color: #F4EAFF; }
+.ile-habitants, .ile-betes, .ile-carte-texte { color: #FFF1DC; }
+.ile-fiche h2, .ile-betes h2, .ile-carte-texte h2 { font-size: 26px; color: #FFD75E; margin: 0 0 12px; }
+.ile-general { margin: -4px 0 14px; font-weight: 700; font-size: 17px; color: #FFD75E; }
+.ile-general:empty { display: none; }
+.mesures { list-style: none; margin: 0 0 12px; padding: 0; display: grid; gap: 10px; }
+.mesure { display: grid; grid-template-columns: 40px minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 10px 12px; background: rgba(255, 255, 255, .05); box-shadow: inset 0 0 0 1px rgba(215, 164, 33, .35); }
+.mesure-icone { width: 40px; height: 40px; display: grid; place-items: center; background: #2A1740; box-shadow: inset 0 0 0 2px #120A1E; }
+.mesure-icone img { width: 32px; height: 32px; image-rendering: pixelated; }
+/* l'étoile de la beauté, en pixels */
+.etoile-pixel::before { content: ""; width: 24px; height: 24px; image-rendering: pixelated; background:
+  linear-gradient(#FFD75E, #FFD75E) 10px 0 / 4px 24px no-repeat,
+  linear-gradient(#FFD75E, #FFD75E) 0 8px / 24px 6px no-repeat,
+  linear-gradient(#FFD75E, #FFD75E) 4px 14px / 16px 4px no-repeat,
+  linear-gradient(#FFD75E, #FFD75E) 2px 18px / 6px 6px no-repeat,
+  linear-gradient(#FFD75E, #FFD75E) 16px 18px / 6px 6px no-repeat,
+  linear-gradient(#A57713, #A57713) 8px 4px / 8px 4px no-repeat; }
+.mesure-texte { display: grid; gap: 2px; min-width: 0; }
+.mesure-nom { font-size: 17px; color: #FFF; }
+.mesure-valeur { font-size: 16px; color: #FFD75E; overflow-wrap: anywhere; }
+.mesure-aide { font-size: 14px; color: rgba(244, 234, 255, .72); }
+.mesure-rang { font-family: "Lilita One", sans-serif; font-size: 22px; color: #1B1028; background: #FFD75E; box-shadow: 0 3px 0 #A57713; padding: 2px 10px; white-space: nowrap; }
+.habitants { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.habitant { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 10px; }
+.habitant-tete { display: inline-block; width: 32px; height: 32px; box-shadow: 0 0 0 2px #3F2612; background: #2A1740; flex: none; }
+.habitant-nom { color: #FFD75E; font-weight: 700; font-size: 18px; overflow-wrap: anywhere; }
+.habitant-role { font-size: 14px; color: #1B1028; background: #E3C7A8; padding: 1px 8px; }
+.habitants-amis { margin: 12px 0 0; font-size: 16px; }
+.habitants-amis:empty, .ile-presents:empty { display: none; }
+.ile-presents { margin: 10px 0 0; font-size: 16px; }
+.ile-presents.vivante { color: #9CE07A; font-weight: 700; }
+.ile-minicarte { padding: 10px; display: grid; place-items: center; }
+.ile-minicarte canvas { width: min(320px, 100%); height: auto; aspect-ratio: 1; image-rendering: pixelated; display: block; }
+.ile-carte-texte p { font-size: 18px; margin: 0; }
+.ile-carte-texte .gestes { margin-top: 18px; }
+.betes-liste { list-style: none; margin: 0 0 12px; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 8px; }
+.bete { display: flex; align-items: baseline; flex-wrap: wrap; gap: 2px 8px; padding: 8px 10px; background: rgba(0, 0, 0, .18); box-shadow: inset 0 0 0 1px rgba(255, 215, 94, .25); }
+.bete-n { font-family: "Lilita One", sans-serif; font-size: 22px; color: #FFD75E; }
+.bete-nom { font-size: 17px; font-weight: 700; overflow-wrap: anywhere; }
+.bete-rarete { font-size: 13px; font-weight: 700; padding: 1px 7px; color: #1B1028; background: #8FE3FF; }
+.rarete-epique .bete-rarete { background: #C9A2FF; }
+.rarete-legendaire .bete-rarete { background: #FFD75E; }
+.rarete-mythique .bete-rarete { background: #FF8FB1; }
+.bete-petits { font-size: 14px; color: rgba(255, 241, 220, .75); }
+@media (max-width: 768px) {
+  .ile-fiche { grid-template-columns: minmax(0, 1fr); }
+  .mesure { grid-template-columns: 40px minmax(0, 1fr); }
+  .mesure-rang { grid-column: 2; justify-self: start; }
+}
+/* la taille : un territoire en pixels (l'herbe, son mur de pierre, la mer autour) */
+.territoire-pixel::before { content: ""; width: 26px; height: 26px; image-rendering: pixelated; background:
+  linear-gradient(#6FBF4A, #6FBF4A) 6px 6px / 14px 14px no-repeat,
+  linear-gradient(#4E9A34, #4E9A34) 10px 10px / 4px 4px no-repeat,
+  linear-gradient(#9AA0A6, #9AA0A6) 2px 2px / 22px 22px no-repeat,
+  linear-gradient(#2E8FB8, #2E8FB8) 0 0 / 26px 26px no-repeat; }
+.mesure-icone { background: #3E2A5C; }
+/* (67, 29/10 ; l'audit du site, 1, 11 et 12) l'île qui se dessine ; « pas encore d'étoile » ; l'île de l'appel, nette */
+.ile-berce { width: 120px; height: 120px; image-rendering: pixelated; filter: drop-shadow(0 8px 0 rgba(0, 0, 0, .25)); animation: berce 3.4s ease-in-out infinite; }
+.ile-se-dessine { font-size: 20px; font-weight: 700; color: #FFD75E; }
+.etoiles-aucune { font-size: 17px; color: #E3D3F5; }
+@media (prefers-reduced-motion: reduce) { .ile-berce { animation: none; } }

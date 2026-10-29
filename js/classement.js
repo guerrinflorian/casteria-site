@@ -244,6 +244,9 @@
       s.appendChild(el('span', 'cl-petit', String(ligne.pseudo) + (nbAmis(ligne) > 0 ? ' et ' + A.nombre(nbAmis(ligne)) + (nbAmis(ligne) > 1 ? ' amis' : ' ami') : '')))
     } else s.appendChild(el('span', 'cl-pseudo', String(ligne.pseudo)))
     s.appendChild(el('span', 'cl-valeur', valeurDe(ligne)))
+    // (67, 29/10) l'aperçu de son île, sous sa valeur
+    var ap = apercuDe(ligne)
+    if (ap) s.appendChild(ap)
     return s
   }
   // (18/10/2026, gardé) un nom du podium tient sur UNE ligne : sa taille baisse tant qu'il en fait plus d'une, 11 px au plus
@@ -336,6 +339,7 @@
     nom.setAttribute('aria-label', (l.ile ? String(l.ile.nom) + ', l\'île de ' + String(l.pseudo) : String(l.pseudo)) + ', ' + A.rang(r) + ' : voir sa fiche')
     if (l.grade && /^(chevalier|comte|marquis|duc|souverain)$/.test(l.grade)) { var e = el('span', 'cl-embleme e-' + l.grade); e.setAttribute('aria-hidden', 'true'); nom.appendChild(e) }
     nom.addEventListener('click', function () { ouvrirFiche(String(l.pseudo), nom) })
+    avecApercu(qui, nom, l)
     li.appendChild(qui)
     var barre = el('span', 'cl-barre'), i = el('i')
     barre.setAttribute('aria-hidden', 'true')
@@ -347,6 +351,39 @@
       li.addEventListener('pointerleave', cacherSurvol)
     }
     return li
+  }
+  // (67, 29/10 ; le propriétaire : « dans le classement, un petit bouton qui mène à l'aperçu de l'île du joueur, seulement si
+  // elle est ouverte ; sinon le bouton est barré ou éteint ») L'APERÇU DE SON ÎLE : l.apercu = { i, j, ouverte } (l'API, lu
+  // dans res_site_ile) ; ouverte : une petite île qui mène à /ile/<i>,<j> ; fermée : la même, éteinte et barrée, « Île fermée
+  // aux visites » au survol et au toucher ; sans île (null) : rien
+  function apercuDe(l) {
+    var a = l && l.apercu, qui = String(l && l.pseudo || '')
+    if (!a || typeof a !== 'object' || !isFinite(Number(a.i)) || !isFinite(Number(a.j))) return null
+    var nomIle = l.ile && l.ile.nom ? String(l.ile.nom) : 'l\'île de ' + qui
+    var b
+    if (a.ouverte) {
+      b = el('a', 'cl-apercu')
+      b.href = 'ile/' + Math.floor(Number(a.i)) + ',' + Math.floor(Number(a.j))
+      b.setAttribute('aria-label', 'Voir ' + nomIle + ' en 3D')
+      b.setAttribute('data-bulle', 'Voir son île en 3D')
+    } else {
+      b = el('span', 'cl-apercu fermee')
+      b.setAttribute('role', 'img'); b.tabIndex = 0
+      b.setAttribute('aria-label', 'Île fermée aux visites')
+      b.setAttribute('data-bulle', 'Île fermée aux visites')
+    }
+    b.appendChild(el('span', 'cl-apercu-ile'))
+    // le geste reste au bouton : jamais la fiche du joueur derrière lui
+    b.addEventListener('click', function (ev) { ev.stopPropagation(); if (!a.ouverte) { ev.preventDefault(); b.focus() } })
+    return b
+  }
+  function avecApercu(conteneur, nom, l) {
+    var ap = apercuDe(l)
+    if (!ap) return
+    var lg = el('span', 'cl-nom-ligne')
+    conteneur.insertBefore(lg, nom)
+    lg.appendChild(nom)
+    lg.appendChild(ap)
   }
   // une ligne d'île : ses amis (une liste de pseudos, ou leur nombre) ; sa valeur sans le nom de l'île devant (le jeu écrit
   // « <nom> · <valeur> », et le nom est déjà écrit en grand)

@@ -96,7 +96,7 @@
       if (j.total != null) total = j.total
       if (j.etendue) etendue = j.etendue
       ecrire(''); dire(); sale = true
-      if (!intro && !mesure) lancerIntro()
+      if (!intro && !mesure) { cadrerIles(); lancerIntro() }
       plusTard()
     })
   }
@@ -107,6 +107,16 @@
       : 'Les lieux de la mer que tout le monde connaît.' + (NAVIRES ? ' Les navires des joueurs, toutes les 10 secondes.' : '')
   }
 
+  // (af, 22:4x ; avant : le point 0,0 au zoom 26, les îles minuscules dans un coin d'une mer vide) LE CADRE DES ÎLES : toute
+  // l'étendue de la grille (les îles et les places entre elles) au milieu de la vue, aussi près que la vue le permet (une demi-case
+  // de mer autour, la tête de l'hôte visible dès 44 px par case), jamais plus près que 96 ni plus loin que 26
+  function cadrerIles() {
+    if (!etendue) return
+    // la colonne des boutons du zoom (à gauche, 60 px) reste à la mer : les îles se cadrent à sa droite
+    var w = etendue.a[0] - etendue.de[0] + 1, h = etendue.a[1] - etendue.de[1] + 1, gauche = 60
+    I.s = Math.max(26, Math.min(96, Math.min((L - gauche) / (w + 1.5), H / (h + 1.5))))
+    I.cx = (etendue.de[0] + etendue.a[0]) / 2 - gauche / 2 / I.s; I.cy = (etendue.de[1] + etendue.a[1]) / 2
+  }
   // ---------------------------------------------------------------- L'ARRIVÉE : la caméra glisse vers le centre (2 s)
   function lancerIntro() {
     intro = { fini: true }
@@ -152,8 +162,28 @@
       g.stroke()
     }
   }
+  // (af, 22:5x) LES REFLETS : quatre taches de lumière douces qui glissent lentement sur l'eau (une image faite une fois ; la nuit,
+  // plus pâles) ; immobiles pour qui demande moins de mouvement
+  var reflet = (function () {
+    // un carré, son dégradé tout entier dedans (aucun bord coupé), étiré en ovale au dessin
+    var c = document.createElement('canvas'); c.width = 64; c.height = 64
+    var x = c.getContext('2d'), gr = x.createRadialGradient(32, 32, 1, 32, 32, 32)
+    gr.addColorStop(0, 'rgba(140,220,255,0.14)'); gr.addColorStop(0.6, 'rgba(140,220,255,0.05)'); gr.addColorStop(1, 'rgba(140,220,255,0)')
+    x.fillStyle = gr; x.fillRect(0, 0, 64, 64)
+    return c
+  })()
+  function reflets() {
+    g.globalAlpha = amb.nuit ? 0.45 : 1
+    for (var k = 0; k < 4; k++) {
+      var w = 240 + (k % 2) * 120, h = w * 0.45, v = calme ? 0 : t * (6 + k * 2)
+      var x = ((k * 397 + v) % (L + w)) - w, y = ((k * 211) % Math.max(1, H - h)) + Math.sin(t * 0.3 + k) * (calme ? 0 : 8)
+      g.drawImage(reflet, Math.round(x), Math.round(y), Math.round(w), Math.round(h))
+    }
+    g.globalAlpha = 1
+  }
   // LA HOULE : trois longues crêtes qui descendent lentement la mer (quelques segments par image)
   function houle() {
+    reflets()
     if (calme) return
     g.strokeStyle = amb.nuit ? 'rgba(170,200,255,0.07)' : 'rgba(220,240,255,0.08)'
     g.lineWidth = 2
@@ -220,12 +250,22 @@
       g.font = '600 13px Fredoka, system-ui, sans-serif'
       etiquette('Ton île ici ?', ec[0], ec[1] + dd / 2 + 4, 13, '#FFD75E')
     }
+    // (af, 22:5x) l'île choisie : quatre coins d'or (comme une case de jeu), sans cacher l'île
     if (choisie) {
-      var c = ecranI(choisie.i, choisie.j), r = Math.max(6, s * .46)
-      g.strokeStyle = '#FFD75E'; g.lineWidth = 3
-      g.strokeRect(Math.round(c[0] - r) - .5, Math.round(c[1] - r) - .5, Math.round(r * 2) + 1, Math.round(r * 2) + 1)
+      var c = ecranI(choisie.i, choisie.j), r = Math.round(Math.max(7, s * .5)), lc = Math.max(5, Math.round(r * .38)), ep = Math.max(2, Math.round(s / 30))
+      var x0 = Math.round(c[0] - r), y0 = Math.round(c[1] - r), x1 = Math.round(c[0] + r), y1 = Math.round(c[1] + r)
+      g.fillStyle = 'rgba(0,0,0,.35)'
+      coins(x0 + 2, y0 + 2, x1 + 2, y1 + 2, lc, ep)
+      g.fillStyle = '#FFD75E'
+      coins(x0, y0, x1, y1, lc, ep)
     }
     dessinerEtincelles(maint)
+  }
+  function coins(x0, y0, x1, y1, lc, ep) {
+    g.fillRect(x0, y0, lc, ep); g.fillRect(x0, y0, ep, lc)
+    g.fillRect(x1 - lc, y0, lc, ep); g.fillRect(x1 - ep, y0, ep, lc)
+    g.fillRect(x0, y1 - ep, lc, ep); g.fillRect(x0, y1 - lc, ep, lc)
+    g.fillRect(x1 - lc, y1 - ep, lc, ep); g.fillRect(x1 - ep, y1 - lc, ep, lc)
   }
   function imagePave(p, pi, pj) {
     if (p.img) return p.img
@@ -251,26 +291,45 @@
       g.drawImage(halo, Math.round(px - hl / 2), Math.round(py - hl / 2 + berce), hl, hl)
       g.globalAlpha = 1
     }
-    g.drawImage(P.sprite(x.i, x.j, niveauEtoiles(x.etoiles), x.ouverte), a, b, d, d)
-    if (amb.nuit) { g.fillStyle = '#FFD75E'; g.fillRect(Math.round(a + u * 5), Math.round(b + u * 6), Math.max(2, Math.round(u * 1.5)), Math.max(2, Math.round(u * 1.5))) }
+    // (af, 22:4x) l'île de 20 x 20 (IlePixel.grande : la plage, l'écume, la maison, les arbres, les fleurs de ses étoiles), un
+    // peu plus grande que sa case pour que l'écume touche presque la voisine ; de loin, la petite de 12 x 12
+    var big = P.grande && s >= 16, dg = big ? Math.round(s * .92) : d
+    if (big) { a = Math.round(px - dg / 2); b = Math.round(py - dg / 2 + berce); u = dg / 20 }
+    g.drawImage(big ? P.grande(x.i, x.j, niveauEtoiles(x.etoiles), x.ouverte) : P.sprite(x.i, x.j, niveauEtoiles(x.etoiles), x.ouverte), a, b, dg, dg)
+    if (amb.nuit) { g.fillStyle = '#FFD75E'; g.fillRect(Math.round(a + u * (big ? 9 : 5)), Math.round(b + u * (big ? 10 : 6)), Math.max(2, Math.round(u * 1.5)), Math.max(2, Math.round(u * 1.5))) }
+    d = dg
     if (!tout) return
-    var tt = Math.round(s * .3), te = Tete.image(x.peau, function () { sale = true })
-    if (te) {
-      g.fillStyle = 'rgba(0,0,0,.35)'
-      g.fillRect(Math.round(px - tt / 2) + 2, Math.round(py - tt / 2 + berce) + 2, tt, tt)
-      g.drawImage(te, Math.round(px - tt / 2), Math.round(py - tt / 2 + berce), tt, tt)
-    }
-    // ses étoiles, en tout petit sous l'île (le propriétaire : « sans prendre de place »)
-    g.font = '700 10px Fredoka, system-ui, sans-serif'
-    g.fillStyle = 'rgba(14,8,24,.62)'
-    var et = etoilesTexte(x.etoiles), w = g.measureText(et).width
-    g.fillRect(Math.round(px - w / 2 - 3), Math.round(b + d - 1), Math.round(w + 6), 12)
-    g.fillStyle = '#FFD75E'
-    g.fillText(et, px, Math.round(b + d))
+    // (af, 22:5x) L'ÉPINGLE au-dessus de l'île (elle ne la cache plus) : la tête de l'hôte et, à côté, ses étoiles en petit (le
+    // propriétaire : « sans prendre de place » ; aucune pour une île neuve : son fanion gris le dit), sa pointe vers l'île
+    // (22:4x, la mesure : 24,7 ms par image avec les têtes) l'épingle se dessine UNE fois par île et par taille, puis se recopie
+    var tt = Math.round(s * .12) * 2, ep = epingle(x, tt)
+    g.drawImage(ep, Math.round(px - (ep.width - 2) / 2), Math.round(b - tt * 0.5))
     if (s < 110) return
     var f = Math.min(15, Math.max(12, Math.round(s / 8)))
     g.font = '600 ' + f + 'px Fredoka, system-ui, sans-serif'
     etiquette(x.nom, px, b + d + 12, f, '#fff')
+  }
+  // l'image d'une épingle : son ombre, son fond, sa pointe, la tête de l'hôte et ses étoiles ; gardée (refaite une fois quand la
+  // tête arrive) ; au-delà de 800 gardées, on repart de zéro
+  var epingles = {}, nbEpingles = 0
+  function epingle(x, tt) {
+    var et = Number(x.etoiles) > 0 ? etoilesTexte(x.etoiles) : '', cleE = x.hote + '|' + et + '|' + tt, deja = epingles[cleE]
+    if (deja && (deja.t || !Tete.image(x.peau))) return deja.c
+    var te = Tete.image(x.peau, deja ? null : function () { sale = true })
+    var c = document.createElement('canvas'), k = c.getContext('2d')
+    k.font = '700 10px Fredoka, system-ui, sans-serif'
+    var w = et ? Math.ceil(k.measureText(et).width) + 6 : 0, lp = tt + 4 + w
+    c.width = lp + 2; c.height = tt + 10
+    k.imageSmoothingEnabled = false
+    k.fillStyle = 'rgba(0,0,0,.35)'; k.fillRect(2, 2, lp, tt + 4)
+    k.fillStyle = 'rgba(14,8,24,.82)'; k.fillRect(0, 0, lp, tt + 4)
+    k.beginPath(); k.moveTo(lp / 2 - 4, tt + 4); k.lineTo(lp / 2 + 4, tt + 4); k.lineTo(lp / 2, tt + 8); k.closePath(); k.fill()
+    if (te) k.drawImage(te, 2, 2, tt, tt)
+    if (et) { k.font = '700 10px Fredoka, system-ui, sans-serif'; k.fillStyle = '#FFD75E'; k.textAlign = 'left'; k.textBaseline = 'middle'; k.fillText(et, tt + 6, tt / 2 + 3) }
+    if (nbEpingles > 800) { epingles = {}; nbEpingles = 0 }
+    if (!deja) nbEpingles++
+    epingles[cleE] = { c: c, t: !!te }
+    return c
   }
   function etiquette(t2, px, py, f, couleur) {
     var w = g.measureText(t2).width
@@ -426,16 +485,30 @@
     for (var k = 0; k < 5; k++) s += '<span class="etoile' + (k < n ? ' pleine' : '') + '" aria-hidden="true">★</span>'
     return '<span class="etoiles" role="img" aria-label="' + etoilesTexte(e).replace('★ ', '') + ' étoiles sur 5">' + s + '</span> <b class="etoiles-nb">' + etoilesTexte(e).replace('★ ', '') + '</b>'
   }
+  // le nom que le jeu donne à une île neuve : « Île de <hôte> » ou « Île d'<hôte> » (devant une voyelle)
+  // (la tête, l'audit du site : « Île de Aviteur ») L'ÉLISION comme le jeu (ciDeNom, aa_casino_partage.js) : « d' » devant une
+  // voyelle, le Y selon la lettre qui le suit (« d'Yves », « de Yann »), « de » devant une consonne ou un h
+  var VOYELLES = 'aeiouyàâäéèêëîïôöùûüAEIOUYÀÂÄÉÈÊËÎÏÔÖÙÛÜ'
+  function deDevant(nom) {
+    var n = String(nom === undefined || nom === null ? '' : nom), c = n.charAt(0), s = n.charAt(1)
+    if (c === 'y' || c === 'Y') return s !== '' && VOYELLES.indexOf(s) !== -1 ? 'de ' : 'd\''
+    return n && VOYELLES.indexOf(c) !== -1 ? 'd\'' : 'de '
+  }
+  function nomDuJeu(x) { var n = String(x.nom || ''), h = String(x.hote || ''); return !n || n === 'Île ' + deDevant(h) + h || n === 'Île de ' + h || n === 'Île d\'' + h || n === 'Île d’' + h }
+  // (af, 22:5x) au téléphone, la fiche monte du bas de la carte : l'île montrée se pose au tiers du haut, au-dessus d'elle
+  function sousLaFiche() { return L < 600 ? H * 0.2 / I.s : 0 }
   function echapper(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c] }) }
   function montrer(x, centrer) {
     choisie = x; libreChoisie = null; sale = true
     if (!x) { fiche.hidden = true; history.replaceState(null, '', location.pathname + location.search); return }
-    if (centrer) { finirIntro(); I.cx = x.i; I.cy = x.j; if (I.s < 50) I.s = 60; plusTard() }
+    if (centrer) { finirIntro(); if (I.s < 50) I.s = 60; I.cx = x.i; I.cy = x.j + sousLaFiche(); plusTard() }
     var profil = 'joueur/' + encodeURIComponent(x.hote)
     var cl = x.classement ? '<li>' + rangN(x.classement.rang) + ' au Classement des îles · ' + A.nombre(x.classement.points) + '&nbsp;/&nbsp;' + A.nombre(x.classement.sur) + ' points</li>' : ''
+    // (af, 22:4x ; le propriétaire : « Île de X » deux fois) le nom donné par le jeu dit déjà l'hôte : la ligne de l'hôte ne
+    // s'écrit que pour une île au nom à elle
     ficheCorps.innerHTML =
       '<div class="fiche-haut"><span class="fiche-tete" id="fiche-tete"></span><div><h2>' + echapper(x.nom) + '</h2>' +
-      '<p class="hote">L\'île de <a href="' + profil + '">' + echapper(x.hote) + '</a></p></div></div>' +
+      (nomDuJeu(x) ? '' : '<p class="hote">L\'île ' + deDevant(x.hote) + '<a href="' + profil + '">' + echapper(x.hote) + '</a></p>') + '</div></div>' +
       '<p>' + etoilesHtml(x.etoiles) + '</p>' +
       '<ul class="fiche-faits">' + cl +
       '<li>' + (x.amis ? 'Avec ' + x.amis + ' ami' + (x.amis > 1 ? 's' : '') + ' sur l\'île' : 'Son hôte y vit seul') + '</li>' +
@@ -524,7 +597,7 @@
   toile.addEventListener('pointerleave', function () { bulle.hidden = true; survolee = null; if (survolLibre) { survolLibre = null; sale = true } })
   document.getElementById('zoom-plus').addEventListener('click', function () { zoomer(1.6) })
   document.getElementById('zoom-moins').addEventListener('click', function () { zoomer(1 / 1.6) })
-  document.getElementById('zoom-centre').addEventListener('click', function () { finirIntro(); var v = vueDe(); if (zone === 'mer') cadrerMer(); else { v.cx = 0; v.cy = 0; v.s = DEPART_S } sale = true; plusTard() })
+  document.getElementById('zoom-centre').addEventListener('click', function () { finirIntro(); var v = vueDe(); if (zone === 'mer') cadrerMer(); else if (etendue) cadrerIles(); else { v.cx = 0; v.cy = 0; v.s = DEPART_S } sale = true; plusTard() })
   vue.addEventListener('keydown', function (e) {
     finirIntro()
     var v = vueDe(), pas = 60 / v.s, k = e.key
@@ -592,6 +665,18 @@
   var bts = document.querySelectorAll('.onglet')
   for (var kb = 0; kb < bts.length; kb++) bts[kb].addEventListener('click', function () { choisirZone(this.dataset.zone) })
   if (NAVIRES) { var si = document.querySelector('.si-navires'); if (si) si.hidden = false }
+  // (af, 22:4x) LA LÉGENDE DES ÎLES DESSINÉE : chaque pastille devient une petite île comme sur la carte (son fanion, ses fleurs,
+  // son ponton ; celle où l'on joue, sa lueur d'or)
+  if (P.grande) [].forEach.call(document.querySelectorAll('#legende-iles .pastille'), function (el) {
+    var m = null
+    for (var ke = 0; ke <= 5; ke++) if (el.classList.contains('e' + ke)) m = [0, ke]
+    var et = m ? m[1] : (el.classList.contains('ponton') ? 2 : (el.classList.contains('vivante') ? 3 : -1))
+    if (et < 0) return
+    var c = document.createElement('canvas')
+    c.width = 20; c.height = 20; c.className = 'pastille-dessin' + (el.classList.contains('vivante') ? ' vivante' : ''); c.setAttribute('aria-hidden', 'true')
+    c.getContext('2d').drawImage(P.grande(m ? 1 : 3, m ? 2 : 0, et, el.classList.contains('ponton')), 0, 0)
+    el.replaceWith(c)
+  })
   ;[].forEach.call(document.querySelectorAll('#legende-mer .lieu-icone'), function (el) {
     var sorte = ['port', 'phare', 'ile', 'epave', 'recif', 'repaire'].filter(function (x) { return el.classList.contains(x) })[0]
     if (!sorte) return
@@ -625,7 +710,9 @@
   var m = location.hash.match(/^#ile=(-?\d+),(-?\d+)$/)
   if (m) {
     intro = { fini: true }
-    I.cx = +m[1]; I.cy = +m[2]; I.s = 60
+    // (af, 22:5x) venu d'un lien vers une île (l'accueil, un profil) : la page descend tout de suite sur la carte, sous la grande image
+    var sec = document.getElementById('carte'); if (sec && sec.scrollIntoView) sec.scrollIntoView()
+    I.s = 60; I.cx = +m[1]; I.cy = +m[2] + sousLaFiche()
     V.carte('iles', { de: [+m[1], +m[2]], a: [+m[1], +m[2]] }).then(function (r) { if (r.statut === 200 && r.corps.iles && r.corps.iles[0]) montrer(r.corps.iles[0], false) })
   } else if (location.hash === '#mer') { intro = { fini: true }; choisirZone('mer') }
   lireExploits()

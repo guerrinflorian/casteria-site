@@ -8,7 +8,10 @@
 /* ---------- la connexion ---------- */
 /* la carte marine du kit (css/motifs.css) sous la connexion ; le formulaire : .panneau-nuit .coins-or */
 .connexion { padding: 120px 0 72px; }
-.connexion-grille { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 460px); gap: 40px 64px; align-items: center; }
+.connexion-grille { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 460px); gap: 40px 64px; align-items: start; }
+/* (la tête, 22:3x) sur ordinateur, le texte part du haut avec le formulaire (son sur-titre au niveau du titre « Se connecter ») */
+.connexion-texte { padding-top: 26px; }
+.atouts-court { display: none; }
 .connexion-texte h1 { font-size: clamp(32px, 4vw, 54px); color: #fff; text-shadow: 0 4px 0 rgba(0, 0, 0, .35); }
 .connexion-texte .accroche { margin: 16px 0 12px; font-size: 19px; color: #F1E6FF; }
 .atouts-compte { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
@@ -107,6 +110,11 @@
 .compte-themes li.rien b { color: #BFA6DA; }
 .ile-nom { margin: 0; font-family: "Lilita One", "Fredoka", sans-serif; font-size: 28px; line-height: 1.1; color: #fff; }
 .zone-compte .fiche-etoiles { margin: 4px 0 10px; font-size: 22px; }
+/* (b5, 22:4x) la note à côté des étoiles ; sous l'île, ses deux liens (en 3D, sur la carte), 44 px au doigt */
+.zone-compte .note-etoiles { margin-left: 6px; font-size: 16px; font-weight: 700; letter-spacing: 0; color: #F1E6FF; }
+.compte-ile-liens { display: flex; flex-wrap: wrap; gap: 0 22px; margin: 10px 0 0; }
+.compte-ile-liens a { display: inline-flex; align-items: center; min-height: 44px; font-weight: 700; color: var(--or-clair); text-decoration: none; border-bottom: 2px solid transparent; }
+.compte-ile-liens a:hover, .compte-ile-liens a:focus-visible { border-bottom-color: var(--or-clair); outline: none; }
 .compte-achats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
 .compte-liste { list-style: none; margin: 0; padding: 0; }
 .compte-liste li { display: grid; grid-template-columns: 96px minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 8px 0; border-top: 1px dashed rgba(215, 164, 33, .3); font-size: 15px; color: #F1E6FF; }
@@ -118,7 +126,13 @@
 
 @media (max-width: 960px) {
   .connexion { padding: 96px 0 56px; min-height: 0; }
-  .connexion-grille { grid-template-columns: minmax(0, 1fr); }
+  .connexion-grille { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+  /* (la tête, 22:3x) au téléphone et à la tablette : le pseudo et le mot de passe D'ABORD, à l'ouverture ; le texte après, plus court */
+  .connexion-grille > form { order: -1; }
+  .connexion-texte { padding-top: 0; }
+  .connexion-texte h1 { font-size: clamp(26px, 6vw, 34px); }
+  .connexion-texte .atouts-compte, .connexion-texte .accroche { display: none; }
+  .connexion-texte .atouts-court { display: block; margin: 10px 0 0; font-size: 17px; color: #F1E6FF; }
   .compte-tete { grid-template-columns: 220px minmax(0, 1fr); gap: 16px 24px; }
   .compte-tuiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .compte-themes { grid-template-columns: repeat(2, minmax(0, 1fr)); }

@@ -14,10 +14,10 @@
 .carte-iles-cadre { padding: 16px 16px 14px; }
 .carte-iles-titre { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; margin: 0 0 10px; font-family: "Lilita One", sans-serif; font-size: 20px; color: var(--or-clair); }
 .carte-iles-titre small { font-family: "Fredoka", sans-serif; font-size: 13px; color: #CBB8E6; }
-/* la mer : 9 x 5 cases, ses vagues dessinées (le fond du kit), la grille des places en pointillé très doux */
-.carte-iles { position: relative; display: grid; grid-template-columns: repeat(9, minmax(0, 1fr)); grid-template-rows: repeat(5, minmax(0, 1fr)); aspect-ratio: 9 / 5;
+/* la mer : --cols x --rangs cases (9 x 5 sans les îles ; js/accueil.js la grandit pour toutes les contenir), ses vagues dessinées (le fond du kit), la grille des places en pointillé très doux */
+.carte-iles { position: relative; display: grid; --cols: 9; --rangs: 5; grid-template-columns: repeat(var(--cols), minmax(0, 1fr)); grid-template-rows: repeat(var(--rangs), minmax(0, 1fr)); aspect-ratio: var(--cols) / var(--rangs);
   background-color: #0E3550; background-image: var(--fond-mer-image, none), linear-gradient(90deg, rgba(255, 255, 255, .05) 1px, transparent 1px), linear-gradient(180deg, rgba(255, 255, 255, .05) 1px, transparent 1px);
-  background-size: var(--fond-mer-taille, auto), calc(100% / 9) 100%, 100% calc(100% / 5); border: 2px solid rgba(0, 0, 0, .45); }
+  background-size: var(--fond-mer-taille, auto), calc(100% / var(--cols)) 100%, 100% calc(100% / var(--rangs)); border: 2px solid rgba(0, 0, 0, .45); }
 .ilot { grid-column: var(--i); grid-row: var(--j); position: relative; margin: 14%; padding: 0; border: 0; cursor: pointer; font: inherit; color: inherit;
   /* l'île : l'herbe, sa plage, son ombre sur l'eau (dessinée, aucune image) */
   background: radial-gradient(circle at 42% 38%, #79C95A 0 34%, #4E9A3B 35% 52%, #E7D08A 53% 62%, transparent 63%);
@@ -54,14 +54,14 @@ button.ilot:hover .ilot-nom, button.ilot:focus-visible .ilot-nom, button.ilot.ch
 .podium-accueil h3 { font-size: clamp(26px, 3vw, 38px); }
 .podium-texte p { margin: 10px 0 18px; color: #E6DAF7; }
 .podium-texte .sur-titre { color: var(--or-clair); }
-.podium-marches { list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: end; gap: 10px; margin: 0; padding: 26px 16px 0; border: 3px solid var(--or-fonce); border-bottom: 0; }
+.podium-marches { list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: end; gap: 0 10px; margin: 0; padding: 26px 16px 0; border: 3px solid var(--or-fonce); }
 .marche { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 14px 8px 12px; text-align: center;
   background: linear-gradient(180deg, rgba(255, 215, 94, .16), rgba(27, 16, 40, .9)); border: 2px solid var(--or-fonce); border-bottom: 0; transition: transform .2s ease; }
 .marche:hover { transform: translateY(-6px); }
 .marche-1 { min-height: 210px; border-color: var(--or-clair); background: linear-gradient(180deg, rgba(255, 215, 94, .32), rgba(27, 16, 40, .9)); }
 .marche-2 { min-height: 170px; }
 .marche-3 { min-height: 140px; }
-.marche-pseudo { font-size: 17px; color: #fff; max-width: 100%; overflow-wrap: anywhere; }
+.marche-pseudo { display: block; width: 100%; font-size: 17px; color: #fff; white-space: nowrap; overflow: hidden; }
 .marche-texte { font-size: 14px; color: var(--or-clair); }
 .marche-rang { margin-top: auto; font-family: "Lilita One", sans-serif; font-size: 26px; color: var(--or-clair); text-shadow: 0 2px 0 #000; }
 
@@ -122,7 +122,8 @@ button.ilot:hover .ilot-nom, button.ilot:focus-visible .ilot-nom, button.ilot.ch
 @media (max-width: 430px) {
 
   .ilot.libre { margin: 2%; }
-  .podium-marches { padding: 18px 8px 0; gap: 6px; }
+  .podium-marches { padding: 18px 8px 0; gap: 0 6px; }
+  .podium-marches::after { margin: 0 -8px; }
   .marche-pseudo { font-size: 14px; }
   .marche-1 { min-height: 180px; }
 }
@@ -163,7 +164,7 @@ button.ilot:hover, button.ilot:focus-visible, button.ilot.choisi { filter: brigh
 .fiche-lien:hover, .fiche-lien:focus-visible { border-bottom-color: var(--or-clair); outline: none; }
 /* (af, 18:0x) au téléphone : 7 colonnes (js/accueil.js), des îlots plus grands pour le doigt, la place libre lisible */
 @media (max-width: 520px) {
-  .carte-iles { grid-template-columns: repeat(7, minmax(0, 1fr)); aspect-ratio: 7 / 5; background-size: var(--fond-mer-taille, auto), calc(100% / 7) 100%, 100% calc(100% / 5); }
+  .carte-iles { --cols: 7; }
   .ilot { margin: 7%; }
   .ilot.libre { margin: 0; }
   .ilot.libre span { font-size: 11px; }
@@ -207,7 +208,71 @@ button.ilot:hover, button.ilot:focus-visible, button.ilot.choisi { animation-pla
 }
 /* (af, 18:5x ; la relecture) à 400 px et moins, les îlots touchent le bord de leur case : 44 px au moins au doigt dès 360 */
 @media (max-width: 400px) {
-  .carte-iles { grid-template-columns: repeat(6, minmax(0, 1fr)); aspect-ratio: 6 / 5; background-size: var(--fond-mer-taille, auto), calc(100% / 6) 100%, 100% calc(100% / 5); }
+  .carte-iles { --cols: 6; }
   .ilot { margin: 1px; }
   .ilot.libre { margin: 0; }
 }
+
+/* ---------- (la tête, 22:05 ; le propriétaire : le podium « paraît coupé ») LE SOL DU PODIUM : un socle de pierre du château
+   sous les trois marches, d'un bord à l'autre du cadre, sa lèvre d'or en haut (où les marches se posent), son ombre en bas ;
+   il ferme le cadre. Le motif des pierres du kit (assets/motifs/pierres.svg), aucune image neuve. ---------- */
+.podium-marches::after { content: ""; grid-column: 1 / -1; height: 30px; margin: 0 -16px;
+  background: linear-gradient(180deg, var(--or-clair) 0 3px, var(--or) 3px 6px, var(--or-fonce) 6px 9px, rgba(0, 0, 0, .35) 9px 12px, transparent 12px),
+              linear-gradient(180deg, rgba(8, 4, 14, 0) 40%, rgba(8, 4, 14, .55)), url("../assets/motifs/pierres.svg") 0 0 / 48px 24px, #3B2A52;
+  box-shadow: 0 6px 0 rgba(0, 0, 0, .35); }
+.marche { box-shadow: 0 3px 0 rgba(0, 0, 0, .35); }
+
+/* (la tête, 22:1x) sous l'aperçu : les deux liens de la fiche, et le bouton vers toute la carte */
+.fiche-liens { display: flex; flex-wrap: wrap; gap: 0 20px; margin: 2px 0 0; }
+.carte-toute { display: flex; justify-content: center; margin: 14px 0 2px; }
+.carte-toute .bouton { display: inline-flex; align-items: center; gap: 8px; }
+
+/* ---------- (af, 22:3x ; le propriétaire : « la partie carte sur la page d'accueil est moche et bâclée ») LA MER DESSINÉE : les
+   îles comme sur la grande carte (js/ile.js, IlePixel.grande, agrandies au pixel près), la même mer (son dégradé, ses cases, une
+   houle qui passe), les places de la grille en pointillé doux, l'épingle de chaque hôte (sa tête, ses étoiles) ; js/accueil.js
+   pose la classe « dessinee ». Sans elle (le script de l'île absent) : la carte d'avant. ---------- */
+.carte-iles.dessinee { background-color: #0E2C40; border: 2px solid rgba(0, 0, 0, .55);
+  background-image: linear-gradient(90deg, rgba(255, 255, 255, .045) 1px, transparent 1px), linear-gradient(180deg, rgba(255, 255, 255, .045) 1px, transparent 1px), linear-gradient(180deg, #16506F, #0E2C40);
+  background-size: calc(100% / var(--cols)) 100%, 100% calc(100% / var(--rangs)), 100% 100%; }
+/* la houle : deux longues crêtes claires qui descendent lentement */
+.carte-iles.dessinee::after { content: ""; position: absolute; inset: -40% 0; pointer-events: none; z-index: 0;
+  background: repeating-linear-gradient(172deg, transparent 0 46px, rgba(220, 240, 255, .07) 46px 48px, transparent 48px 120px);
+  animation: houle 14s linear infinite; }
+@keyframes houle { from { translate: 0 -120px; } to { translate: 0 0; } }
+.carte-iles.dessinee .ilot:not(.libre) { margin: 6%; overflow: visible; clip-path: none; background: none; box-shadow: none; filter: none; z-index: 1; }
+.carte-iles.dessinee .ilot.belle::after { content: none; }
+.ilot-dessin { display: block; width: 100%; height: 100%; image-rendering: pixelated; filter: drop-shadow(0 3px 0 rgba(0, 0, 0, .22)); transition: filter .15s; }
+.carte-iles.dessinee button.ilot:hover, .carte-iles.dessinee button.ilot:focus-visible, .carte-iles.dessinee button.ilot.choisi { transform: translateY(-3px) scale(1.08); box-shadow: none; filter: none; z-index: 3; }
+.carte-iles.dessinee button.ilot:hover .ilot-dessin, .carte-iles.dessinee button.ilot:focus-visible .ilot-dessin, .carte-iles.dessinee button.ilot.choisi .ilot-dessin { filter: drop-shadow(0 0 2px #FFD75E) drop-shadow(0 0 7px rgba(255, 215, 94, .7)); }
+/* l'épingle : au-dessus de l'île (elle ne la cache pas), la tête de l'hôte et ses étoiles, sa pointe vers l'île */
+.ilot-epingle { position: absolute; left: 50%; top: 0; transform: translate(-50%, -62%); display: flex; align-items: center; gap: 3px; padding: 2px; white-space: nowrap;
+  font: 700 10px/1 "Fredoka", sans-serif; color: var(--or-clair); background: rgba(14, 8, 24, .85); box-shadow: 2px 2px 0 rgba(0, 0, 0, .35); pointer-events: none; }
+.ilot-epingle > span:last-child:not(.tete-pixel) { padding: 0 2px 0 1px; }
+.ilot-epingle::after { content: ""; position: absolute; left: 50%; bottom: -4px; margin-left: -4px; border: 4px solid transparent; border-bottom: 0; border-top-color: rgba(14, 8, 24, .85); }
+.ilot-epingle .tete-pixel { box-shadow: none; }
+.carte-iles.dessinee .ilot.habitee::before { bottom: auto; top: 0; left: auto; right: 6%; margin: 0; z-index: 2; }
+/* les places de la grille (dans l'étendue des îles) : un pointillé doux, comme la grande carte ; la plus proche du centre dit
+   « Ton île ici ? » */
+.ilot-place { grid-column: var(--i); grid-row: var(--j); margin: 24%; border: 1px dashed rgba(227, 207, 142, .3); pointer-events: none; z-index: 1; }
+.carte-iles.dessinee .ilot.libre { margin: 8%; z-index: 1; }
+.carte-iles.dessinee .ilot-nom { bottom: 0; }
+/* le titre de la carte : « relue il y a… » passe dessous quand la place manque, jamais coupé en deux */
+.carte-iles-titre { flex-wrap: wrap; row-gap: 2px; }
+.carte-iles-titre small { white-space: nowrap; }
+/* la fiche : la tête et le nom sur une ligne ; le nombre des étoiles à côté d'elles */
+.fiche-nom { display: flex; align-items: center; gap: 10px; margin: 0; }
+.fiche-nom > span:last-child { min-width: 0; overflow-wrap: anywhere; }
+.fiche-etoiles-nb { margin-left: 6px; font-size: 15px; letter-spacing: 0; }
+@media (prefers-reduced-motion: reduce) { .carte-iles.dessinee::after { animation: none; } }
+@media (max-width: 400px) { .carte-iles.dessinee .ilot:not(.libre) { margin: 4%; } .ilot-epingle { font-size: 9px; } }
+
+/* (af, 22:5x ; la relecture de l'accueil entier) LA PLANÈTE : ses deux cartes sous la vidéo, de la même largeur qu'elle (avant :
+   deux colonnes sur quatre, la moitié droite vide) */
+.planete .cartes-planete { grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: 980px; margin-left: auto; margin-right: auto; }
+@media (max-width: 560px) { .planete .cartes-planete { grid-template-columns: minmax(0, 1fr); } }
+/* LES TROIS ÉTAPES du téléchargement : chaque carte à la hauteur de son texte (avant : les deux premières étirées à la hauteur de
+   la troisième, de grands vides) */
+.etapes.trois.fil { align-items: start; }
+.etapes.trois.fil .carte { height: auto; }
+/* la carte de l'accueil : le nom d'une île n'apparaît plus sous elle (la fiche le dit, l'épingle montre son hôte) */
+.carte-iles.dessinee .ilot-nom { display: none; }

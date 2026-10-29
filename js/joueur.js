@@ -1,8 +1,11 @@
 // LE PROFIL PUBLIC (joueur.html, casteria.fr/joueur/<pseudo> ; l'API : /api/joueur/<pseudo>/public, API.md 2.3 et 2.4,
 // par js/vivant_api.js). Le pseudo vient de l'adresse (/joueur/Bricolune, ou joueur.html?p=Bricolune). Le jeu écrit chaque
 // texte (« 12 400 000 jetons », « niveau 42 ») : la page les montre tels quels (CasteriaApi.texte : les milliers insécables).
-// Jamais un nom de boss ni le nombre de boss du jeu : des totaux. Le propriétaire (29/10) : « donner envie » : un visiteur
-// lit « Toi aussi, construis ton île » ; connecté (CasteriaApi.moi), « toi face à lui » : vos places et vos niveaux.
+// Jamais le nombre de boss du jeu : des totaux ; un nom de boss seulement dans ses records (l'API ne garde que ceux que le site
+// nomme). Le propriétaire (29/10) : « donner envie » : un visiteur lit « Toi aussi, construis ton île » ; connecté
+// (CasteriaApi.moi), « toi face à lui » : vos places et vos niveaux. (5c, 29/10 ; le propriétaire : « les profils et tout
+// complet ») son rang et son prochain déblocage, l'écart avec la place d'au-dessus, SES BOSS (trois trophées, ses records),
+// SES BÊTES ET COMPAGNONS, ses aventures avec ses machines et son temps de jeu ; jamais une ligne vide ni un « 0 ».
 ;(function () {
   'use strict'
   var A = window.CasteriaApi, V = window.CasteriaVivant, P = window.CasteriaPeau
@@ -15,7 +18,12 @@
 
   function nombre(n) { return A.nombre(n) }
   function pluriel(n, mot, mots) { return nombre(n) + ' ' + (n > 1 ? (mots || mot + 's') : mot) }
-  function rang(r) { return r === 1 ? '1er' : A.nombre(r) + 'e' }
+  // (5c, l'audit du site : « 0e » sur la fiche du propriétaire) un rang de 0 ou moins ne s'écrit jamais
+  function rang(r) { return !(r >= 1) ? '-' : r === 1 ? '1er' : A.nombre(r) + 'e' }
+  // classé : ni hors du classement (l'équipe), ni sans rang (0 : pas encore classé, ou un instantané d'avant la 155)
+  function classe(x) { return !!(x && !x.hors_classement && x.general && x.general.rang >= 1) }
+  // la page est lue : la hauteur réservée pendant la lecture part (l'audit : le pied sautait, CLS 0,43)
+  function lue() { var c = $('contenu'); if (c) c.classList.remove('en-lecture') }
   function etoiles(e) { return String(Math.round(Number(e || 0) * 10) / 10).replace('.', ',') }
   function montrerBloc(id) {
     $('bloc-' + id).hidden = false
@@ -33,6 +41,7 @@
   }
 
   function absent(titre, texte) {
+    lue()
     document.title = titre + ' : Casteria'
     $('pseudo').textContent = pseudo || 'Un joueur'
     $('titre').textContent = 'Profil introuvable'
@@ -57,9 +66,10 @@
 
   function montrer(j, moi) {
     var p = j.pseudo, el = A.el
+    lue()
     document.title = (j.partage && j.partage.titre) || p + ' sur Casteria'
     $('pseudo').textContent = p
-    $('titre').textContent = j.titre || (j.niveau && j.niveau.n >= 50 ? 'Légende de Casteria' : 'Joueur de Casteria')
+    $('titre').textContent = j.titre || 'Joueur de Casteria'
     statue(j.peau, j.modele)
     // le grade, l'équipe
     var b = $('badges')
@@ -70,11 +80,13 @@
     var pr = $('presence')
     A.vider(pr)
     if (j.en_ligne) pr.appendChild(el('span', 'en-ligne', 'En jeu en ce moment' + (j.lieu ? ' : ' + j.lieu : '')))
-    else pr.textContent = (j.vu ? 'Vu ' + A.ilYa(j.vu) : 'Joueur de Casteria') + (j.temps_de_jeu_min ? ' · ' + pluriel(Math.floor(j.temps_de_jeu_min / 60), 'heure') + ' de jeu' : '')
+    else if (j.vu) pr.textContent = 'Vu ' + A.ilYa(j.vu)
     // le niveau
     if (j.niveau) {
       $('niveau').hidden = false
-      $('niveau-n').textContent = 'Niveau ' + j.niveau.n + (j.niveau.max ? ' (le plus haut)' : '')
+      $('niveau-n').textContent = 'Niveau ' + j.niveau.n + (j.niveau.rang ? ' · ' + j.niveau.rang : '') + (j.niveau.max ? ' (le plus haut)' : '')
+      var pc = j.niveau.prochain
+      if (!j.niveau.max && pc && pc.nom && pc.niveau > j.niveau.n) { $('prochain').textContent = 'Prochain déblocage : ' + pc.nom + ', au niveau ' + pc.niveau; $('prochain').hidden = false }
       var part = j.niveau.max ? 100 : Math.round(Math.max(0, Math.min(1, j.niveau.part)) * 100)
       $('niveau-part').style.width = part + '%'
       $('niveau-barre').setAttribute('aria-valuenow', part)
@@ -85,15 +97,13 @@
     faceAFace(j, moi)
 
     // LE CLASSEMENT GÉNÉRAL : sa place, ses points sur 1 000, ses dix aspects
-    if (j.hors_classement) {
-      montrerBloc('general')
-      $('general-rang').textContent = 'Hors du classement'
-      $('general-points').textContent = 'Membre de l\'équipe de Casteria'
-      document.querySelector('.general-aspects').hidden = true
-    } else if (j.general) {
+    // (5c ; la règle du propriétaire : l'équipe se voit « comme un joueur mais sans nous ») hors classement ou pas classé : AUCUN
+    // bloc du classement, ni « hors du classement » ni place ; son rôle se lit dans son badge, à côté de son pseudo
+    if (classe(j)) {
       montrerBloc('general')
       $('general-rang').textContent = rang(j.general.rang)
       $('general-points').textContent = nombre(j.general.points) + ' / ' + nombre(j.general.sur) + ' points'
+      if (j.general.devant > 0 && j.general.suivant > 0) { $('general-devant').textContent = 'Encore ' + pluriel(j.general.devant, 'point') + ' pour passer ' + rang(j.general.suivant); $('general-devant').hidden = false }
       var ul = $('aspects')
       ;(j.general.aspects || []).forEach(function (a) {
         var v = Math.max(0, Math.min(100, a.points)), li = el('li')
@@ -111,6 +121,7 @@
       montrerBloc('themes')
       var pl = $('places')
       j.themes.forEach(function (t) {
+        if (!(t.rang >= 1)) return
         var li = el('li', 'place' + (t.rang <= 3 ? ' podium p' + t.rang : '')), a = el('a')
         a.href = 'classement.html#' + encodeURIComponent(t.categorie)
         a.appendChild(el('span', 'theme', t.nom))
@@ -133,9 +144,9 @@
       e.setAttribute('aria-label', etoiles(ile.etoiles) + ' étoiles sur 5')
       tx.appendChild(e)
       var faits = el('ul', 'ile-faits')
-      if (ile.classement) faits.appendChild(el('li', '', rang(ile.classement.rang) + ' au Classement des îles · ' + nombre(ile.classement.points) + ' / ' + nombre(ile.classement.sur || 400) + ' points'))
+      if (!j.hors_classement && ile.classement && ile.classement.rang >= 1) faits.appendChild(el('li', '', rang(ile.classement.rang) + ' au Classement des îles · ' + nombre(ile.classement.points) + ' / ' + nombre(ile.classement.sur || 400) + ' points'))
       if (ile.beaute) faits.appendChild(el('li', '', nombre(ile.beaute) + ' points de beauté'))
-      faits.appendChild(el('li', '', ile.amis ? 'Avec ' + pluriel(ile.amis, 'ami') + ' sur l\'île' : 'Son hôte y vit seul'))
+      faits.appendChild(el('li', '', ile.amis ? 'Avec ' + pluriel(ile.amis, 'ami') + ' sur l\'île' : p + ' y vit seul'))
       tx.appendChild(faits)
       if (ile.i != null) {
         var gs = el('p', 'ile-gestes')
@@ -144,28 +155,26 @@
         tx.appendChild(gs)
       }
       if (window.IlePixel) {
-        var c = document.createElement('canvas'); c.width = 12; c.height = 12
-        c.getContext('2d').drawImage(IlePixel.sprite(ile.i || 0, ile.j || 0, et, false), 0, 0)
+        // (67, 29/10 ; l'audit du site, 12) la grande ile d'af, chaque pixel plein, a sa taille
+        var g = IlePixel.grande ? IlePixel.grande(ile.i || 0, ile.j || 0, et, !!ile.ouverte) : IlePixel.sprite(ile.i || 0, ile.j || 0, et, false)
+        var c = document.createElement('canvas'); c.width = g.width; c.height = g.height
+        c.getContext('2d').drawImage(g, 0, 0)
         $('ile-dessin').appendChild(c)
       }
     }
-    // SES AVENTURES : des totaux, jamais un nom de boss
+    montrerBoss(j)
+    montrerBetes(j)
+    // SES AVENTURES : la mer, ses machines, son temps de jeu ; des totaux
     var f = []
-    if (j.boss) {
-      var vb = j.boss.victoires || 0, vh = j.boss.victoires_heroique || j.boss.heroiques || 0
-      if (vb) f.push(['⚔', pluriel(vb, 'victoire'), 'contre les boss'])
-      if (vh) f.push(['🔥', pluriel(vh, 'victoire'), 'en Héroïque'])
-      if (j.boss.donjons) f.push(['🏛', pluriel(j.boss.donjons, 'donjon'), 'gagné' + (j.boss.donjons > 1 ? 's' : '')])
-    }
     if (j.mer) {
       if (j.mer.pirates) f.push(['⚓', pluriel(j.mer.pirates, 'pirate'), 'coulé' + (j.mer.pirates > 1 ? 's' : '')])
+      if (j.mer.legendaires) f.push(['☠', pluriel(j.mer.legendaires, 'pirate légendaire', 'pirates légendaires'), 'coulé' + (j.mer.legendaires > 1 ? 's' : '')])
       if (j.mer.sorties) f.push(['🧭', pluriel(j.mer.sorties, 'sortie'), 'en mer'])
-      if (j.mer.lieux) f.push(['🗺', pluriel(j.mer.lieux, 'lieu', 'lieux'), 'découvert' + (j.mer.lieux > 1 ? 's' : '')])
+      if (j.mer.lieux) f.push(['🗺', pluriel(j.mer.lieux, 'lieu', 'lieux'), 'découvert' + (j.mer.lieux > 1 ? 's' : '') + ' en mer'])
     }
-    if (j.collections) {
-      if (j.collections.familiers) f.push(['🐾', pluriel(j.collections.familiers, 'familier'), ''])
-      if (j.collections.montures) f.push(['🐎', pluriel(j.collections.montures, 'monture'), ''])
-    }
+    if (j.machines && j.machines.poses) f.push(['⚙', pluriel(j.machines.poses, 'machine'), 'sur son île'])
+    var h = Math.floor((Number(j.temps_de_jeu_min) || 0) / 60)
+    if (h >= 1) f.push(['⏳', pluriel(h, 'heure'), 'de jeu'])
     if (f.length) {
       montrerBloc('faits')
       var fu = $('faits')
@@ -185,7 +194,12 @@
       })
     }
     // L'APPEL, pour un visiteur (pas connecté, ou ce n'est pas lui)
-    if (!moi) { $('appel-titre').textContent = 'Rejoins ' + p + ' sur Casteria'; montrerBloc('appel') }
+    if (!moi) {
+      $('appel-titre').textContent = 'Rejoins ' + p + ' sur Casteria'
+      // (5c) l'équipe n'a pas de place au classement : « à côté de la sienne » serait faux
+      if (!classe(j)) $('appel-texte').textContent = 'Ton île au milieu de la mer, tes machines, tes bêtes, des boss à vaincre : et ta place au classement.'
+      montrerBloc('appel')
+    }
 
     // partager : le partage du téléphone, sinon le lien copié
     $('partager').addEventListener('click', function () {
@@ -197,20 +211,83 @@
     })
   }
 
+  // SES BOSS : trois trophées (ses victoires, en Héroïque, ses donjons), puis ses records ; rien à zéro, la section cachée sans rien
+  function montrerBoss(j) {
+    var b = j.boss, el = A.el
+    if (!b) return
+    var t = [['assets/discord/boss_vaincu.png', b.victoires, 'victoire', 'contre les boss'],
+      ['assets/discord/boss_heroique.png', b.victoires_heroique || b.heroiques, 'victoire', 'en Héroïque'],
+      ['assets/donjons/coffret.webp', b.donjons, 'donjon', 'gagné']].filter(function (x) { return Number(x[1]) > 0 })
+    var recs = (b.records || []).filter(function (r) { return r && r.nom && r.temps })
+    if (!t.length && !recs.length) return
+    montrerBloc('boss')
+    var ul = $('trophees')
+    t.forEach(function (x) {
+      var li = el('li', 'trophee panneau-nuit coins-or'), im = el('img')
+      im.src = x[0]; im.alt = ''; im.width = 64; im.height = 64; im.className = 'pixel'; im.loading = 'lazy'
+      li.appendChild(im)
+      var n = Number(x[1])
+      li.appendChild(el('b', '', nombre(n)))
+      li.appendChild(el('span', '', (n > 1 ? x[2] + 's' : x[2]) + ' ' + (x[3] === 'gagné' ? (n > 1 ? 'gagnés' : 'gagné') : x[3])))
+      ul.appendChild(li)
+    })
+    if (recs.length) {
+      $('records').hidden = false
+      var ol = $('records-liste')
+      recs.forEach(function (r) {
+        var li = el('li', 'record' + (r.mode === 'heroique' ? ' heroique' : ''))
+        li.appendChild(el('span', 'record-boss', r.nom))
+        li.appendChild(el('span', 'record-mode', r.mode === 'heroique' ? 'Héroïque' : 'Normal'))
+        var tm = el('b', 'record-temps', r.temps); tm.setAttribute('aria-label', r.temps.replace(':', ' min ') + ' s')
+        li.appendChild(tm)
+        ol.appendChild(li)
+      })
+    }
+  }
+  // SES BÊTES ET COMPAGNONS : sa plus belle bête (au Sanctuaire ou celle qui vaut le plus), ses enclos, ses familiers, ses montures
+  function montrerBetes(j) {
+    var el = A.el, be = j.betes || {}, co = j.collections || {}, belle = be.plus_belle
+    var l = []
+    if (be.enclos > 0) l.push(['🐄', pluriel(be.enclos, 'enclos', 'enclos'), 'sur son île'])
+    if (co.familiers > 0) l.push(['🐾', pluriel(co.familiers, 'familier'), 'à ses côtés'])
+    if (co.montures > 0) l.push(['🐎', pluriel(co.montures, 'monture'), 'à monter'])
+    if (!l.length && !(belle && belle.nom)) return
+    montrerBloc('betes')
+    if (belle && belle.nom) {
+      var bx = $('belle')
+      bx.appendChild(el('p', 'sur-ligne', 'Sa plus belle bête'))
+      bx.appendChild(el('h3', '', belle.nom))
+      bx.appendChild(el('p', 'belle-ou', belle.sanctuaire ? 'Au Sanctuaire, le plus haut enclos' : 'Dans ses enclos'))
+      bx.hidden = false
+    }
+    var ul = $('compagnons')
+    l.forEach(function (x) {
+      var li = el('li', 'compagnon panneau-bois')
+      li.appendChild(el('span', 'ico', x[0]))
+      var tx = el('span', 'compagnon-texte')
+      tx.appendChild(el('b', '', x[1]))
+      tx.appendChild(el('span', '', x[2]))
+      li.appendChild(tx)
+      ul.appendChild(li)
+    })
+  }
+
   // TOI FACE À LUI (connecté) ; sinon l'envie (visiteur)
   function faceAFace(j, moi) {
     var box = $('face-a-face'), el = A.el
     A.vider(box)
     if (moi && String(moi.pseudo).toLowerCase() === String(j.pseudo).toLowerCase()) {
       box.appendChild(el('h2', '', 'C\'est ton profil'))
-      box.appendChild(el('p', '', 'C\'est ce que les autres voient de toi. Partage-le : ton lien montre ton île et ta place.'))
+      box.appendChild(el('p', '', 'C\'est ce que les autres voient de toi. Partage-le : ton lien montre ton île' + (classe(j) ? ' et ta place.' : '.')))
       var c = el('a', 'bouton bouton-bois', 'Mon compte'); c.href = 'compte.html'; box.appendChild(c)
     } else if (moi) {
       box.appendChild(el('h2', '', 'Toi face à ' + j.pseudo))
       var t = el('table', 'duel')
-      var lignes = [['Classement général', moi.general ? rang(moi.general.rang) : '-', j.general ? rang(j.general.rang) : '-', moi.general && j.general ? moi.general.rang - j.general.rang : 0],
-        ['Points', moi.general ? nombre(moi.general.points) : '-', j.general ? nombre(j.general.points) : '-', moi.general && j.general ? j.general.points - moi.general.points : 0],
-        ['Niveau', moi.niveau ? String(moi.niveau.n) : '-', j.niveau ? String(j.niveau.n) : '-', moi.niveau && j.niveau ? j.niveau.n - moi.niveau.n : 0]]
+      // (5c) un joueur pas classé (l'équipe, ou rang 0) : « - », jamais une place ni un écart
+      var gm = classe(moi) ? moi.general : null, gj = classe(j) ? j.general : null
+      // (5c) les lignes du classement seulement si les DEUX sont classés (l'équipe : jamais une ligne de rang)
+      var lignes = (gm && gj ? [['Classement général', rang(gm.rang), rang(gj.rang), gm.rang - gj.rang], ['Points', nombre(gm.points), nombre(gj.points), gj.points - gm.points]] : [])
+        .concat([['Niveau', moi.niveau ? String(moi.niveau.n) : '-', j.niveau ? String(j.niveau.n) : '-', moi.niveau && j.niveau ? j.niveau.n - moi.niveau.n : 0]])
       var th = el('tr'); th.appendChild(el('th', '', '')); th.appendChild(el('th', '', 'Toi')); th.appendChild(el('th', '', j.pseudo)); t.appendChild(th)
       lignes.forEach(function (l) {
         var tr = el('tr')
@@ -220,11 +297,11 @@
         t.appendChild(tr)
       })
       box.appendChild(t)
-      var ecart = moi.general && j.general ? moi.general.rang - j.general.rang : 0
-      box.appendChild(el('p', 'duel-mot', ecart > 0 ? 'Il te reste ' + pluriel(ecart, 'place') + ' pour le rattraper.' : (ecart < 0 ? 'Tu es devant : garde ta place.' : 'Vous êtes au coude à coude.')))
+      var ecart = gm && gj ? gm.rang - gj.rang : 0
+      if (gm && gj) box.appendChild(el('p', 'duel-mot', ecart > 0 ? 'Il te reste ' + pluriel(ecart, 'place') + ' pour le rattraper.' : (ecart < 0 ? 'Tu es devant : garde ta place.' : 'Vous êtes au coude à coude.')))
     } else {
       box.appendChild(el('h2', '', 'Toi aussi, construis ton île'))
-      box.appendChild(el('p', '', 'Une île rien qu\'à toi au milieu de la mer, des boss, des bêtes, des machines : et ta place au classement, à côté de la sienne.'))
+      box.appendChild(el('p', '', 'Une île rien qu\'à toi au milieu de la mer, des boss, des bêtes, des machines : et ta place au classement' + (classe(j) ? ', à côté de la sienne.' : '.')))
       var a = el('a', 'bouton bouton-or', 'Jouer gratuitement'); a.href = './#telecharger'; box.appendChild(a)
       var cx = el('a', 'lien-or', 'Déjà joueur ? Connecte-toi'); cx.href = 'connexion.html'; box.appendChild(cx)
     }

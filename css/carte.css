@@ -106,3 +106,7 @@
 /* un bouton cache reste cache (.bouton impose son display) */
 .bouton[hidden] { display: none !important; }
 .fiche-gestes { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; }
+
+/* (af, 22:4x) la légende des îles dessinée (js/carte.js) : de petites îles comme sur la carte, au pixel près */
+.pastille-dessin { width: 30px; height: 30px; image-rendering: pixelated; flex: none; }
+.pastille-dessin.vivante { filter: drop-shadow(0 0 3px #FFD75E) drop-shadow(0 0 6px rgba(255, 200, 80, .7)); }

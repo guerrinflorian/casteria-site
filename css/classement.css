@@ -103,6 +103,12 @@
 .cl-socle .cl-ile-nom { max-width: 100%; padding: 0 4px; font-family: "Lilita One", "Fredoka", sans-serif; font-size: clamp(15px, 2vw, 22px); line-height: 1.1; overflow-wrap: anywhere; }
 .cl-socle .cl-petit { margin-top: 2px; font-size: 13px; font-weight: 700; opacity: .85; }
 .cl-socle .cl-valeur { margin-top: 6px; font-weight: 700; font-size: 15px; }
+/* (la tête, 22:05 ; le podium de l'accueil « paraît coupé », celui-ci aussi) LE SOL : une dalle de pierre du château sous les
+   trois socles, d'un bord à l'autre du podium, sa lèvre d'or en haut ; seulement quand les places sont là */
+.cl-podium:has(.cl-place)::after { content: ""; order: 4; grid-column: 1 / -1; position: relative; z-index: 2; height: 28px; margin: 0 -14px;
+  background: linear-gradient(180deg, var(--or-clair) 0 3px, var(--or) 3px 6px, var(--or-fonce) 6px 9px, rgba(0, 0, 0, .35) 9px 12px, transparent 12px),
+              linear-gradient(180deg, rgba(8, 4, 14, 0) 40%, rgba(8, 4, 14, .55)), url("../assets/motifs/pierres.svg") 0 0 / 48px 24px, #3B2A52;
+  box-shadow: 0 8px 0 rgba(0, 0, 0, .3), 0 22px 30px rgba(0, 0, 0, .35); }
 /* les éclats qui scintillent sur la scène (css/style.css, .eclat) */
 .cl-podium .eclat { z-index: 0; pointer-events: none; }
 
@@ -322,3 +328,25 @@ html.photo .cl-couronne, html.photo .cl-place.p1::before, html.photo .cl-embleme
 .fiche-toi { margin: 12px 0 0; font-weight: 700; color: var(--or-clair); }
 .banniere-texte .en-ligne { margin-top: 14px; }
 @media (prefers-reduced-motion: reduce) { .cl-fil li.neuf { animation: none; } }
+
+/* (67, 29/10 ; le propriétaire : « un petit bouton qui mène à l'aperçu de l'île du joueur, seulement si elle est ouverte ; sinon
+   le bouton est barré ou éteint ») L'APERÇU DE SON ÎLE : une petite île en pixels (l'herbe, le sable, la mer) ; fermée : éteinte,
+   barrée de rouge ; la bulle au survol et au toucher (le focus) */
+.cl-nom-ligne { display: flex; align-items: center; gap: 4px 10px; min-width: 0; }
+.cl-nom-ligne .cl-nom { flex: 0 1 auto; min-width: 0; }
+.cl-apercu { position: relative; z-index: 2; flex: none; display: inline-grid; place-items: center; width: 34px; height: 28px; background: #0E3B57; box-shadow: 0 0 0 2px #3F2612, 0 3px 0 2px #1B0F05; cursor: pointer; text-decoration: none; transition: transform .12s ease; }
+.cl-apercu-ile { width: 26px; height: 20px; image-rendering: pixelated; background:
+  linear-gradient(#4E9A34, #4E9A34) 8px 4px / 10px 4px no-repeat,
+  linear-gradient(#6FBF4A, #6FBF4A) 4px 6px / 18px 8px no-repeat,
+  linear-gradient(#8B5A2B, #8B5A2B) 12px 2px / 2px 4px no-repeat,
+  linear-gradient(#E9D38C, #E9D38C) 2px 12px / 22px 4px no-repeat,
+  linear-gradient(#8FE3FF, #8FE3FF) 0 17px / 26px 2px no-repeat; }
+a.cl-apercu:hover, a.cl-apercu:focus-visible { transform: translateY(-2px); box-shadow: 0 0 0 2px #FFD75E, 0 5px 0 2px #1B0F05; outline: none; }
+.cl-apercu.fermee { cursor: help; background: #2A2433; box-shadow: 0 0 0 2px #4A3F55, 0 3px 0 2px #120A1E; }
+.cl-apercu.fermee .cl-apercu-ile { filter: grayscale(1) brightness(.55); }
+.cl-apercu.fermee::after { content: ""; position: absolute; left: 2px; right: 2px; top: 50%; height: 3px; margin-top: -1px; background: #E0504A; box-shadow: 0 1px 0 #6E1E1B; transform: rotate(-32deg); }
+.cl-apercu[data-bulle]:hover::before, .cl-apercu[data-bulle]:focus::before { content: attr(data-bulle); position: absolute; left: 50%; bottom: calc(100% + 8px); transform: translateX(-50%); white-space: nowrap; padding: 4px 10px; font: 700 13px/1.2 "Fredoka", sans-serif; color: #FFF4D6; background: #1B1028; box-shadow: 0 0 0 2px #D7A421; pointer-events: none; z-index: 5; }
+.cl-apercu.fermee:focus { outline: none; box-shadow: 0 0 0 2px #E0504A, 0 3px 0 2px #120A1E; }
+/* au podium : sous la valeur, au milieu du socle */
+.cl-socle .cl-apercu { margin-top: 8px; }
+@media (prefers-reduced-motion: reduce) { .cl-apercu { transition: none; } }

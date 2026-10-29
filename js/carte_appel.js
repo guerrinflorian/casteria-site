@@ -4,5 +4,8 @@
   'use strict'
   var c = document.getElementById('appel-dessin')
   if (!c || !window.IlePixel) return
-  c.getContext('2d').drawImage(IlePixel.sprite(2, 1, 5, true), 0, 0)
+  // (67, 29/10 ; l'audit du site, 12) la grande ile d'af (js/ile.js), chaque pixel plein, a sa taille : jamais le petit sprite agrandi
+  var g = IlePixel.grande ? IlePixel.grande(2, 1, 5, true) : IlePixel.sprite(2, 1, 5, true)
+  c.width = g.width; c.height = g.height
+  c.getContext('2d').drawImage(g, 0, 0)
 })()

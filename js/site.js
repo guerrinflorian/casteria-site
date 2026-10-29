@@ -101,6 +101,36 @@
     if (/(?:^|;\s*)casteria_connecte=1(?:;|$)/.test(document.cookie || '')) return true
     try { return !!sessionStorage.getItem('casteria_essai_session') } catch (e) { return false }
   }
+  // (la tête, 22:2x ; le propriétaire : « sur ordi on se connecte où à son compte ? ») LE COMPTE DANS LA BARRE, sur toutes les
+  // pages : juste avant « Jouer », « Connexion » ; connecté, sa tête et son pseudo (lus dans /api/moi), vers Mon compte. Le lien
+  // « Mon compte » que certaines pages avaient dans leur Menu devient celui-ci (jamais deux). Au téléphone, le tiroir le reprend.
+  function barreCompte() {
+    var nav = document.querySelector('.barre nav[aria-label="Le menu"]')
+    if (!nav) return
+    // le lien est dans le HTML de chaque page (« Connexion », sans JavaScript aussi) ; une page d'avant : il est créé
+    var jouer = nav.querySelector('a.bouton'), a = nav.querySelector('a.barre-compte'), ici = /\/(compte|connexion)\.html$/.test(location.pathname)
+    Array.prototype.forEach.call(nav.querySelectorAll('a.compte:not(.barre-compte)'), function (x) { x.parentNode.removeChild(x) })
+    if (!a) { a = document.createElement('a'); a.className = 'compte barre-compte'; nav.insertBefore(a, jouer || null) }
+    // la 404 (servie depuis n'importe quelle adresse) écrit ses liens depuis « / » : le lien du compte suit
+    var racine = (a.getAttribute('href') || (jouer && jouer.getAttribute('href')) || '').charAt(0) === '/' ? '/' : ''
+    if (!connecte()) { a.href = racine + 'connexion.html'; a.textContent = 'Connexion' } else { a.href = racine + 'compte.html'; a.textContent = 'Mon compte' }
+    if (ici) a.setAttribute('aria-current', 'page')
+    if (!connecte() || !window.fetch) return
+    fetch('/api/moi', { credentials: 'same-origin', headers: { Accept: 'application/json' } }).then(function (r) {
+      if (r.status === 401) { a.href = 'connexion.html'; a.textContent = 'Connexion'; return null }
+      return r.ok ? r.json() : null
+    }).then(function (m) {
+      if (!m || typeof m.pseudo !== 'string' || !/^[A-Za-z0-9_]{3,16}$/.test(m.pseudo)) return
+      var t = document.createElement('span'), u = '/api/peau/' + m.pseudo, n = document.createElement('span')
+      t.className = 'barre-tete'; t.setAttribute('aria-hidden', 'true')
+      // la face (8 x 8) et le chapeau, découpés de la peau à 3 px le pixel
+      t.style.backgroundImage = 'url("' + u + '"), url("' + u + '")'
+      n.className = 'barre-pseudo'; n.textContent = m.pseudo
+      a.textContent = ''; a.appendChild(t); a.appendChild(n)
+      a.setAttribute('aria-label', 'Mon compte : ' + m.pseudo)
+    }).catch(function () {})
+  }
+  barreCompte()
   function menuTelephone() {
     var barre = document.querySelector('.barre'), nav = barre ? barre.querySelector('nav') : null
     if (!barre || !nav || barre.querySelector('.menu-bouton')) return
@@ -120,7 +150,7 @@
     }
     Array.prototype.forEach.call(nav.querySelectorAll('a'), function (a) {
       if (a.classList.contains('bouton')) return
-      var l = ligne(a.getAttribute('href'), (a.getAttribute('aria-label') || a.textContent).trim(), !!a.getAttribute('aria-current'))
+      var l = ligne(a.getAttribute('href'), a.classList.contains('barre-compte') ? (connecte() ? 'Mon compte' : 'Connexion') : (a.getAttribute('aria-label') || a.textContent).trim(), !!a.getAttribute('aria-current'))
       if (a.classList.contains('compte')) compte = l
     })
     // « Connexion » ou « Mon compte » (le dernier mot de la liste)

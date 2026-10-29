@@ -36,12 +36,12 @@
   <nav aria-label="Le menu">
     <a href="./#voyage">Le jeu</a>
     <a href="commencer.html">Par où commencer</a>
-    <a href="carte.html">La carte</a>
-    <a href="exploits.html">Exploits</a>
+    <a href="evenements.html">Événements</a>
     <a class="classement" href="classement.html" aria-label="Classement"><img class="pixel" src="assets/icones/classement.png" alt="" width="20" height="20">Classement</a>
+    <a href="carte.html">La carte</a>
     <a class="voter" href="vote.html">Voter</a>
     <a class="boutique" href="boutique.html"><img class="pixel" src="assets/icones/credit.png" alt="" width="20" height="20">Boutique</a>
-    <a class="compte" href="compte.html">Mon compte</a>
+    <a class="compte barre-compte" href="connexion.html">Connexion</a>
     <a class="bouton bouton-or petit" href="./#telecharger">Jouer</a>
   </nav>
 </header>
@@ -61,6 +61,7 @@
         <span class="niveau-n" id="niveau-n"></span>
         <span class="niveau-barre" role="progressbar" aria-valuemin="0" aria-valuemax="100" id="niveau-barre"><span id="niveau-part"></span></span>
       </div>
+      <p class="prochain" id="prochain" hidden></p>
       <p class="gestes" id="gestes" hidden>
         <button type="button" class="bouton bouton-or" id="partager">Partager ce profil</button>
         <a class="bouton bouton-bois" id="vers-ile" href="carte.html" hidden>Voir son île</a>
@@ -71,7 +72,7 @@
   </div>
 </section>
 
-<div id="contenu">
+<div id="contenu" class="en-lecture">
   <div class="frise frise-creneaux" aria-hidden="true" data-bloc="general" hidden></div>
   <section class="fond-pierres relief profil-bloc" id="bloc-general" hidden>
     <div class="dedans une-grande">
@@ -79,6 +80,7 @@
         <h2>Le classement général</h2>
         <p class="general-rang" id="general-rang"></p>
         <p class="general-points" id="general-points"></p>
+        <p class="general-devant" id="general-devant" hidden></p>
         <a class="lien-or" href="classement.html#score">Tout le classement</a>
       </div>
       <div class="general-aspects">
@@ -96,6 +98,19 @@
     </div>
   </section>
 
+  <!-- SES BOSS (5c, 29/10) : ses victoires en trois trophées, puis ses records (seulement les boss que le site nomme : l'API) -->
+  <div class="frise frise-creneaux" aria-hidden="true" data-bloc="boss" hidden></div>
+  <section class="fond-pierres relief profil-bloc" id="bloc-boss" hidden>
+    <div class="dedans">
+      <h2 class="bloc-titre">Ses boss</h2>
+      <ul class="trophees" id="trophees"></ul>
+      <div class="records" id="records" hidden>
+        <h3 class="sous-titre">Ses records</h3>
+        <ol class="records-liste" id="records-liste"></ol>
+      </div>
+    </div>
+  </section>
+
   <div class="frise frise-vague" aria-hidden="true" data-bloc="ile" hidden></div>
   <section class="fond-mer relief profil-bloc" id="bloc-ile" hidden>
     <div class="dedans alterne"><div class="rangee">
@@ -104,8 +119,20 @@
     </div></div>
   </section>
 
-  <div class="frise frise-corde" aria-hidden="true" data-bloc="faits" hidden></div>
-  <section class="fond-bois relief profil-bloc" id="bloc-faits" hidden>
+  <!-- SES BÊTES ET COMPAGNONS (5c, 29/10) : sa plus belle bête, ses enclos, ses familiers, ses montures -->
+  <div class="frise frise-corde" aria-hidden="true" data-bloc="betes" hidden></div>
+  <section class="fond-bois relief profil-bloc" id="bloc-betes" hidden>
+    <div class="dedans">
+      <h2 class="bloc-titre">Ses bêtes et compagnons</h2>
+      <div class="betes-rangee">
+        <div class="belle panneau-nuit coins-or" id="belle" hidden></div>
+        <ul class="compagnons" id="compagnons"></ul>
+      </div>
+    </div>
+  </section>
+
+  <div class="frise frise-etoiles" aria-hidden="true" data-bloc="faits" hidden></div>
+  <section class="fond-ciel relief profil-bloc" id="bloc-faits" hidden>
     <div class="dedans">
       <h2 class="bloc-titre">Ses aventures</h2>
       <ul class="faits" id="faits"></ul>
@@ -137,7 +164,7 @@
   <section class="fond-ciel relief profil-bloc profil-appel" id="bloc-appel" hidden>
     <div class="dedans">
       <h2 id="appel-titre">Rejoins-le sur Casteria</h2>
-      <p>Ton île au milieu de la mer, tes machines, tes bêtes, des boss à vaincre : et ta place au classement, juste à côté de la sienne.</p>
+      <p id="appel-texte">Ton île au milieu de la mer, tes machines, tes bêtes, des boss à vaincre : et ta place au classement, juste à côté de la sienne.</p>
       <p class="gestes"><a class="bouton bouton-or grand" href="./#telecharger">Jouer gratuitement</a><a class="bouton bouton-bois" href="carte.html">Voir les îles</a></p>
     </div>
   </section>
@@ -146,12 +173,22 @@
 
 <div class="frise frise-corde" aria-hidden="true"></div>
 <footer>
-  <div class="dedans">
-    <div class="col">
+  <div class="dedans pied">
+    <div class="pied-marque">
       <img src="assets/logo/casteria-logo-300.webp" alt="Casteria" width="70" height="70" loading="lazy">
-      <nav aria-label="Le pied de page"><a href="./">Accueil</a><a href="commencer.html">Par où commencer</a><a href="evenements.html">Les événements</a><a href="pirates.html">La mer et les pirates</a><a href="donjons.html">Les donjons</a><a href="casino.html">Le casino</a><a href="./#boss">Les boss</a><a href="classement.html">Classement</a><a href="carte.html">La carte</a><a href="exploits.html">Les exploits</a><a href="boutique.html">Boutique</a><a href="vote.html">Voter</a><a href="compte.html">Mon compte</a><a href="reglement.html">Le règlement</a><a href="./#telecharger">Télécharger</a><a href="serveur-minecraft-ile.html">Serveur Minecraft d'île</a><a href="serveur-minecraft-modde.html">Serveur moddé</a><a href="launcher-minecraft-modde.html">Launcher moddé</a><a href="serveur-minecraft-rpg.html">Serveur RPG</a><a href="serveur-minecraft-boss.html">Boss et donjons</a><a href="mentions-legales.html">Mentions légales</a><a href="confidentialite.html">Confidentialité</a><a href="conditions.html">Conditions</a></nav>
+      <p class="pied-phrase"><b>Casteria</b>Ton île sur la mer, des boss géants, des pirates et une planète : le serveur Minecraft moddé en français, gratuit.</p>
+      <p class="pied-gestes"><a class="bouton bouton-or petit" href="./#telecharger">Jouer gratuitement</a><a class="pied-discord" href="discord.html">Rejoindre le Discord</a></p>
     </div>
-    <small>Casteria est un serveur Minecraft indépendant, créé par des joueurs. Il n'est ni affilié à Mojang ni à Microsoft, ni approuvé par eux. Minecraft est une marque de Mojang Studios.</small>
+    <nav aria-label="Le pied de page">
+      <div class="pied-colonne"><p class="pied-titre">Jouer</p><a href="./#telecharger">Télécharger</a><a href="commencer.html">Par où commencer</a><a href="reglement.html">Le règlement</a><a href="vote.html">Voter</a></div>
+      <div class="pied-colonne"><p class="pied-titre">Le jeu</p><a href="./">Accueil</a><a href="evenements.html">Les événements</a><a href="pirates.html">La mer et les pirates</a><a href="donjons.html">Les donjons</a><a href="./#boss">Les boss</a><a href="casino.html">Le casino</a></div>
+      <div class="pied-colonne"><p class="pied-titre">En direct</p><a href="classement.html">Classement</a><a href="carte.html">La carte</a><a href="exploits.html">Les exploits</a></div>
+      <div class="pied-colonne"><p class="pied-titre">Ton compte</p><a href="compte.html">Mon compte</a><a href="boutique.html">Boutique</a><a href="discord.html">Le Discord</a></div>
+    </nav>
+    <div class="pied-bas">
+      <nav class="pied-legal" aria-label="Les pages légales"><a href="mentions-legales.html">Mentions légales</a><a href="confidentialite.html">Confidentialité</a><a href="conditions.html">Conditions</a></nav>
+      <small>Casteria est un serveur Minecraft indépendant, créé par des joueurs. Il n'est ni affilié à Mojang ni à Microsoft, ni approuvé par eux. Minecraft est une marque de Mojang Studios.</small>
+    </div>
   </div>
 </footer>
 <script src="js/site.js" defer></script>

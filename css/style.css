@@ -249,6 +249,28 @@ footer nav a { display: inline-block; white-space: nowrap; line-height: 1.8; }
 footer a:hover { text-decoration: underline; }
 footer img { width: 70px; }
 footer small { display: block; margin-top: 20px; opacity: .7; }
+/* (29/10/2026, 22:3x ; « le pied complet et rangé ») LE PIED EN COLONNES (b5_assembleur/pied.js) : le logo, sa phrase, « Jouer
+   gratuitement » et le Discord ; cinq colonnes titrées ; puis les pages légales et la phrase sur Mojang. Au téléphone : les
+   colonnes deux par deux, chaque lien haut de 40 px pour le doigt. Aucun arrondi. */
+.pied { display: grid; grid-template-columns: minmax(0, 280px) minmax(0, 1fr); gap: 34px 56px; }
+.pied-marque img { width: 70px; height: 70px; }
+.pied-phrase { margin: 12px 0 16px; line-height: 1.45; color: #DCCDF0; }
+.pied-phrase b { display: block; margin-bottom: 4px; font-family: "Lilita One", sans-serif; font-weight: 400; font-size: 24px; color: #fff; }
+.pied-gestes { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; margin: 0; }
+footer .pied-gestes a { margin: 0; }
+footer .pied-gestes a.bouton { color: var(--encre); text-decoration: none; }
+.pied-discord { display: inline-flex; align-items: center; min-height: 40px; color: #C9CCFF !important; border-bottom: 2px solid transparent; }
+.pied-discord:hover { text-decoration: none !important; border-bottom-color: #C9CCFF; }
+.pied > nav[aria-label="Le pied de page"] { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)) max-content; gap: 24px 22px; align-items: start; }
+.pied-colonne { display: flex; flex-direction: column; min-width: 0; }
+.pied-titre { margin: 0 0 8px; padding-bottom: 6px; font-family: "Lilita One", sans-serif; font-size: 17px; color: #fff; letter-spacing: .02em; border-bottom: 2px solid rgba(215, 164, 33, .45); }
+footer .pied-colonne a { display: block; margin: 0; padding: 3px 0; line-height: 1.5; white-space: normal; color: var(--or-clair); }
+.pied-bas { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 10px 30px; padding-top: 18px; border-top: 1px solid rgba(255, 255, 255, .1); }
+footer .pied-legal a { margin: 0 18px 0 0; color: #CBB8DE; font-weight: 600; }
+.pied-bas small { margin: 0; max-width: 640px; }
+@media (max-width: 1100px) { .pied { grid-template-columns: minmax(0, 1fr); } .pied-marque { display: grid; grid-template-columns: 70px minmax(0, 1fr); gap: 0 18px; align-items: start; } .pied-phrase { margin-top: 0; } .pied-gestes { grid-column: 1 / -1; } }
+@media (max-width: 760px) { .pied > nav[aria-label="Le pied de page"] { grid-template-columns: repeat(2, minmax(0, 1fr)); } footer .pied-colonne a { display: flex; align-items: center; min-height: 40px; padding: 0; } }
+@media (max-width: 420px) { .pied-marque { grid-template-columns: minmax(0, 1fr); } .pied-marque img { margin-bottom: 10px; } }
 
 /* les pages intérieures */
 .page-tete { padding: 150px 0 70px; text-align: center; color: #fff; background: radial-gradient(90% 120% at 50% 0%, rgba(142, 76, 184, .5), transparent 70%), var(--nuit); }
@@ -712,3 +734,22 @@ html.essai .barre { top: 20px; }
 @media (prefers-reduced-motion: reduce) { .menu-barres { transition: none; } }
 /* (29/10/2026) pour une photo de la page entière (?photo) : le bandeau de l'ouverture au bas de la page, pas au milieu */
 html.photo body { position: relative; } html.photo .ouverture { position: absolute; }
+/* (la tête, 22:2x) LE COMPTE DANS LA BARRE (js/site.js, barreCompte) : « Connexion », ou la tête et le pseudo du joueur connecté,
+   dans un cadre d'or fin, juste avant « Jouer » ; au téléphone, il est dans le tiroir. Aucun arrondi. */
+.barre nav a.barre-compte { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 4px 12px; margin-left: 6px; color: #FFF4D6; border: 2px solid rgba(215, 164, 33, .65); border-bottom-width: 2px; background: rgba(255, 255, 255, .05); white-space: nowrap; }
+.barre nav a.barre-compte:hover, .barre nav a.barre-compte:focus-visible, .barre nav a.barre-compte[aria-current="page"] { color: var(--or-clair); border-color: var(--or-clair); border-bottom-color: var(--or-clair); background: rgba(255, 215, 94, .1); outline: none; }
+.barre-tete { flex: none; width: 24px; height: 24px; image-rendering: pixelated; background-repeat: no-repeat; background-size: 192px 192px; background-position: -120px -24px, -24px -24px; box-shadow: 0 0 0 2px rgba(0, 0, 0, .5); }
+.barre-pseudo { max-width: 150px; overflow: hidden; text-overflow: ellipsis; }
+/* « La carte » et le compte en plus : la barre tient d'une ligne de 961 à 1240 px, les liens un peu plus serrés */
+.barre nav a { white-space: nowrap; }
+@media (min-width: 961px) and (max-width: 1240px) {
+  .barre nav { gap: 0; }
+  .barre nav a { padding: 8px 7px; font-size: 15px; }
+  .barre nav a.barre-compte { padding: 4px 8px; margin-left: 4px; }
+  .barre nav a.bouton { margin-left: 6px; }
+}
+/* sous 1100 px, le logo seul (son nom part : le logo le dit déjà) */
+@media (min-width: 961px) and (max-width: 1100px) {
+  .barre:not(.accueil) .marque span, .barre.accueil.avec-logo .marque span { display: none; }
+  .barre nav a { padding: 8px 6px; }
+}

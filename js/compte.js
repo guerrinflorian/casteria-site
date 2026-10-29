@@ -98,6 +98,8 @@
     var bout = el('a', 'bouton bouton-or grand', 'La boutique'); bout.href = 'boutique.html#acheter'
     bout.addEventListener('click', function () { try { sessionStorage.setItem('casteria_pseudo', String(m.pseudo)) } catch (x) {} })
     gestes.appendChild(bout)
+    // (b5, 22:4x) son profil public : ce que tout le monde voit de lui, et son image à partager
+    if (/^[A-Za-z0-9_]{3,16}$/.test(String(m.pseudo))) { var pub = el('a', 'bouton bouton-bois', 'Mon profil public'); pub.href = '/joueur/' + String(m.pseudo); gestes.appendChild(pub) }
     if (m.droits && m.droits.admin) { var ad = el('a', 'bouton bouton-bois', 'L\'espace de l\'équipe'); ad.href = 'admin.html'; gestes.appendChild(ad) }
     var dec = el('button', 'bouton bouton-bois', 'Se déconnecter'); dec.type = 'button'
     dec.addEventListener('click', function () { dec.disabled = true; A.deconnexion().then(function () { location.assign('connexion.html') }) })
@@ -107,8 +109,10 @@
     // les tuiles : les jetons, les crédits, le temps de jeu, les boss
     vider(tuiles)
     var pv = m.prive || {}
-    tuile('assets/icones/jeton.png', 'Jetons', A.nombre(pv.jetons || 0), 'jetons')
-    tuile('assets/icones/credit.png', 'Crédits', A.nombre(pv.credits || 0), 'crédits')
+    // (b5, 22:4x) un solde que le jeu n'a pas encore dit (null) ne s'écrit jamais « 0 »
+    var connu = function (n) { return n !== null && n !== undefined && isFinite(Number(n)) }
+    tuile('assets/icones/jeton.png', 'Jetons', connu(pv.jetons) ? A.nombre(pv.jetons) : 'Pas encore lu', connu(pv.jetons) ? 'jetons' : 'dit à ta prochaine venue en jeu')
+    tuile('assets/icones/credit.png', 'Crédits', connu(pv.credits) ? A.nombre(pv.credits) : 'Pas encore lu', connu(pv.credits) ? 'crédits' : 'dit à ta prochaine venue en jeu')
     tuile('', 'Temps de jeu', A.nombre(Math.floor((m.temps_de_jeu_min || 0) / 60)) + NBSP + 'h', 'en tout')
     // (la tête, 29/10) jamais un nombre de boss : ses VICTOIRES seulement
     if (m.boss) tuile('', 'Victoires contre les boss', A.nombre(m.boss.victoires || 0), m.boss.victoires_heroique ? 'dont ' + A.nombre(m.boss.victoires_heroique) + ' en Héroïque' : 'en arène')
@@ -153,13 +157,23 @@
       ile.appendChild(el('p', 'ile-nom', String(m.ile.nom)))
       var et = el('p', 'fiche-etoiles')
       for (var k = 0; k < 5; k++) et.appendChild(el('span', k < (Number(m.ile.etoiles) || 0) ? '' : 'vide', '★'))
+      // (b5, 22:4x) la note elle-même à côté des étoiles (3,8 : quatre étoiles pleines ne disaient pas laquelle)
+      if (isFinite(Number(m.ile.etoiles))) et.appendChild(el('span', 'note-etoiles', ' ' + String(Math.round(Number(m.ile.etoiles) * 10) / 10).replace('.', ',') + ' sur 5'))
       et.setAttribute('aria-label', (Number(m.ile.etoiles) || 0) + ' étoiles de Beauté sur 5')
       ile.appendChild(et)
       var ul = el('ul', 'fiche-grille')
-      ligne(ul, 'Beauté', A.nombre(m.ile.beaute) + ' points')
-      if (m.ile.place) ligne(ul, 'Place aux Îles', A.rang(m.ile.place))
+      // une donnée absente se tait (jamais « 0 points » pour une beauté que le jeu n'a pas encore dite)
+      if (m.ile.beaute !== null && m.ile.beaute !== undefined && isFinite(Number(m.ile.beaute))) ligne(ul, 'Beauté', A.nombre(m.ile.beaute) + ' points')
+      if (m.ile.classement && m.ile.classement.rang) ligne(ul, 'Classement des îles', A.rang(m.ile.classement.rang))
+      else if (m.ile.place) ligne(ul, 'Place aux Îles', A.rang(m.ile.place))
       ligne(ul, 'Tes amis sur l\'île', A.nombre(m.ile.amis))
       ile.appendChild(ul)
+      // son île en 3D (ile.html, /ile/<i>,<j>) et sa place sur la carte (carte.js lit #ile=i,j)
+      if (isFinite(Number(m.ile.i)) && isFinite(Number(m.ile.j))) {
+        var vers = el('p', 'compte-ile-liens'), c3 = el('a', 'fiche-lien', 'Voir mon île en 3D ›'), ca = el('a', 'fiche-lien', 'Sur la carte ›')
+        c3.href = '/ile/' + Number(m.ile.i) + ',' + Number(m.ile.j); ca.href = 'carte.html#ile=' + Number(m.ile.i) + ',' + Number(m.ile.j)
+        vers.appendChild(c3); vers.appendChild(ca); ile.appendChild(vers)
+      }
     } else ile.appendChild(el('p', 'rien', 'Ton île t\'attend : tape /ile en jeu.'))
     // les boss et les exploits
     var ex = $('compte-exploits'); vider(ex)

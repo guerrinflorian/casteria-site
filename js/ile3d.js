@@ -13,13 +13,14 @@
   // les trois caméras (le hash de BlueMap : carte:x:y:z:distance:rotation:angle:inclinaison:ortho:mode) autour du centre de
   // l'emprise (36 blocs à l'est du centre de la case, comme la démo de l'agent)
   var REGARDS = {
-    trois_quarts: function (x, z) { return [x, 64, z, 210, 0.75, 0.95, 0, 0, 'perspective'] },
+    trois_quarts: function (x, z) { return [x, 64, z + 8, 175, 0.75, 0.95, 0, 0, 'perspective'] },
     ciel: function (x, z) { return [x, 64, z, 260, 0, 0, 0, 1, 'flat'] },
     promenade: function (x, z) { return [x, 66, z + 20, 56, 0.35, 1.32, 0, 0, 'perspective'] }
   }
   var iframe = null, fiche = null, i = 0, j = 0
 
-  function rang(r) { return r === 1 ? '1er' : A.nombre(r) + 'e' }
+  // (une ile : « la 1re », comme sa fiche)
+  function rang(r) { return r === 1 ? '1re' : A.nombre(r) + 'e' }
   function etoiles(e) { return String(Math.round(Number(e || 0) * 10) / 10).replace('.', ',') }
   function message(t, avecCadenas) {
     var b = $('message')
@@ -27,6 +28,8 @@
     if (avecCadenas) { var c = A.el('span', 'cadenas'); c.setAttribute('aria-hidden', 'true'); b.appendChild(c) }
     b.appendChild(A.el('p', '', A.texte(t)))
     b.hidden = false
+    // (67, 29/10) une phrase a la place de la vue : pas de « Glisse pour tourner autour » sous elle
+    $('geste').hidden = true
   }
   function hashDe(nom) {
     var x = i * ESPACE + 36, z = j * ESPACE
@@ -40,6 +43,27 @@
   }
   ;[].forEach.call(document.querySelectorAll('.regard'), function (b) { b.addEventListener('click', function () { regarder(b.dataset.regard) }) })
 
+  // (67, 29/10 ; l'audit du site, 12) une ile en pixels, la GRANDE d'af (js/ile.js : chaque pixel plein, a sa taille), sinon
+  // la petite de la carte
+  function peindre(c, ii, jj, et, o) {
+    if (!window.IlePixel) return
+    var g = IlePixel.grande ? IlePixel.grande(ii, jj, et, o) : IlePixel.sprite(ii, jj, et, o)
+    c.width = g.width; c.height = g.height
+    c.getContext('2d').drawImage(g, 0, 0)
+  }
+  // (67, 29/10) une ile pas encore dessinee : la phrase et sa petite ile en pixels, qui berce
+  function seDessine() {
+    var b = $('message')
+    A.vider(b)
+    var c = document.createElement('canvas')
+    c.className = 'ile-berce'; c.setAttribute('aria-hidden', 'true')
+    peindre(c, i, j, 5, true)
+    b.appendChild(c)
+    b.appendChild(A.el('p', 'ile-se-dessine', 'Cette île se dessine : reviens dans quelques minutes.'))
+    b.appendChild(A.el('p', 'note', 'Chaque île de Casteria passe en 3D l\'une après l\'autre.'))
+    b.hidden = false
+    $('geste').hidden = true
+  }
   // sans île sur cette case : une place libre
   function libre() {
     document.title = 'Une place libre de Casteria'
@@ -48,6 +72,24 @@
     $('hote').textContent = 'Aucune île ici pour l\'instant.'
     message('Pas encore d\'île sur cette case : la prochaine peut être la tienne.', false)
     $('appel').hidden = false
+  }
+  // (67, 29/10 ; l'audit du site, 20) une case vide DANS l'archipel : une place libre ; au-dela de la grille (une case de
+  // plus autour des iles) : elle n'existe pas sur la carte
+  function libreOuHors() {
+    V.carte('iles').then(function (rc) {
+      var e = rc.statut === 200 && rc.corps ? rc.corps.etendue : null
+      if (e && e.de && e.a && (i < e.de[0] - 1 || i > e.a[0] + 1 || j < e.de[1] - 1 || j > e.a[1] + 1)) {
+        document.title = 'Une case hors de la carte de Casteria'
+        $('case').textContent = 'Case ' + i + ', ' + j
+        $('nom').textContent = 'Cette case n\'existe pas'
+        $('hote').textContent = 'Elle est au-delà de la carte : l\'archipel ne va pas jusque-là.'
+        message('Aucune île ici : la carte montre toutes les îles de Casteria.', false)
+        var c = A.el('a', 'bouton bouton-or petit', 'Voir la carte'); c.href = 'carte.html'; $('message').appendChild(c)
+        $('appel').hidden = false
+        return
+      }
+      libre()
+    })
   }
   function haut(f, x) {
     document.title = f.nom + ' : l\'île de ' + f.hote + ' en 3D sur Casteria'
@@ -68,9 +110,13 @@
       $('chiffres').hidden = false
       var e = $('etoiles'), n = Math.max(0, Math.min(5, Math.floor(Number(x.etoiles) || 0)))
       A.vider(e)
-      for (var k = 0; k < 5; k++) e.appendChild(A.el('span', 'etoile' + (k < n ? ' pleine' : ''), '★'))
-      e.appendChild(A.el('b', 'etoiles-nb', etoiles(x.etoiles)))
-      e.setAttribute('aria-label', etoiles(x.etoiles) + ' étoiles sur 5')
+      // (67, 29/10 ; l'audit du site, 11) sans etoile : la phrase, jamais cinq etoiles grises et un « 0 »
+      if (!(Number(x.etoiles) >= 0.05)) { e.appendChild(A.el('span', 'etoiles-aucune', 'Pas encore d\'étoile de beauté')); e.removeAttribute('aria-label') }
+      else {
+        for (var k = 0; k < 5; k++) e.appendChild(A.el('span', 'etoile' + (k < n ? ' pleine' : ''), '★'))
+        e.appendChild(A.el('b', 'etoiles-nb', etoiles(x.etoiles)))
+        e.setAttribute('aria-label', etoiles(x.etoiles) + ' étoiles sur 5')
+      }
       $('place').textContent = x.classement ? rang(x.classement.rang) + ' au Classement des îles · ' + A.nombre(x.classement.points) + ' / ' + A.nombre(x.classement.sur || 400) + ' points' : ''
     }
   }
@@ -88,6 +134,9 @@
     var ok = false
     try { var cv = document.createElement('canvas'); ok = !!(window.WebGLRenderingContext && (cv.getContext('webgl2') || cv.getContext('webgl'))) } catch (e) { ok = false }
     if (!ok) { message('La vue 3D ne s\'ouvre pas sur cet appareil : il lui faut WebGL.', false); return }
+    // (67, 29/10 ; l'audit du site, 1) pas encore dessinee (le premier rendu, une ile neuve) : jamais un cadre vide ni une
+    // date fausse ; « se dessine », une petite ile qui berce
+    if (typeof f.vue !== 'string' || !f.vue || !f.carte) { seDessine(); return }
     $('message').hidden = true
     iframe = document.createElement('iframe')
     iframe.title = f.nom + ' en 3D'
@@ -96,7 +145,8 @@
     v.appendChild(iframe)
     $('regards').hidden = false
     $('pied').hidden = false
-    $('dessinee').textContent = 'Dessinée ' + A.date(f.rendu, true)
+    var quand = f.rendu ? Date.parse(f.rendu) : NaN
+    $('dessinee').textContent = isFinite(quand) && quand > 0 ? 'Dessinée ' + A.date(f.rendu, true) : ''
     if (f.actualisable) {
       var r = $('rafraichir')
       r.hidden = false
@@ -117,7 +167,7 @@
   i = Number(m[1]); j = Number(m[2])
   Promise.all([V.ile3d(i, j), A.moi()]).then(function (rs) {
     var r = rs[0]
-    if (r.statut === 404) { libre(); return }
+    if (r.statut === 404) { libreOuHors(); return }
     if (r.statut !== 200) { message('L\'île ne répond pas pour l\'instant. Réessaie dans une minute.', false); return }
     fiche = r.corps
     // un visiteur (pas connecté) : « Ton île ici ? »
@@ -126,9 +176,11 @@
       var x = c.statut === 200 && c.corps.iles ? c.corps.iles[0] : null
       haut(fiche, x)
       vue(fiche)
+      // (67, 29/10) ses chiffres, qui y vit, sa place sur la carte, ses betes (js/ile_fiche.js)
+      if (window.IleFiche) IleFiche.remplir({ fiche: fiche, x: x, i: i, j: j })
     })
   })
   // l'île de l'appel, en pixels
   var ap = $('appel-ile')
-  if (ap && window.IlePixel) ap.getContext('2d').drawImage(IlePixel.sprite(1, 2, 5, true), 0, 0)
+  if (ap) peindre(ap, 1, 2, 5, true)
 })()
