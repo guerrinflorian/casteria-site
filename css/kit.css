@@ -341,3 +341,59 @@ html body .en-ligne::before { border-radius: 50%; }
 [id] { scroll-margin-top: 92px; }
 html body .pas-achat li { border-radius: 16px; }
 html body .pas-achat b { border-radius: 10px; }
+
+/* ---------- (b5, 00:4x) LES RÈGLES GÉNÉRIQUES DE pages_k.css (67), pour l'accueil aussi (la route, le quai, le cadre de bois, les écrans, les
+   objets, le combat et la planète), plus fortes que les feuilles des pages ---------- */
+html body .cadre-bois { border: 0; border-image: none; border-radius: 24px; overflow: hidden; image-rendering: auto; box-shadow: var(--ombre-douce), 0 0 0 1px rgba(255, 255, 255, .12); }
+html body .cadre-bois > * { background: none; }
+html body .launcher .cadre-bois { border-width: 0; }
+html body .pancarte.p1, html body .pancarte.p2 { transform: none; }
+html body .pancarte:hover { transform: translateY(-4px); }
+html body .route .pas-photo { border: 1px solid rgba(255, 215, 94, .45); border-radius: 22px; box-shadow: 0 22px 44px rgba(0, 0, 0, .45); }
+html body .route .pas-photo > img:first-child { border-radius: 21px; }
+html body .route .pas-photo:hover { transform: translateY(-5px); box-shadow: 0 0 34px rgba(255, 215, 94, .25), 0 26px 48px rgba(0, 0, 0, .5); }
+html body .route::before { width: 4px; border-radius: 2px; background: repeating-linear-gradient(180deg, rgba(255, 207, 90, .7) 0 10px, rgba(255, 207, 90, 0) 10px 24px); }
+html body .route .borne { border: 0; border-radius: 20px; background: linear-gradient(180deg, #FFE08A, var(--or-k) 45%, var(--or-k2)); box-shadow: 0 5px 0 var(--or-k-fonce), 0 0 0 6px var(--nuit), 0 0 24px rgba(255, 207, 90, .35); }
+html body .route .borne small { color: #7A4A12; }
+html body .route .borne b { color: #4A2B07; text-shadow: none; font-family: var(--police-titre); }
+html body .trois-ecrans figure .ecran-penche { transform: none; }
+html body .ecran-large { border: 1px solid rgba(255, 207, 90, .5); border-radius: 22px; overflow: hidden; box-shadow: var(--ombre-douce); }
+html body .victoire-ecran { border: 1px solid rgba(255, 207, 90, .5); border-radius: 22px; transform: none; }
+html body .victoire-ecran img { border-radius: 21px; }
+html body .victoire-ecran .bulle-entree, html body .victoire-ecran .bulle-defaite { border: 0; border-radius: 16px; box-shadow: 0 8px 18px rgba(0, 0, 0, .35); }
+html body .victoire-ecran .bulle-entree::after, html body .victoire-ecran .bulle-defaite::after { border: 0; }
+html body .fenetre-launcher .capture { transform: none; border-radius: 20px; }
+/* les objets faits maison : des cartes crème arrondies (plus de cadre ni de parchemin en pixels) */
+html body .objet { border: 0; border-image: none; border-radius: 18px; image-rendering: auto; background: linear-gradient(180deg, #FFFBF1, #FBF0D9); box-shadow: 0 8px 20px rgba(40, 22, 10, .14), 0 0 0 1px rgba(74, 47, 28, .08); }
+html body .objet:hover img { transform: scale(1.08); }
+@media (max-width: 620px) {
+  html body .objets .famille > summary { border: 0; border-image: none; border-radius: 16px; image-rendering: auto; background: linear-gradient(180deg, #FFFBF1, #FBF0D9); box-shadow: 0 6px 14px rgba(40, 22, 10, .12), 0 0 0 1px rgba(74, 47, 28, .08); }
+}
+@media (max-width: 760px) {
+  html body .victoire-ecran img { border: 0; border-radius: 18px; box-shadow: 0 12px 26px rgba(0, 0, 0, .5); }
+}
+/* nos illustrations posées sur une carte (décor seul : alt vide, aucun mot de plus pour les moteurs) */
+html body .carte-illu { position: relative; }
+html body .carte-illu .illu-coin { position: absolute; right: -14px; top: -34px; width: 104px; height: auto; pointer-events: none; filter: drop-shadow(0 10px 12px rgba(40, 22, 10, .35)); }
+html body .carte-illu h3 { padding-right: 78px; }
+/* les trois étapes « fil » : droites, reliées par un trait d'or doux ; le quai des boutons de téléchargement arrondi */
+html body .etapes.trois.fil li:nth-child(n) .carte { transform: none; }
+html body .etapes.trois.fil::before { top: 3px; height: 3px; border-top: 0; border-radius: 2px; background: linear-gradient(90deg, transparent, rgba(243, 169, 58, .7) 12%, rgba(243, 169, 58, .7) 88%, transparent); }
+html body .plateformes.quai { border: 1px solid rgba(255, 207, 90, .45); border-radius: 28px; box-shadow: var(--ombre-douce); }
+/* les numéros de « Ce que rapporte un boss » : des pastilles d'or à lèvre, comme les étapes du kit */
+html body .victoire-temps li::before { border: 0; border-radius: 11px; color: #4A2B07; background: linear-gradient(180deg, #FFE08A, var(--or-k) 50%, var(--or-k2)); box-shadow: 0 3px 0 var(--or-k-fonce); font-family: var(--police-bouton); text-shadow: none; }
+/* le combat et la planète : leurs quatre photos en cartes arrondies (la couleur de chaque bande en filet fin dessous) */
+html body .cartes-combat figure, html body .cartes-planete figure { border-top: 0; border-radius: var(--r-carte); overflow: hidden; border: 1px solid var(--trait); box-shadow: var(--ombre-douce); }
+html body .cartes-combat figure { background: linear-gradient(180deg, var(--carte-2), var(--carte)); box-shadow: var(--ombre-douce), inset 0 -3px 0 rgba(255, 207, 90, .55); }
+html body .cartes-planete figure { box-shadow: var(--ombre-douce), inset 0 -3px 0 rgba(255, 138, 60, .6); }
+/* les commandes à copier (l'aide du launcher) : arrondies */
+html body .reponses pre { border-radius: 10px; }
+html body .reponses { border-top: 1px solid rgba(74, 47, 28, .18); }
+
+/* les volets (l'aide du téléchargement, sur l'accueil et le launcher) : des cartes crème arrondies, plus de cadre en pixels */
+html body .volet { border: 0; border-image: none; border-radius: 18px; image-rendering: auto; overflow: hidden; background: linear-gradient(180deg, #FFFBF1, #FBF0D9);
+  box-shadow: 0 8px 20px rgba(40, 22, 10, .14), 0 0 0 1px rgba(74, 47, 28, .1); }
+html body .volet summary { padding: 14px 18px; }
+html body .volet > *:not(summary) { padding-left: 18px; padding-right: 18px; }
+/* les carrousels des Événements, du casino et des donjons : leurs règles (« … [data-carrousel] > .vue.jeu ») remettaient les angles droits */
+html body .defi-jeux [data-carrousel] > .vue.jeu, html body .casino-frise [data-carrousel] > .vue, html body .donjon-dedans [data-carrousel] > .vue { border-radius: var(--r-carte); border: 1px solid rgba(255, 207, 90, .45); overflow: hidden; }
