@@ -327,3 +327,5 @@ html body .carrousel-commandes .fleche { border-radius: 12px; }
 html body .site-vote { border-radius: 16px; }
 html body .pancarte-pseudo { border-radius: var(--r-panneau); border-width: 2px; box-shadow: 0 14px 30px rgba(40, 22, 10, .18); }
 html body .pancarte-pseudo .champ-exemple { border-radius: 12px; overflow: hidden; }
+/* (67, 00:1x) css/scene.css se charge APRÈS le kit et remettait le grain de parchemin : la crème du kit passe devant */
+html body .pan-parchemin, html body .clair { background: linear-gradient(180deg, #FBF2DE 0%, #F4E4C3 100%); image-rendering: auto; }

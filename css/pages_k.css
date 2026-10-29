@@ -1,0 +1,80 @@
+/* (67, le 30/10/2026 ; la tête : « pirates, donjons, casino et exploits AU STYLE NEUF ») LES PAGES DU JEU AU KIT DE b5 : chargée
+   après css/kit.css. Plus de cadre de bois ni de parchemin en pixels, plus de cartes penchées ni de pinces : des cartes droites
+   et arrondies, des bandes de nuit en dégradés doux, nos illustrations rendues dans Blockbench (tete_48/illustrations_site) */
+
+/* ---- les bandes : la mer, la nuit, une bande large (le texte et son illustration) ---- */
+.mer { background: radial-gradient(80% 40% at 50% 0%, rgba(46, 143, 184, .24), transparent 70%), linear-gradient(180deg, #11263F 0%, #0D1B30 60%, var(--nuit) 100%); }
+.bande-k { position: relative; background: var(--nuit); color: #F4EAFF; }
+.bande-large { overflow: hidden; background: radial-gradient(60% 90% at 85% 50%, rgba(255, 138, 61, .16), transparent 65%), radial-gradient(55% 90% at 10% 20%, rgba(155, 93, 229, .22), transparent 60%), linear-gradient(180deg, var(--nuit-2), var(--nuit)); }
+.large-grille { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); align-items: center; gap: 30px; }
+.large-grille .tete { text-align: left; margin: 0; max-width: none; }
+.large-grille .tete p { font-size: 18px; line-height: 1.6; }
+.illu-k { margin: 0; position: relative; display: grid; place-items: center; }
+.illu-k img { width: 100%; height: auto; max-width: 460px; filter: drop-shadow(0 22px 26px rgba(0, 0, 0, .45)); }
+.illu-k::before { content: ""; position: absolute; left: 12%; right: 12%; bottom: 6%; height: 16%; border-radius: 50%; background: radial-gradient(closest-side, rgba(0, 0, 0, .45), transparent); }
+.illu-k figcaption { position: relative; margin-top: 4px; font: 400 15px var(--police-bouton); letter-spacing: .4px; color: var(--or-k); text-align: center; }
+@media (prefers-reduced-motion: no-preference) {
+  .illu-k.flotte img { animation: illu-flotte 6s ease-in-out infinite; }
+  @keyframes illu-flotte { 0%, 100% { transform: translateY(0) rotate(-.6deg); } 50% { transform: translateY(-10px) rotate(.6deg); } }
+}
+
+/* ---- les photos : plus de cadre de bois ; une carte arrondie, sa légende dessous sur la nuit ---- */
+.tableau { border: 0; border-image: none; border-radius: 24px; overflow: hidden; image-rendering: auto; background: var(--carte); box-shadow: var(--ombre-douce), 0 0 0 1px rgba(255, 255, 255, .1); }
+.tableau figcaption { background: linear-gradient(180deg, var(--carte-2), var(--carte)); color: #F3E7FF; font-weight: 600; font-size: 17px; padding: 14px 22px 15px; }
+.tableau.grand figcaption { font-size: 18px; }
+.mer .voiles + .galerie.seule { margin-top: 44px; }
+
+/* ---- les cartes : droites ; « mosaique » devient trois cartes égales ---- */
+.cartes.mosaique { grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: auto; }
+.cartes.mosaique > :nth-child(n) { grid-row: auto; display: block; transform: none; }
+.cartes.mosaique > :nth-child(1) h3 { font-size: 27px; }
+.cartes.mosaique > :nth-child(1) .signe { font-size: 46px; line-height: 64px; height: 64px; }
+.astuces.notes .carte:nth-child(n) { transform: none; }
+.astuces.notes .carte:hover { transform: translateY(-4px); }
+@media (max-width: 960px) { .cartes.mosaique { grid-template-columns: minmax(0, 1fr); } }
+
+/* ---- les voiles (la mer) : quatre cartes de nuit droites, la vidéo en haut, sans cordage ni pince ---- */
+.voiles { padding-top: 0; margin-top: 44px; gap: 20px; align-items: stretch; }
+.voiles::before, .voile::before { display: none; }
+.voiles .voile:nth-child(n) { margin-top: 0; transform: none; }
+.voile { overflow: hidden; border: 1px solid var(--trait); border-radius: 22px; background: linear-gradient(180deg, var(--carte-2), var(--carte)); box-shadow: var(--ombre-douce); }
+.voiles .voile:hover { transform: translateY(-5px); }
+.voile-ecran { border-bottom: 0; }
+.voile .num { display: inline-block; margin: 16px 16px 8px; padding: 3px 11px; border-radius: 999px; background: rgba(143, 227, 255, .14); color: #8FE3FF; }
+.voile h3 { color: var(--or-k); }
+.voile li::before { border-radius: 50%; transform: none; background: var(--or-k); }
+@media (max-width: 960px) { .voiles { padding: 4px 6px 24px; margin-top: 30px; scrollbar-color: var(--or-k) transparent; } }
+
+/* ---- la carte d'un boss sous la mer : son illustration et le chemin des boss ---- */
+.boss-k { display: grid; grid-template-columns: 220px minmax(0, 1fr); align-items: center; gap: 10px 26px; max-width: 760px; margin: 56px auto 0; padding: 18px 26px 18px 14px; }
+.boss-k .illu-k img { max-width: 220px; }
+.boss-k h3 { margin: 0 0 6px; font-size: 28px; color: var(--titre-creme); }
+.boss-k p { margin: 0 0 16px; color: #E4D6F5; }
+
+@media (max-width: 760px) {
+  .large-grille { grid-template-columns: minmax(0, 1fr); gap: 6px; }
+  .large-grille .illu-k { order: -1; }
+  .large-grille .illu-k img { max-width: 300px; }
+  .large-grille .tete p { font-size: 17px; }
+  .boss-k { grid-template-columns: minmax(0, 1fr); text-align: center; padding: 10px 18px 22px; }
+  .boss-k .illu-k img { max-width: 190px; }
+}
+
+/* ==== LES DONJONS : les deux stèles en cartes arrondies (la mousse et le grès en dégradés doux, plus de joints de pierre en
+   lignes), leurs marches en blocs arrondis ; la pile des photos arrondie ; les trois sabliers en cartes crème ==== */
+.steles .stele { border: 1px solid rgba(255, 255, 255, .14); border-radius: 26px; box-shadow: var(--ombre-douce); }
+.steles .stele::before { display: none; }
+.steles .stele.temple { background: radial-gradient(90% 70% at 0% 0%, rgba(120, 190, 70, .30), transparent 60%), radial-gradient(70% 60% at 100% 100%, rgba(40, 70, 30, .5), transparent 70%), linear-gradient(180deg, #4C5D46, #2C3829); }
+.steles .stele.sanctuaire { border-color: rgba(255, 236, 190, .5); background: radial-gradient(90% 70% at 100% 0%, rgba(255, 236, 170, .7), transparent 60%), linear-gradient(180deg, #EBCF92, #CDA35F); }
+.stele .stele-astuce { border-top: 1px solid currentColor; }
+.marches li { border: 0; border-radius: 16px; }
+.stele.temple .marches li { box-shadow: inset 0 3px 0 rgba(150, 200, 100, .35), 0 5px 0 rgba(0, 0, 0, .3); }
+.stele.sanctuaire .marches li { box-shadow: inset 0 3px 0 rgba(255, 245, 210, .7), 0 5px 0 rgba(90, 55, 8, .3); }
+.marches b { font-family: var(--police-titre); }
+.regles-groupe p { border: 1px solid rgba(255, 207, 90, .3); background: rgba(0, 0, 0, .25); border-radius: 18px; }
+.donjon-dedans [data-carrousel] > .vue { border-radius: 20px; border: 1px solid rgba(255, 207, 90, .4); overflow: hidden; }
+.trois-sabliers article { border: 0; border-radius: var(--r-carte); background: linear-gradient(180deg, #FFFBF1, #FBF0D9); box-shadow: 0 10px 24px rgba(40, 22, 10, .16), 0 0 0 1px rgba(74, 47, 28, .08); }
+.trois-sabliers h3 { font-size: 30px; color: var(--brun); }
+.boss-k.desert { margin-top: 46px; }
+/* la crème du kit (css/kit.css) : css/scene.css, chargée après lui, remettait le grain de parchemin en pixels */
+.pan-parchemin { background: linear-gradient(180deg, #FBF2DE 0%, #F4E4C3 100%); image-rendering: auto; }

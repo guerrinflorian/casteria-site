@@ -327,8 +327,11 @@
     function lignes(c, paires) { var ul = el('ul', 'fiche-grille'); paires.forEach(function (p) { var li = el('li'); li.appendChild(el('span', '', p[0])); li.appendChild(el('b', '', p[1])); ul.appendChild(li) }); c.appendChild(ul) }
     var b1 = bloc('Le compte'); g.appendChild(b1)
     lignes(b1, [['Identifiant (uuid)', texte(ad.uuid)], ['Inscrit', ad.inscrit ? A.date(ad.inscrit) : 'inconnu'], ['Où', ad.lieu ? texte(ad.lieu) : 'hors ligne'], ['Temps de jeu', num(f.temps_de_jeu_min) === null ? VIDE : A.nombre(Math.floor(f.temps_de_jeu_min / 60)) + NBSP + 'h']])
-    var b2 = bloc('L\'argent'); g.appendChild(b2)
-    lignes(b2, [['Jetons', nb(pv.jetons)], ['Crédits', nb(pv.credits)], ['Classement général', f.general && f.general.rang ? A.rang(f.general.rang) + ' (' + A.nombre(f.general.points) + ' points)' : (f.hors_classement ? 'hors classement' : 'pas classé')]])
+    var b2 = bloc('L\'argent'), ag = ad.argent || {}; g.appendChild(b2)
+    // (5c, 30/10) la fortune et le patrimoine (le classement du jeu), puis les hausses de jetons par jour (relevées chaque nuit)
+    lignes(b2, [['Jetons', nb(pv.jetons)], ['Fortune', nb(ag.fortune)], ['Patrimoine', nb(ag.patrimoine)], ['Crédits', nb(pv.credits)],
+      ['Classement général', f.general && f.general.rang ? A.rang(f.general.rang) + ' (' + A.nombre(f.general.points) + ' points)' : (f.hors_classement ? 'hors classement' : 'pas classé')]])
+    hausses(b2, ag)
     var ile = bloc('L\'île'), ilef = f.ile || {}, ilea = ad.ile || {}; g.appendChild(ile)
     lignes(ile, [['Nom', texte(ilef.nom)], ['Case', ilea.i !== undefined ? ilea.i + ', ' + ilea.j : ''], ['Beauté', nb(ilef.beaute) + ' points · ' + pluriel(num(ilef.etoiles) || 0, 'étoile')]])
     if (liste(ilea.membres).length) ile.appendChild(el('p', 'a-aide', 'Ses membres : ' + liste(ilea.membres).map(function (m) { return texte(m.pseudo) }).join(', ')))
@@ -341,6 +344,8 @@
     if (!uld.children.length) uld.appendChild(el('li', 'rien', 'Aucune dépense.'))
     dep.appendChild(uld)
     boite.appendChild(g)
+    // (5c, 30/10) SES CONNEXIONS : la grille des 30 jours par heure, ses sessions
+    if (ad.connexions) boite.appendChild(blocConnexions(ad.connexions, f))
     // LE CASIER ENTIER : le résumé, chaque sanction (du plus récent au plus ancien), les notes, les signalements contre lui
     // et ceux qu'il a faits, avec leur suite
     var cb = bloc('Le casier', true); cb.classList.add('coins-or', 'a-casier')
@@ -399,6 +404,81 @@
     signalements('Les signalements contre lui', cas.signalements_recus, false)
     signalements('Les signalements qu\'il a faits', cas.signalements_faits, true)
     boite.appendChild(cb)
+  }
+
+  // ---------- (5c, 30/10) SES CONNEXIONS ET SES HAUSSES ----------
+  // la couleur d'un serveur (les variables du kit) ; un serveur inconnu : le bleu de la mer
+  var COULEURS_SERVEURS = { iles: 'var(--vert-k)', spawn: 'var(--or-k)', boss: 'var(--rose)', planete: 'var(--violet-k)' }
+  function couleurServeur(k) { return COULEURS_SERVEURS[k] || '#8FE3FF' }
+  var JOURS_COURTS = ['dim.', 'lun.', 'mar.', 'mer.', 'jeu.', 'ven.', 'sam.']
+  function jourCourt(d) { var p = String(d).split('-'), t = new Date(Date.UTC(+p[0], +p[1] - 1, +p[2])); return JOURS_COURTS[t.getUTCDay()] + NBSP + p[2] + '/' + p[1] }
+  function heureMin(iso) { var t = new Date(iso); return isNaN(t) ? '' : t.toLocaleString('fr-FR', { timeZone: 'Europe/Paris', day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }).replace(' ', ' à ') }
+  function heuresMinutes(m) { m = num(m) || 0; var h = Math.floor(m / 60), r = m % 60; return h ? h + NBSP + 'h' + (r ? NBSP + (r < 10 ? '0' : '') + r : '') : r + NBSP + 'min' }
+  function blocConnexions(c, f) {
+    var b = el('div', 'a-carte large a-connexions')
+    b.appendChild(el('h3', '', 'Ses connexions'))
+    var d = c.derniere
+    var haut = el('p', 'a-aide')
+    haut.textContent = (d ? (d.en_cours ? 'En jeu en ce moment (' + texte(d.nom) + ')' : 'Dernière connexion : ' + heureMin(d.quand) + ' (' + texte(d.nom) + ', ' + A.ilYa(d.quand) + ')') : 'Aucune connexion relevée') +
+      (c.depuis ? ' · relevé chaque minute par l\'API depuis le ' + heureMin(c.depuis) : ' · pas encore de relevé')
+    b.appendChild(haut)
+    // la légende : ses serveurs, la couleur de chacun, ses heures sur 30 jours
+    var leg = el('ul', 'a-legende')
+    liste(c.par_serveur).forEach(function (x) { var li = el('li'), pt = el('span', 'a-pastille'); pt.style.background = couleurServeur(x.cle); li.appendChild(pt); li.appendChild(el('span', '', texte(x.nom) + ' · ' + heuresMinutes(x.minutes))); leg.appendChild(li) })
+    var lp = el('li', 'pas-releve'), pp = el('span', 'a-pastille vide'); lp.appendChild(pp); lp.appendChild(el('span', '', 'pas encore relevé')); leg.appendChild(lp)
+    b.appendChild(leg)
+    // LA GRILLE : une ligne par jour (le plus récent en haut), 24 heures ; une case pleine à la mesure de ses minutes
+    var gr = el('div', 'a-grille-heures'), jours = liste(c.jours).slice().reverse(), joues = 0
+    gr.setAttribute('role', 'img')
+    var tete = el('div', 'a-gh-ligne a-gh-tete'); tete.appendChild(el('span', 'a-gh-jour', ''))
+    for (var h = 0; h < 24; h++) tete.appendChild(el('span', 'a-gh-h', h % 3 === 0 ? String(h) : ''))
+    tete.appendChild(el('span', 'a-gh-total', 'total'))
+    gr.appendChild(tete)
+    jours.forEach(function (j) {
+      var ligne = el('div', 'a-gh-ligne')
+      ligne.appendChild(el('span', 'a-gh-jour', jourCourt(j.date)))
+      liste(j.heures).forEach(function (x, hh) {
+        var cse = el('span', 'a-gh-case')
+        if (x === null) { cse.classList.add('vide'); cse.title = jourCourt(j.date) + ', ' + hh + NBSP + 'h : pas encore relevé' }
+        else if (num(x.minutes) > 0) {
+          cse.style.background = couleurServeur(x.serveur)
+          cse.style.opacity = String(0.35 + 0.65 * Math.min(1, x.minutes / 60))
+          cse.title = jourCourt(j.date) + ', ' + hh + NBSP + 'h : ' + x.minutes + NBSP + 'min' + (c.serveurs && c.serveurs[x.serveur] ? ' (' + texte(c.serveurs[x.serveur]) + ')' : '')
+        } else cse.title = jourCourt(j.date) + ', ' + hh + NBSP + 'h : pas en jeu'
+        ligne.appendChild(cse)
+      })
+      if (num(j.minutes) > 0) joues++
+      ligne.appendChild(el('span', 'a-gh-total', j.minutes === null ? '' : (num(j.minutes) ? heuresMinutes(j.minutes) : '-')))
+      gr.appendChild(ligne)
+    })
+    gr.setAttribute('aria-label', 'Ses connexions, heure par heure, sur 30 jours : ' + pluriel(joues, 'jour joué', 'jours joués') + '.')
+    b.appendChild(gr)
+    // SES SESSIONS RÉCENTES
+    b.appendChild(el('h4', '', 'Ses dernières sessions'))
+    var ul = el('ul', 'a-liste a-sessions')
+    liste(c.sessions).forEach(function (x) {
+      var li = el('li' , x.en_cours ? 'en-cours' : '')
+      li.appendChild(el('span', 'quand', heureMin(x.debut)))
+      li.appendChild(el('span', '', (x.en_cours ? 'en cours' : 'jusqu\'à ' + heureMin(x.fin).replace(/^.* à /, '')) + ' · ' + liste(x.serveurs).map(texte).join(', ')))
+      li.appendChild(el('span', 'prix', heuresMinutes(x.minutes)))
+      ul.appendChild(li)
+    })
+    if (!ul.children.length) ul.appendChild(el('li', 'rien', 'Aucune session relevée.'))
+    b.appendChild(ul)
+    return b
+  }
+  // ses hausses de jetons par jour (30 jours) : des barres ; l'API ne relève que ce qui monte, la note le dit
+  function hausses(b2, ag) {
+    var l = liste(ag.hausses).filter(function (x) { return num(x.jetons) > 0 })
+    if (!l.length) { if (ag.hausses_depuis) b2.appendChild(el('p', 'a-aide', 'Aucune hausse de jetons relevée depuis le ' + A.date(ag.hausses_depuis) + '.')); return }
+    var max = Math.max.apply(null, l.map(function (x) { return num(x.jetons) }))
+    var bar = el('div', 'a-hausses')
+    bar.setAttribute('role', 'img')
+    bar.setAttribute('aria-label', 'Ses hausses de jetons par jour, sur ' + pluriel(l.length, 'jour') + '.')
+    l.forEach(function (x) { var c = el('span', 'a-hausse'); c.style.height = Math.max(6, Math.round(100 * num(x.jetons) / max)) + '%'; c.title = jourCourt(x.jour) + ' : +' + A.nombre(x.jetons) + NBSP + 'jetons'; bar.appendChild(c) })
+    b2.appendChild(el('h4', '', 'Ses hausses de jetons'))
+    b2.appendChild(bar)
+    b2.appendChild(el('p', 'a-aide', 'Relevées chaque nuit depuis le ' + (ag.hausses_depuis ? A.date(ag.hausses_depuis) : '?') + ' ; une baisse n\'est pas relevée. La plus forte : +' + A.nombre(max) + NBSP + 'jetons.'))
   }
 
   // ---------- le tchat en direct : UN tchat pour tout le réseau ----------

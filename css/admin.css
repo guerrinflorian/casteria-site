@@ -212,3 +212,32 @@ html.photo .a-etat::before { animation: none; }
 .a-carte, .a-tuiles li, .a-en-cours { hyphens: manual; -webkit-hyphens: manual; }
 /* (Lighthouse, 29/10) le menu de l'équipe garde sa place tant qu'il est caché : la page ne saute pas quand il arrive */
 .admin-menu[hidden] { display: block; visibility: hidden; }
+
+/* ---------- (5c, 30/10 ; le propriétaire : « un graphique de quand il était connecté ») SES CONNEXIONS ET SES HAUSSES ---------- */
+.a-connexions h4 { margin: 18px 0 8px; font: 400 16px var(--police-bouton, "Lilita One"), sans-serif; letter-spacing: .4px; text-transform: uppercase; color: var(--violet-trait, #C9A8FF); }
+.a-legende { list-style: none; margin: 0 0 12px; padding: 0; display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 14px; color: #F1E6FF; }
+.a-legende li { display: inline-flex; align-items: center; gap: 7px; }
+.a-pastille { display: inline-block; width: 14px; height: 14px; border-radius: 4px; }
+.a-pastille.vide, .a-gh-case.vide { background: repeating-linear-gradient(45deg, rgba(255, 255, 255, .08) 0 3px, transparent 3px 6px); }
+/* la grille : le jour, 24 heures, le total ; des cases arrondies, la couleur du serveur, plus pleine avec les minutes */
+.a-grille-heures { display: grid; gap: 3px; overflow-x: auto; padding-bottom: 4px; }
+.a-gh-ligne { display: grid; grid-template-columns: 78px repeat(24, minmax(10px, 1fr)) 64px; gap: 3px; align-items: center; min-width: 520px; }
+.a-gh-jour { font-size: 13px; color: #CDB8E6; white-space: nowrap; }
+.a-gh-h { font-size: 11px; color: #9C88B8; text-align: left; }
+.a-gh-total { font-size: 13px; font-weight: 700; color: var(--or-k, #FFCF5A); text-align: right; white-space: nowrap; }
+.a-gh-tete .a-gh-total { font-weight: 400; color: #9C88B8; font-size: 11px; }
+.a-gh-case { height: 16px; border-radius: 4px; background: rgba(255, 255, 255, .05); }
+.a-carte .a-liste.a-sessions li { grid-template-columns: 128px minmax(0, 1fr) auto; }
+.a-carte .a-liste.a-sessions li.en-cours span:nth-child(2) { color: var(--vert-k, #46D27A); font-weight: 700; }
+/* ses hausses de jetons : des barres arrondies, la plus forte en haut */
+.a-hausses { display: flex; align-items: flex-end; gap: 4px; height: 70px; padding: 6px 0 2px; }
+.a-hausse { flex: 1 1 0; max-width: 22px; min-width: 5px; border-radius: 5px 5px 2px 2px; background: linear-gradient(180deg, var(--or-k, #FFCF5A), var(--or-k2, #F3A93A)); }
+@media (max-width: 600px) {
+  .a-gh-ligne { grid-template-columns: 46px repeat(24, minmax(6px, 1fr)) 40px; gap: 1px; min-width: 0; }
+  .a-gh-jour { font-size: 10.5px; }
+  .a-gh-total { font-size: 10.5px; }
+  .a-gh-h { font-size: 9.5px; }
+  .a-gh-case { height: 13px; border-radius: 3px; }
+  .a-carte .a-liste.a-sessions li { grid-template-columns: minmax(0, 1fr) auto; gap: 2px 10px; }
+  .a-carte .a-liste.a-sessions li .quand { grid-column: 1 / -1; }
+}

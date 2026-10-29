@@ -219,3 +219,11 @@
   .record-portrait { grid-row: 1 / 3; }
 }
 @media (prefers-reduced-motion: reduce) { .ile-dessin canvas, .presence .en-ligne::before { animation: none; } .place a { transition: none; } }
+/* (5c, 30/10) sa plus belle bête, quand c'est une de nos bêtes illustrées : son portrait à droite, qui flotte doucement */
+.belle.avec-image { grid-template-columns: minmax(0, 1fr) 160px; column-gap: 16px; }
+.belle.avec-image > :not(.belle-image) { grid-column: 1; }
+.belle-image { grid-column: 2; grid-row: 1 / span 3; align-self: center; width: 160px; height: 160px; object-fit: contain;
+  filter: drop-shadow(0 14px 16px rgba(0, 0, 0, .45)); animation: flotte 4.5s ease-in-out infinite; }
+@keyframes flotte { 50% { transform: translateY(-6px); } }
+@media (max-width: 430px) { .belle.avec-image { grid-template-columns: minmax(0, 1fr) 110px; } .belle-image { width: 110px; height: 110px; } }
+@media (prefers-reduced-motion: reduce) { .belle-image { animation: none; } }

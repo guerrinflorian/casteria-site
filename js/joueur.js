@@ -26,6 +26,8 @@
   }
   // (5c) le portrait des boss que le site nomme (les illustrations de nos modèles, tete_48/illustrations_site, réduites à 128 px)
   var PORTRAITS = { roi_champignon: 1, kraken_abysses: 1, yeti_glaces: 1 }
+  // (5c, 30/10) les bêtes illustrées (le nom de l'espèce dans le jeu, en minuscules, et son image de 256 px)
+  var ILLUS_BETES = { 'kitsune céleste': 'bete_kitsune_celeste', 'capybara': 'bete_capybara', 'mouton cerisier': 'bete_mouton_cerisier' }
   function pluriel(n, mot, mots) { return nombre(n) + ' ' + (n > 1 ? (mots || mot + 's') : mot) }
   // (5c, l'audit du site : « 0e » sur la fiche du propriétaire) un rang de 0 ou moins ne s'écrit jamais
   function rang(r) { return !(r >= 1) ? '-' : r === 1 ? '1er' : A.nombre(r) + 'e' }
@@ -271,6 +273,14 @@
       bx.appendChild(el('p', 'sur-ligne', 'Sa plus belle bête'))
       bx.appendChild(el('h3', '', belle.nom))
       bx.appendChild(el('p', 'belle-ou', belle.sanctuaire ? 'Au Sanctuaire, le plus haut enclos' : 'Dans ses enclos'))
+      // (5c, 30/10) son portrait quand c'est une de nos bêtes illustrées (le nom exact de l'espèce : jamais une variante, qui a son
+      // propre dessin)
+      var ill = ILLUS_BETES[String(belle.nom).toLowerCase()]
+      if (ill) {
+        var im = el('img', 'belle-image'); im.src = 'assets/illustrations/' + ill + '_256.png'; im.alt = belle.nom; im.width = 160; im.height = 160; im.loading = 'lazy'
+        bx.classList.add('avec-image')
+        bx.appendChild(im)
+      }
       bx.hidden = false
     }
     var ul = $('compagnons')
