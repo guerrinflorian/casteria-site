@@ -24,7 +24,7 @@ const PAGES = [['index.html', '', '1.0'], ['commencer.html', 'commencer.html', '
   // (29/10/2026, le propriétaire) les cinq pages SEO
   ['serveur-minecraft-ile.html', 'serveur-minecraft-ile.html', '0.8', 'assets/images/casteria-serveur-minecraft-partage.jpg'], ['serveur-minecraft-modde.html', 'serveur-minecraft-modde.html', '0.8'],
   ['launcher-minecraft-modde.html', 'launcher-minecraft-modde.html', '0.8', 'assets/images/casteria-commencer-palais-partage.jpg'], ['serveur-minecraft-rpg.html', 'serveur-minecraft-rpg.html', '0.8'],
-  ['serveur-minecraft-boss.html', 'serveur-minecraft-boss.html', '0.8']]
+  ['serveur-minecraft-boss.html', 'serveur-minecraft-boss.html', '0.8', 'assets/images/casteria-boss-yeti-partage.jpg']]
 // l'image de partage : 1200 x 630, le format des réseaux (l'image d'origine, plus large, y perdait ses bords)
 const IMAGE = 'assets/images/casteria-decollage-partage.jpg'
 const jour = new Date().toISOString().slice(0, 10)

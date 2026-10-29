@@ -30,8 +30,8 @@
 <link rel="stylesheet" href="css/scene.css">
 <link rel="stylesheet" href="css/objets.css">
 <!-- LES DONNÉES POUR GOOGLE : le fil d'Ariane, la FAQ de la page (mot pour mot), et le jeu, la même entité que sur l'accueil.
-     TODO (la tête) : porter le même « @id » (https://casteria.fr/#jeu) et le même « operatingSystem » sur le VideoGame de
-     index.html, pour que Google lise une seule entité. -->
+     (29/10/2026, la tête) le même « @id » (https://casteria.fr/#jeu) et le même « operatingSystem » sont sur le VideoGame de
+     index.html : Google lit une seule entité. -->
 <script type="application/ld+json">
 { "@context": "https://schema.org", "@graph": [
   { "@type": "BreadcrumbList", "itemListElement": [
@@ -184,7 +184,7 @@
       <p>Pas de pack à télécharger, pas de version à régler, pas de dossier mods à remplir : le launcher de Casteria s'en charge.</p>
     </div>
     <div class="launcher">
-      <div class="cadre-bois apparait de-gauche"><img src="assets/images/launcher-casteria-2010.jpg" alt="Le launcher de Casteria : le bouton JOUER, les nouvelles de la dernière mise à jour et ses réglages" width="1100" height="700" loading="lazy"></div>
+      <div class="cadre-bois apparait de-gauche"><img src="assets/images/launcher-casteria-2910.jpg" alt="Le launcher de Casteria : le bouton JOUER, les nouvelles de la dernière mise à jour et ses réglages" width="1100" height="700" loading="lazy"></div>
       <div class="apparait de-droite">
         <ul class="atouts">
           <li><b>Tout s'installe d'un coup.</b> Minecraft 1.21.1, NeoForge, le Java qu'il faut et les mods du serveur, la première fois, en quelques minutes.</li>
@@ -210,8 +210,10 @@
      Linux ; src/reglages.js, glibc 2.39 ; les fichiers x86_64) ; la mémoire (src/reglages.js, memoireConseillee et
      verifierMemoire : 2, 3 ou 4 Go, de 2 à 16 Go, 2 Go laissés au système) ; les shaders (electron/fenetre/index.html : « une
      bonne carte graphique » ; src/reglages.js : coupés par défaut) ; la première préparation (index.html, l'aide Windows).
-     TODO (le propriétaire) : le processeur, la carte graphique et la mémoire minimum, l'espace disque et la version minimale
-     de Windows ne sont écrits nulle part (ni le launcher, ni le site, ni le Discord) : à ajouter ici quand ils seront connus. -->
+     (29/10/2026, la tête, sur le mot du propriétaire : « ça demande pas grand-chose, à toi de dire ») : le processeur et la puce
+     graphique, ceux de Minecraft Java 1.21 selon Mojang (Intel Core i3-3210 ou AMD A8-7600, Intel HD 4000, GeForce 400 ou Radeon
+     HD 7000, OpenGL 4.4) ; la mémoire totale, du launcher (2 Go au jeu au moins, 2 Go laissés au système : 4 Go) ; le disque,
+     mesuré le 29/10 (le dossier Casteria entier, le jeu, ses mods et Java : 1,9 Go) ; Windows 10 ou 11 (Electron 44 du launcher). -->
 <section class="pan pan-nuit" id="configuration" aria-labelledby="configuration-titre">
   <div class="dedans">
     <div class="tete apparait">
@@ -219,12 +221,12 @@
       <p>Ce qu'il faut pour jouer à ce serveur moddé, tel que le launcher le demande.</p>
     </div>
     <div class="astuces">
-      <article class="carte apparait"><h3>Sur Windows</h3><p>Un PC sous Windows 64 bits. Le launcher s'installe tout seul, sans rien te demander.</p></article>
+      <article class="carte apparait"><h3>Sur Windows</h3><p>Un PC sous Windows 10 ou 11, en 64 bits. Le launcher s'installe tout seul, sans rien te demander.</p></article>
       <article class="carte apparait"><h3>Sur Mac</h3><p>macOS 13 ou plus récent, avec une puce Apple (M1, M2, M3...) ou un processeur Intel : chacun a son fichier.</p></article>
       <article class="carte apparait"><h3>Sur Linux</h3><p>Un PC 64 bits sous Ubuntu 24.04, Linux Mint 22, Debian 13, Fedora 40, Arch ou Manjaro, ou plus récent. Sur un Linux plus ancien, le jeu ne peut pas démarrer.</p></article>
-      <article class="carte apparait"><h3>La mémoire</h3><p>Le launcher la règle selon ton ordinateur : 2 Go pour le jeu, 3 Go dès 8 Go de mémoire, 4 Go dès 12 Go. Dans Réglages, tu choisis de 2 à 16 Go, en laissant toujours 2 Go à ton système.</p></article>
-      <article class="carte apparait"><h3>La carte graphique</h3><p>Les shaders, coupés au départ, rendent la lumière, l'eau et le ciel magnifiques, mais demandent une bonne carte graphique : sans eux, le jeu est plus léger.</p></article>
-      <article class="carte apparait"><h3>La connexion</h3><p>Il en faut une pour jouer. La première fois, le launcher télécharge le jeu : compte quelques minutes, selon ta connexion.</p></article>
+      <article class="carte apparait"><h3>La mémoire</h3><p>4 Go sur ton ordinateur suffisent, 8 Go sont conseillés. Le launcher la règle tout seul : 2 Go pour le jeu, 3 Go dès 8 Go de mémoire, 4 Go dès 12 Go. Dans Réglages, tu choisis de 2 à 16 Go, en laissant toujours 2 Go à ton système.</p></article>
+      <article class="carte apparait"><h3>Le processeur et la carte graphique</h3><p>Ceux de Minecraft suffisent : un processeur Intel Core i3 ou AMD A8 au moins, une puce graphique Intel HD 4000, GeForce 400 ou Radeon HD 7000, ou mieux. Les shaders, coupés au départ, demandent une vraie carte graphique.</p></article>
+      <article class="carte apparait"><h3>Le disque et la connexion</h3><p>Environ 2 Go libres : le jeu, ses mods et Java tiennent dans 1,9 Go. Une connexion pour jouer ; la première fois, le launcher télécharge tout en quelques minutes.</p></article>
     </div>
   </div>
 </section>
