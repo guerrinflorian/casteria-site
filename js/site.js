@@ -44,8 +44,9 @@
   // publie, c'est le serveur allumé) ; rien si le champ manque, n'est pas un entier positif ou nul, ou date de plus de 15
   // minutes (le serveur ne publie plus). Relu toutes les 5 minutes tant que la page est ouverte et visible.
   var enLigne = document.querySelectorAll('[data-en-ligne]')
-  var GIST_COMPTE = 'guerrinflorian', GIST_ID = '4337783e1d14963774decfe06f2709da'
-  var SOURCE_EN_LIGNE = GIST_ID ? 'https://gist.githubusercontent.com/' + GIST_COMPTE + '/' + GIST_ID + '/raw/classement.json' : ''
+  // (b5, la bascule du 29/10 ; la tete) plus le gist : l'API du site, la meme origine (API.md 2.1 : { en_ligne, lu, lieux } ; la
+  // cle du maitre de plus de 3 minutes : en_ligne null, le badge se tait)
+  var SOURCE_EN_LIGNE = '/api/en-ligne'
   var EN_LIGNE_VIEUX_MS = 15 * 60000, EN_LIGNE_RELIRE_MS = 5 * 60000
   function montrerEnLigne(d) {
     var n = d ? d.en_ligne : null, lu = d ? Date.parse(String(d.en_ligne_lu || d.lu || '')) : NaN
@@ -88,6 +89,58 @@
     menu.addEventListener('click', function () { var o = liens.classList.toggle('ouvert'); menu.setAttribute('aria-expanded', o ? 'true' : 'false') })
     liens.addEventListener('click', function (e) { if (e.target.tagName === 'A') liens.classList.remove('ouvert') })
   }
+
+  // (29/10/2026 ; le propriétaire : « sur mobile faire un petit menu déroulant plutôt que les icônes vu que y'a quelques petits
+  // trucs en plus ») LE MENU DÉROULANT DU TÉLÉPHONE ET DE LA TABLETTE (960 px et moins ; css/style.css, .menu-bouton) : un
+  // bouton « Menu » dans la barre, qui déroule les pages du menu EN MOTS (les liens de <nav aria-label="Le menu"> de la page,
+  // sauf « Jouer », qui reste dans la barre), puis « Connexion », ou « Mon compte » quand on est connecté ; il se ferme au clic
+  // dehors, à la touche Échap (le bouton reprend la main), après un choix, et quand l'écran s'élargit. Une page neuve du menu
+  // (la carte, les exploits) y entre seule : il suffit qu'elle soit dans le <nav> des pages.
+  function connecte() {
+    // l'indice posé par l'API à la connexion (un cookie lisible, sans rien de secret : API.md 1.3), ou la session d'essai
+    if (/(?:^|;\s*)casteria_connecte=1(?:;|$)/.test(document.cookie || '')) return true
+    try { return !!sessionStorage.getItem('casteria_essai_session') } catch (e) { return false }
+  }
+  function menuTelephone() {
+    var barre = document.querySelector('.barre'), nav = barre ? barre.querySelector('nav') : null
+    if (!barre || !nav || barre.querySelector('.menu-bouton')) return
+    var bouton = document.createElement('button'), tiroir = document.createElement('div'), liste = document.createElement('ul'), barres = document.createElement('span'), compte = null
+    bouton.type = 'button'; bouton.className = 'menu-bouton'
+    bouton.setAttribute('aria-expanded', 'false'); bouton.setAttribute('aria-controls', 'menu-tiroir')
+    barres.className = 'menu-barres'; barres.setAttribute('aria-hidden', 'true')
+    bouton.appendChild(barres); bouton.appendChild(document.createTextNode('Menu'))
+    tiroir.className = 'menu-tiroir'; tiroir.id = 'menu-tiroir'; tiroir.hidden = true
+    liste.setAttribute('aria-label', 'Les pages de Casteria')
+    function ligne(href, mot, ici) {
+      var li = document.createElement('li'), a = document.createElement('a')
+      a.href = href; a.textContent = mot
+      if (ici) a.setAttribute('aria-current', 'page')
+      li.appendChild(a); liste.appendChild(li)
+      return a
+    }
+    Array.prototype.forEach.call(nav.querySelectorAll('a'), function (a) {
+      if (a.classList.contains('bouton')) return
+      var l = ligne(a.getAttribute('href'), (a.getAttribute('aria-label') || a.textContent).trim(), !!a.getAttribute('aria-current'))
+      if (a.classList.contains('compte')) compte = l
+    })
+    // « Connexion » ou « Mon compte » (le dernier mot de la liste)
+    if (!compte) compte = ligne('compte.html', 'Mon compte', /compte\.html$/.test(location.pathname))
+    if (!connecte()) { compte.href = 'connexion.html'; compte.textContent = 'Connexion'; if (/connexion\.html$/.test(location.pathname)) compte.setAttribute('aria-current', 'page') }
+    tiroir.appendChild(liste)
+    barre.insertBefore(bouton, nav)
+    barre.insertBefore(tiroir, nav)
+    function ouvrir(oui) {
+      tiroir.hidden = !oui
+      bouton.setAttribute('aria-expanded', oui ? 'true' : 'false')
+      barre.classList.toggle('menu-ouvert', oui)
+    }
+    bouton.addEventListener('click', function () { ouvrir(tiroir.hidden) })
+    tiroir.addEventListener('click', function (e) { if (e.target.tagName === 'A') ouvrir(false) })
+    document.addEventListener('click', function (e) { if (!tiroir.hidden && !tiroir.contains(e.target) && !bouton.contains(e.target)) ouvrir(false) })
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !tiroir.hidden) { ouvrir(false); bouton.focus() } })
+    window.addEventListener('resize', function () { if (!tiroir.hidden && window.innerWidth > 960) ouvrir(false) })
+  }
+  menuTelephone()
 
   // le héros : les trois téléphones et le logo glissent à des vitesses différentes, le fond s'éloigne (la bannière du
   // classement, elle, reste en place : elle porte son texte)

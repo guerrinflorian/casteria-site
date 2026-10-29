@@ -1,0 +1,108 @@
+/* LA CARTE VIVANTE (carte.html, js/carte.js ; 29/10/2026) : la mer de nuit, un cadre d'or, la fiche d'une île à droite (en
+   bas sur un téléphone), la légende en pixels */
+@import url("vivant.css");
+.carte-section { padding: 46px 0 70px; }
+.carte-outils { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.onglets { display: inline-flex; gap: 6px; background: rgba(0, 0, 0, .3); padding: 5px; box-shadow: inset 0 0 0 2px rgba(215, 164, 33, .45); }
+.onglet { font: inherit; font-weight: 700; font-size: 17px; color: #F3E7FF; background: transparent; border: 0; padding: 8px 18px; cursor: pointer; border-bottom: 3px solid transparent; }
+.onglet:hover { color: #FFD75E; }
+.onglet[aria-selected="true"] { color: #FFD75E; border-bottom-color: #D7A421; background: rgba(215, 164, 33, .12); }
+.trouver { display: flex; gap: 8px; align-items: center; flex: 0 1 380px; }
+.trouver input { flex: 1 1 auto; min-width: 0; font: inherit; font-size: 16px; padding: 9px 12px; color: #fff; background: rgba(0, 0, 0, .35); border: 2px solid rgba(215, 164, 33, .6); outline: none; }
+.trouver input:focus { border-color: #FFD75E; }
+.trouver input::placeholder { color: rgba(243, 231, 255, .6); }
+
+.carte-cadre { position: relative; }
+.carte-vue { position: relative; height: min(72svh, 720px); min-height: 420px; overflow: hidden; background: #0E2C40; box-shadow: 0 0 0 3px #A57713, 0 0 0 6px #3F2612, 0 18px 40px rgba(0, 0, 0, .5); touch-action: none; outline: none; }
+.carte-vue:focus-visible { box-shadow: 0 0 0 3px #FFD75E, 0 0 0 6px #3F2612, 0 18px 40px rgba(0, 0, 0, .5); }
+.carte-vue canvas { display: block; cursor: grab; }
+.carte-vue canvas:active { cursor: grabbing; }
+.carte-zoom { position: absolute; left: 12px; top: 12px; display: grid; gap: 6px; }
+.carte-zoom button { width: 40px; height: 40px; font: inherit; font-size: 22px; font-weight: 700; line-height: 1; color: #FFD75E; background: rgba(14, 8, 24, .82); border: 2px solid #A57713; cursor: pointer; }
+.carte-zoom button:hover { color: #fff; border-color: #FFD75E; }
+.carte-etat { position: absolute; left: 50%; top: 14px; transform: translateX(-50%); margin: 0; padding: 6px 14px; background: rgba(14, 8, 24, .85); color: #F3E7FF; font-size: 15px; box-shadow: 0 0 0 2px #A57713; max-width: calc(100% - 130px); text-align: center; }
+.carte-etat[hidden] { display: none; }
+.bulle { position: absolute; margin: 0; transform: translate(-50%, calc(-100% - 12px)); padding: 4px 10px; background: rgba(14, 8, 24, .9); color: #fff; font-size: 14px; white-space: nowrap; pointer-events: none; box-shadow: 0 0 0 2px #A57713; }
+.bulle[hidden] { display: none; }
+
+.fiche-ile { position: absolute; right: 14px; top: 14px; width: 300px; max-width: calc(100% - 28px); padding: 16px 16px 18px; background: rgba(27, 16, 40, .95); color: #F4EAFF; box-shadow: 0 0 0 3px #D7A421, 0 0 0 6px #3F2612, 0 14px 30px rgba(0, 0, 0, .55); }
+.fiche-ile[hidden] { display: none; }
+.fiche-ile .fermer { position: absolute; right: 6px; top: 4px; width: 36px; height: 36px; font: inherit; font-size: 26px; line-height: 1; color: #FFD75E; background: none; border: 0; cursor: pointer; }
+.fiche-haut { display: flex; gap: 12px; align-items: center; padding-right: 26px; }
+.fiche-tete { flex: 0 0 auto; width: 56px; height: 56px; box-shadow: 0 0 0 3px #3F2612, 0 4px 0 3px rgba(0, 0, 0, .3); background: #2A1740; }
+.fiche-ile h2 { font-size: 24px; color: #FFD75E; overflow-wrap: anywhere; }
+.fiche-ile .hote { margin: 2px 0 0; font-size: 15px; }
+.fiche-ile .hote a { color: #fff; font-weight: 700; }
+.fiche-ile p { margin: 10px 0 0; }
+.fiche-faits { list-style: none; margin: 10px 0 14px; padding: 0; display: grid; gap: 4px; font-size: 16px; }
+.fiche-faits li::before { content: ""; display: inline-block; width: 8px; height: 8px; margin-right: 8px; background: #D7A421; vertical-align: 2px; }
+.fiche-faits .ouverte { color: #9CE07A; }
+.fiche-faits .vivante { color: #fff; font-weight: 700; }
+.fiche-faits .vivante::before { background: #fff; animation: clignote 1.6s ease-in-out infinite; }
+@keyframes clignote { 50% { opacity: .25; } }
+
+.legende { list-style: none; display: flex; flex-wrap: wrap; gap: 8px 20px; margin: 18px 0 0; padding: 0; font-size: 15px; color: #F3E7FF; }
+.legende[hidden] { display: none; }
+.legende li { display: inline-flex; align-items: center; gap: 8px; }
+.legende li[hidden] { display: none; }
+.pastille { display: inline-block; width: 14px; height: 14px; }
+.pastille.e0 { background: #7D8A96; } .pastille.e2 { background: #6CC04A; } .pastille.e4 { background: #FFD75E; } .pastille.e5 { background: #FFF1B8; box-shadow: 0 0 8px #FFD75E; }
+.pastille.ponton { width: 6px; height: 14px; background: #8C5A2E; box-shadow: inset 0 -4px 0 #6B4423; }
+.pastille.vivante { width: 6px; height: 6px; background: #fff; }
+.lieu-icone { display: inline-block; width: 16px; height: 16px; background: rgba(14, 8, 24, .6); box-shadow: inset 0 0 0 4px #F4EAFF; }
+.lieu-icone.phare { box-shadow: inset 0 0 0 4px #FFD75E; } .lieu-icone.ile { box-shadow: inset 0 0 0 4px #6CC04A; } .lieu-icone.epave { box-shadow: inset 0 0 0 4px #C9B79C; }
+.lieu-icone.recif { box-shadow: inset 0 0 0 4px #E8604C; } .lieu-icone.repaire { box-shadow: inset 0 0 0 4px #FFB4A8; }
+.lieu-icone.navire { width: 0; height: 0; background: none; box-shadow: none; border-left: 7px solid transparent; border-right: 7px solid transparent; border-bottom: 15px solid #FFD75E; }
+.carte-note { margin: 14px 0 0; }
+
+@media (max-width: 700px) {
+  .carte-section { padding: 26px 0 50px; }
+  .carte-outils { flex-direction: column; align-items: stretch; }
+  .onglets { justify-content: stretch; } .onglet { flex: 1 1 0; }
+  .trouver { flex: 1 1 auto; }
+  .carte-vue { height: 70svh; min-height: 380px; }
+  .fiche-ile { left: 10px; right: 10px; top: auto; bottom: 10px; width: auto; max-width: none; }
+  .carte-zoom button { width: 44px; height: 44px; }
+  .carte-etat { max-width: calc(100% - 80px); left: auto; right: 10px; transform: none; }
+}
+.lieu-icone-dessin { width: 22px; height: 22px; image-rendering: pixelated; }
+
+/* ---------- (la v2, 29/10/2026 au soir : le kit des motifs, la direction du propriétaire) ---------- */
+/* la carte dans son panneau d'or (css/motifs.css : .panneau-nuit .coins-or) ; la section sur la carte marine du kit */
+.carte-section { padding: 40px 0 56px; }
+.carte-cadre.panneau-nuit { padding: 6px; }
+.carte-vue { box-shadow: none; }
+/* le fil des exploits, en haut à gauche de la carte : les trois derniers, le plus neuf en haut */
+.carte-fil { position: absolute; left: 12px; bottom: 12px; display: grid; gap: 4px; max-width: min(420px, calc(100% - 140px)); pointer-events: auto; }
+.carte-fil .fil-ligne { display: block; padding: 4px 10px; background: rgba(14, 8, 24, .82); color: #FFF1B8; font-size: 14px; text-decoration: none; box-shadow: 0 0 0 1px rgba(215, 164, 33, .55); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; animation: fil-arrive .6s ease-out both; }
+.carte-fil .fil-ligne:hover { color: #fff; box-shadow: 0 0 0 1px #FFD75E; }
+.carte-fil .fil-ligne:nth-child(2) { opacity: .8; } .carte-fil .fil-ligne:nth-child(3) { opacity: .6; }
+@keyframes fil-arrive { from { opacity: 0; transform: translateY(-8px); } }
+@media (prefers-reduced-motion: reduce) { .carte-fil .fil-ligne { animation: none; } }
+.etoiles-nb { color: #FFD75E; font-size: 16px; vertical-align: 2px; }
+/* la fiche d'une place libre : l'envie d'y être */
+.fiche-libre h2 { font-size: 24px; color: #FFD75E; }
+.fiche-libre p { margin: 8px 0 14px; font-size: 16px; }
+.fiche-libre .petit { font-size: 14px; opacity: .85; margin: 10px 0 0; }
+.pastille.libre { width: 14px; height: 14px; box-shadow: inset 0 0 0 1px rgba(227, 207, 142, .8); background: repeating-linear-gradient(90deg, transparent 0 3px, rgba(227, 207, 142, .5) 3px 4px); }
+/* l'appel : l'île de cinq étoiles, grande, qui berce */
+.carte-appel { padding: 56px 0; }
+.appel-ile { display: grid; place-items: center; }
+.appel-ile canvas { width: min(300px, 70vw); height: auto; aspect-ratio: 1; image-rendering: pixelated; filter: drop-shadow(0 16px 0 rgba(0, 0, 0, .25)); animation: berce 4s ease-in-out infinite; }
+@keyframes berce { 50% { transform: translateY(6px) rotate(-1deg); } }
+@media (prefers-reduced-motion: reduce) { .appel-ile canvas { animation: none; } }
+.appel-texte { padding: 26px 28px; color: #FFF1DC; }
+.appel-texte h2 { font-size: clamp(30px, 4vw, 44px); color: #FFD75E; }
+.appel-texte p { font-size: 18px; margin: 12px 0 0; }
+.appel-texte .gestes { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 20px; }
+@media (max-width: 700px) {
+  .carte-fil { left: 10px; right: 10px; bottom: 10px; max-width: none; }
+  .carte-fil .fil-ligne:nth-child(n+2) { display: none; }
+  .appel-texte { padding: 20px 18px; }
+}
+/* la rose des vents du kit en bas a droite : en haut, elle tombait sur « Trouver » */
+.carte-section.fond-carte { --fond-carte-place: right -40px bottom -40px, 0 0, 0 0, 0 0; }
+@media (max-width: 700px) { .carte-section.fond-carte { --fond-carte-place: right -30px bottom -30px, 0 0, 0 0, 0 0; } }
+/* un bouton cache reste cache (.bouton impose son display) */
+.bouton[hidden] { display: none !important; }
+.fiche-gestes { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; }

@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- LA PAGE D'UNE ÎLE EN 3D, casteria.fr/ile/<i>,<j> (29/10/2026, 67 ; la vue : l'agent de la 3D, sa fiche /api/ile/<i>,<j>/3d
+     et sa vue BlueMap). <base href="/"> : la page vit sous /ile/, ses fichiers à la racine. -->
+<base href="/">
+<title>Une île de Casteria en 3D : son hôte, ses étoiles, sa vue</title>
+<meta name="description" content="Une île de joueur du serveur Minecraft Casteria en 3D : son hôte et ses amis, ses étoiles de beauté, sa place au Classement des îles, vue de trois quarts, du ciel ou en promenade.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#1B1028">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:site_name" content="Casteria">
+<meta property="og:title" content="Une île de Casteria en 3D">
+<meta property="og:description" content="Une île de joueur de Casteria, en 3D.">
+<meta property="og:image" content="https://casteria.fr/assets/images/casteria-decollage-partage.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/logo/favicon-32.png">
+<link rel="apple-touch-icon" href="assets/logo/icone-apple-180.png">
+<link rel="preload" href="assets/polices/fredoka.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/polices/lilita_one.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/motifs.css">
+<link rel="stylesheet" href="css/ile3d.css">
+</head>
+<body>
+<div class="progres" aria-hidden="true"></div>
+<header class="barre verre posee">
+  <a class="marque" href="./" aria-label="Casteria, l'accueil"><img src="assets/logo/casteria-logo-300.webp" alt="Logo de Casteria" width="46" height="46"><span>Casteria</span></a>
+  <nav aria-label="Le menu">
+    <a href="./#voyage">Le jeu</a>
+    <a href="commencer.html">Par où commencer</a>
+    <a href="carte.html">La carte</a>
+    <a href="exploits.html">Exploits</a>
+    <a class="classement" href="classement.html" aria-label="Classement"><img class="pixel" src="assets/icones/classement.png" alt="" width="20" height="20">Classement</a>
+    <a class="voter" href="vote.html">Voter</a>
+    <a class="boutique" href="boutique.html"><img class="pixel" src="assets/icones/credit.png" alt="" width="20" height="20">Boutique</a>
+    <a class="compte" href="compte.html">Mon compte</a>
+    <a class="bouton bouton-or petit" href="./#telecharger">Jouer</a>
+  </nav>
+</header>
+
+<main>
+<!-- LE HAUT : le nom de l'île, son hôte et ses amis, ses étoiles, sa place au Classement des îles -->
+<section class="fond-ciel relief ile-tete" id="haut">
+  <div class="dedans ile-haut">
+    <div class="ile-qui">
+      <p class="sur-ligne" id="case">Une île de Casteria</p>
+      <h1 id="nom">Une île</h1>
+      <p class="ile-hote" id="hote"></p>
+      <p class="ile-badges" id="badges"></p>
+    </div>
+    <div class="ile-chiffres panneau-nuit coins-or" id="chiffres" hidden>
+      <p class="ile-etoiles" id="etoiles"></p>
+      <p class="ile-place" id="place"></p>
+      <a class="lien-or" href="classement.html#iles_general">Le Classement des îles</a>
+    </div>
+  </div>
+</section>
+
+<div class="frise frise-vague" aria-hidden="true"></div>
+<section class="fond-mer relief ile-vue-section">
+  <div class="dedans">
+    <div class="ile-cadre panneau-nuit coins-or">
+      <div class="ile-vue" id="vue">
+        <div class="ile-message" id="message"><p>L'île se charge...</p></div>
+      </div>
+      <div class="ile-regards" id="regards" role="group" aria-label="La façon de regarder" hidden>
+        <button type="button" class="regard" aria-pressed="true" data-regard="trois_quarts">Trois quarts</button>
+        <button type="button" class="regard" aria-pressed="false" data-regard="ciel">Du ciel</button>
+        <button type="button" class="regard" aria-pressed="false" data-regard="promenade">Promenade</button>
+      </div>
+      <div class="ile-pied" id="pied" hidden>
+        <span id="dessinee"></span>
+        <button type="button" class="bouton bouton-or petit" id="rafraichir" hidden>Rafraîchir mon île</button>
+        <span class="ile-rafraichi" id="rafraichi" role="status"></span>
+      </div>
+    </div>
+    <p class="note ile-geste" id="geste">Glisse pour tourner autour, la molette ou deux doigts pour t'approcher.</p>
+  </div>
+</section>
+
+<div class="frise frise-parchemin" aria-hidden="true"></div>
+<!-- CE QUI SE VOIT, CE QUI NE SE VOIT PAS (les mots de l'agent de la 3D, qui sait ce que la vue dessine) -->
+<section class="fond-carte relief ile-savoir">
+  <div class="dedans une-grande">
+    <div class="panneau-nuit savoir">
+      <h2>Ce qui se voit</h2>
+      <ul>
+        <li>Les blocs de l'île, tels qu'ils étaient au moment du dessin</li>
+        <li>Les machines, le ponton, la Tour, la Mine et les autres constructions</li>
+        <li>Les bêtes des enclos, celles de Minecraft et celles de Casteria</li>
+        <li>Le jour ou le soir, selon l'heure du dessin</li>
+      </ul>
+    </div>
+    <div class="panneau-bois savoir">
+      <h2>Ce qui ne se voit pas</h2>
+      <ul>
+        <li>Les joueurs</li>
+        <li>L'intérieur des coffres</li>
+        <li>Ce qui a changé depuis le dessin : son hôte peut la rafraîchir</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<div class="frise frise-corde" aria-hidden="true"></div>
+<section class="fond-bois relief ile-appel" id="appel" hidden>
+  <div class="dedans alterne"><div class="rangee">
+    <div class="appel-dessin" aria-hidden="true"><canvas id="appel-ile" width="12" height="12"></canvas></div>
+    <div class="panneau-bois appel-texte">
+      <h2>Ton île ici ?</h2>
+      <p>Chaque joueur de Casteria a la sienne : 184 sur 112 blocs au milieu de la mer, à bâtir, à embellir, à partager. La prochaine île de la carte peut être la tienne.</p>
+      <p class="gestes"><a class="bouton bouton-or grand" href="./#telecharger">Jouer gratuitement</a><a class="bouton bouton-bois" href="carte.html">Voir la carte</a></p>
+    </div>
+  </div></div>
+</section>
+</main>
+
+<div class="frise frise-corde" aria-hidden="true"></div>
+<footer>
+  <div class="dedans">
+    <div class="col">
+      <img src="assets/logo/casteria-logo-300.webp" alt="Casteria" width="70" height="70" loading="lazy">
+      <nav aria-label="Le pied de page"><a href="./">Accueil</a><a href="commencer.html">Par où commencer</a><a href="evenements.html">Les événements</a><a href="pirates.html">La mer et les pirates</a><a href="donjons.html">Les donjons</a><a href="casino.html">Le casino</a><a href="./#boss">Les boss</a><a href="classement.html">Classement</a><a href="carte.html">La carte</a><a href="exploits.html">Les exploits</a><a href="boutique.html">Boutique</a><a href="vote.html">Voter</a><a href="compte.html">Mon compte</a><a href="reglement.html">Le règlement</a><a href="./#telecharger">Télécharger</a><a href="serveur-minecraft-ile.html">Serveur Minecraft d'île</a><a href="serveur-minecraft-modde.html">Serveur moddé</a><a href="launcher-minecraft-modde.html">Launcher moddé</a><a href="serveur-minecraft-rpg.html">Serveur RPG</a><a href="serveur-minecraft-boss.html">Boss et donjons</a><a href="mentions-legales.html">Mentions légales</a><a href="confidentialite.html">Confidentialité</a><a href="conditions.html">Conditions</a></nav>
+    </div>
+    <small>Casteria est un serveur Minecraft indépendant, créé par des joueurs. Il n'est ni affilié à Mojang ni à Microsoft, ni approuvé par eux. Minecraft est une marque de Mojang Studios.</small>
+  </div>
+</footer>
+<script src="js/site.js" defer></script>
+<script src="js/api.js" defer></script>
+<script src="js/vivant_api.js" defer></script>
+<script src="js/tete.js" defer></script>
+<script src="js/ile.js" defer></script>
+<script src="js/ile3d.js" defer></script>
+</body>
+</html>

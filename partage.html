@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1200">
+<!-- L'IMAGE DE PARTAGE D'UN PROFIL (API.md 2.4 : /api/joueur/<pseudo>/image.png, 1200 x 630). Le patron : l'API ouvre
+     partage.html?p=<pseudo> dans un navigateur sans fenêtre de 1200 x 630, attend data-pret="1" sur <html>, et en fait la
+     photo (gardée une heure). Hors de Google. -->
+<title>Casteria : l'image de partage d'un profil de joueur</title>
+<meta name="description" content="Le patron de l'image de partage d'un profil de joueur de Casteria : son personnage, son niveau, sa place au classement et son île, en 1200 sur 630 pixels.">
+<meta name="robots" content="noindex">
+<base href="/">
+<link rel="stylesheet" href="/css/partage.css">
+</head>
+<body>
+<main class="image" id="image">
+  <div class="fond" aria-hidden="true"><img src="/assets/images/casteria-decollage-1920.jpg" alt="" width="1920" height="1080"></div>
+  <div class="personnage" id="personnage" aria-hidden="true"></div>
+  <div class="infos">
+    <img class="logo" src="/assets/logo/casteria-logo-300.webp" alt="Casteria" width="92" height="92">
+    <p class="titre" id="titre"></p>
+    <h1 id="pseudo"></h1>
+    <p class="badges" id="badges"></p>
+    <div class="niveau" id="niveau"><span id="niveau-n"></span><span class="barre"><span id="niveau-part"></span></span></div>
+    <ul class="tuiles" id="tuiles"></ul>
+  </div>
+  <p class="adresse" id="adresse">casteria.fr</p>
+</main>
+<script src="/js/api.js"></script>
+<script src="/js/vivant_api.js"></script>
+<script src="/js/tete.js"></script>
+<script src="/js/partage.js"></script>
+</body>
+</html>

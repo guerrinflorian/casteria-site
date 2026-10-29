@@ -26,7 +26,10 @@
 <link rel="preload" href="assets/polices/fredoka.ttf" as="font" type="font/ttf" crossorigin>
 <link rel="preload" as="image" type="image/webp" media="(max-aspect-ratio: 2/3)" imagesrcset="assets/images/casteria-grand-voyage-portrait-720.webp 720w, assets/images/casteria-grand-voyage-portrait-1080.webp 1080w" imagesizes="100vw" fetchpriority="high">
 <link rel="preload" as="image" type="image/webp" media="(min-aspect-ratio: 2001/3000)" imagesrcset="assets/images/casteria-grand-voyage-1280.webp 1280w, assets/images/casteria-grand-voyage-1920.webp 1920w" imagesizes="100vw" fetchpriority="high">
+<link rel="preload" href="assets/polices/fredoka.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/polices/lilita_one.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/motifs.css">
 <link rel="stylesheet" href="css/scene.css">
 <link rel="stylesheet" href="css/objets.css">
 <!-- LES DONNÉES POUR GOOGLE : le fil d'Ariane, la FAQ de la page (mot pour mot), et le jeu, la même entité que sur l'accueil.
@@ -102,6 +105,7 @@
     </div>
   </div>
 </section>
+<div class="frise frise-creneaux" aria-hidden="true"></div>
 
 <!-- UN SERVEUR MODDÉ FAIT MAISON : les objets du serveur, chacun en volume (les rendus de assets/objets, ceux de l'accueil),
      trois par famille ; leurs mots lus dans le jeu (index.html, « Tout est fait pour Casteria » ; aide.js : les machines, le
@@ -145,6 +149,7 @@
     <p class="esquif-objet apparait">Et ce n'est qu'un début : des familiers te suivent partout, des montures t'emmènent au sol, dans les airs ou dans l'eau, et cinq navires se pilotent pour de bon, de la Chaloupe au Vaisseau amiral.</p>
   </div>
 </section>
+<div class="frise frise-etoiles" aria-hidden="true"></div>
 
 <!-- UNE SURVIE MODDÉE AVEC UNE VRAIE PROGRESSION : aide.js, « Les niveaux » (tout rapporte de l'expérience ; chaque niveau ouvre
      un outil, un palier, un bonus ou un boss), « Le castérium » (du Réacteur à la Forge de Casteria, plus fort que la
@@ -171,6 +176,7 @@
     </figure>
   </div>
 </section>
+<div class="frise frise-parchemin" aria-hidden="true"></div>
 
 <!-- LE LAUNCHER INSTALLE LES MODS POUR TOI : CasteriaLauncher/LISEZMOI.md (Minecraft, NeoForge et le Java de Mojang, une fois),
      page_github/page_installateur.md (il ne touche jamais au dossier Minecraft habituel ; il se met à jour tout seul),
@@ -204,6 +210,7 @@
     <p class="apparait">Chaque étape, système par système, et les réponses aux soucis d'installation : <a href="launcher-minecraft-modde.html">le launcher Minecraft moddé de Casteria</a>. Les mêmes fichiers sont aussi sur <a href="./#telecharger">la page de téléchargement de l'accueil</a>.</p>
   </div>
 </section>
+<div class="frise frise-etoiles" aria-hidden="true"></div>
 
 <!-- LA CONFIGURATION REQUISE : seulement ce qui est écrit. Windows 64 bits (CasteriaLauncher/package.json, build.win : l'arch x64
      seule) ; macOS 13 et la puce Apple ou Intel (index.html, l'aide Mac ; page_installateur.md) ; les Linux (index.html, l'aide
@@ -230,6 +237,7 @@
     </div>
   </div>
 </section>
+<div class="frise frise-parchemin" aria-hidden="true"></div>
 
 <!-- LA FAQ : les mêmes questions et réponses, mot pour mot, dans le bloc FAQPage du JSON-LD (en tête de page) -->
 <section class="clair" id="faq" aria-labelledby="faq-titre">
@@ -248,6 +256,7 @@
     </div>
   </div>
 </section>
+<div class="frise frise-etoiles" aria-hidden="true"></div>
 
 <!-- LE BAS DE PAGE : « Jouer gratuitement » une seconde fois, le Discord, et la page de l'île -->
 <section class="final" id="final" aria-labelledby="final-titre">
@@ -269,7 +278,7 @@
   <div class="dedans">
     <div class="col">
       <img src="assets/logo/casteria-logo-300.webp" alt="Casteria" width="70" height="70" loading="lazy">
-      <nav aria-label="Le pied de page"><a href="./">Accueil</a><a href="commencer.html">Par où commencer</a><a href="evenements.html">Les événements</a><a href="pirates.html">La mer et les pirates</a><a href="donjons.html">Les donjons</a><a href="casino.html">Le casino</a><a href="./#combat">Le combat</a><a href="classement.html">Classement</a><a href="boutique.html">Boutique</a><a href="vote.html">Voter</a><a href="reglement.html">Le règlement</a><a href="./#telecharger">Télécharger</a><a href="serveur-minecraft-ile.html">Serveur Minecraft d'île</a><a href="serveur-minecraft-modde.html">Serveur moddé</a><a href="launcher-minecraft-modde.html">Launcher moddé</a><a href="serveur-minecraft-rpg.html">Serveur RPG</a><a href="serveur-minecraft-boss.html">Boss et donjons</a><a href="mentions-legales.html">Mentions légales</a><a href="confidentialite.html">Confidentialité</a><a href="conditions.html">Conditions</a></nav>
+      <nav aria-label="Le pied de page"><a href="./">Accueil</a><a href="commencer.html">Par où commencer</a><a href="evenements.html">Les événements</a><a href="pirates.html">La mer et les pirates</a><a href="donjons.html">Les donjons</a><a href="casino.html">Le casino</a><a href="./#boss">Les boss</a><a href="classement.html">Classement</a><a href="carte.html">La carte</a><a href="exploits.html">Les exploits</a><a href="boutique.html">Boutique</a><a href="vote.html">Voter</a><a href="compte.html">Mon compte</a><a href="reglement.html">Le règlement</a><a href="./#telecharger">Télécharger</a><a href="serveur-minecraft-ile.html">Serveur Minecraft d'île</a><a href="serveur-minecraft-modde.html">Serveur moddé</a><a href="launcher-minecraft-modde.html">Launcher moddé</a><a href="serveur-minecraft-rpg.html">Serveur RPG</a><a href="serveur-minecraft-boss.html">Boss et donjons</a><a href="mentions-legales.html">Mentions légales</a><a href="confidentialite.html">Confidentialité</a><a href="conditions.html">Conditions</a></nav>
     </div>
     <small>Casteria est un serveur Minecraft indépendant, créé par des joueurs. Il n'est ni affilié à Mojang ni à Microsoft, ni approuvé par eux. Minecraft est une marque de Mojang Studios.</small>
   </div>

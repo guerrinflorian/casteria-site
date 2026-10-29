@@ -1,0 +1,141 @@
+/* LE PROFIL PUBLIC (joueur.html, js/joueur.js ; 29/10/2026, la v2) : le kit des motifs (css/motifs.css : les fonds, les
+   frises, les panneaux, les mises en page) ; une section ne ressemble pas à la suivante ; lisible de 360 à 1440 px */
+.lien-or { color: #FFD75E; font-weight: 700; }
+.lien-or:hover { color: #fff; }
+.etoile { color: rgba(255, 255, 255, .22); }
+.etoile.pleine { color: #FFD75E; text-shadow: 0 2px 0 #A57713; }
+.etoiles-nb { color: #FFD75E; margin-left: 8px; }
+
+/* ---------- le haut : le joueur en 3D, son nom, et à droite « toi face à lui » ---------- */
+.profil-tete { padding: 120px 0 56px; color: #fff; }
+.profil-haut { display: grid; grid-template-columns: 260px minmax(0, 1fr) minmax(0, 330px); gap: 28px 40px; align-items: center; }
+.profil-statue { position: relative; width: 100%; aspect-ratio: 2 / 3; background: radial-gradient(closest-side, rgba(255, 215, 94, .22), rgba(255, 215, 94, 0)); }
+.profil-statue::after { content: ""; position: absolute; left: 24%; right: 24%; bottom: 6%; height: 6%; background: radial-gradient(closest-side, rgba(8, 4, 14, .75), rgba(8, 4, 14, 0)); z-index: 0; }
+.profil-statue .face { position: absolute; z-index: 1; left: 50%; bottom: 9%; height: 74%; width: auto; aspect-ratio: 1 / 2; transform: translateX(-50%); image-rendering: pixelated; opacity: 0; transition: opacity .4s ease; }
+.profil-statue .face.pret { opacity: 1; }
+.profil-statue .vue3d { position: absolute; z-index: 1; inset: 0; width: 100% !important; height: 100% !important; opacity: 0; transition: opacity .6s ease; cursor: grab; }
+.profil-statue.en-3d .vue3d { opacity: 1; }
+.profil-statue.en-3d .face { opacity: 0; }
+.identite .sur-ligne { margin: 0 0 6px; font-family: "Lilita One", sans-serif; letter-spacing: 2.2px; text-transform: uppercase; color: #FFD75E; font-size: 16px; }
+.identite h1 { font-size: clamp(40px, 6vw, 76px); line-height: 1; overflow-wrap: anywhere; text-shadow: 0 4px 0 rgba(0, 0, 0, .35); }
+.badges { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 0; }
+.badges:empty { display: none; }
+.badge { font-weight: 700; font-size: 15px; padding: 3px 12px; color: #1B1028; background: #D7A421; box-shadow: 0 3px 0 #A57713; }
+.badge.equipe { background: #D29CFF; box-shadow: 0 3px 0 #8E4CB8; }
+.presence { margin: 12px 0 0; font-size: 17px; color: #E8DAFF; }
+.presence .en-ligne { color: #9CE07A; font-weight: 700; }
+.presence .en-ligne::before { content: ""; display: inline-block; width: 10px; height: 10px; margin-right: 8px; background: #6CC04A; box-shadow: 0 0 10px #6CC04A; animation: clignote 1.6s ease-in-out infinite; }
+@keyframes clignote { 50% { opacity: .3; } }
+.niveau { display: flex; align-items: center; gap: 14px; margin: 18px 0 0; max-width: 520px; }
+.niveau[hidden] { display: none; }
+.niveau-n { font-family: "Lilita One", sans-serif; font-size: 22px; color: #FFD75E; white-space: nowrap; }
+.niveau-barre { flex: 1 1 auto; height: 16px; background: rgba(0, 0, 0, .45); box-shadow: inset 0 0 0 2px #3F2612, 0 0 0 2px rgba(215, 164, 33, .5); position: relative; }
+.niveau-barre > span { position: absolute; inset: 2px auto 2px 2px; max-width: calc(100% - 4px); background: linear-gradient(180deg, #9CE07A, #3E8E2F); }
+.identite .gestes { display: flex; flex-wrap: wrap; gap: 12px; margin: 24px 0 0; }
+.identite .gestes[hidden] { display: none; }
+.copie { margin: 10px 0 0; font-size: 15px; color: #9CE07A; overflow-wrap: anywhere; }
+.face-a-face { padding: 20px 22px 22px; color: #F4EAFF; }
+.face-a-face[hidden] { display: none; }
+.face-a-face h2 { font-size: 24px; color: #FFD75E; margin: 0 0 8px; }
+.face-a-face p { margin: 0 0 14px; font-size: 16px; }
+.face-a-face .lien-or { display: inline-block; margin: 12px 0 0 2px; font-size: 15px; }
+.duel { width: 100%; border-collapse: collapse; margin: 6px 0 10px; font-size: 16px; }
+.duel th, .duel td { padding: 6px 4px; text-align: left; border-bottom: 1px solid rgba(215, 164, 33, .25); }
+.duel tr:first-child th { color: #D29CFF; font-size: 13px; letter-spacing: 1px; text-transform: uppercase; }
+.duel td { font-weight: 700; }
+.duel td.devant { color: #9CE07A; }
+.duel-mot { color: #FFF1B8; font-weight: 700; }
+
+/* ---------- les blocs ---------- */
+.profil-bloc { padding: 52px 0; }
+.profil-bloc[hidden], .frise[hidden] { display: none; }
+.bloc-titre { font-size: clamp(28px, 3.4vw, 40px); color: #FFD75E; margin: 0 0 22px; }
+.bloc-titre-ligne { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+
+/* le classement general : la place (la grande carte) a gauche, les dix aspects a droite */
+.profil-bloc .une-grande { grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); align-items: center; }
+.general-place { padding: 24px; text-align: center; }
+.general-place h2 { font-size: 22px; color: #D29CFF; letter-spacing: 1px; text-transform: uppercase; margin: 0; }
+.general-rang { font-family: "Lilita One", sans-serif; font-size: clamp(64px, 9vw, 110px); line-height: 1; color: #FFD75E; margin: 10px 0 4px; text-shadow: 0 6px 0 rgba(0, 0, 0, .35); }
+.general-points { font-size: 20px; margin: 0 0 14px; }
+.general-aide { margin: 0 0 12px; opacity: .9; }
+.aspects { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 26px; }
+.aspects li { display: grid; grid-template-columns: 104px minmax(0, 1fr) 34px; align-items: center; gap: 10px; font-size: 16px; }
+.barre-aspect { height: 14px; background: rgba(0, 0, 0, .45); box-shadow: inset 0 0 0 2px rgba(215, 164, 33, .35); position: relative; }
+.barre-aspect > span { position: absolute; inset: 2px auto 2px 2px; max-width: calc(100% - 4px); background: linear-gradient(90deg, #A57713, #FFD75E); }
+.aspects .points { text-align: right; font-weight: 700; color: #FFD75E; }
+
+/* ses meilleures places : des cartes decalees (css/motifs.css .decalees) */
+.places { list-style: none; margin: 0; padding: 0 0 18px; }
+.place a { display: grid; align-content: start; gap: 2px; padding: 14px 16px 16px; text-decoration: none; color: #F4EAFF; background: rgba(27, 16, 40, .88); box-shadow: inset 0 0 0 2px rgba(215, 164, 33, .35); transition: transform .2s ease, box-shadow .2s ease; }
+.place a:hover { transform: translateY(-3px); box-shadow: inset 0 0 0 2px #FFD75E; }
+.place .theme { font-family: "Lilita One", sans-serif; letter-spacing: 1.5px; text-transform: uppercase; font-size: 14px; color: #D29CFF; }
+.place .rang-place { font-family: "Lilita One", sans-serif; font-size: 40px; line-height: 1.1; color: #fff; }
+.place.p1 .rang-place { color: #FFD75E; } .place.p2 .rang-place { color: #DDE6EE; } .place.p3 .rang-place { color: #E3A15E; }
+.place.podium a { box-shadow: inset 0 0 0 2px #D7A421, 0 0 22px rgba(215, 164, 33, .18); }
+.place .cat { font-size: 15px; opacity: .88; }
+.place .val { font-weight: 700; color: #FFD75E; }
+
+/* son ile : le dessin a gauche, le texte a droite (css/motifs.css .alterne) */
+.ile-dessin { display: grid; place-items: center; }
+.ile-dessin canvas { width: min(260px, 64vw); height: auto; aspect-ratio: 1; image-rendering: pixelated; filter: drop-shadow(0 14px 0 rgba(0, 0, 0, .25)); animation: berce 4s ease-in-out infinite; }
+@keyframes berce { 50% { transform: translateY(6px) rotate(-1deg); } }
+.ile-texte { color: #EAF8FF; }
+.ile-texte .sur-ligne { margin: 0; font-family: "Lilita One", sans-serif; letter-spacing: 2px; text-transform: uppercase; color: #8FE3FF; font-size: 15px; }
+.ile-texte h2 { font-size: clamp(30px, 4vw, 46px); color: #fff; margin: 4px 0 6px; }
+.ile-etoiles { font-size: 24px; margin: 0 0 8px; }
+.ile-faits { list-style: none; margin: 0 0 18px; padding: 0; display: grid; gap: 4px; font-size: 17px; }
+.ile-faits li::before { content: ""; display: inline-block; width: 8px; height: 8px; margin-right: 8px; background: #8FE3FF; vertical-align: 2px; }
+
+/* ses aventures : des planchettes du port */
+.faits { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+.faits li { padding: 16px 18px; font-size: 16px; color: #FFF1DC; }
+.faits .ico { display: block; font-size: 24px; margin-bottom: 4px; }
+.faits b { font-family: "Lilita One", sans-serif; font-weight: 400; font-size: 24px; color: #FFD75E; }
+
+/* ses derniers exploits */
+.fil { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.exploit { display: grid; grid-template-columns: 34px minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 10px 14px; background: rgba(12, 33, 49, .9); box-shadow: inset 4px 0 0 #D7A421; font-size: 17px; }
+.exploit .ico { font-size: 22px; text-align: center; }
+.exploit time { font-size: 14px; opacity: .8; white-space: nowrap; }
+.exploit.s-boss_heroique, .exploit.s-boss_heroique_record { box-shadow: inset 4px 0 0 #E8604C; }
+.exploit.s-oeuf_mythique { box-shadow: inset 4px 0 0 #D29CFF; }
+.exploit.s-casino_gros_gain { box-shadow: inset 4px 0 0 #6CC04A; }
+.exploit.s-minijeu_victoire { box-shadow: inset 4px 0 0 #7FC3EA; }
+
+/* l'appel et l'absent */
+.profil-appel { text-align: center; }
+.profil-appel h2 { font-size: clamp(30px, 4vw, 46px); color: #FFD75E; }
+.profil-appel p { font-size: 19px; max-width: 640px; margin: 12px auto 0; }
+.profil-appel .gestes { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 22px; }
+.profil-absent h2 { font-size: 34px; color: #FFD75E; }
+.profil-absent p { font-size: 18px; max-width: 640px; }
+.chercher { display: flex; gap: 8px; max-width: 460px; margin-top: 18px; }
+.chercher input { flex: 1 1 auto; min-width: 0; font: inherit; font-size: 16px; padding: 9px 12px; color: #fff; background: rgba(0, 0, 0, .35); border: 2px solid rgba(215, 164, 33, .6); outline: none; }
+
+@media (max-width: 1100px) {
+  .profil-haut { grid-template-columns: 220px minmax(0, 1fr); }
+  .face-a-face { grid-column: 1 / -1; }
+  .faits { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 768px) {
+  .profil-tete { padding: 96px 0 40px; }
+  .profil-haut { grid-template-columns: 1fr; justify-items: center; text-align: center; }
+  .profil-statue { width: 180px; }
+  .badges, .identite .gestes { justify-content: center; }
+  .niveau { margin-left: auto; margin-right: auto; }
+  .face-a-face { text-align: left; width: 100%; }
+  .aspects { grid-template-columns: 1fr; }
+  .aspects li { grid-template-columns: 96px minmax(0, 1fr) 34px; }
+  .exploit { grid-template-columns: 28px minmax(0, 1fr); }
+  .exploit time { grid-column: 2; }
+}
+@media (max-width: 430px) { .faits { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: reduce) { .ile-dessin canvas, .presence .en-ligne::before { animation: none; } }
+/* (la v2) sous 768 : le classement general sur une colonne (ma grille passait devant celle du kit) */
+@media (max-width: 768px) { .profil-bloc .une-grande { grid-template-columns: minmax(0, 1fr); } }
+/* un bouton cache reste cache (.bouton impose son display) */
+.bouton[hidden] { display: none !important; }
+.ile-gestes { display: flex; flex-wrap: wrap; gap: 12px; margin: 0; }
+/* (b5, l'assemblage du 29/10 ; la tete) « Voir son profil » toujours sur une ligne : le champ cede la place (min-width 0) */
+.chercher .bouton { flex: 0 0 auto; white-space: nowrap; }

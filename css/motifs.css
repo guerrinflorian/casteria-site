@@ -1,0 +1,95 @@
+/* LE KIT DES MOTIFS DE CASTERIA (29/10/2026 ; la demande du propriétaire : « habiller avec des design que tu crées, des
+   motifs [...] pas faire tout moche fond violet simple [...] des petites séparations, pas toujours les éléments au même
+   endroit, et tout responsive »). Des fonds et des frises en pixel art DESSINÉS PAR NOUS (assets/motifs/*.svg, quelques Ko,
+   faits pour se répéter ; aucun fichier de Mojang), sur la palette du site. Le mode d'emploi : KIT_MOTIFS.md.
+   - un FOND : une classe sur la section (.fond-ciel, .fond-pierres, .fond-carte, .fond-bois, .fond-mer), et .relief pour
+     l'ombre du haut et du bas ; chaque fond existe aussi en variables (--fond-<nom>-image, --fond-<nom>-taille), pour une
+     règle plus précise d'une page (une section qui a déjà son fond) ;
+   - une FRISE : <div class="frise frise-corde" aria-hidden="true"></div> entre deux sections (vague, corde, créneaux,
+     étoiles, parchemin) ;
+   - des PANNEAUX : .panneau-nuit (la nuit et l'or), .panneau-bois (le bois du port et ses clous), .coins-or (des équerres
+     d'or aux quatre coins) ;
+   - des MISES EN PAGE : .alterne (une image à gauche, la suivante à droite), .decalees (des cartes un peu décalées),
+     .une-grande (une grande carte et des petites).
+   Aucun arrondi (le propriétaire : jamais une pastille arrondie). */
+
+:root {
+  /* le ciel étoilé : la lumière violette du haut, les étoiles, la nuit en dégradé */
+  --fond-ciel-image: radial-gradient(70% 55% at 50% 0%, rgba(142, 76, 184, .34), rgba(142, 76, 184, 0) 70%), url("../assets/motifs/ciel.svg"), linear-gradient(180deg, #120A1E 0%, #1E1230 55%, #241539 100%);
+  --fond-ciel-taille: auto, 64px 64px, auto;
+  /* les pierres du château : une lumière de torche au milieu, l'ombre des bords, les pierres */
+  --fond-pierres-image: radial-gradient(60% 50% at 50% 35%, rgba(255, 190, 90, .13), rgba(255, 190, 90, 0) 70%), linear-gradient(180deg, rgba(8, 4, 14, .55) 0%, rgba(8, 4, 14, .12) 30%, rgba(8, 4, 14, .12) 70%, rgba(8, 4, 14, .6) 100%), url("../assets/motifs/pierres.svg");
+  --fond-pierres-taille: auto, auto, 64px 32px;
+  /* la carte marine : la rose des vents dans un coin, une lumière, le quadrillage et sa route, la mer de nuit */
+  --fond-carte-image: url("../assets/motifs/rose-des-vents.svg"), radial-gradient(50% 50% at 20% 20%, rgba(143, 227, 255, .1), rgba(143, 227, 255, 0) 70%), url("../assets/motifs/carte.svg"), linear-gradient(180deg, #0C2131 0%, #102C42 60%, #0E2536 100%);
+  --fond-carte-taille: 248px 248px, auto, 48px 48px, auto;
+  --fond-carte-place: right -40px top -40px, 0 0, 0 0, 0 0;
+  /* le bois du port : l'ombre en haut et en bas, les planches */
+  --fond-bois-image: linear-gradient(180deg, rgba(10, 5, 2, .5) 0%, rgba(10, 5, 2, .08) 35%, rgba(10, 5, 2, .08) 65%, rgba(10, 5, 2, .55) 100%), url("../assets/motifs/bois.svg");
+  --fond-bois-taille: auto, 64px 32px;
+  /* la mer : le reflet de la lune, les vagues, la profondeur */
+  --fond-mer-image: radial-gradient(40% 40% at 70% 0%, rgba(232, 247, 255, .12), rgba(232, 247, 255, 0) 70%), url("../assets/motifs/vagues.svg"), linear-gradient(180deg, #0F3550 0%, #0C2A40 60%, #0A2133 100%);
+  --fond-mer-taille: auto, 48px 24px, auto;
+}
+
+/* ---------- les fonds ---------- */
+.fond-ciel, .fond-pierres, .fond-carte, .fond-bois, .fond-mer { position: relative; background-repeat: repeat; color: #F4EAFF; }
+.fond-ciel { background-color: #1B1028; background-image: var(--fond-ciel-image); background-size: var(--fond-ciel-taille); }
+.fond-pierres { background-color: #22152F; background-image: var(--fond-pierres-image); background-size: var(--fond-pierres-taille); }
+.fond-carte { background-color: #102C42; background-image: var(--fond-carte-image); background-size: var(--fond-carte-taille); background-position: var(--fond-carte-place); background-repeat: no-repeat, no-repeat, repeat, no-repeat; color: #EAF8FF; }
+.fond-bois { background-color: #3F2612; background-image: var(--fond-bois-image); background-size: var(--fond-bois-taille); color: #FFF4D6; }
+.fond-mer { background-color: #0C2A40; background-image: var(--fond-mer-image); background-size: var(--fond-mer-taille); color: #EAF8FF; }
+/* le relief : l'ombre qui entre par le haut et par le bas, un fil de lumière en haut */
+.relief { box-shadow: inset 0 22px 30px -22px rgba(0, 0, 0, .8), inset 0 -22px 30px -22px rgba(0, 0, 0, .8); border-top: 1px solid rgba(255, 215, 94, .14); }
+
+/* ---------- les frises (entre deux sections ; jamais un simple trait) ---------- */
+.frise[hidden] { display: none; }
+.frise { display: block; position: relative; z-index: 3; height: 16px; margin: 0; background-repeat: repeat-x; background-position: center; image-rendering: pixelated; pointer-events: none; }
+.frise-vague { height: 16px; background-image: url("../assets/motifs/frise-vague.svg"); background-size: 32px 16px; background-color: #123A52; }
+.frise-corde { height: 14px; background-image: url("../assets/motifs/frise-corde.svg"); background-size: 24px 14px; background-color: #140B1F; border-top: 2px solid #24150A; border-bottom: 2px solid #24150A; }
+.frise-creneaux { height: 36px; background-image: url("../assets/motifs/frise-creneaux.svg"); background-size: 48px 36px; background-position: left bottom; }
+.frise-etoiles { height: 12px; background-image: url("../assets/motifs/frise-etoiles.svg"); background-size: 40px 12px; margin: 10px 0; }
+.frise-parchemin { height: 18px; background-image: url("../assets/motifs/frise-parchemin.svg"); background-size: 64px 18px; background-position: left top; }
+/* une frise posée DANS une section, centrée, plus courte (une séparation entre deux blocs) */
+.frise.courte { width: min(520px, 70%); margin: 26px auto; }
+
+/* ---------- les panneaux ---------- */
+.panneau-nuit { position: relative; background: linear-gradient(180deg, rgba(42, 23, 64, .96), rgba(27, 16, 40, .97)); border: 3px solid var(--or, #D7A421); box-shadow: 0 0 0 3px #120a1c, 0 22px 50px rgba(0, 0, 0, .5); color: #F4EAFF; }
+.panneau-bois { position: relative; background-color: #4A2D16; background-image: linear-gradient(180deg, rgba(10, 5, 2, .28), rgba(10, 5, 2, .5)), url("../assets/motifs/bois.svg"); background-size: auto, 64px 32px; border: 4px solid #24150A; box-shadow: inset 0 0 0 2px #7A4E28, inset 0 0 0 5px rgba(0, 0, 0, .35), 0 16px 34px rgba(0, 0, 0, .5); color: #FFF4D6; }
+/* les clous du bois, aux quatre coins */
+.panneau-bois::before { content: ""; position: absolute; inset: 7px; pointer-events: none;
+  background: radial-gradient(circle at 4px 4px, #E8C978 0 2px, #8A6A2C 2.5px 3.5px, transparent 4px) 0 0 / 100% 100% no-repeat,
+    radial-gradient(circle at calc(100% - 4px) 4px, #E8C978 0 2px, #8A6A2C 2.5px 3.5px, transparent 4px) 0 0 / 100% 100% no-repeat,
+    radial-gradient(circle at 4px calc(100% - 4px), #E8C978 0 2px, #8A6A2C 2.5px 3.5px, transparent 4px) 0 0 / 100% 100% no-repeat,
+    radial-gradient(circle at calc(100% - 4px) calc(100% - 4px), #E8C978 0 2px, #8A6A2C 2.5px 3.5px, transparent 4px) 0 0 / 100% 100% no-repeat; }
+/* (la tête, 29/10) dans un panneau, jamais un mot coupé par la page (hyphens: manual) ; un nombre a ses milliers insécables */
+.panneau-nuit, .panneau-bois, .coins-or { hyphens: manual; -webkit-hyphens: manual; }
+/* des équerres d'or aux quatre coins (un cadre ancien) */
+.coins-or { position: relative; }
+.coins-or::after { content: ""; position: absolute; inset: -3px; pointer-events: none;
+  background: linear-gradient(var(--or-clair, #FFD75E), var(--or-clair, #FFD75E)) 0 0 / 18px 4px no-repeat, linear-gradient(var(--or-clair, #FFD75E), var(--or-clair, #FFD75E)) 0 0 / 4px 18px no-repeat,
+    linear-gradient(var(--or-clair, #FFD75E), var(--or-clair, #FFD75E)) 100% 0 / 18px 4px no-repeat, linear-gradient(var(--or-clair, #FFD75E), var(--or-clair, #FFD75E)) 100% 0 / 4px 18px no-repeat,
+    linear-gradient(var(--or-clair, #FFD75E), var(--or-clair, #FFD75E)) 0 100% / 18px 4px no-repeat, linear-gradient(var(--or-clair, #FFD75E), var(--or-clair, #FFD75E)) 0 100% / 4px 18px no-repeat,
+    linear-gradient(var(--or-clair, #FFD75E), var(--or-clair, #FFD75E)) 100% 100% / 18px 4px no-repeat, linear-gradient(var(--or-clair, #FFD75E), var(--or-clair, #FFD75E)) 100% 100% / 4px 18px no-repeat; }
+
+/* ---------- les mises en page qui changent d'une section à l'autre ---------- */
+/* .alterne : des rangées de deux colonnes, l'image (le premier enfant) à gauche, puis à droite à la rangée suivante */
+.alterne > * { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 24px 40px; align-items: center; }
+.alterne > :nth-child(even) > :first-child { order: 2; }
+/* .decalees : des cartes côte à côte, un peu décalées en hauteur et penchées (pas toutes au même endroit) */
+.decalees { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 22px; align-items: start; }
+.decalees > :nth-child(3n+1) { transform: rotate(-1deg); }
+.decalees > :nth-child(3n+2) { transform: rotate(.8deg) translateY(18px); }
+.decalees > :nth-child(3n) { transform: rotate(-.5deg) translateY(-6px); }
+/* .une-grande : une grande carte (le premier enfant) et des petites à côté */
+.une-grande { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 18px; align-items: start; }
+.une-grande > :not(:first-child) { min-width: 0; }
+
+@media (max-width: 768px) {
+  .alterne > * { grid-template-columns: minmax(0, 1fr); }
+  .alterne > :nth-child(even) > :first-child { order: 0; }
+  .une-grande { grid-template-columns: minmax(0, 1fr); }
+  .decalees > :nth-child(n) { transform: none; }
+  .fond-carte { --fond-carte-taille: 160px 160px, auto, 48px 48px, auto; --fond-carte-place: right -30px top -30px, 0 0, 0 0, 0 0; }
+}
+@media (prefers-reduced-motion: reduce) { .decalees > :nth-child(n) { transition: none; } }

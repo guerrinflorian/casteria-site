@@ -77,3 +77,8 @@ html.photo .vote-caisse .cle, html.photo .champ-exemple b::after { animation: no
 @media (max-width: 600px) { .vote-consigne { font-size: 17px; } }
 /* une liste vide (aucun site inscrit) : la consigne se tait avec elle */
 .vote-consigne:has(+ .sites-vote:empty) { display: none; }
+/* (b5, le 29/10/2026) le second site de vote (serveursminecraft.org) reste cache tant que le drapeau de la liste vaut « eteint »
+   (vote.html, data-serveursminecraft) ; sa carte porte une phrase plus longue : elle prend la largeur d'une carte */
+.sites-vote[data-serveursminecraft="eteint"] .site-sm { display: none; }
+.site-sm .site-vote { max-width: 440px; }
+.site-sm .site-vote span { line-height: 1.35; }

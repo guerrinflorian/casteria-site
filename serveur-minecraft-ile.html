@@ -26,7 +26,10 @@
 <link rel="preload" href="assets/polices/fredoka.ttf" as="font" type="font/ttf" crossorigin>
 <link rel="preload" as="image" type="image/webp" media="(max-aspect-ratio: 2/3)" imagesrcset="assets/images/casteria-evenements-couchant-portrait-768.webp 768w" imagesizes="100vw" fetchpriority="high">
 <link rel="preload" as="image" type="image/webp" media="(min-aspect-ratio: 2001/3000)" imagesrcset="assets/images/casteria-evenements-couchant-1280.webp 1280w, assets/images/casteria-evenements-couchant-1920.webp 1920w" imagesizes="100vw" fetchpriority="high">
+<link rel="preload" href="assets/polices/fredoka.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/polices/lilita_one.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/motifs.css">
 <link rel="stylesheet" href="css/scene.css">
 <link rel="stylesheet" href="css/voyage.css">
 <!-- LES DONNÉES POUR GOOGLE : le fil d'Ariane, la FAQ de la page (mot pour mot), et le jeu, la même entité que sur l'accueil.
@@ -102,6 +105,7 @@
     </div>
   </div>
 </section>
+<div class="frise frise-creneaux" aria-hidden="true"></div>
 
 <!-- CE QUE CASTERIA GARDE DE L'ESPRIT SKYBLOCK : l'île de départ (aide.js, « Ton île sur la mer » : 100 × 100, le départ en
      8 × 8, le Noyau ; « Le Casse-cailloux » : deux offerts), les machines (aide.js, « Les machines de l'île » ; niveaux.js : la
@@ -139,6 +143,7 @@
     </div>
   </div>
 </section>
+<div class="frise frise-etoiles" aria-hidden="true"></div>
 
 <!-- CE QU'UN SKYBLOCK CLASSIQUE N'A PAS : la mer (pirates.html ; index.html, le voyage : la Chaloupe au niveau 15, le Vaisseau
      amiral au 60), les boss et les donjons (index.html : le Roi Champignon au niveau 3, les panoplies ; le Temple Creux au 16, le
@@ -183,6 +188,7 @@
     </ul>
   </div>
 </section>
+<div class="frise frise-parchemin" aria-hidden="true"></div>
 
 <!-- TON ÎLE NE DORT JAMAIS : la réserve des machines (aide.js, « Les machines de l'île » : 30 min ; « L'Entrepôt et les bonus
      d'île » : jusqu'à 4 h ; niveaux.js : l'Entrepôt au niveau 5), le comptoir (aide.js, « Le comptoir du marchand » : toutes
@@ -208,6 +214,7 @@
     </div>
   </div>
 </section>
+<div class="frise frise-etoiles" aria-hidden="true"></div>
 
 <!-- JOUER SUR TON ÎLE À PLUSIEURS : aide.js, « Jouer à plusieurs » (6 amis, 7 à 10 avec un grade ; les droits ; /ic) et « Les
      droits forts » (même absent, la récolte est pour l'ami) ; « Ton île sur la mer » (fermée aux visites par défaut) -->
@@ -231,6 +238,7 @@
     </article>
   </div>
 </section>
+<div class="frise frise-parchemin" aria-hidden="true"></div>
 
 <!-- REJOINDRE CASTERIA GRATUITEMENT : les liens figés de la release « installateur » (ceux de index.html), chacun avec son
      data-track ; le crack accepté (index.html ; forum.js, f_crack), /register et /login (index.html), la file d'attente
@@ -257,6 +265,7 @@
     <p class="apparait">Casteria se joue seulement par son launcher ; serveur plein, il te garde ta place dans la file d'attente. Le détail : <a href="launcher-minecraft-modde.html">le launcher Minecraft moddé de Casteria</a>, et <a href="./#telecharger">l'aide à l'installation de l'accueil</a>.</p>
   </div>
 </section>
+<div class="frise frise-etoiles" aria-hidden="true"></div>
 
 <!-- LA FAQ : les mêmes questions et réponses, mot pour mot, dans le bloc FAQPage du JSON-LD (en tête de page) -->
 <section class="pan pan-nuit" id="faq" aria-labelledby="faq-titre">
@@ -276,6 +285,7 @@
     </div>
   </div>
 </section>
+<div class="frise frise-etoiles" aria-hidden="true"></div>
 
 <!-- LE BAS DE PAGE : « Jouer gratuitement » une seconde fois, le Discord, et la page du serveur moddé -->
 <section class="final" id="final" aria-labelledby="final-titre">
@@ -297,7 +307,7 @@
   <div class="dedans">
     <div class="col">
       <img src="assets/logo/casteria-logo-300.webp" alt="Casteria" width="70" height="70" loading="lazy">
-      <nav aria-label="Le pied de page"><a href="./">Accueil</a><a href="commencer.html">Par où commencer</a><a href="evenements.html">Les événements</a><a href="pirates.html">La mer et les pirates</a><a href="donjons.html">Les donjons</a><a href="casino.html">Le casino</a><a href="./#combat">Le combat</a><a href="classement.html">Classement</a><a href="boutique.html">Boutique</a><a href="vote.html">Voter</a><a href="reglement.html">Le règlement</a><a href="./#telecharger">Télécharger</a><a href="serveur-minecraft-ile.html">Serveur Minecraft d'île</a><a href="serveur-minecraft-modde.html">Serveur moddé</a><a href="launcher-minecraft-modde.html">Launcher moddé</a><a href="serveur-minecraft-rpg.html">Serveur RPG</a><a href="serveur-minecraft-boss.html">Boss et donjons</a><a href="mentions-legales.html">Mentions légales</a><a href="confidentialite.html">Confidentialité</a><a href="conditions.html">Conditions</a></nav>
+      <nav aria-label="Le pied de page"><a href="./">Accueil</a><a href="commencer.html">Par où commencer</a><a href="evenements.html">Les événements</a><a href="pirates.html">La mer et les pirates</a><a href="donjons.html">Les donjons</a><a href="casino.html">Le casino</a><a href="./#boss">Les boss</a><a href="classement.html">Classement</a><a href="carte.html">La carte</a><a href="exploits.html">Les exploits</a><a href="boutique.html">Boutique</a><a href="vote.html">Voter</a><a href="compte.html">Mon compte</a><a href="reglement.html">Le règlement</a><a href="./#telecharger">Télécharger</a><a href="serveur-minecraft-ile.html">Serveur Minecraft d'île</a><a href="serveur-minecraft-modde.html">Serveur moddé</a><a href="launcher-minecraft-modde.html">Launcher moddé</a><a href="serveur-minecraft-rpg.html">Serveur RPG</a><a href="serveur-minecraft-boss.html">Boss et donjons</a><a href="mentions-legales.html">Mentions légales</a><a href="confidentialite.html">Confidentialité</a><a href="conditions.html">Conditions</a></nav>
     </div>
     <small>Casteria est un serveur Minecraft indépendant, créé par des joueurs. Il n'est ni affilié à Mojang ni à Microsoft, ni approuvé par eux. Minecraft est une marque de Mojang Studios.</small>
   </div>

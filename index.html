@@ -26,13 +26,14 @@
 <link rel="preload" href="assets/polices/fredoka.ttf" as="font" type="font/ttf" crossorigin>
 <link rel="preload" as="image" type="image/webp" media="(max-aspect-ratio: 2/3)" imagesrcset="assets/images/casteria-decollage-portrait-720.webp 720w, assets/images/casteria-decollage-portrait-1080.webp 1080w" imagesizes="100vw" fetchpriority="high">
 <link rel="preload" as="image" type="image/webp" media="(min-aspect-ratio: 2001/3000)" imagesrcset="assets/images/casteria-decollage-1280.webp 1280w, assets/images/casteria-decollage-1920.webp 1920w, assets/images/casteria-decollage-2560.webp 2560w" imagesizes="100vw" fetchpriority="high">
+<link rel="preload" href="assets/polices/fredoka.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/polices/lilita_one.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/carrousel.css">
 <link rel="stylesheet" href="css/voyage.css">
 <link rel="stylesheet" href="css/scene.css">
-<link rel="stylesheet" href="css/objets.css">
-<link rel="stylesheet" href="css/combat.css">
-<link rel="stylesheet" href="css/pages.css">
+<link rel="stylesheet" href="css/motifs.css">
+<link rel="stylesheet" href="css/accueil.css">
 <script type="application/ld+json">
 { "@context": "https://schema.org", "@graph": [
   { "@type": "WebSite", "@id": "https://casteria.fr/#site", "url": "https://casteria.fr/", "name": "Casteria", "inLanguage": "fr",
@@ -102,7 +103,7 @@
            sur mobile un beau logo Discord et sur PC un beau logo et le texte Discord ! ») vers /discord (l'invitation n'est
            écrite que dans discord.html) ; le logo de la marque, en ligne ; sur un téléphone, le logo seul (css/scene.css) -->
       <a class="bouton bouton-discord grand" href="/discord" aria-label="Rejoindre le Discord de Casteria" data-track="discord"><svg class="logo-discord" viewBox="0 0 127.14 96.36" aria-hidden="true" focusable="false"><path fill="currentColor" d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/></svg><span class="mot">Discord</span></a>
-      <a class="lien-doux" href="#voyage">Voir le jeu <span class="chevron" aria-hidden="true"></span></a>
+      <a class="lien-doux" href="#ton-ile">Voir le jeu <span class="chevron" aria-hidden="true"></span></a>
     </div>
     <!-- (29/10/2026, le propriétaire : « ajoute bien dans le site, bien visible, que le serveur accepte les crack ») -->
     <p class="crack-accepte"><span class="coche" aria-hidden="true"></span>Crack accepté : pas besoin d'acheter Minecraft</p>
@@ -111,53 +112,40 @@
   </div>
 </section>
 
-<!-- ============ TON AVENTURE COMMENCE ICI : le launcher, trois gestes ; un familier sort de la fenêtre ============ -->
-<section class="pan pan-vert" id="commencer-ici">
-  <div class="feuillage haut" aria-hidden="true"></div>
+
+<div class="frise frise-etoiles" aria-hidden="true"></div>
+
+<!-- ============ TON ÎLE SUR LA MER (af, 29/10/2026 ; le propriétaire : « que ça donne envie aux joueurs de faire partie du
+     serveur, d'avoir leur île et de monter dans le classement ») : la carte VIVANTE des îles (API.md 2.6, js/accueil.js) ; sans
+     elle, des îlots dessinés sans nom ni chiffre, et toujours la place libre « Ton île ici ? » ============ -->
+<section class="pan fond-mer relief accueil-ile" id="ton-ile" aria-labelledby="ile-titre">
   <div class="dedans deux-colonnes">
     <div class="texte monte">
-      <span class="sur-titre">Prêt pour la suite ?</span>
-      <h2>Ton aventure commence ici.</h2>
-      <p>Fan de skyblock ? Casteria en garde l'esprit, ton île et tes machines qui produisent toutes seules, puis t'emmène bien plus loin : sur la mer, face aux boss, jusqu'à la planète. <a href="serveur-minecraft-ile.html">Le serveur d'île pour les fans de skyblock</a>.</p>
-      <p>Le launcher Casteria installe le jeu, les mods et les shaders, puis se met à jour tout seul. Tu cliques sur JOUER, tu arrives au palais.</p>
-      <ol class="trois-gestes">
+      <span class="sur-titre">Ta place sur la mer</span>
+      <h2 id="ile-titre">Une île à toi, au milieu des autres</h2>
+      <p>Chaque joueur a son île sur la même mer : ton Noyau au centre, tes machines qui produisent toutes seules, tes bêtes, tes amis invités. Visite les îles ouvertes, fais plus beau que tes voisins, et repousse tes murs pour grandir.</p>
+      <p class="en-ligne-iles" data-iles-en-ligne hidden></p>
+      <ol class="trois-gestes court">
         <li><b>1</b>Télécharge le launcher</li>
-        <li><b>2</b>Choisis ton pseudo</li>
-        <li><b>3</b>Clique sur JOUER</li>
-        <li><b>4</b>Crée ton mot de passe : /register</li>
+        <li><b>2</b>Clique sur JOUER</li>
+        <li><b>3</b>Ton île t'attend</li>
       </ol>
-      <div class="gestes"><a class="bouton bouton-orange" href="#telecharger"><span class="triangle" aria-hidden="true"></span>Télécharger le launcher</a><a class="bouton-verre" href="commencer.html">Par où commencer <span class="fleche" aria-hidden="true">&#8250;</span></a></div>
+      <div class="gestes"><a class="bouton bouton-orange" href="#telecharger"><span class="triangle" aria-hidden="true"></span>Avoir mon île</a><a class="bouton-verre" href="commencer.html">Par où commencer <span class="fleche" aria-hidden="true">&#8250;</span></a></div>
     </div>
-    <div class="fenetre-launcher monte" data-scene>
-      <div class="pointeur" data-profondeur="14"><img class="capture" src="assets/images/launcher-casteria-2910.jpg" alt="Le launcher Casteria : le bouton Jouer, l'état du serveur et les nouvelles de chaque mise à jour" width="1100" height="700" loading="lazy"></div>
-      <div class="pointeur sort" data-profondeur="40"><img class="flotte f-vol" src="assets/boutique/renard.png" alt="" width="420" height="420" loading="lazy"></div>
-      <p class="on-t-attend" aria-hidden="true">On t'attend !</p>
+    <div class="carte-iles-cadre panneau-nuit coins-or monte">
+      <p class="carte-iles-titre"><span data-carte-titre>La mer des îles</span><small data-carte-lu></small></p>
+      <div class="carte-iles" data-carte-iles role="group" aria-label="La carte des îles">
+        <!-- sans la carte vivante : des îlots dessinés (aucun nom, aucun chiffre) ; js/accueil.js les remplace -->
+        <i class="ilot deco" style="--i:1;--j:1"></i><i class="ilot deco grand" style="--i:3;--j:2"></i><i class="ilot deco" style="--i:5;--j:1"></i>
+        <i class="ilot deco" style="--i:2;--j:4"></i><i class="ilot deco grand" style="--i:6;--j:4"></i><i class="ilot deco" style="--i:8;--j:2"></i>
+        <a class="ilot libre" href="#telecharger" style="--i:4;--j:3" data-ilot-libre><span>Ton île ici&#160;?</span></a>
+      </div>
+      <div class="fiche-ile" data-fiche-ile aria-live="polite"><p class="fiche-vide">Ici, chaque île a son nom, son hôte et ses étoiles de beauté. La tienne aussi, dès ta première connexion.</p></div>
     </div>
   </div>
 </section>
 
-<!-- ============ LA CARTE AU TRÉSOR : nos chiffres vrais (lus dans le jeu, 07/10 : boss.js bt1 à bt15, ai_mer_table.js
-     ordre 1 à 5, casinocompagnons Catalogue.TOUS, ai_planete_table.js niveaux.max), sur des morceaux de parchemin reliés
-     par un fil rouge, qui s'assemblent quand on arrive ============ -->
-<section class="pan pan-parchemin" id="carte" aria-labelledby="carte-titre">
-  <svg class="dechirure dessus" viewBox="0 0 1440 48" preserveAspectRatio="none" aria-hidden="true"><path d="M0 48V22l40 6 34-12 52 10 44-14 38 12 60-8 30 10 56-16 44 14 48-6 40 10 62-12 36 8 52-14 40 12 58-10 34 12 50-8 44 10 56-14 38 8 60-6 46 12 54-10 40 8 52-12 34 10 56-8 42 12 L1440 20V48z"/></svg>
-  <div class="feuille-coin g" aria-hidden="true"></div><div class="feuille-coin d" aria-hidden="true"></div>
-  <div class="dedans">
-    <div class="tete monte">
-      <span class="sur-titre encre">Casteria en chiffres</span>
-      <h2 id="carte-titre">Une carte au trésor, du port au trou noir</h2>
-    </div>
-    <div class="carte-tresor">
-      <svg class="fil" viewBox="0 0 1000 560" preserveAspectRatio="none" aria-hidden="true"><path d="M150 110 C 300 40, 420 260, 520 160 S 760 70, 850 140 M520 160 C 470 300, 300 330, 250 420 M520 160 C 600 300, 720 330, 760 430"/></svg>
-      <article class="morceau m1 monte"><img src="assets/volume/yeti.png" alt="" width="520" height="520" loading="lazy"><b class="mot">Boss</b><span>en arène</span></article>
-      <article class="morceau m2 monte"><img class="pixel" src="assets/icones/jeton.png" alt="" width="64" height="64" loading="lazy"><b data-n="70">70</b><span>niveaux à gravir</span></article>
-      <article class="morceau m3 monte"><img src="assets/boutique/phenix.png" alt="" width="420" height="420" loading="lazy"><b data-n="36">36</b><span>familiers</span></article>
-      <article class="morceau m4 monte"><img src="assets/volume/fregate.webp" alt="" width="855" height="1027" loading="lazy"><b data-n="5">5</b><span>navires à barrer</span></article>
-      <article class="morceau m5 monte"><img src="assets/images/casteria-planete-trou-noir-esquif.jpg" class="rond" alt="" width="1280" height="720" loading="lazy"><b data-n="1">1</b><span>planète sous un trou noir</span></article>
-    </div>
-  </div>
-  <svg class="dechirure dessous" viewBox="0 0 1440 48" preserveAspectRatio="none" aria-hidden="true"><path d="M0 0V26l44-8 36 14 50-10 42 12 40-14 56 10 34-8 52 14 46-12 40 8 60-14 38 12 54-8 42 10 50-12 36 8 58-10 40 14 52-12 44 8 56-10 38 12 60-8 44 10 50-14 36 12 56-10 40 8 L1440 24V0z"/></svg>
-</section>
+<div class="frise frise-vague" aria-hidden="true"></div>
 
 <!-- ============ LE VOYAGE : la vraie route d'un joueur, niveau après niveau (22/10/2026, le propriétaire : « Six mondes, un
      seul serveur [...] c'est quoi le rapport 6 mondes, et y a un familier dedans, y a aucun rapport ») : plus de grille de
@@ -237,126 +225,8 @@
   </div>
 </section>
 
-<!-- ============ AU PALAIS, DEUX PORTES (19/10/2026) : le casino à minerais et les donjons, chacun sa page ; deux portes en
-     arche, l'une sous ses ampoules, l'autre entre deux torches ============ -->
-<section class="pan palais-portes" id="palais" aria-labelledby="palais-titre">
-  <div class="dedans">
-    <div class="tete monte">
-      <span class="sur-titre">Au palais</span>
-      <h2 id="palais-titre">Deux portes, deux façons de tenter ta chance</h2>
-      <p>Au cœur du palais, un casino où l'on mise ses minerais. Devant Anselme, deux donjons à faire seul ou à trois.</p>
-    </div>
-    <div class="portes">
-      <a class="porte porte-casino monte" href="casino.html">
-        <span class="porte-arche"><img src="assets/images/casteria-casino-salle-1280.webp" alt="" width="1280" height="720" loading="lazy"><i class="ampoules-arche" aria-hidden="true"></i></span>
-        <span class="porte-texte">
-          <span class="porte-titre">Le casino du palais</span>
-          <span class="porte-dit">Neuf jeux : la roulette européenne à plusieurs, le blackjack et son double, les machines à sous, le Wagon fou... On y mise ses minerais, jamais ses jetons.</span>
-          <span class="porte-lien">Entrer au casino <span aria-hidden="true">&#8250;</span></span>
-        </span>
-      </a>
-      <a class="porte porte-donjons monte" href="donjons.html">
-        <span class="porte-arche"><img src="assets/images/casteria-donjon-plaques-1280.webp" alt="" width="1280" height="742" loading="lazy"><i class="torche g" aria-hidden="true"></i><i class="torche d" aria-hidden="true"></i></span>
-        <span class="porte-texte">
-          <span class="porte-titre">Les donjons</span>
-          <span class="porte-dit">Le Temple Creux et le Sanctuaire des Sables : trois niveaux chacun, de 1 à 3 joueurs, un coffre pour chacun et un classement par taille de groupe.</span>
-          <span class="porte-lien">Voir les donjons <span aria-hidden="true">&#8250;</span></span>
-        </span>
-      </a>
-    </div>
-  </div>
-</section>
 
-<!-- ============ TOUT EST FAIT POUR CASTERIA : les objets du serveur, chacun en volume (le rendu du vrai modele du jeu) ============ -->
-<section class="pan pan-parchemin objets" id="objets" aria-labelledby="objets-titre">
-  <div class="dedans">
-    <div class="tete monte">
-      <span class="sur-titre encre">Fait maison</span>
-      <h2 id="objets-titre">Tout est fait pour Casteria</h2>
-      <p>Des armes aux machines, de la ferme aux bêtes : chaque objet ici a été dessiné et codé pour le serveur. Tu ne les trouveras nulle part ailleurs.</p>
-    </div>
-    <div class="familles">
-      <details class="famille" open>
-        <summary><h3>Les armes</h3><span class="compte">6 objets</span></summary>
-        <div class="grille-objets">
-          <article class="objet monte"><img src="assets/objets/objet_arbalete.webp" alt="L'arbalète de castérium, violette et or" width="240" height="240" loading="lazy"><div><h4>Arbalète de castérium</h4><p>Sa flèche traverse et touche plusieurs créatures. Elle ne casse jamais : un castérium raffiné rend ses tirs.</p></div></article>
-          <article class="objet monte"><img src="assets/objets/objet_hachette.webp" alt="La hachette de lancer" width="240" height="240" loading="lazy"><div><h4>Hachette de lancer</h4><p>Lance-la : elle frappe et revient dans ta main. Tranchant l'améliore, au lancer aussi.</p></div></article>
-          <article class="objet monte"><img src="assets/objets/objet_marteau.webp" alt="Le marteau en diamant" width="240" height="240" loading="lazy"><div><h4>Marteau en diamant</h4><p>Il creuse en 3 x 3 la pierre et la terre. Accroupi, un seul bloc.</p></div></article>
-          <article class="objet monte"><img src="assets/objets/objet_sabre_oni.webp" alt="Le Sabre de l'Oni, une lame rouge" width="240" height="240" loading="lazy"><div><h4>Sabre de l'Oni</h4><p>L'arme d'un boss : trois coups en 4 secondes sur la même créature, et elle explose.</p></div></article>
-          <article class="objet monte"><img src="assets/objets/objet_katana.webp" alt="Le katana en castérium" width="240" height="240" loading="lazy"><div><h4>Katana en castérium</h4><p>Clic droit : un élan de 6 blocs qui frappe les monstres sur son passage.</p></div></article>
-          <article class="objet monte"><img src="assets/objets/objet_bouclier.webp" alt="Le bouclier en castérium" width="240" height="240" loading="lazy"><div><h4>Bouclier en castérium</h4><p>Contre les boss, la parade parfaite se réussit plus facilement.</p></div></article>
-        </div>
-      </details>
-      <details class="famille" open>
-        <summary><h3>La ferme et tes bêtes</h3><span class="compte">9 objets</span></summary>
-        <div class="grille-objets">
-          <article class="objet monte"><img src="assets/objets/objet_houe.webp" alt="La houe de récolte en diamant" width="240" height="240" loading="lazy"><div><h4>Houe de récolte</h4><p>Clic droit sur une plante mûre : elle récolte et replante.</p></div></article>
-          <article class="objet monte"><img src="assets/objets/objet_arrosoir.webp" alt="L'arrosoir" width="240" height="240" loading="lazy"><div><h4>Arrosoir</h4><p>Chaque plante arrosée a une chance de pousser d'un cran. Il ne s'use pas.</p></div></article>
-          <article class="objet monte"><img src="assets/objets/objet_semoir.webp" alt="Le semoir" width="240" height="240" loading="lazy"><div><h4>Semoir</h4><p>Il plante et récolte tout seul. Colle-lui un coffre : la récolte y rentre.</p></div></article>
-          <article class="objet monte"><img src="assets/objets/objet_epouvantail.webp" alt="L'épouvantail" width="240" height="240" loading="lazy"><div><h4>Épouvantail</h4><p>Autour de lui, les plantes poussent quatre fois plus vite, sans poudre d'os.</p></div></article>
-          <article class="objet monte"><img src="assets/objets/objet_aimant.webp" alt="L'aimant à objets" width="240" height="240" loading="lazy"><div><h4>Aimant à objets</h4><p>Allumé, il attire à toi les objets à 6 blocs.</p></div></article>
-          <article class="objet monte"><img src="assets/objets/objet_enclos.webp" alt="L'enclos de ferme" width="240" height="240" loading="lazy"><div><h4>Enclos de ferme</h4><p>Clôture, grange, auge et coffre, posés d'un coup. Tes bêtes n'en sortent jamais.</p></div></article>
-          <article class="objet monte"><img src="assets/objets/objet_mangeoire.webp" alt="Le distributeur de nourriture" width="240" height="240" loading="lazy"><div><h4>Distributeur de nourriture</h4><p>Il nourrit tout seul les bêtes d'un enclos.</p></div></article>
-          <article class="objet monte"><img src="assets/objets/objet_oeuf.webp" alt="Un œuf mystère mythique, rose" width="240" height="240" loading="lazy"><div><h4>Œuf mystère</h4><p>Il éclot dans un incubateur : une bête commune, rare... ou mythique. Chaque bête neuve entre dans ton bestiaire : à 10, 25, 50, 75 et 100 %, un cadeau.</p></div></article>
-          <article class="objet monte"><img src="assets/objets/objet_incubateur.webp" alt="L'incubateur" width="240" height="240" loading="lazy"><div><h4>Incubateur</h4><p>C'est là que tes œufs mystères éclosent.</p></div></article>
-        </div>
-      </details>
-      <details class="famille" open>
-        <summary><h3>Ton île</h3><span class="compte">5 objets</span></summary>
-        <div class="grille-objets">
-          <article class="objet monte"><img src="assets/objets/objet_cailloux.webp" alt="Le Casse-cailloux, une machine de pierre" width="240" height="240" loading="lazy"><div><h4>Casse-cailloux</h4><p>La pierre de l'île, sans fin : ton premier revenu, le plus sûr.</p></div></article>
-          <article class="objet monte"><img src="assets/objets/objet_fonderie.webp" alt="La Fonderie d'or" width="240" height="240" loading="lazy"><div><h4>Fonderie d'or</h4><p>Un creuset où l'or fond à ciel ouvert. Elle marche au charbon.</p></div></article>
-          <article class="objet monte"><img src="assets/objets/objet_potionnerie.webp" alt="La Potionnerie" width="240" height="240" loading="lazy"><div><h4>Potionnerie</h4><p>Elle brasse plusieurs potions d'un coup, qui sortent dans le coffre à sa droite.</p></div></article>
-          <article class="objet monte"><img src="assets/objets/objet_coffre_ile.webp" alt="Le coffre de l'île" width="240" height="240" loading="lazy"><div><h4>Coffre de l'île</h4><p>Tous tes coffres à 40 blocs dans un seul écran : cherche, prends, et fabrique dans sa grille 3 x 3.</p></div></article>
-          <article class="objet monte"><img src="assets/objets/objet_comptoir.webp" alt="Le comptoir du marchand, sous son auvent rayé" width="240" height="240" loading="lazy"><div><h4>Comptoir du marchand</h4><p>Il vend le contenu du coffre collé toutes les 5 minutes, même quand tu es absent.</p></div></article>
-        </div>
-      </details>
-    </div>
-    <p class="esquif-objet monte">Et au bout du voyage, <a href="#planete">l'Esquif</a> : la fusée de ton île, qui t'emmène sur la planète.</p>
-  </div>
-</section>
-
-<!-- ============ LA GAZETTE DU PALAIS (19/10/2026) : tout ce qui fait vivre le serveur, en colonnes de journal (chaque
-     chiffre lu dans le jeu : les nouvelles des mises en ligne 112 à 126, /aide, le livre des quêtes) ============ -->
-<section class="pan gazette" id="gazette" aria-labelledby="gazette-titre">
-  <div class="dedans">
-    <div class="gazette-page">
-      <div class="gazette-une monte">
-        <p class="gazette-filet">Le journal des joueurs <i aria-hidden="true">&#183;</i> chaque jour sur Casteria</p>
-        <h2 id="gazette-titre">La Gazette du palais</h2>
-        <p class="gazette-sous">Tout ce qui fait vivre ton île, le palais et tes soirées</p>
-      </div>
-      <div class="gazette-colonnes">
-        <article class="g-article g-lead monte">
-          <img src="assets/images/casteria-ile-sur-la-mer-2010.jpg" alt="Une île de Casteria vue du ciel : ses prés en terrasses, un enclos, ses chemins, son ponton et la mer autour" width="1080" height="608" loading="lazy">
-          <h3>Ton île ne dort jamais</h3>
-          <p>Tes machines s'animent et sonnent quand elles travaillent. Quand tu y joues, une épreuve tombe sur ton île toutes les 10 à 15 minutes : une machine qui surchauffe, des fuites, une bête évadée, une pie voleuse. Réussie, un gain ; ratée, un malus.</p>
-          <p>Au niveau 17, la Mine s'ouvre sous tes pieds : cinq étages dans le noir, des gemmes pour tes machines, et deux familiers qu'on ne trouve que là. Au niveau 24, la Batterie côtière : un canon sur ta rive ouest. Au coucher du soleil, une fois par heure au plus, la cloche sonne : huit boulets pour couler la voile. Au niveau 30, la Tour du ciel : à son pupitre, tu choisis le ciel de ton île, un pour le jour, un pour la nuit.</p>
-        </article>
-        <article class="g-article g-caisses monte">
-          <img src="assets/images/casteria-marche-caisses-2010.jpg" alt="Les quatre caisses mystères du palais sous leur enseigne, et Fortuné le Forain" width="1280" height="720" loading="lazy">
-          <h3>Les caisses s'ouvrent en grand</h3>
-          <p>Une bande dorée, cinq secondes de suspense, et ton gain en grand. Un gros gain fait pleuvoir les jetons, comme à la roue et aux jackpots du casino. Le carnet des caisses montre chaque lot, sa rareté et sa chance. Quatre caisses au palais, celle du Corsaire au port, et celle des Donjons près d'Anselme.</p>
-        </article>
-        <article class="g-article monte"><h3>130 quêtes chez Ludovic</h3><p>Dix chapitres, du niveau 1 au 60 : de 40 à 500 XP selon leurs étoiles, et au bout de chaque chapitre, des tickets et un objet qu'on ne trouve que là. Tape /qp.</p></article>
-        <article class="g-article monte"><h3>Trois missions par jour</h3><p>Une facile (1 ticket), une moyenne (2), une difficile (4), de nouvelles à minuit. Enchaîne les jours : des tickets en prime.</p></article>
-        <article class="g-article monte"><h3>Le soir, au palais</h3><p>18&#160;h&#160;30 : le Sol qui lâche. 20&#160;h&#160;15 : le Défi Éclair (le week-end aussi à 11&#160;h et 14&#160;h&#160;30). 21&#160;h : la Bataille de neige. Tape /participer de partout : on vient te chercher 10&#160;secondes avant. <a href="evenements.html">Tous les événements</a></p></article>
-        <article class="g-article monte">
-          <img src="assets/images/casteria-ecran-ile-2026.jpg" alt="L'écran de l'île : l'île peinte sur la mer, la Mine, la Batterie, la Tour du ciel et ses vitraux, le ponton, l'écurie et l'Esquif sur son pas de tir" width="694" height="424" loading="lazy">
-          <h3>Ton île, redessinée</h3><p>Son écran montre la mer et chaque lieu à sa vraie place, jusqu'à l'Esquif. Tape /iles, de partout.</p>
-        </article>
-        <article class="g-article monte"><h3>Le palais a ses voix</h3><p>Les habitants te parlent, Anselme te suit de sa voix dans les donjons, un présentateur lance les mini-jeux et une radio te guide sur la planète. Le curseur « Voix » des options les règle.</p></article>
-        <article class="g-article monte"><h3>Le Défi Éclair</h3><p>Cinq jeux rapides au palais, tirés parmi quatorze, de La Suite de laines au Nombre unique. Personne n'est éliminé, rien à perdre : des jetons dès ta première réponse. <a href="evenements.html#jeux">Les quatorze jeux</a></p></article>
-        <article class="g-article monte"><h3>Faites vos jeux !</h3><p>Au casino, le croupier annonce chaque partie : «&#160;Faites vos jeux&#160;», puis «&#160;Rien ne va plus&#160;» quand la bille part à la roulette. Au blackjack, il parle comme un villageois : «&#160;Hmmm... Faites vos jeux.&#160;»</p></article>
-        <article class="g-article monte"><h3>Le mode Héroïque</h3><p>Bats un boss une fois : son mode Héroïque s'ouvre. Le même boss, bien plus dur, avec une phase de plus ; la même armure à gagner, avec plus de chances pour chaque pièce.</p></article>
-        <article class="g-article monte"><h3>Tes compagnons</h3><p>36 familiers te suivent partout. Certains ne s'achètent pas : tu les trouves dans ta Mine, en mer, sur la planète, dans tes champs, au casino ou au fond d'un donjon. Douze montures, au sol, dans les airs ou dans l'eau. Et dans tes enclos, des bêtes de commune à mythique.</p></article>
-        <article class="g-article monte"><h3>Ton île à plusieurs</h3><p>Avec /amis, invite tes amis et choisis leurs droits. Avec le droit Machines, un ami récolte tes machines même sans toi : sa récolte est pour lui.</p></article>
-        <article class="g-article monte"><h3>Le Bac, à l'Établi</h3><p>Il garde 16 piles d'un seul objet (64 et 256 pour les plus grands) et montre son compte sur sa façade.</p></article>
-        <article class="g-article monte"><h3>Objets et recettes</h3><p>/recettes ouvre le livre de chaque objet du serveur : sa recette, et à quoi il sert.</p></article>
-      </div>
-    </div>
-  </div>
-</section>
+<div class="frise frise-creneaux" aria-hidden="true"></div>
 
 <!-- ============ LES BOSS ET LEURS PANOPLIES ============ -->
 <section class="pan pan-nuit boss-bande" id="boss">
@@ -365,6 +235,7 @@
       <span class="sur-titre">Les boss</span>
       <h2>Chaque boss de Casteria fait son entrée</h2>
       <p>Arène après arène, boss après boss. Chaque victoire ouvre le suivant, et chacun a ses attaques, ses phases et sa manière de te surprendre. En voici trois. Les autres, tu les découvriras en jeu.</p>
+      <p class="une-ligne"><strong>Chaque arme a ses coups</strong> : un revers, un balayage qui prend plusieurs monstres, et un combo quand tu tiens le clic.</p>
       <p class="geste">Tire la carte du dessus pour voir la suivante.</p>
     </div>
     <div class="monte" data-carrousel="pile" data-nom="Trois entrées de boss" style="--vue: min(80vw, 520px)">
@@ -373,62 +244,25 @@
       <figure class="vue"><video data-auto muted loop playsinline preload="none" poster="assets/affiches/entree_oni.jpg" data-src="assets/videos/entree_oni.mp4" aria-label="Vidéo : l'entrée de l'Oni Samouraï, un boss de Casteria"></video><figcaption><strong>L'Oni Samouraï</strong>Le sixième boss, et son sabre.</figcaption></figure>
     </div>
   </div>
-  <!-- (la 147) LA VICTOIRE EN 3D ET LES VOIX DES BOSS : la photo du jeu (casteria-boss, VictoireVfx) et les deux répliques
-       du Roi Champignon (tete_48\voix_boss\REPLIQUES.md, rang 1 : l'entrée et la défaite) -->
-  <div class="dedans victoire monte">
-    <figure class="victoire-ecran">
-      <img src="assets/images/casteria-victoire-boss-3d-roi-champignon.jpg" alt="La victoire contre le Roi Champignon : il vole en morceaux, une gerbe de jetons jaillit d'une colonne de lumière et une couronne dorée flotte au-dessus du joueur" width="1280" height="720" loading="lazy">
-      <p class="bulle bulle-entree"><span>À son entrée</span>«&#160;Hop là&#160;! À genoux devant le Roi Champignon&#160;!&#160;»</p>
-      <p class="bulle bulle-defaite"><span>Quand il tombe</span>«&#160;Non&#160;! Ma couronne... mon royaume... tout moisi&#160;!&#160;»</p>
-    </figure>
-    <div class="victoire-texte">
-      <span class="sur-titre">Ta victoire</span>
-      <h3>Un boss qui tombe, ça se voit</h3>
-      <ol class="victoire-temps">
-        <li>Il vole en morceaux, faits de sa propre matière.</li>
-        <li>Une gerbe de jetons jaillit d'une colonne de lumière.</li>
-        <li>Une couronne de lumière se pose sur chaque vainqueur.</li>
-      </ol>
-      <p>Et chaque boss a sa voix : il te parle à son entrée, et une dernière fois quand il tombe. Les premiers fanfaronnent ; les plus redoutables font froid dans le dos.</p>
+  <!-- (af, 29/10/2026) LE PODIUM DU MOMENT : les trois premiers du classement général (API.md 2.2, theme=general), leur tête
+       découpée de leur peau ; sans le classement, ce bloc reste caché (jamais un pseudo ni un chiffre inventé) -->
+  <div class="dedans podium-accueil" data-podium hidden>
+    <div class="podium-texte">
+      <span class="sur-titre">Le classement</span>
+      <h3>Le podium du moment</h3>
+      <p>Ton niveau, tes ventes, ton île, tes boss, la mer : tout compte. Tu commences en bas, et chaque soir quelqu'un monte.</p>
+      <a class="bouton bouton-or" href="classement.html">Tout le classement <span class="fleche" aria-hidden="true">&#8250;</span></a>
     </div>
-  </div>
-  <div class="dedans rang-panoplies">
-    <div class="panoplies monte">
-      <figure class="ecran-large"><video data-auto muted loop playsinline preload="none" poster="assets/affiches/panoplies_portees.jpg" data-src="assets/videos/panoplies_portees.mp4" aria-label="Vidéo : un joueur essaie les panoplies des boss, l'une après l'autre"></video></figure>
-      <article class="carte pancarte p2">
-        <span class="num">Les panoplies</span>
-        <h3>Chaque boss a son armure, et chaque armure son pouvoir</h3>
-        <p>Respirer sans fin sous l'eau. Sauter une seconde fois en l'air. Te couvrir d'une carapace de givre avec l'armure du Yéti. Chaque panoplie change ta façon de jouer.</p>
-        <ul>
-          <li>Chaque pièce donne déjà un bonus ; les quatre ensemble éveillent le pouvoir.</li>
-          <li>À la forge, tes éclats de boss deviennent la pièce qui te manque.</li>
-          <li>Un mode Héroïque pour ceux qui en redemandent.</li>
-          <li>Les pouvoirs des armes et des armures se voient en 3D, avec leurs sons.</li>
-        </ul>
-      </article>
-    </div>
+    <ol class="podium-marches fond-ciel" data-podium-marches aria-label="Les trois premiers du classement général"></ol>
   </div>
 </section>
 
-<!-- ============ LE COMBAT : chaque arme a ses coups (le combat refait) ============ -->
-<section class="pan pan-nuit combat" id="combat" aria-labelledby="combat-titre">
-  <div class="dedans">
-    <div class="texte monte">
-      <span class="sur-titre">Le combat</span>
-      <h2 id="combat-titre">Chaque arme a ses coups</h2>
-      <p>Sur Casteria, chaque arme frappe à sa façon et a son combo : un revers, un coup en avant, un balayage qui prend plusieurs monstres d'un seul geste. Tiens le clic, ton arme enchaîne son combo. Et les armes de boss laissent une traînée à la couleur de leur boss.</p>
-    </div>
-    <div class="cartes-combat">
-      <figure class="monte"><img src="assets/images/casteria-combat-arme-de-boss.jpg" alt="Un joueur frappe avec le sabre de l'Oni, sa traînée de braise derrière la lame" width="1152" height="720" loading="lazy"><figcaption><strong>Ses coups, son combo</strong>Chaque arme a ses gestes et les enchaîne en combo quand tu tiens le clic.</figcaption></figure>
-      <figure class="monte"><img src="assets/images/casteria-combat-balayage.jpg" alt="Un grand coup d'épée à deux mains qui balaie trois monstres d'un seul geste, sa traînée violette" width="1152" height="720" loading="lazy"><figcaption><strong>Deux mains, ou une main et un bouclier</strong>Les grandes armes frappent fort et large, mais ta main gauche ne sert plus. Une épée te laisse ton bouclier.</figcaption></figure>
-      <figure class="monte"><img src="assets/images/casteria-combat-dernier-coup.jpg" alt="La hache de Singularité tournoie au dernier coup de son combo" width="1152" height="720" loading="lazy"><figcaption><strong>La fin de combo des armes de boss</strong>Au dernier coup du combo, chaque arme de boss déchaîne son effet.</figcaption></figure>
-      <figure class="monte"><img src="assets/images/casteria-combat-barre-de-vie.jpg" alt="Des monstres blessés, chacun avec sa barre de vie verte au-dessus de la tête ; la vache, elle, n'en a pas" width="1152" height="720" loading="lazy"><figcaption><strong>Une barre de vie au-dessus des monstres</strong>Le vert, ce qui leur reste ; le sombre, ce que tu leur as pris. Sur les boss aussi.</figcaption></figure>
-    </div>
-    <p class="combat-sang monte"><strong>Le sang</strong> se règle dans le launcher : normal, réduit ou aucun.</p>
-  </div>
+<!-- ============ LES GRANDS EXPLOITS (af, 29/10/2026) : le fil du serveur (API.md 2.8), qui défile ; caché sans lui ============ -->
+<section class="bande-exploits fond-pierres relief" id="exploits" data-exploits hidden aria-labelledby="exploits-titre">
+  <h2 id="exploits-titre" class="exploits-titre"><span class="sur-titre">En ce moment sur Casteria</span>Les derniers exploits</h2>
+  <div class="exploits-piste" data-exploits-piste><ul class="exploits-liste" data-exploits-liste></ul></div>
 </section>
 
-<!-- la bande entre la nuit des boss et le rouge de la planète : des braises qui montent -->
 <div class="bande-braises" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
 
 <!-- ============ LA PLANÈTE ============ -->
@@ -444,57 +278,62 @@
     <div class="cartes-planete">
       <figure class="monte"><img src="assets/images/casteria-planete-trou-noir-esquif.jpg" alt="L'Esquif posé sur la planète, devant le trou noir et son anneau de feu" width="1280" height="720" loading="lazy"><figcaption><strong>L'Esquif</strong>Cinq paliers à rénover sur ton île, puis le départ.</figcaption></figure>
       <figure class="monte"><img src="assets/images/casteria-planete-trou-noir-comete.jpg" alt="Le ciel rouge de la planète : le trou noir et son anneau de feu, une comète qui passe" width="2048" height="1152" loading="lazy"><figcaption><strong>Ses trois anneaux</strong>Du Bord lointain à l'Anneau intérieur, ils s'ouvrent aux niveaux 60, 63 et 66, chacun avec ses gisements.</figcaption></figure>
-      <figure class="monte"><img src="assets/images/casteria-planete-salamandre-de-braise.jpg" alt="Une salamandre de braise sur le sol de la planète, le trou noir derrière elle" width="1280" height="720" loading="lazy"><figcaption><strong>Ses bêtes</strong>Des bêtes qu'on ne trouve que là-haut, à capturer à l'œuf.</figcaption></figure>
-      <figure class="monte"><img src="assets/images/casteria-planete-recolte.jpg" alt="La récolte d'un gisement de la planète : la barre à arrêter au bon moment" width="680" height="400" loading="lazy"><figcaption><strong>Ses gisements</strong>On ne mine pas la planète : on la récolte, à la foreuse.</figcaption></figure>
     </div>
   </div>
 </section>
 
-<!-- ============ LA BOUTIQUE : ses choses en volume, en couches qui suivent la souris ============ -->
-<section class="pan pan-nuit boutique-scene" id="boutique" data-scene>
-  <div class="dedans deux-colonnes">
-    <div class="texte monte">
-      <span class="sur-titre">La boutique</span>
-      <h2>Soutiens le serveur, fais-toi plaisir</h2>
-      <p>Les crédits sont la monnaie de la boutique, à part des jetons. Avec eux, tu t'offres des familiers et des montures qu'on ne trouve qu'ici. Ils s'achètent, et se gagnent aussi en jouant : les missions du jour, les votes, les quêtes de Ludovic.</p>
-      <ul class="puces">
-        <li><img class="pixel" src="assets/icones/credit.png" alt="" width="24" height="24" loading="lazy">Des familiers et des bêtes rares</li>
-        <li><img class="pixel" src="assets/icones/jeton.png" alt="" width="24" height="24" loading="lazy">Des clés de caisses, des couleurs de pseudo et des cadres de titre</li>
-        <li><img class="pixel" src="assets/icones/ticket.png" alt="" width="24" height="24" loading="lazy">Des cadeaux pour tout le serveur</li>
-      </ul>
-      <a class="bouton bouton-or grand" href="boutique.html">Ouvrir la boutique <span class="fleche" aria-hidden="true">&#8250;</span></a>
+
+<div class="frise frise-corde" aria-hidden="true"></div>
+
+<!-- ============ AU PALAIS, CE SOIR (af, 29/10/2026 : les deux portes et la Gazette fondues en une bande) : le casino, les
+     donjons, les événements ; les heures lues dans le jeu : 18 h 30 le Sol qui lâche (ai_evt_sol.js:135), 20 h 15 le Défi Éclair chaque jour (ev_eclair.js:62 et 65), 21 h la Bataille de neige (ai_evt_neige.js:728) ============ -->
+<section class="pan fond-bois relief palais-bande" id="palais" aria-labelledby="palais-titre">
+  <div class="dedans">
+    <div class="tete monte">
+      <span class="sur-titre">Au palais</span>
+      <h2 id="palais-titre">Chaque soir, le palais s'anime</h2>
     </div>
-    <div class="couches" aria-hidden="true">
-      <div class="pointeur c1" data-profondeur="20"><img class="flotte f-lent" src="assets/boutique/baleine.png" alt="" width="420" height="420" loading="lazy"></div>
-      <div class="pointeur c2" data-profondeur="46"><img class="flotte f-sol" src="assets/boutique/caisse.png" alt="" width="420" height="420" loading="lazy"></div>
-      <div class="pointeur c3" data-profondeur="70"><img class="flotte f-vif pixel" src="assets/icones/credit.png" alt="" width="120" height="120" loading="lazy"></div>
-      <div class="pointeur c4" data-profondeur="34"><img class="flotte f-vol" src="assets/boutique/renard.png" alt="" width="420" height="420" loading="lazy"></div>
+    <div class="palais-cartes alterne-court">
+      <a class="palais-carte panneau-bois monte" href="evenements.html">
+        <img src="assets/images/casteria-marche-caisses-2010.jpg" alt="" width="1280" height="720" loading="lazy">
+        <span class="palais-mot">Les soirées</span>
+        <span class="palais-dit">18&#160;h&#160;30, 20&#160;h&#160;15, 21&#160;h : un mini-jeu ou le Défi Éclair. Tape /participer, on vient te chercher.</span>
+      </a>
+      <a class="palais-carte panneau-bois monte" href="casino.html">
+        <img src="assets/images/casteria-casino-salle-1280.webp" alt="" width="1280" height="720" loading="lazy">
+        <span class="palais-mot">Le casino</span>
+        <span class="palais-dit">La roulette à plusieurs, le blackjack, les machines : on y mise ses minerais, jamais ses jetons.</span>
+      </a>
+      <a class="palais-carte panneau-bois monte" href="donjons.html">
+        <img src="assets/images/casteria-donjon-plaques-1280.webp" alt="" width="1280" height="742" loading="lazy">
+        <span class="palais-mot">Les donjons</span>
+        <span class="palais-dit">Seul ou à trois, trois niveaux chacun, et un coffre pour chaque joueur.</span>
+      </a>
     </div>
   </div>
 </section>
 
-<!-- ============ LE FINAL : on t'attend en jeu ============ -->
-<section class="final" id="final" data-scene aria-labelledby="final-titre">
-  <div class="final-fond" aria-hidden="true"><div class="pointeur" data-profondeur="12"><img src="assets/images/casteria-planete-trou-noir-comete.jpg" alt="" width="2048" height="1152" loading="lazy"></div></div>
-  <div class="etincelles" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-  <div class="dedans deux-colonnes">
-    <div class="texte monte">
-      <span class="sur-titre">La suite, c'est toi</span>
-      <h2 id="final-titre">On t'attend en jeu.</h2>
-      <p>Ton île t'attend déjà sur la mer. Le launcher est gratuit et installe tout.</p>
-      <div class="gestes"><a class="bouton bouton-orange grand" href="#telecharger"><span class="triangle" aria-hidden="true"></span>Jouer gratuitement</a><a class="bouton-verre" href="#voyage">Revoir le voyage <span class="fleche" aria-hidden="true">&#8250;</span></a></div>
+<!-- ============ LA BOUTIQUE, EN UNE BANDE ============ -->
+<section class="boutique-bande fond-ciel relief" id="boutique" aria-labelledby="boutique-titre">
+  <div class="dedans boutique-ligne">
+    <img class="boutique-bete" src="assets/boutique/renard.png" alt="" width="420" height="420" loading="lazy">
+    <div>
+      <h2 id="boutique-titre">Soutiens le serveur, fais-toi plaisir</h2>
+      <p>Des familiers et des montures qu'on ne trouve qu'ici, en crédits. Ils s'achètent, et se gagnent aussi en jouant.</p>
     </div>
-    <div class="final-sprite" aria-hidden="true"><div class="pointeur" data-profondeur="40"><img class="flotte f-sol" src="assets/volume/fregate.webp" alt="" width="855" height="1027" loading="lazy"></div></div>
+    <a class="bouton bouton-or" href="boutique.html"><img class="pixel" src="assets/icones/credit.png" alt="" width="20" height="20">La boutique</a>
   </div>
 </section>
 
-<!-- ============ TÉLÉCHARGER ============ -->
+<div class="frise frise-creneaux" aria-hidden="true"></div>
+
+<!-- ============ ON T'ATTEND EN JEU : le final et le téléchargement ensemble (af, 29/10/2026) ============ -->
 <section class="clair telecharge" id="telecharger">
   <div class="dedans">
     <div class="tete apparait">
-      <span class="ruban">Rejoins-nous</span>
-      <h2>Télécharger le launcher Casteria</h2>
-      <p>Pas de mods à chercher, pas de version à régler. Sur Windows, sur Mac et sur Linux : le launcher s'occupe de tout, tu n'as plus qu'à jouer.</p>
+      <span class="ruban">La suite, c'est toi</span>
+      <h2>On t'attend en jeu.</h2>
+      <p>Ton île t'attend déjà sur la mer. Le launcher Casteria est gratuit : sur Windows, sur Mac et sur Linux, il installe tout, tu n'as plus qu'à jouer.</p>
     </div>
     <div class="launcher">
       <div class="cadre-bois apparait de-gauche penche"><img class="perche" src="assets/boutique/phenix.png" alt="" width="420" height="420" loading="lazy"><img src="assets/images/launcher-casteria-2910.jpg" alt="Le launcher Casteria : le bouton Jouer, l'état du serveur et les nouvelles de chaque mise à jour" width="1100" height="700" loading="lazy"></div>
@@ -607,23 +446,6 @@
   </div>
 </section>
 
-<!-- ============ DÉCOUVRIR (29/10/2026, le propriétaire : un bloc qui mène aux cinq pages de Casteria par sujet) ============ -->
-<section class="clair" id="decouvrir" aria-labelledby="decouvrir-titre">
-  <div class="dedans">
-    <div class="tete apparait">
-      <span class="ruban">Découvrir</span>
-      <h2 id="decouvrir-titre">Casteria, sujet par sujet</h2>
-      <p>Tu cherches un serveur bien précis ? Chaque page te raconte une partie du jeu, en détail.</p>
-    </div>
-    <div class="cartes decouvrir">
-      <a class="carte apparait" href="serveur-minecraft-ile.html"><h3>Un serveur Minecraft d'île</h3><p>Pour les fans de skyblock : ton île, tes machines, puis toute la mer à explorer.</p></a>
-      <a class="carte apparait" href="serveur-minecraft-modde.html"><h3>Un serveur Minecraft moddé</h3><p>Des mods faits maison pour Casteria, installés pour toi, gratuitement.</p></a>
-      <a class="carte apparait" href="launcher-minecraft-modde.html"><h3>Le launcher Minecraft moddé</h3><p>Il installe le jeu et les mods, puis se met à jour tout seul.</p></a>
-      <a class="carte apparait" href="serveur-minecraft-rpg.html"><h3>Un serveur Minecraft RPG</h3><p>Des niveaux, des quêtes, des missions et un vrai combat.</p></a>
-      <a class="carte apparait" href="serveur-minecraft-boss.html"><h3>Des boss et des donjons</h3><p>Arène après arène, leurs panoplies et le mode Héroïque.</p></a>
-    </div>
-  </div>
-</section>
 </main>
 
 <footer>
@@ -631,15 +453,16 @@
     <div class="col">
       <img src="assets/logo/casteria-logo-300.webp" alt="Casteria" width="70" height="70" loading="lazy">
       <nav aria-label="Le pied de page">
-        <a href="./">Accueil</a><a href="commencer.html">Par où commencer</a><a href="evenements.html">Les événements</a><a href="pirates.html">La mer et les pirates</a><a href="donjons.html">Les donjons</a><a href="casino.html">Le casino</a><a href="#combat">Le combat</a><a href="classement.html">Classement</a><a href="boutique.html">Boutique</a><a href="vote.html">Voter</a><a href="reglement.html">Le règlement</a><a href="#telecharger">Télécharger</a><a href="serveur-minecraft-ile.html">Serveur Minecraft d'île</a><a href="serveur-minecraft-modde.html">Serveur moddé</a><a href="launcher-minecraft-modde.html">Launcher moddé</a><a href="serveur-minecraft-rpg.html">Serveur RPG</a><a href="serveur-minecraft-boss.html">Boss et donjons</a>
-      <a href="mentions-legales.html">Mentions légales</a><a href="confidentialite.html">Confidentialité</a><a href="conditions.html">Conditions</a></nav>
+        <a href="./">Accueil</a><a href="commencer.html">Par où commencer</a><a href="evenements.html">Les événements</a><a href="pirates.html">La mer et les pirates</a><a href="donjons.html">Les donjons</a><a href="casino.html">Le casino</a><a href="#boss">Les boss</a><a href="classement.html">Classement</a><a href="carte.html">La carte</a><a href="exploits.html">Les exploits</a><a href="boutique.html">Boutique</a><a href="vote.html">Voter</a><a href="compte.html">Mon compte</a><a href="reglement.html">Le règlement</a><a href="#telecharger">Télécharger</a><a href="serveur-minecraft-ile.html">Serveur Minecraft d'île</a><a href="serveur-minecraft-modde.html">Serveur moddé</a><a href="launcher-minecraft-modde.html">Launcher moddé</a><a href="serveur-minecraft-rpg.html">Serveur RPG</a><a href="serveur-minecraft-boss.html">Boss et donjons</a><a href="mentions-legales.html">Mentions légales</a><a href="confidentialite.html">Confidentialité</a><a href="conditions.html">Conditions</a>
+      </nav>
     </div>
     <small>Casteria est un serveur Minecraft indépendant, créé par des joueurs. Il n'est ni affilié à Mojang ni à Microsoft, ni approuvé par eux. Minecraft est une marque de Mojang Studios.</small>
   </div>
 </footer>
+<script src="js/api.js" defer></script>
 <script src="js/carrousel.js" defer></script>
 <script src="js/site.js" defer></script>
 <script src="js/scene.js" defer></script>
-<script src="js/objets.js" defer></script>
+<script src="js/accueil.js" defer></script>
 </body>
 </html>

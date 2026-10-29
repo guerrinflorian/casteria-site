@@ -1,14 +1,18 @@
 // Les règles du site, vérifiées en une seconde : npm run verifier (code 0 : tout est bon)
 'use strict'
 const fs = require('fs'), path = require('path')
-const RACINE = path.join(__dirname, '..'), PAGES = ['index.html', 'commencer.html', 'pirates.html', 'casino.html', 'donjons.html', 'evenements.html', 'classement.html', 'boutique.html', 'reglement.html', 'vote.html', 'discord.html', 'rejoindre.html', 'mentions-legales.html', 'confidentialite.html', 'conditions.html', 'merci.html', '404.html', 'serveur-minecraft-ile.html', 'serveur-minecraft-modde.html', 'launcher-minecraft-modde.html', 'serveur-minecraft-rpg.html', 'serveur-minecraft-boss.html']
+const RACINE = path.join(__dirname, '..'), PAGES = ['index.html', 'commencer.html', 'pirates.html', 'casino.html', 'donjons.html', 'evenements.html', 'classement.html', 'boutique.html', 'reglement.html', 'vote.html', 'discord.html', 'rejoindre.html', 'mentions-legales.html', 'confidentialite.html', 'conditions.html', 'merci.html', '404.html', 'serveur-minecraft-ile.html', 'serveur-minecraft-modde.html', 'launcher-minecraft-modde.html', 'serveur-minecraft-rpg.html', 'serveur-minecraft-boss.html', 'connexion.html', 'compte.html', 'admin.html',
+  // (29/10/2026, 67) la carte vivante, le fil des exploits, le profil public et son image de partage
+  'carte.html', 'exploits.html', 'joueur.html', 'partage.html', 'ile.html']
 // LES FICHIERS LOURDS PERMIS (aucun depuis le 13/10/2026 : la bande-annonce de l'accueil a été retirée sur la demande du
 // propriétaire) : un fichier de plus de 5 Mo n'entre ici qu'avec son plafond en Mo, et la vidéo qui le cite porte
 // « data-clic » (chargée au clic du visiteur), jamais « data-auto »
 // (27/10/2026) le trailer en 1080p : cite par AUCUNE page (le lien du Discord et de la publicite), 32 Mo au plus
 const LOURDS_PERMIS = { 'assets/videos/casteria-trailer.mp4': 32 }
 // les pages qui restent hors de Google et hors du plan du site : la 404, et « Merci » (la page de retour après un achat)
-const HORS_GOOGLE = ['404.html', 'merci.html', 'rejoindre.html']
+// (29/10/2026, le prototype du compte) la connexion, le compte du joueur et l'espace de l'équipe : hors de Google aussi
+// (29/10/2026, 67) le profil (joueur.html, le modele que le VPS remplit pour chaque joueur) et le patron de son image de partage
+const HORS_GOOGLE = ['404.html', 'merci.html', 'rejoindre.html', 'connexion.html', 'compte.html', 'admin.html', 'joueur.html', 'partage.html', 'ile.html']
 // les mots qui diraient que le serveur n'est pas ouvert (le propriétaire, 05/10) : les pages, et les phrases du classement
 const MOTS_INTERDITS = ['en développement', 'bientôt', 'pas encore ouvert', 'ouvrira', "jour de l'ouverture"]
 // (19/10/2026, les pages du casino et des donjons) AUCUN SPOILER (le propriétaire) : jamais l'Abyssarque, jamais le dernier
@@ -73,46 +77,206 @@ function verifierBoutique(faute) {
   if (/class="[^"]*\b(?:cadre-bois|bouton-vert)\b/.test(page)) faute('boutique.html : le tableau de parchemin (cadre-bois) ou le bouton vert est revenu (la boutique est dans la nuit et l\'or du site)')
   for (const r of reglesCss(lire('css/boutique.css'))) for (const m of r.corps.matchAll(/border(?:-[a-z]+)*-radius\s*:\s*([^;]+)/g)) if (!/^0(px)?\s*$/.test(m[1].trim())) faute('css/boutique.css, « ' + r.sel.slice(0, 60) + ' » : un arrondi (' + m[1].trim() + ') : jamais une pastille arrondie')
 }
-// LE CLASSEMENT (classement.html, js/classement.js) : (la 119) la page lit le fichier brut classement.json du gist que le
-// serveur du jeu publie, et rien d'autre ; elle n'écrit jamais un texte reçu comme du code de page. (le 20/10/2026) La
-// fonction /api/classement, qui lisait la base du jeu, est RETIRÉE (la base refuse Vercel, la page ne la lisait plus, et sa
-// copie du calcul du Score ne suivait plus le jeu) : elle ne revient pas.
+// LE CLASSEMENT ET LES PAGES DU COMPTE (le prototype du 29/10/2026 ; le contrat : API.md, à côté du site). Le classement ne lit
+// plus le gist : TOUT passe par l'API du site (le VPS de casteria.fr, la même origine : /api/...), par UN seul script,
+// js/api.js (CasteriaApi), et son interrupteur des données d'essai (ESSAI : donnees-essai/, des pseudos et des chiffres
+// inventés, et un bandeau qui le dit). Les autres scripts du compte ne parlent jamais au réseau eux-mêmes. Rien de reçu ne
+// s'écrit comme du code de page. (le 20/10/2026, gardé) La fonction api/classement.js de Vercel ne revient pas : l'API vit
+// sur le VPS et ne recompte rien (« le jeu calcule, l'API lit »).
+const SCRIPTS_COMPTE = ['js/api.js', 'js/classement.js', 'js/peau.js', 'js/connexion.js', 'js/compte.js', 'js/admin.js', 'js/graphe.js']
+const SANS_RESEAU = ['js/classement.js', 'js/peau.js', 'js/connexion.js', 'js/compte.js', 'js/admin.js', 'js/graphe.js']
+// la seule adresse complète permise dans ces scripts : l'espace de noms du SVG (js/graphe.js), qui n'est pas une adresse lue
+const ADRESSES_PERMISES = { 'js/graphe.js': ['http://www.w3.org/2000/svg'] }
+// (29/10/2026) les vrais pseudos connus (l'équipe, les vidéastes) : jamais dans les données d'essai
+const VRAIS_PSEUDOS = ['_Floskyl_', 'LRVG57', 'Elcoo1', 'Bloubi_', 'kidnamed', 'Aviteur']
+const LA_3D = 'assets/vendor/skinview3d/skinview3d.bundle.js'
+function codeDe(js) { return js.split('\n').filter(l => !/^\s*\/\//.test(l)).join('\n') }
 function verifierClassement(faute) {
   const js = lire('js/classement.js')
   if (!js) return faute('js/classement.js manque')
-  if (lire('api/classement.js')) faute('api/classement.js est revenu : le classement vient du gist que le jeu publie (la fonction est retirée le 20/10/2026)')
+  if (lire('api/classement.js')) faute('api/classement.js est revenu : le classement vient de l\'API du site sur le VPS (API.md), jamais d\'une fonction de Vercel (retirée le 20/10/2026)')
   let vj = null
   try { vj = JSON.parse(lire('vercel.json')) } catch (e) { vj = null }
   if (!vj) faute('vercel.json illisible')
-  else if (vj.functions && Object.keys(vj.functions).length) faute('vercel.json : une fonction est revenue (« functions ») : le site n\'en a plus (le classement : le gist)')
-  if (/innerHTML|outerHTML|insertAdjacentHTML|document\.write|\beval\(/.test(js)) faute('js/classement.js : un texte reçu ne s\'écrit jamais comme du code de page (textContent seulement)')
-  // (la 119) la page lit le fichier brut du gist que le serveur du jeu publie, et rien d'autre : la seule adresse permise est
-  // celle des fichiers bruts des gists ; elle ne lit plus /api/classement ; sans identifiant de gist, la panne
-  for (const u of js.match(/https?:\/\/[^\s'"`)]+/g) || []) if (u !== 'https://gist.githubusercontent.com/') faute('js/classement.js : une adresse d\'un autre serveur : ' + u)
-  // (le code seul : la phrase de la panne est aussi dans le commentaire de tête, qui ne s'affiche jamais)
-  const code = js.split('\n').filter(l => !/^\s*\/\//.test(l)).join('\n')
-  if (!code.includes("'https://gist.githubusercontent.com/' + GIST_COMPTE + '/' + GIST_ID + '/raw/classement.json'")) faute('js/classement.js : la page lit le fichier brut classement.json du gist (https://gist.githubusercontent.com/<compte>/<id>/raw/classement.json)')
-  if (code.includes('/api/classement')) faute('js/classement.js : la page ne lit plus /api/classement (la base refuse Vercel) : le gist seulement')
-  if (!/if \(!window\.fetch \|\| !SOURCE\) \{ panne\(\); return \}/.test(code)) faute('js/classement.js : sans identifiant de gist (SOURCE vide), la page dit la panne sans rien lire')
-  if (!/fetch\(SOURCE, \{ credentials: 'omit'/.test(code)) faute('js/classement.js : la lecture du gist part sans cookie (credentials: \'omit\')')
-  const idGist = (code.match(/GIST_ID = '([^']*)'/) || [])[1]
-  if (idGist === undefined || !/^([0-9a-f]{32})?$/.test(idGist)) faute('js/classement.js : GIST_ID est vide ou l\'identifiant hexadécimal du gist (32 caractères, la fin de son adresse sur gist.github.com)')
-  if (!/GIST_COMPTE = '[A-Za-z0-9-]{1,39}'/.test(code)) faute('js/classement.js : GIST_COMPTE est un nom de compte GitHub')
-  // (18/10/2026, le classement est en ligne depuis la 119 : « arrive très bientôt » n'était plus vrai, et « bientôt » est un
-  // mot interdit du site) la panne dit ce qui se passe et où voir le classement
+  else if (vj.functions && Object.keys(vj.functions).length) faute('vercel.json : une fonction est revenue (« functions ») : le site n\'en a pas (l\'API vit sur le VPS)')
+  for (const f of SCRIPTS_COMPTE) {
+    const s = lire(f)
+    if (!s) { faute(f + ' manque'); continue }
+    const code = codeDe(s)
+    if (/innerHTML|outerHTML|insertAdjacentHTML|document\.write|\beval\(|new Function\(/.test(code)) faute(f + ' : un texte reçu ne s\'écrit jamais comme du code de page (textContent seulement)')
+    for (const u of code.match(/https?:\/\/[^\s'"`)]+/g) || []) if (!(ADRESSES_PERMISES[f] || []).includes(u)) faute(f + ' : une adresse d\'un autre serveur : ' + u + ' (une seule origine : /api/... du site)')
+    for (const mot of MOTS_INTERDITS) if (new RegExp('(^|[^a-zà-ÿ])' + mot, 'i').test(code)) faute(f + ' : un mot interdit : « ' + mot + ' »')
+    if (SANS_RESEAU.includes(f) && /\bfetch\(|XMLHttpRequest|EventSource|sendBeacon/.test(code)) faute(f + ' : il parle au réseau lui-même : tout passe par CasteriaApi (js/api.js)')
+    if (/console\.(log|info|debug|warn|error)\(/.test(code)) faute(f + ' : rien dans la console (une donnée du joueur, un mot de passe n\'y vont jamais)')
+  }
+  // js/api.js : l'interrupteur des données d'essai, déclaré une fois ; le bandeau sous lui ; la même origine seulement
+  const api = codeDe(lire('js/api.js') || '')
+  const decl = api.match(/\n  var ESSAI = (true|false)(?=\n)/g) || [], aff = (api.match(/\bESSAI\s*=(?!=)/g) || []).length
+  if (decl.length !== 1 || aff !== 1) faute('js/api.js : l\'interrupteur « var ESSAI = true|false » doit être déclaré une fois (' + decl.length + ')')
+  if (!api.includes('\n  if (ESSAI) bandeauEssai()\n') || (api.match(/(?<!function )bandeauEssai\(\)/g) || []).length !== 1) faute('js/api.js : le bandeau des données d\'essai se pose sous l\'interrupteur (« if (ESSAI) bandeauEssai() »), et nulle part ailleurs')
+  if (!/function bandeauEssai\(\) \{[\s\S]*?Données d\\'essai/.test(api)) faute('js/api.js : le bandeau dit « Données d\'essai » (les pseudos et les chiffres sont inventés)')
+  if (!/credentials: 'same-origin'/.test(api) || /credentials: '(include|omit)'/.test(api)) faute('js/api.js : les demandes partent vers la même origine, le cookie de session avec (credentials: \'same-origin\'), jamais vers un autre site')
+  for (const m of api.match(/demander\('[^']*'/g) || []) if (!/^demander\('(\/api\/|donnees-essai\/)/.test(m)) faute('js/api.js : une demande hors de /api/ (ou des données d\'essai) : ' + m)
+  if (!/new EventSource\('\/api\/admin\/tchat'\)/.test(api)) faute('js/api.js : le tchat en direct arrive par /api/admin/tchat (un flux SSE, API.md 4.8)')
+  if (!/demander\('\/api\/connexion', \{ methode: 'POST'/.test(api)) faute('js/api.js : la connexion part en POST vers /api/connexion (jamais le mot de passe dans l\'adresse)')
+  // la peau : seulement une adresse de l'API ou du site
+  if (!/function peau\(u\) \{[\s\S]*?\\\/api\\\/peau\\\/\[A-Za-z0-9_\]\{3,16\}\$/.test(api)) faute('js/api.js : une peau ne vient que de /api/peau/<pseudo> (ou des peaux du site) : la règle de peau() manque')
+  const peau = codeDe(lire('js/peau.js') || '')
+  if ((peau.match(/A\.peau\(url\)/g) || []).length < 3) faute('js/peau.js : chaque peau passe par CasteriaApi.peau() (la tête, le joueur de face, la 3D)')
+  // la 3D : skinview3d copiée dans le site (jamais un CDN), sa licence à côté, chargée par js/peau.js seulement (après la page)
+  if (!peau.includes("var BIBLIO = '" + LA_3D + "'")) faute('js/peau.js : la 3D se charge depuis la copie du site (' + LA_3D + '), jamais d\'ailleurs')
+  if (!fs.existsSync(path.join(RACINE, LA_3D))) faute(LA_3D + ' manque (skinview3d, copiée dans le site)')
+  const lic = lire('assets/vendor/skinview3d/LICENCES.txt')
+  if (!/MIT License/.test(lic) || !/skinview3d/.test(lic) || !/three\.js/.test(lic)) faute('assets/vendor/skinview3d/LICENCES.txt : les licences MIT de skinview3d et de three.js, à côté de la bibliothèque')
+  for (const p of PAGES) if (lire(p).includes('skinview3d')) faute(p + ' : la 3D ne se charge jamais par la page (js/peau.js la charge après, au repos ou au premier geste)')
+  // le classement : la panne ; les donjons (niveaux, tailles), le hasard (ses colonnes), les îles ; les choix disent lesquels sont choisis
+  const code = codeDe(js)
   if (!code.includes("'Le classement ne s\\'affiche pas pour l\\'instant. En jeu, tape /top.'")) faute('js/classement.js : la phrase de la panne manque (« Le classement ne s\'affiche pas pour l\'instant. En jeu, tape /top. »)')
-  // les phrases du script se lisent sur la page : les mots interdits des pages le sont aussi ici (le code seul)
-  for (const mot of MOTS_INTERDITS) if (new RegExp('(^|[^a-zà-ÿ])' + mot, 'i').test(code)) faute('js/classement.js : un mot interdit : « ' + mot + ' »')
-  // (la 125 du jeu, 18/10/2026) LES DONJONS : les niveaux d'un donjon (« donjon ») dans UNE carte, avec ses tailles de groupe
-  // (« tailles ») ; ses choix sont des boutons qui disent lequel est choisi (aria-pressed)
-  if (!/function carteDonjon\(/.test(code) || code.split('carteDonjon(').length < 3) faute('js/classement.js : les niveaux d\'un donjon vont dans une carte (carteDonjon), comme la rangée des donjons de /top')
   if (!code.includes('c.donjon') || !code.includes('.tailles')) faute('js/classement.js : la page lit le donjon et les tailles de groupe d\'un temps de donjon (« donjon », « tailles »)')
-  if (!code.includes("setAttribute('aria-pressed'")) faute('js/classement.js : un choix de la carte d\'un donjon dit s\'il est choisi (aria-pressed)')
-  // (18/10/2026, une photo à 360 px : « Chevalier_S » puis « ables ») un pseudo du podium tient sur une ligne : ajusterPodium,
-  // au dessin, quand les polices arrivent (ready et loadingdone) et quand la fenêtre change de taille
+  if (!code.includes('c.hasard') || !code.includes('.hasard.col')) faute('js/classement.js : les cinq colonnes d\'un jeu de hasard se choisissent sous lui (« hasard », sa colonne)')
+  if (!code.includes('if (l.ile) {') || !code.includes('function nbAmis(')) faute('js/classement.js : une ligne d\'île (le thème Îles) écrit le nom de l\'île en grand, l\'hôte et ses amis en petit')
+  if (!code.includes("setAttribute('aria-pressed'")) faute('js/classement.js : un choix (classement, niveau, joueurs, colonne) dit s\'il est choisi (aria-pressed)')
+  if (!code.includes("setAttribute('role', 'tab')") || !code.includes("'aria-selected'")) faute('js/classement.js : les thèmes sont des onglets (role tab, aria-selected)')
+  // (18/10/2026, gardé) un pseudo du podium tient sur une ligne : ajusterPodium, au dessin, quand les polices arrivent, quand la fenêtre change
   if (!/function ajusterPodium\(/.test(code) || code.split('ajusterPodium').length < 6 || !code.includes("'loadingdone'")) faute('js/classement.js : un pseudo du podium tient sur une ligne (ajusterPodium : au dessin, quand les polices arrivent, quand la fenêtre change de taille)')
-  // jamais une pastille arrondie (le propriétaire) : aucun arrondi dans la feuille du classement
-  for (const r of reglesCss(lire('css/classement.css'))) for (const m of r.corps.matchAll(/border(?:-[a-z]+)*-radius\s*:\s*([^;]+)/g)) if (!/^0(px)?\s*$/.test(m[1].trim())) faute('css/classement.css, « ' + r.sel.slice(0, 60) + ' » : un arrondi (' + m[1].trim() + ') : jamais une pastille arrondie')
+  if (!code.includes('A.moi()') || !code.includes("'cl-marque toi'")) faute('js/classement.js : « Toi » se surligne quand le joueur est connecté (CasteriaApi.moi)')
+  // jamais une pastille arrondie (le propriétaire) : aucun arrondi dans les feuilles du classement, du compte et de l'espace admin
+  for (const f of ['css/classement.css', 'css/compte.css', 'css/admin.css', 'css/motifs.css']) for (const r of reglesCss(lire(f))) for (const m of r.corps.matchAll(/border(?:-[a-z]+)*-radius\s*:\s*([^;]+)/g)) if (!/^0(px)?\s*$/.test(m[1].trim())) faute(f + ', « ' + r.sel.slice(0, 60) + ' » : un arrondi (' + m[1].trim() + ') : jamais une pastille arrondie')
+  // (29/10/2026 ; le propriétaire : « pas faire tout moche fond violet simple ») LE KIT DES MOTIFS (css/motifs.css, le
+  // KIT_MOTIFS.md du kit) : chaque dessin appelé par une feuille existe (sinon le fond redevient uni sans rien dire) ; les
+  // pages du compte chargent le kit après style.css, posent un fond dessiné et une frise entre deux sections
+  for (const f of ['css/style.css', 'css/motifs.css', 'css/classement.css', 'css/compte.css', 'css/admin.css']) for (const m of (lire(f) || '').matchAll(/url\(\s*["']?(\.\.\/assets\/[^"')]+)["']?\s*\)/g)) if (!fs.existsSync(path.join(RACINE, 'css', m[1]))) faute(f + ' : le dessin ' + m[1] + ' manque (le fond serait uni)')
+  for (const p of ['classement.html', 'connexion.html', 'compte.html', 'admin.html']) {
+    const h = lire(p) || '', i = h.indexOf('<link rel="stylesheet" href="css/style.css">'), j = h.indexOf('<link rel="stylesheet" href="css/motifs.css">')
+    if (i < 0 || j < i) faute(p + ' : le kit des motifs (css/motifs.css) se charge, après css/style.css')
+    if (!/class="[^"]*\bfond-(ciel|pierres|carte|bois|mer)\b/.test(h)) faute(p + ' : aucun fond dessiné (fond-ciel, fond-pierres, fond-carte, fond-bois, fond-mer) : jamais un fond uni')
+    if (!/class="frise frise-(vague|corde|creneaux|etoiles|parchemin)\b/.test(h)) faute(p + ' : aucune frise entre deux sections (frise-vague, frise-corde, frise-creneaux, frise-etoiles, frise-parchemin)')
+  }
+  // (b5, l'assemblage du 29/10 ; la tete : « le kit sur toutes les pages, meme celles que personne n'a touchees ») chaque page qui
+  // charge css/style.css charge aussi le kit, juste apres, et ses deux polices prechargees (woff2, le ttf en secours)
+  for (const p of fs.readdirSync(RACINE).filter(n => n.endsWith('.html'))) {
+    const h = lire(p) || '', m = /<link rel="stylesheet" href="(\/?)css\/style\.css">/.exec(h)
+    if (!m) continue
+    if (h.indexOf('<link rel="stylesheet" href="' + m[1] + 'css/motifs.css">') < m.index) faute(p + ' : le kit des motifs (css/motifs.css) se charge, après css/style.css')
+    for (const pol of ['fredoka', 'lilita_one']) if (!h.includes('<link rel="preload" href="' + m[1] + 'assets/polices/' + pol + '.woff2" as="font" type="font/woff2" crossorigin>')) faute(p + ' : la police ' + pol + '.woff2 n\'est pas prechargee')
+  }
+  for (const pol of ['fredoka', 'lilita_one']) if (!fs.existsSync(path.join(RACINE, 'assets/polices', pol + '.woff2')) || !new RegExp('url\\("\\.\\./assets/polices/' + pol + '\\.woff2"\\) format\\("woff2"\\), url\\("\\.\\./assets/polices/' + pol + '\\.ttf"\\)').test(lire('css/style.css'))) faute('css/style.css : la police ' + pol + ' en woff2 d\'abord, le ttf en secours')
+  // (la tete, 29/10) https://casteria.fr/#telecharger est donnee aux sites de listes de serveurs : l'accueil garde UNE section
+  // id="telecharger", et dedans les boutons du launcher (l'installateur de Windows au moins, et le Mac)
+  {
+    const h = lire('index.html') || '', ids = h.match(/\sid="telecharger"/g) || [], i = h.search(/<section\b[^>]*\sid="telecharger"/)
+    const sec = i < 0 ? '' : h.slice(i, h.indexOf('</section>', i))
+    if (ids.length !== 1 || i < 0) faute('index.html : une seule section id="telecharger" (l\'adresse casteria.fr/#telecharger des sites de listes) : ' + ids.length + ' id, ' + (i < 0 ? 'aucune section' : 'une section'))
+    else if (!/href="https:\/\/github\.com\/guerrinflorian\/casteria-mc\/releases\/download\/installateur\/Casteria-Installation\.exe"/.test(sec) || !/data-track="download-windows"/.test(sec) || !/data-track="download-mac"/.test(sec)) faute('index.html : la section #telecharger porte les boutons du launcher (Windows, Mac)')
+  }
+  // (la tete, 29/10) UNE PAGE LUE SANS JAVASCRIPT MONTRE SON TEXTE : l'etat cache d'avant l'apparition (.apparait, opacite 0)
+  // n'existe que sous @media (scripting: enabled) ; jamais une regle « .apparait { opacity: 0 » hors de ce bloc
+  {
+    const st = lire('css/style.css') || '', i = st.indexOf('.apparait { opacity: 0'), b = st.lastIndexOf('@media (scripting: enabled) {', i)
+    if (i < 0 || b < 0 || i - b > 400 || st.indexOf('.apparait { opacity: 0', i + 1) >= 0) faute('css/style.css : « .apparait » cache seulement sous @media (scripting: enabled) (une page lue sans JavaScript montre tout)')
+  }
+  // 44 PX AU DOIGT (la tete, 29/10) : chaque point d'un carrousel est une zone de 44 x 44 (le losange dessine au milieu), et une
+  // rangee qui ne tient pas s'efface (js : placePoints) ; au telephone, le logo de la barre garde une zone de 44 de haut
+  {
+    const pt = (reglesCss(lire('css/carrousel.css')).find(r => r.sel.trim() === '.carrousel-points button') || {}).corps || ''
+    if (!/width:\s*44px/.test(pt) || !/height:\s*44px/.test(pt)) faute('css/carrousel.css : un point du carrousel fait 44 x 44 au doigt (.carrousel-points button)')
+    if (!/function placePoints\(\) \{ points\.hidden = n \* 44 > /.test(lire('js/carrousel.js'))) faute('js/carrousel.js : une rangee de points qui ne tient pas a 44 px s\'efface (placePoints)')
+    if (!/\.barre \.marque \{ min-height: 44px;/.test(lire('css/style.css'))) faute('css/style.css : au telephone, le logo de la barre garde 44 px de haut au doigt (.barre .marque { min-height: 44px })')
+  }
+  // (la tête, 29/10) UN NOMBRE NE SE COUPE JAMAIS, nulle part : ni dans le texte affiché des pages (hors des balises, des
+  // scripts et des styles), ni dans les textes des scripts ; CasteriaApi.texte rend insécables les milliers et le trait
+  // d'union des textes du jeu ; jamais une coupure de mot dans un panneau du kit (hyphens: manual)
+  for (const p of PAGES) {
+    const vu = (lire(p) || '').replace(/<!--[\s\S]*?-->/g, '').replace(/<script[\s\S]*?<\/script>/g, '').replace(/<style[\s\S]*?<\/style>/g, '').replace(/<[^>]*>/g, ' ')
+    const m = vu.match(/\d[ \u202f]\d{3}(?![\d])/)
+    if (m) faute(p + ' : « ' + m[0] + ' » : l\'espace des milliers est insécable (&nbsp;), jamais une espace ordinaire (un nombre ne se coupe jamais)')
+  }
+  for (const f of SCRIPTS_COMPTE.concat(['js/site.js', 'js/boutique.js'])) for (const m of codeDe(lire(f) || '').match(/'(?:[^'\\\n]|\\.)*'/g) || []) if (/\d[ \u202f]\d{3}(?!\d)/.test(m)) faute(f + ' : un texte du script coupe un nombre (« ' + m.slice(0, 40) + ' ») : l\'espace des milliers est insécable')
+  if (!api.includes("function texte(t) { return String(t === undefined || t === null ? '' : t).replace(/(\\d)[ \\u202f](?=\\d{3}(?!\\d))/g, '$1' + NBSP)") || !api.includes("'$1' + TIRET_INSECABLE)")) faute('js/api.js : CasteriaApi.texte rend insécables les milliers d\'un texte du jeu (et le trait d\'union d\'un mot composé)')
+  if (!reglesCss(lire('css/motifs.css')).some(r => /\.panneau-nuit/.test(r.sel) && /hyphens\s*:\s*manual/.test(r.corps))) faute('css/motifs.css : jamais une coupure de mot dans un panneau (hyphens: manual)')
+  // (le propriétaire, 29/10 vers 18:10 : « donner envie aux joueurs de faire partie du serveur ») CHAQUE PAGE MÈNE AU JEU,
+  // à sa place : au classement « Ta place t'attend » (le launcher), à la fiche « Toi aussi, construis ton île », au compte
+  // sans session « Crée-le en jeu : /register » ; connecté, la page le pousse à monter (la place à viser, l'aspect le plus faible)
+  {
+    const cp = codeDe(lire('js/compte.js') || '')
+    if (!code.includes("'Ta place t\\'attend'") || !code.includes("'Toi aussi, construis ton île'") || (code.match(/\.href = '\.\/#telecharger'/g) || []).length < 2) faute('js/classement.js : le classement mène au jeu : « Ta place t\'attend » et « Toi aussi, construis ton île », avec le launcher (./#telecharger)')
+    if (!code.includes('function dessinerMonter(') || !code.includes("'Encore ' + A.nombre(manque)") || !code.includes('Ton aspect le plus faible monte le plus vite.')) faute('js/classement.js : connecté, la page pousse à monter (les points qui manquent pour la place à viser, l\'aspect le plus faible)')
+    if (!cp.includes("'Pas encore de compte ? Crée-le en jeu : '") || !cp.includes("tel.href = './#telecharger'")) faute('js/compte.js : sans session, « Pas encore de compte ? Crée-le en jeu : /register », et le launcher')
+    if (!cp.includes("m.niveau.prochain.nom")) faute('js/compte.js : le compte dit son prochain déblocage de niveau (niveau.prochain)')
+  }
+  // (la tête, 29/10, les neuf choix ; le propriétaire, 29/10 vers 17:05, l'espace de l'équipe)
+  // - jamais un nombre de boss : le classement retire boss_vaincus et boss_heroiques (même si l'API les envoyait), et aucune
+  //   page ne lit un compte de boss d'un joueur (« vaincus », « heroiques ») : ses victoires seulement
+  if (!code.includes('var HORS_SITE = { boss_vaincus: 1, boss_heroiques: 1 }') || !code.includes('!HORS_SITE[c.id]')) faute('js/classement.js : les classements dont le texte dit un nombre de boss (boss_vaincus, boss_heroiques) ne se montrent jamais (HORS_SITE)')
+  for (const f of ['js/classement.js', 'js/compte.js', 'js/admin.js']) if (/\.boss\.(vaincus|heroiques)\b/.test(codeDe(lire(f) || ''))) faute(f + ' : un compte de boss d\'un joueur (boss.vaincus, boss.heroiques) : jamais un nombre de boss, ses victoires seulement')
+  // - la boutique remplit le pseudo de qui est connecté (/api/moi, par CasteriaApi), et ne coche JAMAIS « C'est bien mon pseudo »
+  {
+    const b = codeDe(lire('js/boutique.js') || ''), h = lire('boutique.html') || ''
+    if (!b.includes('window.CasteriaApi.moi().then(') || !b.includes('pseudoConnecte || sessionStorage')) faute('js/boutique.js : le pseudo de qui est connecté remplit le champ tout seul (CasteriaApi.moi)')
+    if (/\bsur\.checked\s*=\s*(true|!0|1)\b/.test(b) || /\.checked\s*=\s*true/.test(b)) faute('js/boutique.js : la case « C\'est bien mon pseudo » ne se coche jamais par la page')
+    const ia = h.indexOf('<script src="js/api.js" defer></script>'), ib = h.indexOf('<script src="js/boutique.js" defer></script>')
+    if (ia < 0 || ib < 0 || ia > ib) faute('boutique.html : js/api.js se charge avant js/boutique.js (le pseudo de qui est connecté)')
+  }
+  // - l'espace de l'équipe : UN tchat (aucun serveur), aucune liste écrite dans la page (les lieux, les packs, les activités
+  //   viennent des données), une valeur absente jamais dessinée comme un 0, la session de l'équipe de 12 heures
+  {
+    const ad = codeDe(lire('js/admin.js') || ''), gr = codeDe(lire('js/graphe.js') || ''), ap = codeDe(lire('js/api.js') || '')
+    if (/data-serveur|l\.serveur|l\.lieu\b/.test(ad)) faute('js/admin.js : le tchat est UN tchat pour tout le réseau : aucune ligne ne se range par serveur')
+    if (/'Le palais'|'Les îles'|'Les arènes'|'La planète'|var LIEUX\b/.test(ad)) faute('js/admin.js : une liste écrite dans la page (les lieux) : elle vient des données, avec ses noms')
+    if (!ad.includes("var VIDE = 'pas encore de données'") || !/function num\(x\) \{ return typeof x === 'number' && isFinite\(x\) \? x : null \}/.test(ad)) faute('js/admin.js : une valeur absente se dit « pas encore de données », jamais 0 (num, VIDE)')
+    if (/valeur\)\s*\|\|\s*0/.test(gr)) faute('js/graphe.js : une valeur absente (null) se dessine comme un 0 : jamais (num)')
+    if (!ad.includes("r.corps.erreur === 'reconnexion'") || !ap.includes('var EQUIPE_MS = 12 * 3600000') || !ap.includes("refus(401, 'reconnexion')")) faute('js/admin.js, js/api.js : la session de l\'équipe dure 12 heures (401 « reconnexion », API.md 1.3)')
+    if (!ad.includes('function source(d, cle, lu)') || !ad.includes(' ne répond pas : chiffres ')) faute('js/admin.js : chaque tuile dit l\'heure de sa donnée et l\'état de sa source (« Tebex ne répond pas : chiffres de 14:05 »)')
+  }
+  verifierPagesCompte(faute)
+  verifierDonneesEssai(faute)
+}
+// LES PAGES DU COMPTE : la connexion (le pseudo exact et le mot de passe du jeu ; un POST, jamais le mot de passe dans
+// l'adresse ; l'inscription en jeu dite), le compte, l'espace admin (réservé : la page le dit, l'API le refuse)
+function verifierPagesCompte(faute) {
+  const c = lire('connexion.html'), nu = c.replace(/<!--[\s\S]*?-->/g, '')
+  if (!c) return faute('connexion.html manque')
+  const form = (nu.match(/<form\b[^>]*id="connexion"[^>]*>/) || [''])[0]
+  if (!/\smethod="post"/.test(form) || /\smethod="get"/i.test(nu)) faute('connexion.html : le formulaire part en POST (method="post") : jamais le mot de passe dans l\'adresse')
+  if (!/<input id="mot-de-passe" name="mot_de_passe" type="password" autocomplete="current-password"/.test(nu)) faute('connexion.html : le mot de passe dans un champ caché (type="password", autocomplete="current-password")')
+  if (!/<input id="pseudo" name="pseudo" type="text" autocomplete="username"/.test(nu)) faute('connexion.html : le pseudo dans son champ (autocomplete="username")')
+  if (!/<code>\/register<\/code>/.test(nu) || !/pseudo exact/.test(nu)) faute('connexion.html : la page dit de s\'inscrire d\'abord en jeu (/register) et de taper son pseudo exact')
+  const cj = codeDe(lire('js/connexion.js') || '')
+  if (/localStorage|sessionStorage/.test(cj)) faute('js/connexion.js : rien n\'est gardé par la page de connexion (ni le pseudo ni le mot de passe)')
+  if (!cj.includes("'Trop d\\'essais : réessaie dans une minute.'")) faute('js/connexion.js : trop d\'essais se dit « Trop d\'essais : réessaie dans une minute. »')
+  for (const [page, scripts] of [['connexion.html', ['js/api.js', 'js/connexion.js']], ['compte.html', ['js/api.js', 'js/peau.js', 'js/compte.js']], ['admin.html', ['js/api.js', 'js/graphe.js', 'js/admin.js']], ['classement.html', ['js/api.js', 'js/peau.js', 'js/classement.js']]]) {
+    const s = lire(page)
+    for (const sc of scripts) if (!s.includes('<script src="' + sc + '" defer></script>')) faute(page + ' : le script ' + sc + ' n\'est pas chargé (defer)')
+  }
+  const ad = codeDe(lire('js/admin.js') || '')
+  if (!/!r\.corps\.droits \|\| !r\.corps\.droits\.admin/.test(ad) || !ad.includes('réservée à l\\\'équipe')) faute('js/admin.js : la page ne montre rien à qui n\'a pas le grade (Admin, Responsable, Fondateur) et le dit')
+}
+// LES DONNÉES D'ESSAI (donnees-essai/) : chaque fichier porte « essai: true », et aucun vrai pseudo connu
+function verifierDonneesEssai(faute) {
+  const d = path.join(RACINE, 'donnees-essai')
+  if (!fs.existsSync(d)) return
+  let n = 0
+  ;(function lireDossier(x) {
+    for (const f of fs.readdirSync(x)) {
+      const p = path.join(x, f)
+      if (fs.statSync(p).isDirectory()) { lireDossier(p); continue }
+      if (!f.endsWith('.json')) continue
+      n++
+      const s = fs.readFileSync(p, 'utf8'), rel = path.relative(RACINE, p).split(path.sep).join('/')
+      let o = null
+      try { o = JSON.parse(s) } catch (e) { faute(rel + ' : illisible (' + e.message + ')'); continue }
+      if (!o || o.essai !== true) faute(rel + ' : un fichier d\'essai porte « essai: true » (sinon on le prendrait pour une vraie donnée)')
+      for (const v of VRAIS_PSEUDOS) if (s.toLowerCase().includes(v.toLowerCase())) faute(rel + ' : un vrai pseudo (« ' + v + ' ») dans les données d\'essai : des pseudos inventés seulement')
+      for (const t of TIRETS) if (s.includes(t)) faute(rel + ' : un tiret long ou moyen')
+      // (la tête, 29/10) UN NOMBRE NE SE COUPE JAMAIS : aucune espace ordinaire entre les milliers d'un texte d'essai
+      { const m = s.match(/\d[ \u202f]\d{3}(?!\d)/); if (m) faute(rel + ' : « ' + m[0] + ' » : l\'espace des milliers est insécable (U+00A0), jamais une espace ordinaire (un nombre ne se coupe jamais)') }
+      // (la tête, 29/10) jamais un nombre de boss : ni les classements dont le texte le dit, ni un compte de boss d'un joueur
+      if (/"(boss_vaincus|boss_heroiques)"|"vaincus":|"heroiques":/.test(s)) faute(rel + ' : un nombre de boss (boss_vaincus, boss_heroiques, « vaincus », « heroiques ») : seulement des victoires')
+      // (le propriétaire, 29/10) le tchat est UN tchat : aucune ligne ne dit son serveur
+      if (/admin\/tchat\.json$/.test(rel) && /"serveur":|"lieu":/.test(s)) faute(rel + ' : une ligne du tchat dit son serveur : le tchat est un seul tchat pour tout le réseau')
+    }
+  })(d)
+  if (!n) faute('donnees-essai/ est vide')
 }
 // ---------- deux lecteurs, pour les règles du soir du 05/10 (la hero, les hauteurs, la barre du téléphone) ----------
 // Les règles d'une feuille de style : [{ sel, corps, media }]. Les commentaires sont retirés ; @media, @supports et
@@ -201,7 +365,8 @@ function verifierOuvertureEtEnLigne(faute) {
   if (!/\.ouverture\s*\{[^}]*position:\s*fixed/.test(css)) faute('css/style.css : le bandeau (.ouverture) est fixe en bas de l\'écran')
   if (!/\nhtml\.avec-ouverture body \{ padding-bottom: \d+px; \}/.test(css)) faute('css/style.css : la page garde la place du bandeau (html.avec-ouverture body, padding-bottom)')
   // les joueurs en ligne
-  if (!code.includes("'https://gist.githubusercontent.com/' + GIST_COMPTE + '/' + GIST_ID + '/raw/classement.json'")) faute('js/site.js : les joueurs en ligne se lisent dans le fichier brut classement.json du gist')
+  // (b5, la bascule du 29/10) plus le gist : l'API du site, la meme origine
+  if (!code.includes("\n  var SOURCE_EN_LIGNE = '/api/en-ligne'\n") || /gist\.githubusercontent\.com/.test(code)) faute('js/site.js : les joueurs en ligne se lisent par l\'API du site (/api/en-ligne), plus jamais dans le gist')
   if (!/fetch\(SOURCE_EN_LIGNE, \{ credentials: 'omit'/.test(code)) faute('js/site.js : la lecture des joueurs en ligne part sans cookie (credentials: \'omit\')')
   if (!code.includes('var EN_LIGNE_VIEUX_MS = 15 * 60000')) faute('js/site.js : un nombre de joueurs de plus de 15 minutes ne s\'affiche pas (EN_LIGNE_VIEUX_MS)')
   const fEn = code.indexOf('\n  function montrerEnLigne('), fEnFin = fEn < 0 ? -1 : code.indexOf('\n  }\n', fEn + 1)
@@ -272,7 +437,7 @@ function verifierVote(faute) {
   if (!s) return faute('vote.html manque (la page du vote)')
   const nu = s.replace(/<!--[\s\S]*?-->/g, '')
   if ((nu.match(/<ul class="sites-vote"/g) || []).length !== 1) faute('vote.html : la liste des sites de vote (<ul class="sites-vote">) doit y être, une seule fois')
-  else if (!/<ul class="sites-vote"[^>]*>(?:<li>(?:(?!<\/li>)[\s\S])*<\/li>)*<\/ul>/.test(nu)) faute('vote.html : la liste des sites de vote ne porte que des <li> collés (aucune espace entre les balises : vide, elle se cache toute seule)')
+  else if (!/<ul class="sites-vote"[^>]*>(?:<li(?: class="[a-z-]+")?>(?:(?!<\/li>)[\s\S])*<\/li>)*<\/ul>/.test(nu)) faute('vote.html : la liste des sites de vote ne porte que des <li> collés (aucune espace entre les balises : vide, elle se cache toute seule)')
   if (!/<p class="sites-vides[^"]*">(?:(?!<\/p>)[\s\S])*\/vote/.test(nu)) faute('vote.html : la phrase qui remplace une liste vide (<p class="sites-vides">, « tape /vote ») manque')
   // (23/10/2026, le propriétaire : « j'ai mis sur Serveur Privé que ça demande le pseudo ») un site dans la liste : la
   // consigne juste au-dessus dit d'écrire son pseudo du jeu (<p class="vote-consigne">, collée à la liste)
@@ -283,8 +448,20 @@ function verifierVote(faute) {
     if (!/\srel="noopener"/.test(a)) faute('vote.html : un site de vote sans rel="noopener" : ' + a.slice(0, 80))
     if (!/\starget="_blank"/.test(a)) faute('vote.html : un site de vote qui ne s\'ouvre pas à part (target="_blank") : ' + a.slice(0, 80))
   }
+  // (b5, le 29/10/2026 ; la tete) LE SECOND SITE, serveursminecraft.org : sa carte dans la liste, a sa vraie page de vote,
+  // derriere le drapeau de la liste (data-serveursminecraft « eteint » ou « allume » ; eteint, css/vote.css la cache) ; sa
+  // phrase dit la meme connexion que le jeu, /vote et « J'ai voté » ; JAMAIS serveur-minecraft.com (le proprietaire), nulle part
+  {
+    const drapeau = (nu.match(/<ul class="sites-vote"[^>]*\sdata-serveursminecraft="([^"]*)"/) || [])[1]
+    if (drapeau !== 'eteint' && drapeau !== 'allume') faute('vote.html : le drapeau du second site de vote (data-serveursminecraft="eteint" ou "allume") sur la liste')
+    const sm = sitesDeVote().liste || ''
+    if (!/<li class="site-sm"><a class="site-vote" href="https:\/\/www\.serveursminecraft\.org\/serveur\/7794\/" target="_blank" rel="noopener">/.test(sm)) faute('vote.html : la carte de serveursminecraft.org (<li class="site-sm">, https://www.serveursminecraft.org/serveur/7794/) dans la liste des sites')
+    else if (!/Un vote toutes les 24 heures\.[^<]*même connexion que le jeu[^<]*\/vote[^<]*J'ai voté/.test(sm)) faute('vote.html : la carte de serveursminecraft.org dit un vote toutes les 24 heures (un vrai vote : 86 380 s), la même connexion que le jeu, puis /vote et « J\'ai voté »')
+    for (const p of fs.readdirSync(RACINE).filter(n => /\.(html|js|json)$/.test(n)).concat(fs.readdirSync(path.join(RACINE, 'js')).map(n => 'js/' + n))) if (/serveur-minecraft\.com/i.test(lire(p) || '')) faute(p + ' : serveur-minecraft.com (le propriétaire n\'en veut pas)')
+  }
   const css = lire('css/vote.css')
   if (!css) return faute('css/vote.css manque')
+  if (!/\.sites-vote\[data-serveursminecraft="eteint"\] \.site-sm \{ display: none; \}/.test(css)) faute('css/vote.css : le drapeau « eteint » cache la carte de serveursminecraft.org')
   if (!s.includes('<link rel="stylesheet" href="css/vote.css">')) faute('vote.html : sa feuille css/vote.css n\'est pas chargée')
   if (!/\.sites-vote:empty\s*\{[^}]*display:\s*none/.test(css) || !/\.sites-vote:not\(:empty\)\s*\+\s*\.sites-vides\s*\{[^}]*display:\s*none/.test(css)) faute('css/vote.css : la liste vide des sites se cache, et la phrase « tape /vote » ne se montre que pour une liste vide')
   for (const r of reglesCss(css)) for (const m of r.corps.matchAll(/border(?:-[a-z]+)*-radius\s*:\s*([^;]+)/g)) if (!/^0(px)?\s*$/.test(m[1].trim())) faute('css/vote.css, « ' + r.sel.slice(0, 60) + ' » : un arrondi (' + m[1].trim() + ') : jamais une pastille arrondie')
@@ -519,7 +696,9 @@ else if ((PLAN.match(/<loc>/g) || []).length !== PAGES.length - HORS_GOOGLE.leng
   if (!css.includes(GARDE)) faute('la règle garde manque, telle quelle : ' + GARDE)
   const regles = reglesCss(css).map(r => Object.assign({ f: 'css/style.css' }, r)).concat(reglesCss(lire('css/carrousel.css')).map(r => Object.assign({ f: 'css/carrousel.css' }, r)),
     reglesCss(lire('css/classement.css')).map(r => Object.assign({ f: 'css/classement.css' }, r)), reglesCss(lire('css/discord.css')).map(r => Object.assign({ f: 'css/discord.css' }, r)),
-    reglesCss(lire('css/boutique.css')).map(r => Object.assign({ f: 'css/boutique.css' }, r)), reglesCss(lire('css/vote.css')).map(r => Object.assign({ f: 'css/vote.css' }, r)))
+    reglesCss(lire('css/boutique.css')).map(r => Object.assign({ f: 'css/boutique.css' }, r)), reglesCss(lire('css/vote.css')).map(r => Object.assign({ f: 'css/vote.css' }, r)),
+    reglesCss(lire('css/compte.css')).map(r => Object.assign({ f: 'css/compte.css' }, r)), reglesCss(lire('css/admin.css')).map(r => Object.assign({ f: 'css/admin.css' }, r)),
+    reglesCss(lire('css/motifs.css')).map(r => Object.assign({ f: 'css/motifs.css' }, r)))
   for (const r of regles) {
     const sels = r.sel.split(',').map(x => x.trim()), ou = r.f + ', « ' + r.sel.slice(0, 70) + ' »' + (r.media ? ' (' + r.media + ')' : '')
     if (sels.some(x => /(^|[\s>+~])(img|video|picture)(?![\w-])[^\s>+~]*$/.test(x))) {
@@ -536,13 +715,27 @@ else if ((PLAN.match(/<loc>/g) || []).length !== PAGES.length - HORS_GOOGLE.leng
   {
     const cacheLiens = regles.filter(r => r.f === 'css/style.css' && /\.barre nav a:not\(/.test(r.sel) && /display\s*:\s*none/.test(r.corps))
     if (!cacheLiens.length || cacheLiens.some(r => !r.sel.includes(':not(.classement)'))) faute('css/style.css : sur tablette et téléphone, la règle qui cache les liens du menu doit épargner le classement (:not(.classement))')
-    if (regles.some(r => r.media && r.sel.split(',').some(x => /a\.classement\s*$/.test(x)) && /display\s*:\s*none/.test(r.corps))) faute('css/style.css : le lien du classement est caché sur un écran étroit')
+    // (29/10/2026 ; le propriétaire : « sur mobile faire un petit menu déroulant plutôt que les icônes ») LE MENU DÉROULANT DU
+    // TÉLÉPHONE : à 960 px et moins, la barre garde le logo, le bouton « Menu » et « Jouer », et le Classement passe dans la
+    // liste, en mots. La règle du 14/10 (sa coupe dans la barre) cède : son lien ne se cache dans la barre QUE si le menu
+    // déroulant existe (js/site.js, menuTelephone, qui reprend chaque lien du menu) ; le bouton et chaque ligne : 44 px au moins ;
+    // la liste se ferme à Échap
+    const site = lire('js/site.js'), menuOk = /\n  function menuTelephone\(\) \{/.test(site) && /\n  menuTelephone\(\)\n/.test(site) && /nav\.querySelectorAll\('a'\)/.test(site)
+    if (!menuOk && regles.some(r => r.media && r.sel.split(',').some(x => /a\.classement\s*$/.test(x)) && /display\s*:\s*none/.test(r.corps))) faute('css/style.css : le lien du classement est caché sur un écran étroit, sans le menu déroulant qui le reprend (js/site.js, menuTelephone)')
+    if (menuOk) {
+      const haut = (sel) => { const r = regles.find(x => x.f === 'css/style.css' && /max-width:\s*960px/.test(x.media || '') && x.sel.trim() === sel), m = r ? r.corps.match(/(?:^|;|\s)min-height\s*:\s*(\d+)px/) : null; return m ? +m[1] : 0 }
+      if (haut('.menu-bouton') < 44) faute('css/style.css : le bouton du menu déroulant (.menu-bouton) fait 44 px de haut au moins')
+      if (haut('.menu-tiroir a') < 44) faute('css/style.css : chaque ligne du menu déroulant (.menu-tiroir a) fait 44 px de haut au moins')
+      if (!/if \(e\.key === 'Escape' && !tiroir\.hidden\) \{ ouvrir\(false\); bouton\.focus\(\) \}/.test(site)) faute('js/site.js : le menu déroulant se ferme à la touche Échap et rend la main à son bouton')
+      if (/innerHTML|insertAdjacentHTML/.test(site.slice(site.indexOf('\n  function menuTelephone() {'), site.indexOf('\n  menuTelephone()\n')))) faute('js/site.js : le menu déroulant s\'écrit en texte, jamais comme du code de page')
+    }
     const cible = regles.find(r => /max-width:\s*600px/.test(r.media || '') && /a\.classement\s*$/.test(r.sel))
     const px = p => { const x = cible ? (cible.corps.match(new RegExp('(?:^|;|\\s)' + p + '\\s*:\\s*(\\d+)px')) || [])[1] : 0; return x ? +x : 0 }
     if (!cible || px('min-width') < 44 || px('min-height') < 44) faute('css/style.css : sur téléphone, la coupe du classement doit être une cible de 44 px au moins (min-width et min-height)')
   }
 }
-for (const f of ['css/style.css', 'css/carrousel.css', 'css/classement.css', 'css/discord.css', 'css/boutique.css', 'css/vote.css', 'css/voyage.css', 'css/scene.css', 'js/site.js', 'js/carrousel.js', 'js/boutique.js', 'js/boutique.config.js', 'js/classement.js', 'README.md', 'serveur.js']) {
+for (const f of ['css/vivant.css', 'css/carte.css', 'css/joueur.css', 'css/exploits.css', 'css/partage.css', 'js/vivant_api.js', 'js/tete.js', 'js/ile.js', 'js/carte.js', 'js/carte_appel.js', 'js/joueur.js', 'js/exploits.js', 'js/partage.js', 'css/ile3d.css', 'js/ile3d.js',
+  'css/style.css', 'css/carrousel.css', 'css/classement.css', 'css/compte.css', 'css/admin.css', 'css/motifs.css', 'css/discord.css', 'css/boutique.css', 'css/vote.css', 'css/voyage.css', 'css/scene.css', 'js/site.js', 'js/carrousel.js', 'js/boutique.js', 'js/boutique.config.js', 'js/classement.js', 'js/api.js', 'js/peau.js', 'js/connexion.js', 'js/compte.js', 'js/admin.js', 'js/graphe.js', 'README.md', 'serveur.js']) {
   const s = fs.readFileSync(path.join(RACINE, f), 'utf8')
   for (const t of TIRETS) if (s.includes(t)) { console.log(f); faute('un tiret long ou moyen') }
   // (22/10/2026) aucun caractère de contrôle (un « retour arrière » U+0008 avait remplacé le \b de /[?&]photo\b/ dans
@@ -562,7 +755,7 @@ let total = 0
 })(RACINE)
 console.log('js/boutique.config.js')
 verifierBoutique(faute)
-console.log('js/classement.js (api/classement.js retiré)')
+console.log('js/classement.js, js/api.js, les pages du compte, donnees-essai/ (api/classement.js retiré)')
 verifierClassement(faute)
 console.log('discord.html, vercel.json')
 verifierDiscord(faute)

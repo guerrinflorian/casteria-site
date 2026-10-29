@@ -56,11 +56,15 @@
 .carrousel-commandes .fleche:disabled { opacity: .35; cursor: default; background: var(--parchemin-3, #EAD9B2) }
 .carrousel-commandes .fleche svg { width: 18px; height: 18px; display: block }
 .carrousel-commandes button:focus-visible { outline: 3px solid var(--or, #D7A421); outline-offset: 3px }
-.carrousel-points { display: flex; align-items: center; gap: 12px; margin: 0; padding: 0 4px }
-.carrousel-points button { position: relative; width: 12px; height: 12px; padding: 0; cursor: pointer; transform: rotate(45deg);
+/* (b5, l'assemblage du 29/10 ; la tete : 44 px au doigt) chaque point est une zone de 44 x 44 (le bouton), le losange de 16 px (12 et son trait de 2, comme avant)
+   dessine au milieu ; une rangee trop longue pour la place s'efface (js : placePoints) */
+.carrousel-points { display: flex; align-items: center; gap: 0; margin: 0; padding: 0 }
+.carrousel-points[hidden] { display: none }
+.carrousel-points button { position: relative; width: 44px; height: 44px; padding: 0; cursor: pointer; border: 0; background: none }
+.carrousel-points button::before { content: ''; position: absolute; left: 50%; top: 50%; width: 16px; height: 16px; box-sizing: border-box; margin: -8px 0 0 -8px; transform: rotate(45deg);
   border: 2px solid var(--bois-fonce, #3F2612); background: var(--parchemin, #FFF8E7); transition: background-color .15s ease-out, transform .15s ease-out }
-.carrousel-points button::after { content: ''; position: absolute; inset: -10px }
-.carrousel-points button[aria-current="true"] { background: var(--or, #D7A421); transform: rotate(45deg) scale(1.25) }
+.carrousel-points button:hover::before { background: var(--or-clair, #FFD75E) }
+.carrousel-points button[aria-current="true"]::before { background: var(--or, #D7A421); transform: rotate(45deg) scale(1.25) }
 .carrousel-lu { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap }
 
 /* ---------- la pile de cartes (js : la classe est-pile ; --rang : 0 pour la carte du dessus) ---------- */
@@ -79,5 +83,5 @@
 
 @media (prefers-reduced-motion: reduce) {
   [data-carrousel], [data-carrousel] * { scroll-behavior: auto !important }
-  .carrousel-commandes .fleche, .carrousel-points button { transition: none }
+  .carrousel-commandes .fleche, .carrousel-points button::before { transition: none }
 }

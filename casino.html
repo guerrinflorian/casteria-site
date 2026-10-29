@@ -24,7 +24,10 @@
 <link rel="apple-touch-icon" href="assets/logo/icone-apple-180.png">
 <link rel="preload" as="image" type="image/webp" media="(max-aspect-ratio: 2/3)" imagesrcset="assets/images/casteria-casino-salle-portrait-840.webp 840w" imagesizes="100vw" fetchpriority="high">
 <link rel="preload" as="image" type="image/webp" media="(min-aspect-ratio: 2001/3000)" imagesrcset="assets/images/casteria-casino-salle-1280.webp 1280w, assets/images/casteria-casino-salle-1920.webp 1920w" imagesizes="100vw" fetchpriority="high">
+<link rel="preload" href="assets/polices/fredoka.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/polices/lilita_one.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/motifs.css">
 <link rel="stylesheet" href="css/carrousel.css">
 <link rel="stylesheet" href="css/scene.css">
 <link rel="stylesheet" href="css/pages.css">
@@ -79,6 +82,7 @@
     </div>
   </div>
 </section>
+<div class="frise frise-creneaux" aria-hidden="true"></div>
 
 <!-- LES MISES : l'enseigne du casino (ses ampoules s'allument tour à tour), les minerais qui se misent, trois règles -->
 <section class="pan casino-mises" aria-labelledby="mises-titre">
@@ -100,6 +104,7 @@
     </div>
   </div>
 </section>
+<div class="frise frise-etoiles" aria-hidden="true"></div>
 
 <!-- LA SALLE, TABLE PAR TABLE : une frise qui défile seule (elle s'arrête au survol et au doigt) -->
 <section class="casino-frise" aria-label="La salle du casino, table par table">
@@ -111,6 +116,7 @@
     <figure class="vue"><img src="assets/images/casteria-casino-salle-plinko.webp" alt="Félix, le croupier du Plinko, devant ses planches, et le bord d'une roulette au premier plan" width="760" height="428" loading="lazy"><figcaption><strong>Le Plinko</strong>Félix et ses planches, sous les lustres.</figcaption></figure>
   </div>
 </section>
+<div class="frise frise-etoiles" aria-hidden="true"></div>
 
 <!-- LA ROULETTE EUROPÉENNE À PLUSIEURS : le vrai écran (dessiné par son code), les cotes en tableau, le panneau des derniers
      numéros qui s'allume dans la salle (refait ici, un numéro de plus toutes les 3 secondes), l'onglet Statistiques -->
@@ -150,6 +156,7 @@
     </div>
   </div>
 </section>
+<div class="frise frise-etoiles" aria-hidden="true"></div>
 
 <!-- LE BLACKJACK, SEUL DEPUIS LA 128 (le blackjack à plusieurs retiré : aide.js) : la salle des trois tables vue d'en haut, l'écran du blackjack du casino en décor -->
 <section class="pan casino-blackjack" id="blackjack" aria-labelledby="blackjack-titre">
@@ -171,6 +178,7 @@
     </div>
   </div>
 </section>
+<div class="frise frise-etoiles" aria-hidden="true"></div>
 
 <!-- LES AUTRES JEUX : une rangée de bornes à glisser (leurs écrans sont ceux du casino du jeu) -->
 <section class="pan casino-bornes" id="jeux" aria-labelledby="jeux-titre">
@@ -191,6 +199,7 @@
     </div>
   </div>
 </section>
+<div class="frise frise-parchemin" aria-hidden="true"></div>
 
 <!-- CE QU'ON Y GAGNE DE PLUS : les deux familiers du casino (les rendus de leurs vrais modèles), qui flottent -->
 <section class="pan pan-parchemin casino-familiers" aria-labelledby="familiers-titre">
@@ -212,6 +221,7 @@
     </div>
   </div>
 </section>
+<div class="frise frise-etoiles" aria-hidden="true"></div>
 
 <!-- AUGUSTE ET LES CROUPIERS : qui t'accueille, et la règle de la maison, dite franchement -->
 <section class="pan casino-maison" aria-labelledby="maison-titre">
@@ -235,7 +245,7 @@
   <div class="dedans">
     <div class="col">
       <img src="assets/logo/casteria-logo-300.webp" alt="Casteria" width="70" height="70" loading="lazy">
-      <nav aria-label="Le pied de page"><a href="./">Accueil</a><a href="commencer.html">Par où commencer</a><a href="evenements.html">Les événements</a><a href="pirates.html">La mer et les pirates</a><a href="donjons.html">Les donjons</a><a href="casino.html">Le casino</a><a href="./#combat">Le combat</a><a href="classement.html">Classement</a><a href="boutique.html">Boutique</a><a href="vote.html">Voter</a><a href="reglement.html">Le règlement</a><a href="./#telecharger">Télécharger</a><a href="serveur-minecraft-ile.html">Serveur Minecraft d'île</a><a href="serveur-minecraft-modde.html">Serveur moddé</a><a href="launcher-minecraft-modde.html">Launcher moddé</a><a href="serveur-minecraft-rpg.html">Serveur RPG</a><a href="serveur-minecraft-boss.html">Boss et donjons</a><a href="mentions-legales.html">Mentions légales</a><a href="confidentialite.html">Confidentialité</a><a href="conditions.html">Conditions</a></nav>
+      <nav aria-label="Le pied de page"><a href="./">Accueil</a><a href="commencer.html">Par où commencer</a><a href="evenements.html">Les événements</a><a href="pirates.html">La mer et les pirates</a><a href="donjons.html">Les donjons</a><a href="casino.html">Le casino</a><a href="./#boss">Les boss</a><a href="classement.html">Classement</a><a href="carte.html">La carte</a><a href="exploits.html">Les exploits</a><a href="boutique.html">Boutique</a><a href="vote.html">Voter</a><a href="compte.html">Mon compte</a><a href="reglement.html">Le règlement</a><a href="./#telecharger">Télécharger</a><a href="serveur-minecraft-ile.html">Serveur Minecraft d'île</a><a href="serveur-minecraft-modde.html">Serveur moddé</a><a href="launcher-minecraft-modde.html">Launcher moddé</a><a href="serveur-minecraft-rpg.html">Serveur RPG</a><a href="serveur-minecraft-boss.html">Boss et donjons</a><a href="mentions-legales.html">Mentions légales</a><a href="confidentialite.html">Confidentialité</a><a href="conditions.html">Conditions</a></nav>
     </div>
     <small>Casteria est un serveur Minecraft indépendant, créé par des joueurs. Il n'est ni affilié à Mojang ni à Microsoft, ni approuvé par eux. Minecraft est une marque de Mojang Studios.</small>
   </div>

@@ -98,33 +98,94 @@ const MUTANTS = [
   ['un fichier cite qui n existe pas', 'index.html', s => s.replace(/src="assets\/images\/([^"]+)"/, 'src="assets/images/absente-$1"')],
   ['un bloc JSON-LD mal ecrit', 'index.html', s => s.replace(/(<script type="application\/ld\+json">\s*\{)/, '$1,')],
 
-  // ---------- le classement : la page lit le gist que le jeu publie, n'écrit qu'en texte ; (le 20/10/2026) la fonction
-  // /api/classement est retirée et ne revient pas ----------
+  // ---------- (29/10/2026, le prototype du compte) le classement et les pages du compte : tout passe par js/api.js et l'API du
+  // site (la même origine), rien ne s'écrit comme du code de page, l'interrupteur des données d'essai et son bandeau ; la 3D
+  // copiée dans le site ; la connexion en POST ; (le 20/10/2026, gardé) la fonction de Vercel ne revient pas ----------
   ['la fonction du classement remise dans vercel.json', 'vercel.json', s => s.replace('"trailingSlash": false,', '"trailingSlash": false,\n  "functions": { "api/classement.js": { "maxDuration": 10 } },')],
-  ['un pseudo ecrit comme du code de page', 'js/classement.js', s => s.replace("li.appendChild(el('span', 'cl-pseudo', String(e.pseudo)))", "var sp = el('span', 'cl-pseudo'); sp.innerHTML = e.pseudo; li.appendChild(sp)")],
-  // (la 119) la page lit le fichier brut du gist que le serveur du jeu publie, et rien d'autre
-  ['la page du classement qui lit un autre serveur', 'js/classement.js', s => s.replace("'https://gist.githubusercontent.com/'", "'https://exemple.test/'")],
-  ['la page du classement qui relit /api/classement', 'js/classement.js', s => s.replace('fetch(SOURCE, {', "fetch('/api/classement', {")],
-  ['un autre fichier du gist que classement.json', 'js/classement.js', s => s.replace("'/raw/classement.json'", "'/raw/autre.json'")],
-  ['sans gist, la page lit quand meme', 'js/classement.js', s => s.replace('if (!window.fetch || !SOURCE) { panne(); return }', 'if (!window.fetch) { panne(); return }')],
-  ['la lecture du gist avec les cookies', 'js/classement.js', s => s.replace("credentials: 'omit'", "credentials: 'include'")],
-  ['un identifiant de gist qui n est pas hexadecimal', 'js/classement.js', s => s.replace(/GIST_ID = '[^']*'/, "GIST_ID = '../../autre'")],
-  ['une cle de 32 caracteres hors de la ligne du gist', 'js/classement.js', s => s.replace("var DELAI = 12000", "var DELAI = 12000 // 0123456789abcdef0123456789abcdef")],
+  ['un pseudo ecrit comme du code de page', 'js/classement.js', s => s.replace("nom = el('button', 'cl-nom', String(l.pseudo))", "nom = el('button', 'cl-nom'); nom.innerHTML = l.pseudo")],
+  ['l API du classement lue sur un autre serveur', 'js/api.js', s => s.replace("demander('/api/classement'", "demander('https://exemple.test/api/classement'")],
+  ['la page du classement qui lit le reseau elle-meme', 'js/classement.js', s => s.replace('  function panne() {', "  function panne() {\n    fetch('/api/classement')")],
+  ['les demandes de l API avec les cookies d un autre site', 'js/api.js', s => s.replace("credentials: 'same-origin'", "credentials: 'include'")],
+  ['l interrupteur des donnees d essai en double', 'js/api.js', s => s.replace(/\n  var ESSAI = (true|false)\n/, (m, v) => '\n  var ESSAI = ' + v + '\n  var ESSAI = ' + (v === 'true' ? 'false' : 'true') + '\n')],
+  ['le bandeau des donnees d essai retire', 'js/api.js', s => s.replace('\n  if (ESSAI) bandeauEssai()\n', '\n')],
+  ['le bandeau sans « Donnees d essai »', 'js/api.js', s => s.replace("b.textContent = 'Données d\\'essai : pseudos et chiffres inventés'", "b.textContent = 'Prototype'")],
+  ['la connexion qui part en GET', 'js/api.js', s => s.replace("demander('/api/connexion', { methode: 'POST'", "demander('/api/connexion', { methode: 'GET'")],
+  ['le tchat lu ailleurs que par /api/admin/tchat', 'js/api.js', s => s.replace("new EventSource('/api/admin/tchat')", "new EventSource('/tchat')")],
+  ['une peau prise a n importe quelle adresse', 'js/peau.js', s => s.replace('var u = A.peau(url), k = taille / 8', 'var u = String(url), k = taille / 8')],
+  ['la regle des peaux retiree de l API', 'js/api.js', s => s.replace('if (/^\\/api\\/peau\\/[A-Za-z0-9_]{3,16}$/.test(s) || ', 'if (true || ')],
+  ['la 3D lue sur un CDN', 'js/peau.js', s => s.replace("var BIBLIO = 'assets/vendor/skinview3d/skinview3d.bundle.js'", "var BIBLIO = 'https://unpkg.com/skinview3d@3.4.2/bundles/skinview3d.bundle.js'")],
+  ['la licence de la 3D retiree', 'assets/vendor/skinview3d/LICENCES.txt', s => s.split('MIT License').join('Licence')],
+  ['la 3D chargee d office par une page', 'classement.html', s => s.replace('<script src="js/peau.js" defer></script>', '<script src="assets/vendor/skinview3d/skinview3d.bundle.js"></script>\n<script src="js/peau.js" defer></script>')],
+  ['un texte du tchat ecrit comme du code de page', 'js/admin.js', s => s.replace("li.appendChild(el('span', 'a-texte', String(l.texte)))", "var tx = el('span', 'a-texte'); tx.innerHTML = l.texte; li.appendChild(tx)")],
+  ['un graphique qui ecrit en code de page', 'js/graphe.js', s => s.replace("tv.textContent = axe(v)", "tv.innerHTML = axe(v)")],
+  ['un graphique qui charge une bibliotheque d un autre serveur', 'js/graphe.js', s => s.replace("var NS = 'http://www.w3.org/2000/svg'", "var NS = 'http://www.w3.org/2000/svg', LIB = 'https://cdn.exemple.test/chart.js'")],
+  ['l espace admin qui montre tout a tous', 'js/admin.js', s => s.replace('if (!r.corps.droits || !r.corps.droits.admin) return refus(', 'if (false) return refus(')],
+  ['la connexion qui garde le mot de passe', 'js/connexion.js', s => s.replace("    var p = pseudo.value.trim(), m = mdp.value\n", "    var p = pseudo.value.trim(), m = mdp.value\n    sessionStorage.setItem('mdp', m)\n")],
+  ['la connexion qui ecrit dans la console', 'js/connexion.js', s => s.replace("    var p = pseudo.value.trim(), m = mdp.value\n", "    var p = pseudo.value.trim(), m = mdp.value\n    console.log(p, m)\n")],
+  ['trop d essais sans sa phrase', 'js/connexion.js', s => s.replace("'Trop d\\'essais : réessaie dans une minute.'", "'Erreur 429.'")],
+  ['le formulaire de connexion en GET', 'connexion.html', s => s.replace('method="post" action="/api/connexion"', 'method="get" action="/api/connexion"')],
+  ['le mot de passe en clair', 'connexion.html', s => s.replace('type="password" autocomplete="current-password"', 'type="text" autocomplete="current-password"')],
+  ['l inscription en jeu plus dite', 'connexion.html', s => s.split('<code>/register</code>').join('ton inscription')],
+  ['une page du compte visible de Google', 'compte.html', s => s.replace('<meta name="robots" content="noindex">\n', '')],
+  ['l espace admin visible de Google', 'admin.html', s => s.replace('<meta name="robots" content="noindex">\n', '')],
+  ['un vrai pseudo dans les donnees d essai', 'donnees-essai/joueur/bricolune.json', s => s.split('"pseudo":"Bricolune"').join('"pseudo":"_Floskyl_"')],
+  ['un fichier d essai sans sa marque', 'donnees-essai/en-ligne.json', s => s.replace('"essai":true,', '')],
   ['la phrase de la panne du classement retiree', 'js/classement.js', s => s.replace("var PANNE = 'Le classement ne s\\'affiche pas pour l\\'instant. En jeu, tape /top.'", "var PANNE = 'Erreur.'")],
-  // (18/10/2026, la 125 du jeu) la panne sans mot interdit ; les donjons dans une carte, ses choix dits, jamais arrondis
   ['la panne du classement qui redit « bientot »', 'js/classement.js', s => s.replace("var PANNE = 'Le classement ne s\\'affiche pas pour l\\'instant. En jeu, tape /top.'", "var PANNE = 'Le classement ne s\\'affiche pas pour l\\'instant. En jeu, tape /top.', PLUS = 'Il revient bientôt.'")],
-  ['les niveaux d un donjon en cartes separees', 'js/classement.js', s => s.replace('return blocs.map(function (b) { return b.c ? carte(b.c) : carteDonjon(b.d) })', 'return blocs.map(function (b) { return b.c ? carte(b.c) : carte(b.d.niveaux[0]) })')],
   ['les tailles de groupe oubliees', 'js/classement.js', s => s.split('.tailles').join('.groupes')],
-  ['un choix de donjon qui ne dit pas s il est choisi', 'js/classement.js', s => s.split("setAttribute('aria-pressed'").join("setAttribute('data-choisi'")],
-  ['un nom de donjon ecrit comme du code de page', 'js/classement.js', s => s.replace("a.appendChild(el('h3', '', d.nom))", "var h3 = el('h3'); h3.innerHTML = d.nom; a.appendChild(h3)")],
-  ['le podium qui ne reajuste plus ses pseudos au dessin', 'js/classement.js', s => s.replace('    suite.hidden = top.length <= 3\n    ajusterPodium()\n', '    suite.hidden = top.length <= 3\n')],
-  ['une pastille arrondie dans le classement', 'css/classement.css', s => s.replace('border-radius: 0; box-shadow: 0 3px 0 var(--bois-clair)', 'border-radius: 999px; box-shadow: 0 3px 0 var(--bois-clair)')],
+  ['les colonnes du hasard oubliees', 'js/classement.js', s => s.split('.hasard.col').join('.hasard.k')],
+  ['les lignes d ile sans leur nom', 'js/classement.js', s => s.split('if (l.ile) {').join('if (false) {')],
+  ['un choix qui ne dit pas s il est choisi', 'js/classement.js', s => s.split("setAttribute('aria-pressed'").join("setAttribute('data-choisi'")],
+  ['les themes qui ne sont plus des onglets', 'js/classement.js', s => s.replace("b.setAttribute('role', 'tab')", "b.setAttribute('role', 'button')")],
+  ['le podium qui ne reajuste plus ses pseudos au dessin', 'js/classement.js', s => s.replace('    ajusterPodium()\n    if (document.fonts && document.fonts.ready) document.fonts.ready.then(ajusterPodium)\n', '')],
+  ['Toi plus surligne', 'js/classement.js', s => s.split("'cl-marque toi'").join("'cl-marque'")],
+  ['une pastille arrondie dans le classement', 'css/classement.css', s => s.replace('.cl-cat { min-height: 40px;', '.cl-cat { border-radius: 999px; min-height: 40px;')],
+  ['une pastille arrondie dans le compte', 'css/compte.css', s => s.replace('.mdp .voir { flex: 0 0 auto;', '.mdp .voir { border-radius: 8px; flex: 0 0 auto;')],
+  ['une pastille arrondie dans l espace admin', 'css/admin.css', s => s.replace('.a-pause { min-height: 42px;', '.a-pause { border-radius: 20px; min-height: 42px;')],
   ['le lien Classement retire du menu d une page', 'pirates.html', s => s.replace(/\n\s*<a class="classement" href="classement\.html"[^\n]*<\/a>/, '')],
   ['la coupe du classement retiree de l en-tete d une page', 'index.html', s => s.replace('<img class="pixel" src="assets/icones/classement.png" alt="" width="20" height="20">', '')],
   ['le nom du lien du classement retire (aria-label)', 'commencer.html', s => s.replace(' aria-label="Classement"', '')],
   ['le lien du classement cache sur telephone', 'css/style.css', s => s.replace(':not(.boutique):not(.classement)', ':not(.boutique)')],
   ['la coupe du classement trop petite pour le doigt', 'css/style.css', s => s.replace('min-width: 44px; min-height: 44px;', 'min-width: 30px; min-height: 30px;')],
-  ['le lien Classement retire du pied d une page', 'boutique.html', s => s.replace('<a href="classement.html">Classement</a><a href="boutique.html">', '<a href="boutique.html">')],
+  // ---------- (29/10/2026) le menu déroulant du téléphone (js/site.js, css/style.css) et le kit des motifs (css/motifs.css) ----------
+  ['le menu deroulant jamais pose (le classement cache sans lui)', 'js/site.js', s => s.replace('\n  menuTelephone()\n', '\n')],
+  ['le menu deroulant qui ne se ferme plus a Echap', 'js/site.js', s => s.replace("if (e.key === 'Escape' && !tiroir.hidden) { ouvrir(false); bouton.focus() }", "if (e.key === 'Esc' && !tiroir.hidden) { ouvrir(false) }")],
+  ['le menu deroulant ecrit comme du code de page', 'js/site.js', s => s.replace('a.href = href; a.textContent = mot', 'a.href = href; a.innerHTML = mot')],
+  ['le bouton du menu trop petit pour le doigt', 'css/style.css', s => s.replace('gap: 10px; margin-left: auto; min-height: 44px;', 'gap: 10px; margin-left: auto; min-height: 30px;')],
+  ['une ligne du menu trop petite pour le doigt', 'css/style.css', s => s.replace('.menu-tiroir a { display: flex; align-items: center; min-height: 48px;', '.menu-tiroir a { display: flex; align-items: center; min-height: 32px;')],
+  ['un dessin du kit qui manque', 'css/motifs.css', s => s.replace('url("../assets/motifs/pierres.svg")', 'url("../assets/motifs/pierre.svg")')],
+  ['une page du compte sans le kit des motifs', 'compte.html', s => s.replace('<link rel="stylesheet" href="css/motifs.css">\n', '')],
+  ['la connexion sur un fond uni', 'connexion.html', s => s.split('fond-carte relief').join('relief').split('fond-bois relief').join('relief').split('fond-mer relief').join('relief')],
+  ['l espace admin sans frise', 'admin.html', s => s.split('<div class="frise frise-etoiles" aria-hidden="true"></div>').join('').split('<div class="frise frise-corde" aria-hidden="true"></div>').join('')],
+  ['une pastille arrondie dans le kit', 'css/motifs.css', s => s + '\n.panneau-nuit { border-radius: 12px; }\n'],
+  ['un tiret long dans le kit', 'css/motifs.css', s => s + '\n/* le ciel ' + String.fromCharCode(0x2014) + ' la nuit */\n'],
+  // ---------- (29/10/2026) les choix de la tête et les trois demandes du propriétaire pour l'espace de l'équipe ----------
+  ['les classements du nombre de boss remis sur le site', 'js/classement.js', s => s.replace('return c && !HORS_SITE[c.id]', 'return c && true')],
+  ['un compte de boss lu par le compte', 'js/compte.js', s => s.replace("ligne(ex, 'Donjons gagnés'", "ligne(ex, 'Boss vaincus', A.nombre(m.boss.vaincus)); ligne(ex, 'Donjons gagnés'")],
+  ['un compte de boss dans les donnees d essai', 'donnees-essai/joueur/bricolune.json', s => s.replace('"boss":{', '"boss":{"vaincus":11,')],
+  ['la case du pseudo cochee par la page', 'js/boutique.js', s => s.replace('      pseudoConnecte = p\n', '      pseudoConnecte = p\n      sur.checked = true\n')],
+  ['la boutique sans le pseudo du connecte', 'js/boutique.js', s => s.replace('pseudoConnecte || sessionStorage', 'sessionStorage')],
+  ['la boutique qui charge api.js apres elle', 'boutique.html', s => s.replace('<script src="js/api.js" defer></script>\n<script src="js/boutique.js" defer></script>', '<script src="js/boutique.js" defer></script>\n<script src="js/api.js" defer></script>')],
+  ['le tchat de nouveau par serveur', 'js/admin.js', s => s.replace("      li.setAttribute('data-cherche',", "      li.setAttribute('data-serveur', String(l.serveur))\n      li.setAttribute('data-cherche',")],
+  ['une ligne du tchat d essai qui dit son serveur', 'donnees-essai/admin/tchat.json', s => s.replace('"pseudo":', '"serveur":"iles","pseudo":')],
+  ['une liste de lieux ecrite dans la page de l equipe', 'js/admin.js', s => s.replace("  var VIDE = 'pas encore de données'", "  var VIDE = 'pas encore de données'\n  var LIEUX = { spawn: 'Le palais' }")],
+  ['une valeur absente dessinee comme un 0', 'js/graphe.js', s => s.replace('var v = num(p.valeur); if (v === null) { m = null; return } if (!m)', 'var v = Number(p.valeur) || 0; if (!m)')],
+  ['une valeur absente ecrite 0 par la page de l equipe', 'js/admin.js', s => s.replace("function num(x) { return typeof x === 'number' && isFinite(x) ? x : null }", 'function num(x) { return Number(x) || 0 }')],
+  ['la session de l equipe sans fin', 'js/api.js', s => s.replace("    if (depuis && Date.now() - depuis > EQUIPE_MS) return refus(401, 'reconnexion')\n", '')],
+  // ---------- (29/10/2026, le propriétaire) chaque page mène au jeu et pousse à monter ----------
+  ['le classement qui ne mene plus au jeu', 'js/classement.js', s => s.replace("moiTitre.textContent = 'Ta place t\\'attend'", "moiTitre.textContent = 'Ta place'")],
+  ['la fiche sans son appel au jeu', 'js/classement.js', s => s.replace("el('p', 'fiche-appel-titre', 'Toi aussi, construis ton île')", "el('p', 'fiche-appel-titre', 'Casteria')")],
+  ['le classement qui ne pousse plus a monter', 'js/classement.js', s => s.replace("'Encore ' + A.nombre(manque) + ' point'", "'Il te manque ' + A.nombre(manque) + ' point'")],
+  ['le compte sans session sans /register', 'js/compte.js', s => s.replace("'Pas encore de compte ? Crée-le en jeu : '", "'Bienvenue : '")],
+  ['le compte sans son prochain deblocage', 'js/compte.js', s => s.split('m.niveau.prochain.nom').join('m.niveau.inconnu')],
+  // ---------- (29/10/2026, la tête) un nombre ne se coupe jamais, ni un mot dans un panneau ----------
+  ['un nombre coupe dans le texte d une page', 'classement.html', s => s.replace('<h2 class="lu" id="liste-titre">', '<p>Plus de 1 000 joueurs</p>\n    <h2 class="lu" id="liste-titre">')],
+  ['un nombre coupe dans les donnees d essai', 'donnees-essai/classement/general.json', s => s.replace(new RegExp('(\\d)' + String.fromCharCode(160) + '(\\d{3})'), '$1 $2')],
+  ['un nombre coupe dans un texte de script', 'js/compte.js', s => s.replace("tuile('', 'Temps de jeu',", "tuile('', 'Temps de jeu (sur 1 000 h)',")],
+  ['les milliers du jeu plus rendus insecables', 'js/api.js', s => s.replace("'$1' + NBSP).replace(", "'$1 ').replace(")],
+  ['une coupure de mot dans un panneau du kit', 'css/motifs.css', s => s.replace('.panneau-nuit, .panneau-bois, .coins-or { hyphens: manual; -webkit-hyphens: manual; }\n', '')],
+  ['la page de l equipe qui ne dit plus l etat de ses sources', 'js/admin.js', s => s.replace("texte(s.nom || cle) + ' ne répond pas : chiffres ' +", "texte(s.nom || cle) + ' : chiffres ' +")],
+  ['le lien Classement retire du pied d une page', 'boutique.html', s => s.replace('<a href="classement.html">Classement</a><a href="carte.html">', '<a href="carte.html">')],
   ['la page du classement retiree du plan du site', 'sitemap.xml', s => s.replace(/<url>(?:(?!<\/url>)[\s\S])*classement\.html[\s\S]*?<\/url>\s*/, '')],
   ['une image trop haute dans la feuille du classement', 'css/classement.css', s => s + '\n.cl-rangs .cl-rang img { height: 1200px; }\n'],
 
@@ -142,7 +203,7 @@ const MUTANTS = [
   ['l Abyssarque nommee sur la page de la mer', 'pirates.html', s => s.replace('</main>', '<p>Et l\'Abyssarque, sur sa tortue.</p></main>')],
   // (22/10/2026, la tête) aucun boss de la fin de partie, ni nommé ni montré
   ['un boss de la fin de partie nomme sur l accueil', 'index.html', s => s.replace('</main>', '<p>Au bout, le Dévoreur t\'attend.</p></main>')],
-  ['le modele d un boss de la fin de partie montre sur l accueil', 'index.html', s => s.replace('src="assets/volume/fregate.webp" alt="" width="855" height="1027" loading="lazy"></div></div>', 'src="assets/volume/mecha_titan.webp" alt="" width="569" height="900" loading="lazy"></div></div>')],
+  ['le modele d un boss de la fin de partie montre sur l accueil', 'index.html', s => s.replace('src="assets/volume/fregate.webp" alt="" width="855" height="1027" loading="lazy"></a>', 'src="assets/volume/mecha_titan.webp" alt="" width="569" height="900" loading="lazy"></a>')],
   ['un nombre coupable en deux lignes (une espace ordinaire)', 'casino.html', s => s.replace('de 800&#160;000 jetons', 'de 800 000 jetons')],
 
   // ---------- (19/10/2026) le Discord : casteria.fr/discord, son bouton, son départ tout seul, l'invitation écrite là seulement ----------
@@ -163,7 +224,18 @@ const MUTANTS = [
   // ---------- (19/10/2026, le propriétaire : « faut pas dire le nombre ! ») aucun nombre de boss, nulle part ----------
   ['un nombre de boss dans la description de l accueil', 'index.html', s => s.replace('tes bêtes, des boss, deux donjons', 'tes bêtes, 15 boss, deux donjons')],
   ['un nombre de boss en lettres dans le haut de l accueil', 'index.html', s => s.replace('bats des boss géants', 'bats quinze boss')],
-  ['un nombre de boss dans la carte au tresor', 'index.html', s => s.replace('<b class="mot">Boss</b><span>en arène</span>', '<b data-n="15">15</b><span>boss en arène</span>')],
+  ['un nombre de boss dans la carte au tresor', 'index.html', s => s.replace('</main>', '<p>Affronte 15 boss en arène.</p></main>')],
+  // (b5, l'assemblage du 29/10) le kit et les polices sur toutes les pages, 44 px au doigt
+  ['une page sans le kit des motifs', 'vote.html', s => s.replace('<link rel="stylesheet" href="css/motifs.css">\n', '')],
+  ['une page sans sa police prechargee', 'pirates.html', s => s.replace('<link rel="preload" href="assets/polices/fredoka.woff2" as="font" type="font/woff2" crossorigin>\n', '')],
+  ['les points du carrousel a 12 px', 'css/carrousel.css', s => s.replace('.carrousel-points button { position: relative; width: 44px; height: 44px;', '.carrousel-points button { position: relative; width: 12px; height: 12px;')],
+  ['les apparitions cachees meme sans JavaScript', 'css/style.css', s => s.replace('@media (scripting: enabled) {\n  .apparait { opacity: 0;', '@media (min-width: 0) {\n  .apparait { opacity: 0;')],
+  ['le second site de vote sans son drapeau', 'vote.html', s => s.replace(' data-serveursminecraft="eteint"', '')],
+  ['le drapeau eteint qui ne cache plus rien', 'css/vote.css', s => s.replace('.sites-vote[data-serveursminecraft="eteint"] .site-sm { display: none; }', '.sites-vote .site-sm { opacity: .9; }')],
+  ['serveur-minecraft.com dans la page du vote', 'vote.html', s => s.replace('https://www.serveursminecraft.org/serveur/7794/', 'https://serveur-minecraft.com/7794')],
+  ['l accueil sans sa section #telecharger', 'index.html', s => s.replace('<section class="clair telecharge" id="telecharger">', '<section class="clair telecharge" id="installer">')],
+  ['la section #telecharger sans le bouton de Windows', 'index.html', s => s.replace('data-track="download-windows"', 'data-track="windows"')],
+  ['le logo de la barre sans ses 44 px au telephone', 'css/style.css', s => s.replace('.barre .marque { min-height: 44px;', '.barre .marque { min-height: 36px;')],
   ['un nombre de boss dans le JSON-LD de l accueil', 'index.html', s => s.replace('une économie en jetons, des boss et leurs panoplies', 'une économie en jetons, 15 boss et leurs panoplies')],
   ['un nombre d arenes sur une autre page', 'pirates.html', s => s.replace('</main>', '<p>Seize arènes t\'attendent.</p></main>')],
   ['un nombre de boss dans un script du site', 'js/classement.js', s => s + "\nvar BOSS_TEXTE = 'les 15 boss'\n"],
@@ -224,13 +296,15 @@ const MUTANTS = [
   ['l\'identifiant du gist dans un autre script', 'js/carrousel.js', s => s + '\n// 4337783e1d14963774decfe06f2709da\n']
 ]
 
+// MUTANTS_SEULS=<un morceau du nom> : seulement ceux-là (pour rejouer un mutant récrit)
+const CHOISIS = process.env.MUTANTS_SEULS ? MUTANTS.filter(m => m[0].includes(process.env.MUTANTS_SEULS)) : MUTANTS
 let rates = 0, code = 0
 try {
   const sain = lancer()
   console.log('le site sain (sa copie) : code ' + sain.status)
   if (sain.status !== 0) { console.log(sain.stdout.split('\n').filter(l => /FAUTE/.test(l)).slice(0, 8).join('\n')); console.log('LE SITE N\'EST PAS SAIN : corrige-le d\'abord (npm run verifier), les mutants ne prouvent rien sur un site rouge'); code = 2 }
   else {
-    for (const [nom, f, muter] of MUTANTS) {
+    for (const [nom, f, muter] of CHOISIS) {
       const p = path.join(COPIE, f), avant = fs.readFileSync(p, 'utf8'), apres = muter(avant)
       if (apres === avant) { console.log('  MUTANT SANS EFFET : ' + nom + ' (' + f + ' a changé : le mutant est à récrire)'); rates++; continue }
       let r
@@ -241,7 +315,7 @@ try {
     }
     const fin = lancer()
     console.log('la copie remise en etat : code ' + fin.status)
-    console.log(rates ? rates + ' mutant(s) non attrape(s) sur ' + MUTANTS.length : MUTANTS.length + ' mutants, tous refuses')
+    console.log(rates ? rates + ' mutant(s) non attrape(s) sur ' + CHOISIS.length : CHOISIS.length + ' mutants, tous refuses')
     code = rates || fin.status ? 1 : 0
   }
 } finally {

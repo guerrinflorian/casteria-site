@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mon compte Casteria : ma peau, mon niveau, mon île</title>
+<meta name="description" content="Ton compte Casteria : ta peau en 3D, ton grade, tes jetons et tes crédits, ton niveau, ta place au classement général et dans chaque thème, ton île, tes boss et tes achats.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#1B1028">
+<link rel="icon" href="favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/logo/favicon-32.png">
+<link rel="apple-touch-icon" href="assets/logo/icone-apple-180.png">
+<link rel="preload" href="assets/polices/fredoka.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/polices/lilita_one.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/motifs.css">
+<link rel="stylesheet" href="css/classement.css">
+<link rel="stylesheet" href="css/compte.css">
+</head>
+<body>
+<div class="progres" aria-hidden="true"></div>
+<header class="barre verre posee">
+  <a class="marque" href="./" aria-label="Casteria, l'accueil"><img src="assets/logo/casteria-logo-300.webp" alt="Logo de Casteria" width="46" height="46"><span>Casteria</span></a>
+  <nav aria-label="Le menu">
+    <a href="./#voyage">Le jeu</a>
+    <a href="commencer.html">Par où commencer</a>
+    <a href="evenements.html">Événements</a>
+    <a class="classement" href="classement.html" aria-label="Classement"><img class="pixel" src="assets/icones/classement.png" alt="" width="20" height="20">Classement</a>
+    <a class="voter" href="vote.html">Voter</a>
+    <a class="boutique" href="boutique.html"><img class="pixel" src="assets/icones/credit.png" alt="" width="20" height="20">Boutique</a>
+    <a class="compte" href="compte.html" aria-current="page">Mon compte</a>
+    <a class="bouton bouton-or petit" href="./#telecharger">Jouer</a>
+  </nav>
+</header>
+
+<main>
+<!-- LE COMPTE DU JOUEUR (le prototype du 29/10/2026) : tout vient de GET /api/moi (API.md 3.1), lu par js/compte.js ; sans
+     session, la page propose la connexion. Rien ne s'écrit d'avance ici : les textes du joueur arrivent en texte. -->
+<section class="sombre zone-compte fond-ciel relief en-attente" id="compte">
+  <div class="dedans">
+    <div class="compte-tete" id="compte-tete">
+      <div class="compte-statue" id="compte-statue"></div>
+      <div class="compte-qui">
+        <p class="sur-titre">Mon compte</p>
+        <h1 id="compte-nom">Ton compte</h1>
+        <p class="titres" id="compte-titres"></p>
+        <p class="compte-sanction" id="compte-sanction" role="status" hidden></p>
+        <div class="fiche-niveau" id="compte-niveau"></div>
+        <p class="compte-general" id="compte-general">On ouvre ton compte...</p>
+        <div class="compte-gestes" id="compte-gestes"></div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- les parties du compte, chacune sur son fond du kit (css/motifs.css), une frise entre deux ; cachées sans session -->
+<div class="frise frise-corde compte-section" aria-hidden="true" hidden></div>
+<section class="fond-bois relief compte-section compte-bande" hidden>
+  <div class="dedans"><ul class="compte-tuiles" id="compte-tuiles" aria-label="Tes chiffres"></ul></div>
+</section>
+<div class="frise frise-creneaux compte-section" aria-hidden="true" hidden></div>
+<section class="fond-pierres relief compte-section" hidden>
+  <div class="dedans une-grande">
+    <div class="compte-bloc panneau-nuit coins-or">
+      <h2>Ta place au classement général</h2>
+      <ul class="fiche-aspects" id="compte-aspects"></ul>
+      <div class="compte-monter" id="compte-monter" hidden></div>
+    </div>
+    <div class="compte-bloc panneau-nuit">
+      <h2>Ta meilleure place dans chaque thème</h2>
+      <ul class="compte-themes" id="compte-themes"></ul>
+    </div>
+  </div>
+</section>
+<div class="frise frise-vague compte-section" aria-hidden="true" hidden></div>
+<section class="fond-mer relief compte-section" hidden>
+  <div class="dedans une-grande compte-ile-grille">
+    <div class="compte-bloc panneau-nuit">
+      <h2>Tes boss et tes exploits</h2>
+      <ul class="fiche-grille" id="compte-exploits"></ul>
+    </div>
+    <div class="compte-bloc panneau-bois ile-carte">
+      <h2>Ton île</h2>
+      <div id="compte-ile"></div>
+    </div>
+  </div>
+</section>
+<div class="frise frise-etoiles compte-section" aria-hidden="true" hidden></div>
+<section class="fond-carte relief compte-section" hidden>
+  <div class="dedans">
+    <div class="compte-bloc panneau-nuit coins-or">
+      <h2>Tes achats</h2>
+      <div class="compte-achats">
+        <div>
+          <h3>Sur la boutique du site</h3>
+          <ul class="compte-liste" id="compte-achats-tebex"></ul>
+        </div>
+        <div>
+          <h3>Dans la boutique du jeu, en crédits</h3>
+          <ul class="compte-liste" id="compte-achats-credits"></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="dedans">
+    <div class="col">
+      <img src="assets/logo/casteria-logo-300.webp" alt="Casteria" width="70" height="70" loading="lazy">
+      <nav aria-label="Le pied de page"><a href="./">Accueil</a><a href="commencer.html">Par où commencer</a><a href="evenements.html">Les événements</a><a href="pirates.html">La mer et les pirates</a><a href="donjons.html">Les donjons</a><a href="casino.html">Le casino</a><a href="./#boss">Les boss</a><a href="classement.html">Classement</a><a href="carte.html">La carte</a><a href="exploits.html">Les exploits</a><a href="boutique.html">Boutique</a><a href="vote.html">Voter</a><a href="compte.html">Mon compte</a><a href="reglement.html">Le règlement</a><a href="./#telecharger">Télécharger</a><a href="serveur-minecraft-ile.html">Serveur Minecraft d'île</a><a href="serveur-minecraft-modde.html">Serveur moddé</a><a href="launcher-minecraft-modde.html">Launcher moddé</a><a href="serveur-minecraft-rpg.html">Serveur RPG</a><a href="serveur-minecraft-boss.html">Boss et donjons</a><a href="mentions-legales.html">Mentions légales</a><a href="confidentialite.html">Confidentialité</a><a href="conditions.html">Conditions</a></nav>
+    </div>
+    <small>Casteria est un serveur Minecraft indépendant, créé par des joueurs. Il n'est ni affilié à Mojang ni à Microsoft, ni approuvé par eux. Minecraft est une marque de Mojang Studios.</small>
+  </div>
+</footer>
+<script src="js/site.js" defer></script>
+<script src="js/api.js" defer></script>
+<script src="js/peau.js" defer></script>
+<script src="js/compte.js" defer></script>
+</body>
+</html>

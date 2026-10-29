@@ -3,3 +3,9 @@
 *.jpg binary
 *.mp4 binary
 *.ttf binary
+*.woff2 binary
+*.webp binary
+# (b5, la bascule du 29/10) les donnees d'essai restent dans le depot (le mode ESSAI des essais locaux) mais ne partent jamais
+# en ligne : le VPS publie par « git archive », qui laisse de cote ce qui est marque export-ignore
+donnees-essai/** export-ignore
+assets/peaux/essai/** export-ignore

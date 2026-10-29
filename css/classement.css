@@ -1,109 +1,324 @@
-/* LE CLASSEMENT (classement.html) : le podium du haut de page, le podium du Score et sa suite, les onglets des familles
-   et les cartes des catégories. Chargé après style.css et scene.css ; les couleurs sont celles du site, le podium et les
-   médailles sont les dessins de /top en jeu (assets/classement). Les classes de la page commencent par « cl- » : le site
-   a déjà ses .pseudo (la boutique), .rang (les rangs de l'accueil), .aide et .m1 (la carte au trésor). */
+/* LE CLASSEMENT (classement.html, le prototype du 29/10/2026) : la bannière (un peu plus petite), la scène des champions
+   (les huit thèmes en marque-pages, les classements du thème, le podium des trois premiers avec leur peau en 3D), la liste
+   jusqu'au 100e, la fiche d'un joueur (au survol, au clic). Chargé après style.css et scene.css ; les couleurs et les polices
+   du site ; les classes de la page commencent par « cl- ». Jamais une pastille arrondie (le propriétaire) : aucun arrondi. */
 
-/* ---------- le haut de page : le podium du jeu, en pixels, et trois boss posés sur ses marches ---------- */
-/* Le groupe garde la forme du dessin (3 de large pour 2 de haut ; le podium en occupe la moitié du bas) : chaque boss est
-   placé sur SA marche, en parts du groupe (les marches du dessin : la 1re à 22,5 % de sa hauteur, la 2e à 48 %, la 3e à
-   63 % ; la transparence sous les pieds de chaque rendu est comptée). Rien ne bouge au défilement : le podium et ses
-   boss restent ensemble. */
-.podium-scene { container-type: size; }
-.podium-scene .ps-groupe { position: absolute; left: 50%; bottom: 0; width: min(100%, 560px); aspect-ratio: 3 / 2; transform: translateX(-50%); }
-@supports (width: 1cqh) { .podium-scene .ps-groupe { width: min(100%, 560px, 146cqh); } }
-.vitrine-tete .podium-scene .ps-groupe img { position: absolute; height: auto; }
-.vitrine-tete .podium-scene .ps-podium { left: 0; bottom: 0; width: 100%; image-rendering: pixelated; filter: drop-shadow(0 16px 18px rgba(0, 0, 0, .55)); }
-.vitrine-tete .podium-scene .ps-1 { width: 43%; left: 28%; bottom: 31%; z-index: 3; }
-.vitrine-tete .podium-scene .ps-2 { width: 42%; left: -3%; bottom: 15.4%; z-index: 2; }
-.vitrine-tete .podium-scene .ps-3 { width: 44%; left: 59%; bottom: 1.6%; z-index: 2; }
+/* ---------- la bannière, plus petite : le podium vivant suit dessous ---------- */
+.vitrine-tete.banniere.compacte { padding-bottom: 26px; }
+/* le ciel étoilé du kit (css/motifs.css) derrière la bannière (sa règle de scene.css porte un fond uni) */
+.vitrine-tete.banniere.compacte.fond-ciel { background-color: #1B1028; background-image: var(--fond-ciel-image); background-size: var(--fond-ciel-taille); }
+.vitrine-tete.banniere.compacte .fond, .vitrine-tete.banniere.compacte .banniere-texte { width: min(1040px, 100% - 32px); }
+@media (max-width: 700px) { .vitrine-tete.banniere.compacte .fond, .vitrine-tete.banniere.compacte .banniere-texte { width: calc(100% - 24px); } }
 
-/* ---------- le Score : le podium des trois premiers ---------- */
-.classement-score .tete { margin-bottom: 40px; }
-.classement-score .tete h2 { text-wrap: balance; }
-.classement-etat { margin: 10px auto 18px; text-align: center; font-weight: 700; font-size: 19px; }
-.podium-score { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: end; max-width: 820px; margin: 0 auto; text-align: center; }
-.podium-score > .classement-etat, .podium-score > .bouton { grid-column: 1 / -1; justify-self: center; }
-.cl-marche { display: flex; flex-direction: column; align-items: center; min-width: 0; }
-.cl-marche.cl-m1 { order: 2; } .cl-marche.cl-m2 { order: 1; } .cl-marche.cl-m3 { order: 3; }
-.cl-couronne { width: 48px; height: 40px; image-rendering: pixelated; margin-bottom: 2px; animation: flotte 4.5s ease-in-out infinite; }
-.cl-medaille { width: 30px; height: 42px; image-rendering: pixelated; margin-bottom: 8px; filter: drop-shadow(0 4px 0 rgba(0, 0, 0, .35)); }
-.cl-marche .cl-pseudo { max-width: 100%; padding: 0 6px; font-family: "Lilita One", "Fredoka", sans-serif; font-size: clamp(16px, 2.4vw, 28px); line-height: 1.1; color: #fff; overflow-wrap: anywhere; text-shadow: 0 3px 0 rgba(0, 0, 0, .35); }
-.cl-marche.cl-m1 .cl-pseudo { color: var(--or-clair); font-size: clamp(18px, 2.8vw, 32px); }
-.cl-marche .cl-valeur { margin: 6px 0 14px; font-weight: 700; font-size: 17px; color: #E7D8F7; white-space: nowrap; }
-.cl-personne { margin: 0 0 14px; font-size: 16px; color: #CDB8E6; }
-.cl-socle { width: 100%; display: grid; place-items: center; font-family: "Lilita One", "Fredoka", sans-serif; font-size: 56px; line-height: 1;
-  border: 4px solid rgba(0, 0, 0, .28); border-bottom: 0; box-shadow: inset 0 7px 0 rgba(255, 255, 255, .35), inset 0 -12px 0 rgba(0, 0, 0, .12); }
-.cl-m1 .cl-socle { height: 170px; background: linear-gradient(180deg, #F2CB4E, #D7A421); color: #6B4B10; }
-.cl-m2 .cl-socle { height: 122px; background: linear-gradient(180deg, #DADDE3, #A9AEB8); color: #4A4F58; }
-.cl-m3 .cl-socle { height: 88px; background: linear-gradient(180deg, #DE9356, #B5652E); color: #5A2E10; }
+/* ---------- la scène : le ciel étoilé du kit, et la lumière du podium par-dessus ---------- */
+.champions { padding: 56px 0 72px; overflow: hidden; background-color: #1B1028;
+  background-image: radial-gradient(52% 34% at 50% 66%, rgba(142, 76, 184, .4), rgba(142, 76, 184, 0) 72%), radial-gradient(36% 26% at 50% 74%, rgba(255, 190, 70, .16), rgba(255, 190, 70, 0) 70%), var(--fond-ciel-image);
+  background-size: auto, auto, var(--fond-ciel-taille); }
+/* ---------- la liste, sur les pierres du château : la grande carte (la liste) et ses encarts ---------- */
+.cl-liste-section { padding: 52px 0 64px; }
+.cl-liste-zone.une-grande { grid-template-columns: minmax(0, 1fr) 300px; gap: 20px; max-width: 1180px; margin: 0 auto; }
+.cl-liste-zone[hidden] { display: none; }
+.cl-liste-carte { min-width: 0; padding: 16px 16px 10px; background: linear-gradient(180deg, rgba(20, 11, 32, .9), rgba(14, 8, 24, .92)); border: 2px solid rgba(215, 164, 33, .4); box-shadow: 0 18px 40px rgba(0, 0, 0, .45); }
+.cl-encarts { display: grid; gap: 16px; align-content: start; }
+.cl-encart { padding: 16px 18px 18px; }
+.cl-encart h3 { margin: 0 0 6px; font-size: 21px; color: var(--or-clair); }
+.cl-encart p { margin: 0; font-size: 15px; line-height: 1.5; color: #F1E6FF; }
+.cl-encart p + p { margin-top: 8px; }
+.cl-encart code { color: var(--or-clair); }
+.cl-encart .classement-lu { text-align: left; font-size: 13.5px; color: #CDB8E6; }
+.panneau-bois.cl-encart p { color: #FFF4D6; }
+.champions .tete { margin-bottom: 26px; }
+.champions .tete h2 { text-wrap: balance; }
+.classement-etat { margin: 30px auto 18px; text-align: center; font-weight: 700; font-size: 19px; color: #F1E6FF; grid-column: 1 / -1; }
+.cl-podium > .bouton { grid-column: 1 / -1; justify-self: center; }
 
-/* la suite (4e à 10e) : une liste de parchemin sous les marches */
-ol.suite-score { max-width: 820px; margin: 0 auto; padding: 6px 16px 10px; border: 12px solid transparent; border-image: url("../assets/matieres/carte.png") 6 fill / 12px round; image-rendering: pixelated;
-  background: var(--parchemin-2) url("../assets/matieres/parchemin.png") 0 0 / 96px 96px repeat; color: var(--encre); }
-.suite-score > * { image-rendering: auto; }
-.classement-lu { margin: 22px 0 0; text-align: center; }
+/* les huit thèmes : des marque-pages de cuir, le choisi au ruban rouge (les onglets de /top) */
+.cl-themes { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 0 auto 18px; }
+.cl-theme { position: relative; padding: 9px 18px 12px; min-height: 44px; font-family: "Lilita One", "Fredoka", sans-serif; font-size: 19px; letter-spacing: .3px; color: #FFF4D6; cursor: pointer;
+  background: linear-gradient(180deg, #7A4E28, #5A3418); border: 3px solid #2B1A0C; box-shadow: inset 0 3px 0 rgba(255, 255, 255, .18), 0 4px 0 #2B1A0C; text-shadow: 0 2px 0 rgba(0, 0, 0, .45); transition: transform .15s ease, filter .15s ease; }
+.cl-theme:hover { transform: translateY(-2px); filter: brightness(1.12); }
+.cl-theme:focus-visible { outline: 3px solid var(--or-clair); outline-offset: 3px; }
+.cl-theme[aria-selected="true"] { background: linear-gradient(180deg, #D0443A, var(--ruban)); border-color: var(--or); box-shadow: inset 0 3px 0 rgba(255, 255, 255, .22), 0 4px 0 #6E1A14; color: #FFF4D6; }
+.cl-theme[aria-selected="true"]::after { content: ""; position: absolute; left: 50%; bottom: -13px; width: 0; height: 0; margin-left: -9px; border: 9px solid transparent; border-top-color: var(--or); border-bottom: 0; }
 
-/* ---------- une ligne de classement (la suite du Score, les cartes) : le rang, le pseudo, la valeur ---------- */
-/* sur une carte étroite, la valeur passe sous le pseudo, à droite, plutôt que de le couper */
-.cl-rangs { list-style: none; margin: 0; padding: 0; }
-.cl-rangs li { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 10px; padding: 7px 0; border-top: 2px dashed var(--parchemin-3); font-size: 17px; }
-.cl-rangs li:first-child { border-top: 0; }
-.cl-rangs .cl-rang { flex: 0 0 34px; display: grid; place-items: center; font-family: "Lilita One", "Fredoka", sans-serif; color: var(--encre-douce); }
-.cl-rangs .cl-rang img { width: 15px; height: 21px; image-rendering: pixelated; }
-.cl-rangs .cl-pseudo { flex: 1 1 auto; min-width: 0; font-weight: 700; color: var(--bois-fonce); overflow-wrap: anywhere; }
-.cl-rangs .cl-valeur { margin-left: auto; font-weight: 700; color: var(--encre); white-space: nowrap; }
-.cl-rangs li.cl-r1 .cl-pseudo { color: var(--ruban); }
-.cl-rangs li.cl-vide { display: block; color: var(--encre-douce); font-weight: 600; }
+/* les classements du thème : des jetons de parchemin, le choisi en or */
+.cl-cats { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; max-width: 980px; margin: 16px auto 10px; }
+.cl-cats[hidden], .cl-sous[hidden] { display: none; }
+.cl-cat { min-height: 40px; padding: 6px 13px 7px; font-family: "Fredoka", sans-serif; font-weight: 700; font-size: 15px; color: var(--bois-fonce); cursor: pointer; background: var(--parchemin-2); border: 2px solid var(--bois-clair); box-shadow: 0 3px 0 var(--bois-clair); transition: transform .12s ease; }
+.cl-cat:hover { transform: translateY(-1px); }
+.cl-cat:focus-visible { outline: 3px solid var(--or-clair); outline-offset: 2px; }
+.cl-cat[aria-pressed="true"] { color: #3A2408; background: linear-gradient(180deg, #FFE38A, var(--or)); border-color: #FFF0B8; box-shadow: 0 3px 0 var(--or-fonce), 0 0 18px rgba(255, 215, 94, .45); }
+/* les choix d'une catégorie (le niveau et les joueurs d'un donjon, la colonne d'un jeu de hasard) */
+.cl-sous { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 22px; margin: 4px auto 6px; }
+.cl-choix-rangee { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.cl-choix-mot { font-weight: 700; font-size: 15px; color: #CDB8E6; margin-right: 4px; }
+.cl-choix { min-width: 40px; min-height: 40px; padding: 4px 11px 6px; font-family: "Lilita One", "Fredoka", sans-serif; font-size: 16px; color: #FFF4D6; cursor: pointer; background: rgba(255, 255, 255, .06); border: 2px solid rgba(215, 164, 33, .5); }
+.cl-choix:hover { background: rgba(255, 255, 255, .12); }
+.cl-choix:focus-visible { outline: 3px solid var(--or-clair); outline-offset: 2px; }
+.cl-choix[aria-pressed="true"] { color: #FFF4D6; background: var(--ruban); border-color: var(--or); box-shadow: 0 3px 0 #6E1A14; }
+.cl-choix[hidden] { display: none; }
 
-/* ---------- les familles : des onglets, comme les marque-pages de /top ---------- */
-.onglets-classement { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin: 0 0 34px; }
-.cl-onglet { padding: 8px 22px 10px; font-family: "Lilita One", "Fredoka", sans-serif; font-size: 21px; color: var(--bois-fonce); cursor: pointer;
-  background: var(--parchemin-3); border: 3px solid var(--bois-clair); box-shadow: 0 4px 0 var(--bois-clair); transition: transform .15s ease, background .15s ease; }
-.cl-onglet:hover { transform: translateY(-2px); }
-.cl-onglet:focus-visible { outline: 3px solid var(--or); outline-offset: 3px; }
-.cl-onglet[aria-selected="true"] { color: #FFF4D6; background: var(--ruban); border-color: var(--or); box-shadow: 0 4px 0 #6E1A14; text-shadow: 0 2px 0 #6E1A14; }
+.cl-entete { text-align: center; margin: 22px auto 8px; max-width: 720px; }
+.cl-entete h3 { font-size: clamp(26px, 3vw, 36px); color: var(--or-clair); text-shadow: 0 3px 0 rgba(0, 0, 0, .4); }
+.cl-entete .cl-aide { margin: 8px 0 0; font-size: 16px; color: #E7D8F7; }
+.cl-entete .cl-classes { margin: 6px 0 0; font-size: 14px; font-weight: 700; color: #BFA6DA; }
+.cl-entete .cl-classes:empty, .cl-entete .cl-aide:empty { display: none; }
 
-/* ---------- les cartes des catégories : trois par rangée, la dernière rangée centrée (la famille Boss n'en a qu'une) ---------- */
-.cartes-classement { display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-start; gap: 24px; }
-.cartes-classement > .carte-classement { flex: 0 1 calc((100% - 48px) / 3); min-width: 0; }
-.cartes-classement > .classement-etat { flex: 1 1 100%; color: var(--bois-fonce); }
-.carte-classement h3 { font-size: 25px; margin: 4px 0 6px; }
-.carte-classement .cl-aide { margin: 0 0 10px; font-size: 15px; color: var(--encre-douce); }
-.classement-fin { text-align: center; margin: 34px 0 0; }
+/* ---------- le podium : trois places (le 1er au milieu), chacune sa statue (la peau en 3D) et son socle en volume ---------- */
+.cl-podium { position: relative; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: end; gap: 0 clamp(6px, 2vw, 26px); max-width: 880px; min-height: 420px; margin: 0 auto; padding-top: 58px; transform-style: preserve-3d; transition: transform .5s ease-out; }
+.cl-scene { perspective: 1400px; }
+.cl-plan { display: contents; }
+.cl-place { position: relative; display: flex; flex-direction: column; align-items: center; min-width: 0; transition: transform .35s cubic-bezier(.2, .8, .2, 1); }
+.cl-place.p1 { order: 2; } .cl-place.p2 { order: 1; } .cl-place.p3 { order: 3; }
+.cl-place:hover { transform: translateY(-6px); }
+/* les rayons derrière le premier */
+.cl-place.p1::before { content: ""; position: absolute; left: 50%; top: 4%; width: 150%; aspect-ratio: 1; transform: translateX(-50%); z-index: 0; pointer-events: none; opacity: .55;
+  background: repeating-conic-gradient(from 0deg, rgba(255, 215, 94, .26) 0deg 7deg, rgba(255, 215, 94, 0) 7deg 22deg);
+  -webkit-mask: radial-gradient(closest-side, #000 22%, transparent 72%); mask: radial-gradient(closest-side, #000 22%, transparent 72%); animation: cl-rayons 40s linear infinite; }
+@keyframes cl-rayons { to { transform: translateX(-50%) rotate(360deg); } }
+.cl-statue { position: relative; z-index: 1; display: block; width: 100%; max-width: 220px; aspect-ratio: 2 / 3; padding: 0; margin: 0; background: none; border: 0; cursor: pointer; }
+.cl-statue:focus-visible { outline: 3px solid var(--or-clair); outline-offset: 2px; }
+.cl-statue .face { position: absolute; left: 50%; bottom: 3%; height: 78%; width: auto; aspect-ratio: 1 / 2; transform: translateX(-50%); image-rendering: pixelated; opacity: 0; transition: opacity .5s ease; filter: drop-shadow(0 14px 10px rgba(0, 0, 0, .5)); }
+.cl-statue .face.pret { opacity: 1; }
+.cl-statue .vue3d { position: absolute; inset: 0; width: 100% !important; height: 100% !important; opacity: 0; transition: opacity .7s ease; }
+.cl-statue.en-3d .vue3d { opacity: 1; }
+.cl-statue.en-3d .face { opacity: 0; }
+/* l'ombre au sol, sous les pieds */
+.cl-statue::after { content: ""; position: absolute; left: 22%; right: 22%; bottom: 0; height: 7%; background: radial-gradient(closest-side, rgba(8, 4, 14, .7), rgba(8, 4, 14, 0)); z-index: -1; }
+.cl-couronne { position: absolute; z-index: 3; left: 50%; top: -15%; width: 54px; height: auto; margin-left: -27px; image-rendering: pixelated; filter: drop-shadow(0 4px 8px rgba(255, 200, 60, .55)); animation: flotte 4.5s ease-in-out infinite; pointer-events: none; }
+.cl-vide-place { display: grid; place-items: center; width: 100%; aspect-ratio: 2 / 3; max-width: 220px; color: #BFA6DA; font-weight: 700; font-size: 15px; text-align: center; }
+/* le socle : sa face, son dessus en perspective, son côté d'ombre */
+.cl-socle { position: relative; z-index: 2; width: 100%; max-width: 236px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 16px 8px 12px; text-align: center;
+  border: 4px solid rgba(0, 0, 0, .3); border-top: 0; box-shadow: inset 0 -12px 0 rgba(0, 0, 0, .12), 0 22px 34px rgba(0, 0, 0, .45); }
+.cl-socle::before { content: ""; position: absolute; left: -4px; right: -4px; top: -26px; height: 26px; transform: perspective(220px) rotateX(52deg); transform-origin: 50% 100%; border: 4px solid rgba(0, 0, 0, .22); border-bottom: 0; }
+.p1 .cl-socle { min-height: 170px; background: linear-gradient(180deg, #F2CB4E, #D7A421); color: #3E2A06; }
+.p1 .cl-socle::before { background: linear-gradient(180deg, #FFF1B0, #F6D35E); }
+.p2 .cl-socle { min-height: 128px; background: linear-gradient(180deg, #E2E5EA, #AEB3BD); color: #2A2E36; }
+.p2 .cl-socle::before { background: linear-gradient(180deg, #FAFBFC, #DCDFE5); }
+.p3 .cl-socle { min-height: 96px; background: linear-gradient(180deg, #E39A5E, #B9692F); color: #3A1D08; }
+.p3 .cl-socle::before { background: linear-gradient(180deg, #F7C79B, #DE9355); }
+.cl-socle .cl-n { position: absolute; right: 8px; bottom: 4px; font-family: "Lilita One", "Fredoka", sans-serif; font-size: 54px; line-height: 1; opacity: .22; pointer-events: none; }
+.cl-socle .cl-medaille { width: 20px; height: 28px; image-rendering: pixelated; margin: -2px 0 6px; }
+.cl-socle .cl-pseudo { max-width: 100%; padding: 0 4px; font-family: "Lilita One", "Fredoka", sans-serif; font-size: clamp(15px, 2vw, 24px); line-height: 1.1; overflow-wrap: anywhere; }
+.cl-socle .cl-ile-nom { max-width: 100%; padding: 0 4px; font-family: "Lilita One", "Fredoka", sans-serif; font-size: clamp(15px, 2vw, 22px); line-height: 1.1; overflow-wrap: anywhere; }
+.cl-socle .cl-petit { margin-top: 2px; font-size: 13px; font-weight: 700; opacity: .85; }
+.cl-socle .cl-valeur { margin-top: 6px; font-weight: 700; font-size: 15px; }
+/* les éclats qui scintillent sur la scène (css/style.css, .eclat) */
+.cl-podium .eclat { z-index: 0; pointer-events: none; }
 
-/* ---------- un donjon (la 125 du jeu) : ses niveaux dans une carte, le niveau et les joueurs du groupe à choisir ----------
-   Les boutons sont des marque-pages carrés, comme les onglets (jamais une pastille arrondie) : le choisi en rouge. Sur une
-   carte très étroite (une tablette en deux colonnes), le mot de la rangée passe au-dessus de ses boutons. */
-.carte-donjon { container-type: inline-size; }
-.cl-choix-rangee { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 0 0 8px; }
-.cl-choix-rangee[hidden], .cl-choix[hidden] { display: none; }
-.cl-choix-mot { flex: 0 0 66px; font-weight: 700; font-size: 15px; color: var(--encre-douce); }
-@container (max-width: 250px) { .cl-choix-mot { flex-basis: 100%; } }
-.cl-choix { min-width: 36px; min-height: 34px; padding: 3px 10px 5px; font-family: "Lilita One", "Fredoka", sans-serif; font-size: 17px; line-height: 1.2; color: var(--bois-fonce); cursor: pointer;
-  background: var(--parchemin-3); border: 2px solid var(--bois-clair); border-radius: 0; box-shadow: 0 3px 0 var(--bois-clair); transition: transform .15s ease; }
-.cl-choix:hover { transform: translateY(-1px); }
-.cl-choix:focus-visible { outline: 3px solid var(--or); outline-offset: 2px; }
-.cl-choix[aria-pressed="true"] { color: #FFF4D6; background: var(--ruban); border-color: var(--or); box-shadow: 0 3px 0 #6E1A14; text-shadow: 0 2px 0 #6E1A14; }
-.carte-donjon .cl-aide { margin-top: 4px; }
+/* ---------- la liste ---------- */
+.cl-outils { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 16px; margin: 0 0 12px; }
+.cl-cherche { flex: 1 1 260px; max-width: 420px; }
+.cl-cherche input { width: 100%; min-height: 44px; padding: 8px 14px; font: 600 16px "Fredoka", sans-serif; color: #fff; background: rgba(10, 6, 16, .55); border: 2px solid rgba(215, 164, 33, .55); }
+.cl-cherche input::placeholder { color: #BFA6DA; }
+.cl-cherche input:focus { outline: 3px solid var(--or-clair); outline-offset: 1px; }
+.cl-moi { margin: 0; font-weight: 700; font-size: 16px; }
+.cl-moi a { color: var(--or-clair); }
+.cl-moi b { color: var(--or-clair); font-size: 1.25em; }
+.cl-liste { list-style: none; margin: 0; padding: 0; }
+.cl-ligne { position: relative; display: grid; grid-template-columns: 48px auto minmax(0, 1fr) minmax(90px, 200px) minmax(0, auto); align-items: center; gap: 4px 14px; padding: 6px 16px; margin: 0 0 4px;
+  background: rgba(42, 26, 62, .55); border: 2px solid rgba(215, 164, 33, .16); transition: transform .15s ease, background .15s ease, border-color .15s ease; }
+.cl-ligne:hover, .cl-ligne:focus-within { transform: translateY(-2px); background: rgba(62, 40, 88, .7); border-color: rgba(255, 215, 94, .6); }
+.cl-ligne.toi { border-color: var(--or-clair); background: linear-gradient(90deg, rgba(215, 164, 33, .26), rgba(215, 164, 33, .07)); }
+.cl-ligne[hidden] { display: none; }
+.cl-ligne .cl-rang { font-family: "Lilita One", "Fredoka", sans-serif; font-size: 21px; color: #E7D8F7; text-align: center; }
+.cl-ligne .cl-rang img { width: 15px; height: 21px; margin: 0 auto; image-rendering: pixelated; }
+.cl-tete { display: block; flex: 0 0 auto; width: 40px; height: 40px; background-color: #3A2A4A; background-repeat: no-repeat; image-rendering: pixelated; box-shadow: 0 0 0 2px #120a1c, 0 0 0 4px rgba(255, 215, 94, .35); }
+.cl-qui { min-width: 0; }
+.cl-qui .cl-nom { display: block; padding: 0; margin: 0; background: none; border: 0; font: 700 18px/1.2 "Fredoka", sans-serif; color: #fff; text-align: left; cursor: pointer; overflow-wrap: anywhere; }
+.cl-qui .cl-nom::after { content: ""; position: absolute; inset: 0; }
+.cl-qui .cl-nom:focus-visible { outline: none; }
+.cl-ligne:has(.cl-nom:focus-visible) { outline: 3px solid var(--or-clair); outline-offset: 2px; }
+.cl-qui .cl-ile-nom { font-family: "Lilita One", "Fredoka", sans-serif; font-weight: 400; font-size: 19px; color: var(--or-clair); }
+.cl-qui .cl-petit { display: block; margin-top: 1px; font-size: 13.5px; font-weight: 600; color: #CDB8E6; }
+.cl-marque { display: inline-block; margin-left: 8px; padding: 1px 6px 2px; font-size: 11.5px; font-weight: 700; letter-spacing: .3px; vertical-align: 2px; color: #241505; background: var(--or-clair); }
+.cl-marque.toi { background: #fff; color: #3A2408; }
+.cl-marque.equipe { background: #8FE3FF; color: #0E2C40; }
+.cl-embleme { display: inline-block; width: 22px; height: 22px; margin-left: 6px; vertical-align: -5px; background: no-repeat 0 0 / 264px 22px; animation: cl-embleme 1.8s steps(12) infinite; }
+@keyframes cl-embleme { to { background-position: -264px 0; } }
+.e-chevalier { background-image: url("../assets/boutique/grades/embleme_chevalier.png"); }
+.e-comte { background-image: url("../assets/boutique/grades/embleme_comte.png"); }
+.e-marquis { background-image: url("../assets/boutique/grades/embleme_marquis.png"); }
+.e-duc { background-image: url("../assets/boutique/grades/embleme_duc.png"); }
+.e-souverain { background-image: url("../assets/boutique/grades/embleme_souverain.png"); }
+.cl-barre { position: relative; height: 10px; background: rgba(255, 255, 255, .08); box-shadow: inset 0 0 0 1px rgba(255, 215, 94, .18); }
+.cl-barre i { position: absolute; left: 0; top: 0; bottom: 0; width: var(--part, 0%); background: linear-gradient(90deg, var(--or-fonce), var(--or-clair)); box-shadow: 0 0 10px rgba(255, 215, 94, .35); transition: width .6s cubic-bezier(.2, .8, .2, 1); }
+.cl-ligne .cl-val { font-weight: 700; font-size: 16px; color: #FFF4D6; text-align: right; white-space: nowrap; }
+.cl-vide { margin: 14px 0 0; text-align: center; font-weight: 700; color: #E7D8F7; }
+.cl-vide .bouton { margin-top: 10px; }
+.classement-lu { margin: 8px 0 0; }
+mark.cl-trouve { background: rgba(255, 215, 94, .45); color: inherit; }
 
+/* ---------- la fiche d'un joueur : au survol (une carte qui suit), au clic (une fenêtre) ---------- */
+.cl-survol { position: fixed; z-index: 70; width: 270px; padding: 12px 14px; pointer-events: none; color: #F4EAFF; background: rgba(27, 16, 40, .97); border: 2px solid var(--or); box-shadow: 0 16px 36px rgba(0, 0, 0, .55); opacity: 0; transform: translateY(6px); transition: opacity .15s ease, transform .15s ease; }
+.cl-survol.vu { opacity: 1; transform: none; }
+.cl-survol[hidden] { display: none; }
+.cl-survol .haut { display: flex; align-items: center; gap: 12px; }
+.cl-survol .cl-tete { width: 48px; height: 48px; }
+.cl-survol b { display: block; font-family: "Lilita One", "Fredoka", sans-serif; font-weight: 400; font-size: 20px; color: #fff; }
+.cl-survol p { margin: 6px 0 0; font-size: 14px; line-height: 1.4; color: #E7D8F7; }
+.cl-survol .or { color: var(--or-clair); font-weight: 700; }
+
+.cl-fiche { position: fixed; inset: 0; z-index: 80; display: grid; place-items: center; padding: 18px; background: rgba(8, 4, 14, .72); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
+.cl-fiche[hidden] { display: none; }
+.cl-fiche .panneau { position: relative; display: grid; grid-template-columns: 250px minmax(0, 1fr); gap: 6px 26px; width: min(820px, 100%); max-height: calc(100svh - 36px); overflow: auto; padding: 22px 24px 24px; color: #F4EAFF;
+  background: radial-gradient(70% 60% at 18% 30%, rgba(142, 76, 184, .35), rgba(142, 76, 184, 0) 70%), linear-gradient(180deg, #2A1740, #1B1028); border: 3px solid var(--or); box-shadow: 0 0 0 3px #120a1c, 0 30px 70px rgba(0, 0, 0, .6); }
+.cl-fiche .fermer { position: absolute; right: 8px; top: 8px; width: 44px; height: 44px; font: 700 26px/1 "Fredoka", sans-serif; color: #FFF4D6; cursor: pointer; background: rgba(255, 255, 255, .06); border: 2px solid rgba(215, 164, 33, .5); }
+.cl-fiche .fermer:hover { background: rgba(255, 255, 255, .14); }
+.cl-fiche .fermer:focus-visible { outline: 3px solid var(--or-clair); outline-offset: 2px; }
+.fiche-statue { position: relative; align-self: start; width: 100%; aspect-ratio: 2 / 3; background: radial-gradient(closest-side, rgba(255, 215, 94, .18), rgba(255, 215, 94, 0)); }
+.fiche-statue .face { position: absolute; left: 50%; bottom: 4%; height: 78%; width: auto; aspect-ratio: 1 / 2; transform: translateX(-50%); image-rendering: pixelated; opacity: 0; transition: opacity .4s ease; }
+.fiche-statue .face.pret { opacity: 1; }
+.fiche-statue .vue3d { position: absolute; inset: 0; width: 100% !important; height: 100% !important; opacity: 0; transition: opacity .6s ease; cursor: grab; }
+.fiche-statue.en-3d .vue3d { opacity: 1; }
+.fiche-statue.en-3d .face { opacity: 0; }
+.fiche-statue .astuce { position: absolute; left: 0; right: 0; bottom: -2px; margin: 0; text-align: center; font-size: 12.5px; color: #BFA6DA; }
+.fiche-infos h2 { font-size: clamp(26px, 3.4vw, 36px); color: #fff; margin: 4px 50px 4px 0; overflow-wrap: anywhere; }
+.fiche-infos .titres { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin: 0 0 8px; font-weight: 700; font-size: 15px; color: #E7D8F7; }
+.fiche-infos .grade { display: inline-flex; align-items: center; gap: 6px; padding: 2px 10px 3px 4px; color: #241505; background: linear-gradient(180deg, #FFE38A, var(--or)); }
+.fiche-infos .grade .cl-embleme { margin-left: 0; }
+.fiche-infos .equipe { padding: 2px 10px 3px; color: #0E2C40; background: #8FE3FF; }
+.fiche-infos .vu { color: #BFA6DA; font-weight: 600; }
+.fiche-infos .vu.en-ligne { color: var(--vert-clair); }
+.fiche-niveau { display: flex; align-items: center; gap: 12px; margin: 6px 0 12px; }
+.fiche-niveau b { font-family: "Lilita One", "Fredoka", sans-serif; font-weight: 400; font-size: 34px; line-height: 1; color: var(--or-clair); }
+.fiche-niveau .cl-barre { flex: 1 1 auto; height: 12px; }
+.fiche-bloc { margin: 12px 0 0; }
+.fiche-bloc h3 { margin: 0 0 6px; font-family: "Lilita One", "Fredoka", sans-serif; font-weight: 400; font-size: 19px; color: var(--or-clair); }
+.fiche-bloc p { margin: 0; font-size: 15px; color: #E7D8F7; }
+.fiche-grille { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 14px; margin: 0; padding: 0; list-style: none; }
+.fiche-grille li { display: flex; justify-content: space-between; gap: 8px; padding: 5px 8px; font-size: 14.5px; background: rgba(255, 255, 255, .05); }
+.fiche-grille li span { color: #CDB8E6; }
+.fiche-grille li b { color: #fff; white-space: nowrap; }
+.fiche-aspects { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px 14px; margin: 0; padding: 0; list-style: none; }
+.fiche-aspects li { display: grid; grid-template-columns: 92px minmax(0, 1fr) 30px; align-items: center; gap: 8px; font-size: 13.5px; color: #E7D8F7; }
+.fiche-aspects li b { text-align: right; color: #fff; }
+.fiche-aspects .cl-barre { height: 8px; }
+.fiche-etoiles { color: var(--or-clair); letter-spacing: 2px; }
+.fiche-etoiles .vide { color: rgba(255, 255, 255, .22); }
+
+/* ---------- les écrans moyens et petits ---------- */
 @media (max-width: 960px) {
-  .cartes-classement > .carte-classement { flex-basis: calc((100% - 24px) / 2); }
-  .cl-m1 .cl-socle { height: 130px; } .cl-m2 .cl-socle { height: 96px; } .cl-m3 .cl-socle { height: 70px; }
-  .cl-socle { font-size: 44px; }
+  .cl-podium { min-height: 360px; }
+  .p1 .cl-socle { min-height: 140px; } .p2 .cl-socle { min-height: 108px; } .p3 .cl-socle { min-height: 82px; }
+  .cl-ligne { grid-template-columns: 42px auto minmax(0, 1fr) minmax(70px, 140px) minmax(0, auto); }
+  /* la liste sur toute la largeur, les encarts dessous, côte à côte tant qu'ils tiennent (la règle du kit, .une-grande,
+     cède ici devant celle de la page, plus précise) */
+  .cl-liste-zone.une-grande { grid-template-columns: minmax(0, 1fr); }
+  .cl-encarts { grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); }
 }
-@media (max-width: 620px) {
-  .cartes-classement > .carte-classement { flex-basis: 100%; }
-  .onglets-classement { gap: 8px; } .cl-onglet { font-size: 18px; padding: 6px 14px 8px; }
-  .cl-marche .cl-valeur { font-size: 14px; }
-  .cl-marche .cl-pseudo { padding: 0 2px; }
-  .cl-medaille { width: 20px; height: 28px; } .cl-couronne { width: 36px; height: 30px; }
-  .cl-m1 .cl-socle { height: 104px; } .cl-m2 .cl-socle { height: 76px; } .cl-m3 .cl-socle { height: 56px; }
-  .cl-socle { font-size: 36px; }
-  ol.suite-score { padding: 4px 8px 8px; }
-  .cl-rangs li { font-size: 16px; }
+@media (max-width: 700px) {
+  .champions { padding: 44px 0 64px; }
+  /* les thèmes et les classements glissent sous le doigt (une rangée chacun), jamais sur trois lignes */
+  .cl-themes, .cl-cats { flex-wrap: nowrap; justify-content: flex-start; overflow-x: auto; scroll-snap-type: x proximity; margin-left: -20px; margin-right: -20px; padding: 2px 20px 16px; scrollbar-width: none; }
+  .cl-themes::-webkit-scrollbar, .cl-cats::-webkit-scrollbar { display: none; }
+  .cl-theme, .cl-cat { flex: 0 0 auto; scroll-snap-align: start; }
+  .cl-theme { font-size: 17px; padding: 8px 14px 10px; }
+  .cl-podium { min-height: 290px; gap: 0 6px; }
+  .cl-statue { max-width: 130px; }
+  .cl-couronne { width: 38px; margin-left: -19px; }
+  .p1 .cl-socle { min-height: 118px; } .p2 .cl-socle { min-height: 92px; } .p3 .cl-socle { min-height: 72px; }
+  .cl-socle { padding: 12px 4px 8px; }
+  .cl-socle .cl-pseudo, .cl-socle .cl-ile-nom { font-size: 15px; }
+  .cl-socle .cl-valeur { font-size: 12.5px; }
+  .cl-socle .cl-petit { font-size: 11.5px; }
+  .cl-socle .cl-n { font-size: 38px; }
+  /* au téléphone : le pseudo sur toute la ligne (jamais coupé au milieu d'un mot), la barre et la valeur dessous */
+  .cl-ligne { grid-template-columns: 34px auto minmax(0, 1fr) auto; gap: 3px 10px; padding: 6px 10px; }
+  .cl-ligne .cl-rang, .cl-ligne .cl-tete { grid-row: 1 / span 2; }
+  .cl-ligne .cl-qui { grid-column: 3 / -1; grid-row: 1; }
+  .cl-ligne .cl-barre { grid-column: 3; grid-row: 2; height: 6px; align-self: center; }
+  .cl-ligne .cl-val { grid-column: 4; grid-row: 2; }
+  .cl-tete { width: 36px; height: 36px; }
+  .cl-ligne .cl-rang { font-size: 18px; }
+  .cl-qui .cl-nom { font-size: 16px; }
+  .cl-qui .cl-ile-nom { font-size: 17px; }
+  .cl-ligne .cl-val { font-size: 14px; white-space: nowrap; }
+  .cl-fiche { padding: 0; place-items: stretch; }
+  .cl-fiche .panneau { grid-template-columns: minmax(0, 1fr); max-height: 100svh; height: 100%; padding: 16px 16px 22px; border-width: 0; box-shadow: none; }
+  .fiche-statue { width: 62%; max-width: 230px; margin: 0 auto; }
+  .fiche-grille, .fiche-aspects { grid-template-columns: minmax(0, 1fr); }
 }
-html.photo .cl-couronne { animation: none; }
+html.photo .cl-couronne, html.photo .cl-place.p1::before, html.photo .cl-embleme { animation: none; }
 @media (prefers-reduced-motion: reduce) {
-  .cl-couronne { animation: none; }
-  .cl-onglet, .cl-choix { transition: none; }
+  .cl-couronne, .cl-place.p1::before, .cl-embleme { animation: none; }
+  .cl-place, .cl-ligne, .cl-theme, .cl-cat, .cl-barre i, .cl-survol { transition: none; }
 }
+
+/* ---------- (29/10/2026, le propriétaire) LE CADRE DE LA LISTE : seize lignes en vue (treize au téléphone), le reste défile
+   dedans ; sa barre fine, son curseur d'or, son rail de nuit (Firefox : scrollbar-color ; Chrome : ::-webkit-scrollbar) ; la
+   page ne saute pas au bout (overscroll-behavior) ---------- */
+.cl-cadre { position: relative; max-height: 1180px; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: var(--or) #120A1C; padding: 2px 8px 2px 2px; margin: 0 -8px 0 0; outline: none; }
+.cl-cadre:focus-visible { outline: 3px solid var(--or-clair); outline-offset: 3px; }
+.cl-cadre::-webkit-scrollbar { width: 12px; }
+.cl-cadre::-webkit-scrollbar-track { background: #120A1C; border-left: 1px solid rgba(215, 164, 33, .3); box-shadow: inset 0 0 0 2px #0B0614; }
+.cl-cadre::-webkit-scrollbar-thumb { background: linear-gradient(90deg, #A57713, #FFD75E 50%, #A57713); border: 2px solid #120A1C; }
+.cl-cadre::-webkit-scrollbar-thumb:hover { background: linear-gradient(90deg, #D7A421, #FFE9A8 50%, #D7A421); }
+.cl-cherche-etat { margin: 0; font-size: 14px; font-weight: 700; color: #CDB8E6; }
+.cl-cherche-etat:empty { display: none; }
+
+/* ---------- LES BANDES : le haut (4 à 10) plus riche, une bande par dizaine, ses paliers ; le bas plus serré ---------- */
+.cl-bande[hidden] { display: none; }
+.cl-rangs-bande { list-style: none; margin: 0; padding: 0; }
+.cl-palier { display: flex; align-items: center; gap: 12px; margin: 16px 0 10px; font-family: "Lilita One", "Fredoka", sans-serif; font-size: 15px; letter-spacing: 1px; text-transform: uppercase; color: var(--or-clair); white-space: nowrap; }
+.cl-palier::before, .cl-palier::after { content: ""; flex: 1 1 auto; height: 12px; background: url("../assets/motifs/frise-etoiles.svg") repeat-x center / 40px 12px; opacity: .8; }
+/* le haut : de grandes lignes dorées, un liseré, de grandes têtes (48 px) */
+.cl-bande-haut .cl-ligne { padding: 8px 18px; background: linear-gradient(90deg, rgba(215, 164, 33, .26), rgba(42, 26, 62, .78) 46%); border-color: rgba(255, 215, 94, .5); border-left: 6px solid var(--or); box-shadow: 0 6px 16px rgba(0, 0, 0, .35); }
+.cl-bande-haut .cl-ligne .cl-rang { font-size: 25px; color: var(--or-clair); }
+.cl-bande-haut .cl-qui .cl-nom { font-size: 19px; }
+.cl-bande-haut .cl-barre { height: 12px; }
+/* les dizaines : une bande sur deux un peu plus claire */
+.cl-bande-paire .cl-ligne { background: rgba(52, 33, 76, .6); }
+.cl-bande-impaire .cl-ligne { background: rgba(36, 22, 54, .62); }
+/* le bas (à partir du 51e) : des lignes serrées, de petites têtes (32 px) */
+.cl-ligne.compacte { padding: 5px 14px; margin-bottom: 4px; gap: 2px 12px; }
+.cl-ligne.compacte .cl-rang { font-size: 17px; }
+.cl-ligne.compacte .cl-qui .cl-nom { font-size: 15.5px; }
+.cl-ligne.compacte .cl-qui .cl-petit { font-size: 12.5px; }
+.cl-ligne.compacte .cl-val { font-size: 14.5px; }
+.cl-ligne.compacte .cl-barre { height: 6px; }
+/* une ligne trouvée par la recherche */
+.cl-ligne.trouve { border-color: #8FE3FF; box-shadow: 0 0 0 2px rgba(143, 227, 255, .45), 0 0 18px rgba(143, 227, 255, .3); }
+/* « Toi », collé en bas du cadre tant que ta ligne est hors de vue */
+.cl-toi-colle { position: sticky; bottom: 0; z-index: 4; display: flex; align-items: center; gap: 10px; width: 100%; min-height: 48px; margin: 8px 0 0; padding: 6px 14px; font: 700 15.5px "Fredoka", sans-serif; color: #241505; text-align: left; cursor: pointer; background: linear-gradient(90deg, #FFE38A, var(--or)); border: 2px solid #241505; box-shadow: 0 -8px 20px rgba(0, 0, 0, .55); }
+.cl-toi-colle[hidden] { display: none; }
+.cl-toi-colle:focus-visible { outline: 3px solid #fff; outline-offset: -5px; }
+.cl-toi-colle .cl-tete { box-shadow: 0 0 0 2px #241505; }
+.cl-toi-colle .cl-marque.toi { margin-left: 0; background: #241505; color: #FFE38A; }
+.cl-toi-colle b { font-family: "Lilita One", "Fredoka", sans-serif; font-weight: 400; font-size: 20px; }
+.cl-toi-colle .nom { flex: 1 1 auto; min-width: 0; overflow-wrap: anywhere; }
+.cl-toi-colle .val { white-space: nowrap; }
+@media (max-width: 700px) {
+  .cl-palier { font-size: 13px; gap: 8px; }
+  .cl-bande-haut .cl-ligne { padding: 8px 10px; border-left-width: 4px; }
+  .cl-ligne.compacte { padding: 5px 8px; }
+  .cl-toi-colle { font-size: 14px; padding: 6px 10px; }
+  .cl-toi-colle .val { white-space: normal; text-align: right; }
+}
+/* (la tête, 29/10) jamais un mot coupé par la page dans un panneau */
+.cl-encart, .cl-liste-carte, .cl-fiche .panneau, .cl-survol { hyphens: manual; -webkit-hyphens: manual; }
+/* ---------- (29/10/2026, le propriétaire : « donner envie [...] de monter dans le classement ») LA PAGE MÈNE AU JEU ET POUSSE À
+   MONTER : le visiteur lit « Ta place t'attend » et a le launcher à portée ; le joueur connecté, les points qui manquent pour la
+   place à viser, sa barre, son aspect le plus faible, son meilleur thème ; les derniers exploits, vivants ---------- */
+.cl-monter { display: grid; gap: 8px; margin-top: 10px; }
+.cl-monter[hidden] { display: none; }
+.cl-monter .bouton { justify-self: start; }
+.cl-monter .note { margin: 0; font-size: 13.5px; color: #F3DFB8; }
+.cl-monter .note a { color: var(--or-clair); font-weight: 700; }
+.cl-monter-but { margin: 0; font-weight: 700; color: #fff; }
+.cl-monter .cl-barre { height: 10px; }
+.cl-monter-conseil, .cl-monter-theme { margin: 0; font-size: 14px; line-height: 1.45; color: #F3DFB8; }
+.cl-monter-theme a { color: var(--or-clair); font-weight: 700; }
+.cl-fil { list-style: none; margin: 4px 0 0; padding: 0; display: grid; gap: 2px; }
+.cl-fil-ligne { display: grid; gap: 2px; width: 100%; min-height: 44px; padding: 7px 8px; text-align: left; font: inherit; color: #F1E6FF; cursor: pointer; background: rgba(255, 255, 255, .03); border: 0; border-left: 3px solid transparent; }
+.cl-fil-ligne:hover, .cl-fil-ligne:focus-visible { background: rgba(255, 215, 94, .1); border-left-color: var(--or-clair); outline: none; }
+.cl-fil-texte { font-size: 14px; font-weight: 600; line-height: 1.35; }
+.cl-fil-quand { font-size: 12.5px; color: #A994C4; }
+.cl-fil li.neuf { animation: fil-neuf .6s ease-out; }
+@keyframes fil-neuf { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
+.fiche-appel { margin-top: 14px; padding: 14px 16px; background: linear-gradient(180deg, rgba(215, 164, 33, .2), rgba(215, 164, 33, .06)); border: 2px solid rgba(255, 215, 94, .55); }
+.fiche-appel-titre { margin: 0 0 4px; font-family: "Lilita One", "Fredoka", sans-serif; font-size: 22px; color: var(--or-clair); }
+.fiche-appel p { margin: 0 0 10px; color: #F1E6FF; }
+.fiche-toi { margin: 12px 0 0; font-weight: 700; color: var(--or-clair); }
+.banniere-texte .en-ligne { margin-top: 14px; }
+@media (prefers-reduced-motion: reduce) { .cl-fil li.neuf { animation: none; } }

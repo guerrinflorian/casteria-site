@@ -1,0 +1,35 @@
+/* L'IMAGE DE PARTAGE D'UN PROFIL (partage.html ; 1200 x 630, photographiée par l'API) */
+@font-face { font-family: "Fredoka"; src: url("../assets/polices/fredoka.ttf") format("truetype"); font-weight: 300 700; font-display: block; }
+@font-face { font-family: "Lilita One"; src: url("../assets/polices/lilita_one.ttf") format("truetype"); font-display: block; }
+:root { --or: #D7A421; --or-clair: #FFD75E; --nuit: #1B1028; }
+html, body { margin: 0; width: 1200px; height: 630px; overflow: hidden; background: var(--nuit); }
+body { font-family: "Fredoka", system-ui, sans-serif; font-weight: 500; color: #fff; -webkit-font-smoothing: antialiased; }
+.image { position: relative; width: 1200px; height: 630px; overflow: hidden; isolation: isolate; }
+.fond { position: absolute; inset: 0; z-index: -2; }
+.fond img { width: 100%; height: 100%; object-fit: cover; object-position: 60% 40%; filter: saturate(1.1); }
+.image::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, rgba(27, 16, 40, .25) 0%, rgba(27, 16, 40, .78) 38%, rgba(27, 16, 40, .94) 100%); }
+.image::after { content: ""; position: absolute; inset: auto 0 0 0; height: 8px; background: linear-gradient(90deg, #A57713, #FFD75E, #D29CFF); }
+.personnage { position: absolute; left: 92px; top: 70px; width: 230px; height: 460px; filter: drop-shadow(0 22px 22px rgba(0, 0, 0, .6)); }
+.personnage::after { content: ""; position: absolute; left: -30px; right: -30px; bottom: -22px; height: 40px; z-index: -1; background: radial-gradient(closest-side, rgba(0, 0, 0, .6), transparent); }
+.corps-pixel { display: block; width: 100%; height: 100%; image-rendering: pixelated; }
+.infos { position: absolute; left: 430px; right: 60px; top: 58px; }
+.logo { position: absolute; right: 0; top: -14px; width: 92px; height: 92px; }
+.titre { margin: 0; font-family: "Lilita One", "Fredoka", sans-serif; letter-spacing: 3px; text-transform: uppercase; color: var(--or-clair); font-size: 22px; }
+h1 { margin: 6px 0 0; font-family: "Lilita One", "Fredoka", sans-serif; font-weight: 400; font-size: 92px; line-height: 1; letter-spacing: 1px; text-shadow: 0 6px 0 rgba(0, 0, 0, .35); max-width: 640px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.badges { display: flex; gap: 10px; margin: 16px 0 0; min-height: 32px; }
+.badge { font-weight: 700; font-size: 20px; padding: 3px 14px; color: #1B1028; background: var(--or); box-shadow: 0 4px 0 #A57713; }
+.badge.equipe { background: #D29CFF; box-shadow: 0 4px 0 #8E4CB8; }
+.niveau { display: flex; align-items: center; gap: 18px; margin: 26px 0 0; }
+.niveau[hidden] { display: none; }
+.niveau > span:first-child { font-family: "Lilita One", sans-serif; font-size: 34px; color: var(--or-clair); white-space: nowrap; }
+.niveau .barre { position: relative; flex: 1 1 auto; height: 22px; background: rgba(0, 0, 0, .5); box-shadow: inset 0 0 0 3px #3F2612, 0 0 0 3px rgba(215, 164, 33, .55); }
+.niveau .barre > span { position: absolute; inset: 3px auto 3px 3px; max-width: calc(100% - 6px); background: linear-gradient(180deg, #9CE07A, #3E8E2F); }
+.tuiles { list-style: none; margin: 34px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.tuiles li { padding: 14px 16px; background: rgba(255, 255, 255, .07); box-shadow: inset 0 0 0 3px rgba(215, 164, 33, .45); }
+.tuiles b { display: block; font-family: "Lilita One", sans-serif; font-weight: 400; font-size: 40px; line-height: 1.05; color: var(--or-clair); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tuiles span { display: block; font-size: 19px; line-height: 1.25; margin-top: 4px; color: #F3E7FF; }
+.adresse { position: absolute; left: 430px; bottom: 34px; margin: 0; font-size: 22px; font-weight: 700; color: #E8DAFF; letter-spacing: .5px; }
+.tuiles .etoile { color: rgba(255, 255, 255, .25); }
+.tuiles .etoile.pleine { color: #FFD75E; }
+.tuiles b .etoile { display: inline; margin: 0; font-size: 36px; color: rgba(255, 255, 255, .25); }
+.tuiles b .etoile.pleine { color: #FFD75E; }

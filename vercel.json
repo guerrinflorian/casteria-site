@@ -7,7 +7,9 @@
   ],
   "rewrites": [
     { "source": "/discord", "destination": "/discord.html" },
-    { "source": "/rejoindre", "destination": "/rejoindre.html" }
+    { "source": "/rejoindre", "destination": "/rejoindre.html" },
+    { "source": "/joueur/:pseudo([A-Za-z0-9_]{3,16})", "destination": "/joueur.html" },
+    { "source": "/ile/:case(-?[0-9]{1,4},-?[0-9]{1,4})", "destination": "/ile.html" }
   ],
   "headers": [
     {

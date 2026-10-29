@@ -1,0 +1,213 @@
+/* L'ACCUEIL EN PEU DE SECTIONS (af, 29/10/2026 ; le propriétaire : « interactif, donner envie d'avoir son île et de monter dans
+   le classement ») : la carte des îles, le podium du moment, les derniers exploits, le palais et la boutique en bandes.
+   À charger après style.css et motifs.css. Le kit : aucun arrondi, aucune pastille ; une cible du doigt de 44 px au moins. */
+
+/* ---------- TON ÎLE SUR LA MER ---------- */
+.accueil-ile { padding: 90px 0; }
+.accueil-ile .sur-titre { color: var(--or-clair); }
+.accueil-ile .trois-gestes.court li { font-size: 17px; }
+.en-ligne-iles[hidden], .podium-accueil[hidden], .bande-exploits[hidden] { display: none; }   /* hidden passe avant leur display */
+.en-ligne-iles { display: inline-flex; align-items: center; gap: 10px; margin: 6px 0 0; font-weight: 700; color: #BFF5C8; }
+.en-ligne-iles::before { content: ""; width: 10px; height: 10px; background: #5BE07A; box-shadow: 0 0 0 3px rgba(91, 224, 122, .25); animation: battement 1.6s ease-in-out infinite; }
+@keyframes battement { 50% { box-shadow: 0 0 0 7px rgba(91, 224, 122, 0); } }
+
+.carte-iles-cadre { padding: 16px 16px 14px; }
+.carte-iles-titre { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; margin: 0 0 10px; font-family: "Lilita One", sans-serif; font-size: 20px; color: var(--or-clair); }
+.carte-iles-titre small { font-family: "Fredoka", sans-serif; font-size: 13px; color: #CBB8E6; }
+/* la mer : 9 x 5 cases, ses vagues dessinées (le fond du kit), la grille des places en pointillé très doux */
+.carte-iles { position: relative; display: grid; grid-template-columns: repeat(9, minmax(0, 1fr)); grid-template-rows: repeat(5, minmax(0, 1fr)); aspect-ratio: 9 / 5;
+  background-color: #0E3550; background-image: var(--fond-mer-image, none), linear-gradient(90deg, rgba(255, 255, 255, .05) 1px, transparent 1px), linear-gradient(180deg, rgba(255, 255, 255, .05) 1px, transparent 1px);
+  background-size: var(--fond-mer-taille, auto), calc(100% / 9) 100%, 100% calc(100% / 5); border: 2px solid rgba(0, 0, 0, .45); }
+.ilot { grid-column: var(--i); grid-row: var(--j); position: relative; margin: 14%; padding: 0; border: 0; cursor: pointer; font: inherit; color: inherit;
+  /* l'île : l'herbe, sa plage, son ombre sur l'eau (dessinée, aucune image) */
+  background: radial-gradient(circle at 42% 38%, #79C95A 0 34%, #4E9A3B 35% 52%, #E7D08A 53% 62%, transparent 63%);
+  filter: drop-shadow(0 3px 0 rgba(0, 0, 0, .35)); transition: transform .18s ease, filter .18s ease; }
+.ilot.grand { margin: 4%; }
+.ilot.deco { pointer-events: none; opacity: .85; }
+button.ilot { min-width: 0; min-height: 0; }
+button.ilot:hover, button.ilot:focus-visible, button.ilot.choisi { transform: translateY(-3px) scale(1.12); filter: drop-shadow(0 0 6px rgba(255, 215, 94, .8)) drop-shadow(0 4px 0 rgba(0, 0, 0, .35)); outline: none; }
+.ilot.belle::after { content: "\2605"; position: absolute; top: -6px; right: -4px; font-size: 14px; color: var(--or-clair); text-shadow: 0 1px 0 #000; }
+.ilot.habitee::before { content: ""; position: absolute; left: 50%; bottom: 8%; width: 6px; height: 6px; margin-left: -3px; background: #5BE07A; box-shadow: 0 0 6px #5BE07A; }
+.ilot-nom { position: absolute; left: 50%; bottom: -4px; transform: translate(-50%, 100%); white-space: nowrap; font-size: 12px; font-weight: 700; color: #fff; text-shadow: 0 1px 0 #000, 0 0 4px #000; opacity: 0; transition: opacity .15s; pointer-events: none; z-index: 2; }
+button.ilot:hover .ilot-nom, button.ilot:focus-visible .ilot-nom, button.ilot.choisi .ilot-nom { opacity: 1; }
+/* la place libre : un cadre d'or en pointillé qui respire ; un clic mène au téléchargement */
+.ilot.libre { display: grid; place-items: center; margin: 6%; background: rgba(255, 215, 94, .08); border: 2px dashed var(--or-clair); filter: none; text-decoration: none; min-height: 44px;
+  animation: respire 2.4s ease-in-out infinite; }
+.ilot.libre span { font-size: 12px; font-weight: 700; line-height: 1.1; text-align: center; color: var(--or-clair); text-shadow: 0 1px 0 #000; padding: 2px; }
+.ilot.libre:hover, .ilot.libre:focus-visible { background: rgba(255, 215, 94, .2); outline: none; }
+@keyframes respire { 50% { box-shadow: 0 0 0 4px rgba(255, 215, 94, .18), 0 0 18px rgba(255, 215, 94, .35); } }
+/* la fiche de l'île montrée */
+.fiche-ile { min-height: 116px; margin-top: 12px; padding: 12px 14px; background: rgba(0, 0, 0, .28); border-left: 3px solid var(--or); }
+.fiche-vide { margin: 0; color: #DCCDF2; font-size: 16px; }
+.fiche-nom { font-size: 22px; color: #fff; }
+.fiche-hote { display: flex; align-items: center; gap: 8px; margin: 6px 0 0; font-weight: 700; color: #F4EAFF; }
+.tete-pixel { display: inline-block; flex: none; image-rendering: pixelated; background-repeat: no-repeat; box-shadow: 0 0 0 2px rgba(0, 0, 0, .5); }
+.fiche-etoiles { margin: 4px 0 0; color: var(--or-clair); letter-spacing: 2px; font-size: 18px; }
+.fiche-traits { list-style: none; display: flex; flex-wrap: wrap; gap: 6px 16px; margin: 6px 0 0; padding: 0; font-size: 15px; color: #DCCDF2; }
+.fiche-traits .ouverte { color: #BFF5C8; }
+.fiche-traits .en-jeu { color: #9BE8FF; }
+
+/* ---------- LES BOSS : la ligne des armes, et LE PODIUM DU MOMENT ---------- */
+.boss-bande .une-ligne { margin: 10px 0 0; font-size: 17px; color: #E6DAF7; }
+.boss-bande .une-ligne strong { color: var(--or-clair); }
+.podium-accueil { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: 40px; align-items: end; margin-top: 70px; }
+.podium-accueil h3 { font-size: clamp(26px, 3vw, 38px); }
+.podium-texte p { margin: 10px 0 18px; color: #E6DAF7; }
+.podium-texte .sur-titre { color: var(--or-clair); }
+.podium-marches { list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: end; gap: 10px; margin: 0; padding: 26px 16px 0; border: 3px solid var(--or-fonce); border-bottom: 0; }
+.marche { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 14px 8px 12px; text-align: center;
+  background: linear-gradient(180deg, rgba(255, 215, 94, .16), rgba(27, 16, 40, .9)); border: 2px solid var(--or-fonce); border-bottom: 0; transition: transform .2s ease; }
+.marche:hover { transform: translateY(-6px); }
+.marche-1 { min-height: 210px; border-color: var(--or-clair); background: linear-gradient(180deg, rgba(255, 215, 94, .32), rgba(27, 16, 40, .9)); }
+.marche-2 { min-height: 170px; }
+.marche-3 { min-height: 140px; }
+.marche-pseudo { font-size: 17px; color: #fff; max-width: 100%; overflow-wrap: anywhere; }
+.marche-texte { font-size: 14px; color: var(--or-clair); }
+.marche-rang { margin-top: auto; font-family: "Lilita One", sans-serif; font-size: 26px; color: var(--or-clair); text-shadow: 0 2px 0 #000; }
+
+/* ---------- LES DERNIERS EXPLOITS, qui défilent ---------- */
+.bande-exploits { padding: 26px 0 30px; overflow: hidden; }
+.exploits-titre { max-width: 1180px; margin: 0 auto 14px; padding: 0 24px; font-size: 26px; color: #fff; }
+.exploits-titre .sur-titre { color: var(--or-clair); }
+.exploits-piste { display: flex; width: max-content; }
+.exploits-piste.defile { animation: defile var(--duree, 60s) linear infinite; }
+.exploits-piste.defile:hover, .exploits-piste.defile:focus-within { animation-play-state: paused; }
+@keyframes defile { to { transform: translateX(-50%); } }
+.exploits-liste { list-style: none; display: flex; gap: 14px; margin: 0; padding: 0 7px; }
+.exploit { display: flex; flex-direction: column; gap: 2px; width: 300px; padding: 12px 14px; background: rgba(27, 16, 40, .86); border: 2px solid var(--or-fonce); border-left: 5px solid var(--or); }
+.exploit-texte { font-weight: 700; color: #fff; font-size: 16px; line-height: 1.3; }
+.exploit-quand { font-size: 13px; color: #CBB8E6; }
+.exploit-oeuf_mythique { border-left-color: #FF7AD9; }
+.exploit-casino_gros_gain { border-left-color: #5BE07A; }
+.exploit-minijeu_victoire { border-left-color: #6CC8FF; }
+.exploit-boss_heroique, .exploit-boss_heroique_record { border-left-color: #FF5A3C; }
+@media (prefers-reduced-motion: reduce) { .exploits-piste { width: auto; } .exploits-liste { flex-wrap: wrap; justify-content: center; } }
+
+/* ---------- AU PALAIS, et LA BOUTIQUE, en bandes ---------- */
+.palais-bande { padding: 80px 0; }
+.palais-bande .tete { margin-bottom: 34px; }
+.palais-bande .sur-titre { color: var(--or-clair); }
+.palais-cartes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+.palais-carte { display: flex; flex-direction: column; gap: 8px; padding: 14px 14px 18px; text-decoration: none; color: #F4EAFF; transition: transform .2s ease; }
+.palais-carte:nth-child(2) { transform: translateY(18px); }
+.palais-carte:hover, .palais-carte:focus-visible { transform: translateY(-6px); outline: none; }
+.palais-carte:nth-child(2):hover, .palais-carte:nth-child(2):focus-visible { transform: translateY(10px); }
+.palais-carte img { width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; border: 2px solid rgba(0, 0, 0, .5); }
+.palais-mot { font-family: "Lilita One", sans-serif; font-size: 24px; color: var(--or-clair); }
+.palais-dit { font-size: 16px; line-height: 1.4; }
+.boutique-bande { padding: 34px 0; }
+.boutique-ligne { display: flex; align-items: center; gap: 24px; }
+.boutique-ligne h2 { font-size: clamp(24px, 2.6vw, 34px); color: #fff; }
+.boutique-ligne p { margin: 6px 0 0; color: #E6DAF7; }
+.boutique-ligne > div { flex: 1; }
+.boutique-bete { width: 110px; height: auto; flex: none; filter: drop-shadow(0 6px 0 rgba(0, 0, 0, .35)); }
+.boutique-ligne .bouton { flex: none; display: inline-flex; align-items: center; gap: 8px; }
+
+/* ---------- LE TÉLÉPHONE D'ABORD ---------- */
+@media (max-width: 960px) {
+  .podium-accueil { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  .palais-cartes { grid-template-columns: minmax(0, 1fr); }
+  .palais-carte:nth-child(2), .palais-carte:nth-child(2):hover { transform: none; }
+}
+@media (max-width: 768px) {
+  .accueil-ile { padding: 64px 0; }
+  .accueil-ile .deux-colonnes { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+  .ilot-nom { display: none; }
+  .ilot.libre span { font-size: 10px; }
+  .boutique-ligne { flex-wrap: wrap; }
+  .boutique-bete { width: 72px; }
+  .exploit { width: 250px; }
+  .palais-bande { padding: 56px 0; }
+}
+@media (max-width: 430px) {
+
+  .ilot.libre { margin: 2%; }
+  .podium-marches { padding: 18px 8px 0; gap: 6px; }
+  .marche-pseudo { font-size: 14px; }
+  .marche-1 { min-height: 180px; }
+}
+
+/* ---------- LE VOYAGE AU TÉLÉPHONE (af) : la route GLISSE au doigt, une étape par écran (au lieu de cinq étapes empilées) ---------- */
+@media (max-width: 768px) {
+  #voyage .route { display: flex; gap: 14px; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; padding: 34px 4px 16px; margin-top: 0; scrollbar-width: thin; }
+  #voyage .route::before { display: none; }
+  #voyage .route .pas, #voyage .route .pas-fin { flex: 0 0 86%; display: flex; flex-direction: column; gap: 12px; margin: 0; scroll-snap-align: center; }
+  #voyage .route .pas .borne { top: 0; left: 18px; margin: -33px 0 0; }
+  #voyage .route .pas-photo { aspect-ratio: 16 / 10; }
+  #voyage .route .pas:nth-child(even) .pas-mots { text-align: left; }
+  #voyage .route .pas-fin .pas-photo { aspect-ratio: 16 / 10; }
+  #voyage .route .pas-fin .pas-photo::after { display: none; }
+  #voyage .route .pas-fin .pas-mots { padding: 0; max-width: none; pointer-events: auto; }
+  #voyage .route .pas-mots p:not(.pas-niveau) { font-size: 16px; }
+  #voyage .route .pas-photo .deborde { height: 70%; }
+  #voyage .tete::after { content: "Glisse pour voir la suite de la route \2192"; display: block; margin-top: 12px; font-size: 14px; font-weight: 700; color: var(--or-clair); }
+}
+/* (af) le palais au téléphone : ses trois cartes glissent aussi au doigt */
+@media (max-width: 768px) {
+  .palais-cartes { display: flex; gap: 14px; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; padding: 4px 4px 14px; }
+  .palais-carte { flex: 0 0 82%; scroll-snap-align: center; }
+}
+
+/* (af, 18:0x) LES ÎLOTS EN BLOCS : une forme en marches de pixel (clip-path), l'herbe en deux tons, un arbre, la plage de sable
+   (une ombre intérieure) ; le survol les éclaire d'or (un contour, la forme coupe les ombres portées) */
+.ilot:not(.libre) { filter: none; clip-path: polygon(22% 0, 78% 0, 78% 12%, 100% 12%, 100% 76%, 88% 76%, 88% 100%, 12% 100%, 12% 88%, 0 88%, 0 24%, 22% 24%);
+  background:
+    radial-gradient(circle at 34% 40%, #2F6B2A 0 9%, #3E8A35 10% 15%, transparent 16%),
+    radial-gradient(circle at 66% 62%, #3E8A35 0 7%, transparent 8%),
+    linear-gradient(135deg, #7CCB5C 0 45%, #5FAF46 45% 100%);
+  box-shadow: inset 0 0 0 4px #E3C981, inset 0 -6px 0 4px #C8A862; }
+.ilot.grand:not(.libre) { clip-path: polygon(14% 0, 70% 0, 70% 10%, 100% 10%, 100% 70%, 86% 70%, 86% 100%, 20% 100%, 20% 86%, 0 86%, 0 16%, 14% 16%); }
+button.ilot:hover, button.ilot:focus-visible, button.ilot.choisi { filter: brightness(1.18) saturate(1.1); box-shadow: inset 0 0 0 4px var(--or-clair), inset 0 -6px 0 4px #C8A862; }
+.ilot.belle::after { top: 2px; right: 6px; }
+.fiche-lien { display: inline-flex; align-items: center; min-height: 44px; margin-top: 4px; font-weight: 700; color: var(--or-clair); text-decoration: none; border-bottom: 2px solid transparent; }
+.fiche-lien:hover, .fiche-lien:focus-visible { border-bottom-color: var(--or-clair); outline: none; }
+/* (af, 18:0x) au téléphone : 7 colonnes (js/accueil.js), des îlots plus grands pour le doigt, la place libre lisible */
+@media (max-width: 520px) {
+  .carte-iles { grid-template-columns: repeat(7, minmax(0, 1fr)); aspect-ratio: 7 / 5; background-size: var(--fond-mer-taille, auto), calc(100% / 7) 100%, 100% calc(100% / 5); }
+  .ilot { margin: 7%; }
+  .ilot.libre { margin: 0; }
+  .ilot.libre span { font-size: 11px; }
+}
+
+/* ---------- (af, 18:1x ; le propriétaire : « de mini animations ou une toute petite cinématique ») LA CARTE QUI VIT ----------
+   les îles bercent sur l'eau (chacune son rythme, --b), l'eau scintille, le phare balaie la mer de sa lumière ; l'ouverture : la
+   caméra glisse de la mer vers les îles (2,4 s, une fois par visite : js/accueil.js, la classe .ouverture) ; tout s'arrête pour qui
+   demande moins de mouvement. Aucune image ni vidéo : du CSS. */
+.ilot:not(.libre) { animation: berce calc(4.2s + var(--b, 0) * 1s) ease-in-out calc(var(--b, 0) * -1.3s) infinite; }
+button.ilot:hover, button.ilot:focus-visible, button.ilot.choisi { animation-play-state: paused; }
+@keyframes berce { 0%, 100% { translate: 0 0; } 50% { translate: 0 -3px; } }
+.carte-iles::before { content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  background: radial-gradient(1.6px 1.6px at 12% 30%, rgba(255, 255, 255, .7), transparent 60%), radial-gradient(1.6px 1.6px at 47% 72%, rgba(255, 255, 255, .6), transparent 60%),
+              radial-gradient(1.6px 1.6px at 81% 18%, rgba(255, 255, 255, .6), transparent 60%), radial-gradient(1.6px 1.6px at 66% 88%, rgba(255, 255, 255, .5), transparent 60%),
+              radial-gradient(1.6px 1.6px at 28% 90%, rgba(255, 255, 255, .5), transparent 60%);
+  animation: scintille 3.2s steps(2, jump-none) infinite; }
+@keyframes scintille { 50% { opacity: .25; } }
+/* le phare, au coin de la carte : sa tour en blocs et un faisceau qui balaie la mer */
+.carte-iles .phare { position: absolute; right: 2%; bottom: 4%; width: 16px; height: 34px; z-index: 1; pointer-events: none;
+  background: linear-gradient(180deg, #FFE27A 0 18%, #3A2A1A 18% 24%, #EDEDED 24% 44%, #C8352B 44% 64%, #EDEDED 64% 84%, #6B6B6B 84%); box-shadow: 0 3px 0 rgba(0, 0, 0, .4); }
+.carte-iles .phare::after { content: ""; position: absolute; left: 8px; top: 3px; width: min(340px, 60vw); height: 70px; margin-top: -35px; transform-origin: 0 50%;
+  background: linear-gradient(90deg, rgba(255, 226, 122, .42), rgba(255, 226, 122, 0) 92%); clip-path: polygon(0 46%, 100% 0, 100% 100%, 0 54%);
+  animation: faisceau 7s linear infinite; mix-blend-mode: screen; }
+@keyframes faisceau { from { transform: rotate(180deg); } to { transform: rotate(540deg); } }
+/* l'ouverture : la mer vue de loin, puis la caméra descend vers les îles */
+/* la grille reste fixe (elle coupe ce qui dépasse) ; ce sont ses îles et son phare qui descendent vers nous */
+.carte-iles.ouverture > * { animation: ouverture 2.4s cubic-bezier(.2, .7, .2, 1) both; transform-origin: 50% 50%; }
+.carte-iles.ouverture { animation: eau-ouverture 2.4s ease-out both; }
+@keyframes eau-ouverture { from { filter: saturate(.6) brightness(.75); } to { filter: none; } }
+.carte-iles.ouverture .ilot { animation: ouverture 2.4s cubic-bezier(.2, .7, .2, 1) both, apparait-ilot .5s ease-out both; animation-delay: 0s, calc(.5s + var(--n, 0) * .05s); }
+@keyframes ouverture { from { transform: scale(1.6) translateY(30%); } to { transform: none; } }
+@keyframes apparait-ilot { from { opacity: 0; translate: 0 10px; } to { opacity: 1; translate: 0 0; } }
+.carte-iles-cadre { overflow: hidden; }
+.carte-iles { overflow: hidden; z-index: 1; }   /* sous le bouton « Passer » (le filtre de l ouverture lui donne son propre plan) */
+.passer-ouverture { position: absolute; right: 22px; top: 54px; z-index: 5; min-height: 44px; padding: 0 12px; font: 700 13px "Fredoka", sans-serif; color: #fff; background: rgba(0, 0, 0, .55); border: 1px solid rgba(255, 255, 255, .35); cursor: pointer; }
+.passer-ouverture:hover, .passer-ouverture:focus-visible { border-color: var(--or-clair); color: var(--or-clair); outline: none; }
+@media (prefers-reduced-motion: reduce) {
+  .ilot:not(.libre), .carte-iles::before, .carte-iles .phare::after, .ilot.libre, .en-ligne-iles::before { animation: none; }
+  .carte-iles.ouverture, .carte-iles.ouverture .ilot { animation: none; }
+}
+/* (af, 18:5x ; la relecture) à 400 px et moins, les îlots touchent le bord de leur case : 44 px au moins au doigt dès 360 */
+@media (max-width: 400px) {
+  .carte-iles { grid-template-columns: repeat(6, minmax(0, 1fr)); aspect-ratio: 6 / 5; background-size: var(--fond-mer-taille, auto), calc(100% / 6) 100%, 100% calc(100% / 5); }
+  .ilot { margin: 1px; }
+  .ilot.libre { margin: 0; }
+}

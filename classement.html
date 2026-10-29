@@ -4,13 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Le classement de Casteria : les meilleurs joueurs du serveur</title>
-<meta name="description" content="Le classement du serveur Minecraft Casteria, comme sur /top en jeu : le Score de Casteria, puis la Fortune, les Machines, les Récoltes, la Beauté de l'île, les Boss, les Donjons, la Mer, le Casino et le Niveau, relu toutes les cinq minutes.">
+<meta name="description" content="Le classement du serveur Minecraft Casteria, comme sur /top en jeu : le classement général, puis la Fortune, les Îles, le Hasard, les Boss, la Mer, le Progrès et les Défis, avec le podium des trois premiers en 3D.">
 <meta name="theme-color" content="#1B1028">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="fr_FR">
 <meta property="og:site_name" content="Casteria">
 <meta property="og:title" content="Le classement de Casteria">
-<meta property="og:description" content="Qui mène le serveur ? Les meilleurs joueurs de Casteria, comme sur /top en jeu.">
+<meta property="og:description" content="Qui mène le serveur ? Les meilleurs joueurs de Casteria, thème par thème, comme sur /top en jeu.">
 <meta property="og:url" content="https://casteria.fr/classement.html">
 <link rel="canonical" href="https://casteria.fr/classement.html">
 <meta property="og:image" content="https://casteria.fr/assets/images/casteria-decollage-partage.jpg">
@@ -22,8 +22,11 @@
 <link rel="icon" type="image/png" sizes="32x32" href="assets/logo/favicon-32.png">
 <link rel="icon" type="image/png" sizes="256x256" href="assets/logo/icone-256.png">
 <link rel="apple-touch-icon" href="assets/logo/icone-apple-180.png">
+<link rel="preload" href="assets/polices/fredoka.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/polices/lilita_one.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/scene.css">
+<link rel="stylesheet" href="css/motifs.css">
 <link rel="stylesheet" href="css/classement.css">
 <script type="application/ld+json">
 { "@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
@@ -42,76 +45,122 @@
     <a class="classement" href="classement.html" aria-current="page" aria-label="Classement"><img class="pixel" src="assets/icones/classement.png" alt="" width="20" height="20">Classement</a>
     <a class="voter" href="vote.html">Voter</a>
     <a class="boutique" href="boutique.html"><img class="pixel" src="assets/icones/credit.png" alt="" width="20" height="20">Boutique</a>
+    <a class="compte" href="compte.html">Mon compte</a>
     <a class="bouton bouton-or petit" href="./#telecharger">Jouer</a>
   </nav>
 </header>
 
 <main>
-<!-- LE HAUT DE PAGE : la bannière du classement (14/10/2026), le podium, la couronne et le trou noir ; elle porte déjà son
-     titre, son logo et « Mis à jour toutes les 5 minutes » : aucun titre écrit par-dessus, le h1 reste pour Google et les
-     lecteurs d'écran (.lu). Sur un téléphone, sa version verticale. Pour changer d'image : une ligne par version (ses
-     sources et l'image de repli), un nouveau nom de fichier (les images restent une semaine chez les visiteurs). -->
-<section class="heros vitrine-tete banniere" id="haut">
+<!-- LE HAUT DE PAGE : la bannière du classement (14/10/2026 ; elle porte son titre et son podium peint), montrée entière et
+     un peu plus petite qu'avant (le podium vivant suit juste dessous) ; le h1 reste pour Google et les lecteurs d'écran (.lu) -->
+<section class="heros vitrine-tete banniere compacte fond-ciel" id="haut">
   <div class="fond plein-cadre">
     <picture>
       <source media="(max-width: 700px)" type="image/webp" srcset="assets/images/casteria-classement-banniere-telephone-768.webp 768w" sizes="calc(100vw - 24px)">
       <source media="(max-width: 700px)" srcset="assets/images/casteria-classement-banniere-telephone-768.jpg 768w" sizes="calc(100vw - 24px)">
-      <source type="image/webp" srcset="assets/images/casteria-classement-banniere-1600.webp 1600w, assets/images/casteria-classement-banniere-2560.webp 2560w" sizes="min(1320px, 100vw - 32px)">
+      <source type="image/webp" srcset="assets/images/casteria-classement-banniere-1600.webp 1600w, assets/images/casteria-classement-banniere-2560.webp 2560w" sizes="min(1040px, 100vw - 32px)">
       <img src="assets/images/casteria-classement-banniere-1600.jpg" alt="Classement : les meilleurs joueurs de Casteria, mis à jour toutes les 5 minutes ; le podium et sa couronne d'or, sous le trou noir" width="3168" height="1344" fetchpriority="high" decoding="async">
     </picture>
   </div>
   <div class="dedans banniere-texte">
     <h1 class="lu">Le classement de Casteria</h1>
-    <p class="accroche">Comme sur /top en jeu : le Score de Casteria d'abord, puis neuf classements, de la Fortune au Niveau.</p>
+    <p class="accroche">Comme sur /top en jeu : le classement général d'abord, puis sept thèmes, de la Fortune aux Défis. Clique sur un joueur pour voir sa fiche.</p>
     <p class="gestes">
-      <a class="bouton bouton-or grand" href="#score">Voir le Score</a>
-      <a class="bouton bouton-bois" href="#categories">Toutes les catégories</a>
+      <a class="bouton bouton-or grand" href="#champions">Voir les champions</a>
+      <a class="bouton bouton-bois" href="connexion.html?retour=classement.html" id="geste-moi">Ma place</a>
     </p>
+    <p class="en-ligne" data-en-ligne hidden></p>
   </div>
 </section>
 
-<!-- LE SCORE DE CASTERIA : le podium des trois premiers, puis la suite jusqu'au dixième. Tout est lu à l'ouverture de la
-     page dans le fichier classement.json du gist que le serveur du jeu publie (js/classement.js), au plus toutes les 5 minutes. -->
-<section class="sombre classement-score" id="score">
+<div class="frise frise-etoiles" aria-hidden="true"></div>
+<!-- LA SCÈNE DES CHAMPIONS (le ciel étoilé du kit, css/motifs.css) : les huit thèmes de /top en onglets, les classements du
+     thème, le podium des trois premiers (leur peau en 3D : js/peau.js). Puis, sous les créneaux, LA LISTE (les pierres du
+     château) jusqu'au 100e, et ses encarts. Tout est lu par js/classement.js dans l'API du site (GET /api/classement,
+     API.md) ; en essai, dans donnees-essai/. -->
+<section class="sombre champions fond-ciel relief" id="champions">
   <div class="dedans">
-    <div class="tete apparait">
-      <span class="ruban">Le Score de Casteria</span>
-      <h2>Le meilleur joueur, sur tout le jeu</h2>
-      <p>Dix aspects du jeu, 100 points chacun : le niveau, les ventes, le territoire, les boss, la mer, les bêtes, les machines, les collections, les quêtes et la beauté de l'île.</p>
+    <div class="tete">
+      <span class="ruban">Les champions</span>
+      <h2 id="theme-nom">Le classement général</h2>
+      <p id="theme-aide">Le classement de tout le serveur, tout compris.</p>
     </div>
-    <div class="podium-score" id="podium" aria-live="polite">
-      <p class="classement-etat" id="classement-etat">On compte les points...</p>
-    </div>
-    <noscript><p class="classement-etat">Pour voir le classement, active JavaScript dans ton navigateur.</p></noscript>
-    <ol class="suite-score cl-rangs" id="suite" hidden></ol>
-    <p class="note classement-lu" id="classement-lu" hidden></p>
-  </div>
-</section>
+    <div class="cl-themes" id="themes" role="tablist" aria-label="Les thèmes du classement"></div>
+    <div class="cl-cats" id="cats" role="group" aria-label="Les classements du thème" hidden></div>
+    <div class="cl-sous" id="sous" hidden></div>
 
-<!-- TOUTES LES CATÉGORIES de /top, famille par famille (les onglets du jeu : Île, Jeux, Boss, Mer, Progrès) -->
-<section class="clair" id="categories">
-  <div class="dedans">
-    <div class="tete apparait">
-      <h2>Tous les classements</h2>
-      <p>Les mêmes que /top en jeu, famille par famille : les dix premiers de chaque catégorie.</p>
+    <div class="cl-scene" id="scene">
+      <div class="cl-entete">
+        <h3 id="cat-titre">Le classement</h3>
+        <p class="cl-aide" id="cat-aide"></p>
+        <p class="cl-classes" id="cat-classes"></p>
+      </div>
+      <div class="cl-podium" id="podium" aria-live="polite">
+        <p class="classement-etat" id="classement-etat">On compte les points...</p>
+      </div>
+      <noscript><p class="classement-etat">Pour voir le classement, active JavaScript dans ton navigateur.</p></noscript>
     </div>
-    <div class="onglets-classement" id="onglets" role="tablist" aria-label="Les familles du classement" hidden></div>
-    <div class="cartes-classement" id="panneau" role="tabpanel" aria-live="polite"></div>
-    <p class="note classement-fin">En jeu, tape <code>/top</code> pour voir ta place dans chaque classement.</p>
+
   </div>
 </section>
+<div class="frise frise-creneaux" aria-hidden="true"></div>
+<!-- LA LISTE, sur les pierres du château : une grande carte (la liste, sa recherche) et trois petites à côté (ce qui compte,
+     ta place, en jeu) ; sur un téléphone, les petites passent sous la liste -->
+<section class="fond-pierres relief cl-liste-section" id="liste-section">
+  <div class="dedans">
+    <h2 class="lu" id="liste-titre">Le classement, du 4e au 100e</h2>
+    <div class="cl-liste-zone une-grande" id="liste-zone" hidden>
+      <div class="cl-liste-carte">
+        <div class="cl-outils">
+          <label class="cl-cherche"><span class="lu">Chercher un pseudo</span><input type="search" id="cherche" placeholder="Chercher un pseudo" autocomplete="off" spellcheck="false" maxlength="16" aria-describedby="cherche-etat"></label>
+          <p class="cl-cherche-etat" id="cherche-etat" aria-live="polite"></p>
+        </div>
+        <!-- LE CADRE (le propriétaire, 16:47 : « que y'en ait que 15-20 de visible maximum et après le scroll ») : seize lignes
+             au bureau, treize au téléphone, jamais une ligne coupée en bas au départ ; le reste défile dedans (la molette, le
+             doigt, les flèches du clavier), sa barre aux couleurs du site ; la page ne saute pas au bout du cadre -->
+        <div class="cl-cadre" id="cadre" tabindex="0" role="region" aria-label="La liste du classement, à faire défiler">
+          <div class="cl-liste" id="liste"></div>
+        </div>
+        <p class="cl-vide" id="liste-vide" hidden></p>
+      </div>
+      <aside class="cl-encarts" aria-label="Autour du classement">
+        <div class="cl-encart panneau-bois" id="encart-moi">
+          <h3 id="moi-titre">Ta place</h3>
+          <p class="cl-moi" id="moi-place"></p>
+          <div class="cl-monter" id="moi-monter" hidden></div>
+        </div>
+        <div class="cl-encart panneau-nuit coins-or">
+          <h3>Ce qui compte</h3>
+          <p id="encart-aide"></p>
+        </div>
+        <div class="cl-encart panneau-nuit cl-exploits" id="encart-exploits" hidden>
+          <h3>Les derniers exploits</h3>
+          <ol class="cl-fil" id="fil-exploits" aria-live="polite"></ol>
+        </div>
+        <div class="cl-encart panneau-nuit">
+          <h3>En jeu</h3>
+          <p>Tape <code>/top</code> pour voir ta place dans chaque classement, et la fiche des autres avec <code>/profil</code>.</p>
+          <p class="note classement-lu" id="classement-lu" hidden></p>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+<div class="frise frise-corde" aria-hidden="true"></div>
 </main>
 
 <footer>
   <div class="dedans">
     <div class="col">
       <img src="assets/logo/casteria-logo-300.webp" alt="Casteria" width="70" height="70" loading="lazy">
-      <nav aria-label="Le pied de page"><a href="./">Accueil</a><a href="commencer.html">Par où commencer</a><a href="evenements.html">Les événements</a><a href="pirates.html">La mer et les pirates</a><a href="donjons.html">Les donjons</a><a href="casino.html">Le casino</a><a href="./#combat">Le combat</a><a href="classement.html">Classement</a><a href="boutique.html">Boutique</a><a href="vote.html">Voter</a><a href="reglement.html">Le règlement</a><a href="./#telecharger">Télécharger</a><a href="serveur-minecraft-ile.html">Serveur Minecraft d'île</a><a href="serveur-minecraft-modde.html">Serveur moddé</a><a href="launcher-minecraft-modde.html">Launcher moddé</a><a href="serveur-minecraft-rpg.html">Serveur RPG</a><a href="serveur-minecraft-boss.html">Boss et donjons</a><a href="mentions-legales.html">Mentions légales</a><a href="confidentialite.html">Confidentialité</a><a href="conditions.html">Conditions</a></nav>
+      <nav aria-label="Le pied de page"><a href="./">Accueil</a><a href="commencer.html">Par où commencer</a><a href="evenements.html">Les événements</a><a href="pirates.html">La mer et les pirates</a><a href="donjons.html">Les donjons</a><a href="casino.html">Le casino</a><a href="./#boss">Les boss</a><a href="classement.html">Classement</a><a href="carte.html">La carte</a><a href="exploits.html">Les exploits</a><a href="boutique.html">Boutique</a><a href="vote.html">Voter</a><a href="compte.html">Mon compte</a><a href="reglement.html">Le règlement</a><a href="./#telecharger">Télécharger</a><a href="serveur-minecraft-ile.html">Serveur Minecraft d'île</a><a href="serveur-minecraft-modde.html">Serveur moddé</a><a href="launcher-minecraft-modde.html">Launcher moddé</a><a href="serveur-minecraft-rpg.html">Serveur RPG</a><a href="serveur-minecraft-boss.html">Boss et donjons</a><a href="mentions-legales.html">Mentions légales</a><a href="confidentialite.html">Confidentialité</a><a href="conditions.html">Conditions</a></nav>
     </div>
     <small>Casteria est un serveur Minecraft indépendant, créé par des joueurs. Il n'est ni affilié à Mojang ni à Microsoft, ni approuvé par eux. Minecraft est une marque de Mojang Studios.</small>
   </div>
 </footer>
 <script src="js/site.js" defer></script>
+<script src="js/api.js" defer></script>
+<script src="js/peau.js" defer></script>
 <script src="js/classement.js" defer></script>
 </body>
 </html>

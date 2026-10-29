@@ -1,0 +1,182 @@
+/* LA CONNEXION ET LE COMPTE DU JOUEUR (connexion.html, compte.html ; le prototype du 29/10/2026) : la nuit et l'or du site,
+   des panneaux aux angles droits (jamais une pastille arrondie), les polices du site. Le compte reprend des pièces de
+   css/classement.css (les barres, les emblèmes des grades, la fiche). */
+
+.sur-titre { margin: 0 0 10px; font-size: 13px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: #FFE3B0; }
+.sur-titre::before { content: ""; display: inline-block; vertical-align: middle; width: 34px; height: 2px; margin: -3px 10px 0 0; background: linear-gradient(90deg, var(--or-clair), rgba(255, 215, 94, .15)); }
+
+/* ---------- la connexion ---------- */
+/* la carte marine du kit (css/motifs.css) sous la connexion ; le formulaire : .panneau-nuit .coins-or */
+.connexion { padding: 120px 0 72px; }
+.connexion-grille { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 460px); gap: 40px 64px; align-items: center; }
+.connexion-texte h1 { font-size: clamp(32px, 4vw, 54px); color: #fff; text-shadow: 0 4px 0 rgba(0, 0, 0, .35); }
+.connexion-texte .accroche { margin: 16px 0 12px; font-size: 19px; color: #F1E6FF; }
+.atouts-compte { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.atouts-compte li { position: relative; padding-left: 30px; color: #E7D8F7; }
+.atouts-compte li::before { content: ""; position: absolute; left: 4px; top: .45em; width: 12px; height: 12px; background: var(--or-clair); transform: rotate(45deg); box-shadow: 0 0 0 3px rgba(255, 215, 94, .22); }
+.atouts-compte b { color: var(--or-clair); }
+.panneau-connexion { padding: 26px 26px 24px; }
+.deja-connecte { position: relative; padding: 26px 26px 24px; color: #F4EAFF; background: linear-gradient(180deg, rgba(42, 23, 64, .96), rgba(27, 16, 40, .98)); border: 3px solid var(--or); box-shadow: 0 0 0 3px #120a1c, 0 26px 60px rgba(0, 0, 0, .55); }
+.panneau-connexion[hidden] { display: none; }
+.panneau-connexion h2, .deja-connecte h2 { font-size: 30px; color: var(--or-clair); margin: 0 0 8px; }
+.panneau-connexion .consigne { margin: 0 0 16px; font-size: 16px; color: #E7D8F7; }
+.panneau-connexion code, .zone-compte code { color: var(--or-clair); }
+.panneau-connexion label { display: block; margin: 14px 0 6px; font-weight: 700; font-size: 16px; color: #fff; }
+.panneau-connexion input { width: 100%; min-height: 48px; padding: 10px 14px; font: 600 18px "Fredoka", sans-serif; color: #fff; background: rgba(10, 6, 16, .6); border: 2px solid rgba(215, 164, 33, .6); }
+.panneau-connexion input:focus { outline: 3px solid var(--or-clair); outline-offset: 1px; }
+.panneau-connexion input[aria-invalid="true"] { border-color: #FF8A7A; }
+.aide-champ { margin: 6px 0 0; font-size: 13.5px; color: #CDB8E6; }
+.mdp { display: flex; gap: 8px; }
+.mdp input { flex: 1 1 auto; min-width: 0; }
+.mdp .voir { flex: 0 0 auto; min-width: 76px; min-height: 48px; padding: 0 12px; font: 700 15px "Fredoka", sans-serif; color: #FFF4D6; cursor: pointer; background: rgba(255, 255, 255, .07); border: 2px solid rgba(215, 164, 33, .6); }
+.mdp .voir:hover { background: rgba(255, 255, 255, .14); }
+.mdp .voir:focus-visible { outline: 3px solid var(--or-clair); outline-offset: 2px; }
+.erreur { margin: 14px 0 0; padding: 10px 14px; font-weight: 700; font-size: 15.5px; color: #FFE1DC; background: rgba(181, 53, 43, .28); border: 2px solid #E0574C; border-left-width: 8px; }
+.erreur[hidden] { display: none; }
+.erreur .bouton { margin-top: 8px; }
+.envoyer { width: 100%; margin-top: 20px; }
+.oubli { margin: 14px 0 0; font-size: 14.5px; color: #CDB8E6; }
+.oubli a, .deja-connecte a:not(.bouton) { color: var(--or-clair); font-weight: 700; }
+.pas-de-compte { margin-top: 20px; padding-top: 16px; border-top: 2px dashed rgba(215, 164, 33, .4); }
+.pas-de-compte h3 { margin: 0 0 6px; font-size: 21px; color: #fff; }
+.pas-de-compte p { margin: 0 0 12px; font-size: 15.5px; color: #E7D8F7; }
+.essai-comptes { margin: 0 0 14px; padding: 10px 12px; font-size: 14.5px; line-height: 1.45; color: #241505; background: #FFD75E; border: 2px solid #241505; }
+.essai-comptes code { color: #6E1A14; }
+.deja-connecte p { margin: 6px 0 14px; color: #E7D8F7; }
+.deja-connecte .gestes { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin: 0; }
+
+/* les trois gestes, sur le bois du port : trois parchemins décalés (.decalees du kit), leur numéro dans un carré d'or */
+.connexion-gestes { padding: 54px 0 70px; }
+.connexion-gestes h2 { text-align: center; font-size: clamp(26px, 3vw, 38px); color: #FFF4D6; text-shadow: 0 3px 0 rgba(0, 0, 0, .45); margin-bottom: 26px; }
+.etapes-compte { list-style: none; margin: 0 auto; padding: 0; max-width: 1000px; }
+.etapes-compte .carte { position: relative; padding-top: 30px; }
+.etapes-compte .carte h3 { font-size: 23px; }
+.etapes-compte code { color: var(--ruban); }
+.num-etape { position: absolute; left: 14px; top: -16px; display: grid; place-items: center; width: 40px; height: 40px; font-family: "Lilita One", "Fredoka", sans-serif; font-size: 22px; color: #FFF4D6; background: var(--ruban); border: 3px solid var(--or); box-shadow: 0 4px 0 #6E1A14; }
+
+/* ---------- le compte ---------- */
+/* chaque partie du compte a son fond du kit (le ciel, le bois, les pierres, la mer, la carte) et une frise entre deux */
+.zone-compte { padding: 108px 0 56px; }
+.compte-section { padding: 48px 0 56px; }
+.compte-section[hidden] { display: none; }
+.compte-section h2 { font-size: 24px; color: var(--or-clair); margin: 0 0 12px; }
+.compte-tete { display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 20px 44px; align-items: center; }
+.compte-statue { position: relative; width: 100%; aspect-ratio: 2 / 3; background: radial-gradient(closest-side, rgba(255, 215, 94, .22), rgba(255, 215, 94, 0)); }
+.compte-statue::after { content: ""; position: absolute; left: 24%; right: 24%; bottom: 6%; height: 6%; background: radial-gradient(closest-side, rgba(8, 4, 14, .75), rgba(8, 4, 14, 0)); z-index: 0; }
+.compte-statue .face { position: absolute; z-index: 1; left: 50%; bottom: 9%; height: 74%; width: auto; aspect-ratio: 1 / 2; transform: translateX(-50%); image-rendering: pixelated; opacity: 0; transition: opacity .4s ease; }
+.compte-statue .face.pret { opacity: 1; }
+.compte-statue .vue3d { position: absolute; z-index: 1; inset: 0; width: 100% !important; height: 100% !important; opacity: 0; transition: opacity .6s ease; cursor: grab; }
+.compte-statue.en-3d .vue3d { opacity: 1; }
+.compte-statue.en-3d .face { opacity: 0; }
+.compte-poses { position: absolute; z-index: 2; left: 0; right: 0; bottom: -6px; display: flex; justify-content: center; gap: 6px; }
+.compte-qui h1 { font-size: clamp(34px, 5vw, 60px); color: #fff; text-shadow: 0 4px 0 rgba(0, 0, 0, .35); overflow-wrap: anywhere; }
+.compte-qui .titres { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin: 10px 0 6px; font-weight: 700; font-size: 16px; color: #E7D8F7; }
+.compte-qui .titres:empty { display: none; }
+.zone-compte .grade { display: inline-flex; align-items: center; gap: 6px; padding: 3px 12px 4px 5px; color: #241505; background: linear-gradient(180deg, #FFE38A, var(--or)); }
+.zone-compte .grade .cl-embleme { margin-left: 0; }
+.zone-compte .equipe { padding: 3px 12px 4px; color: #0E2C40; background: #8FE3FF; }
+.zone-compte .vu { color: #BFA6DA; }
+.zone-compte .vu.en-ligne { color: var(--vert-clair); }
+.zone-compte .fiche-niveau { max-width: 560px; }
+.zone-compte .fiche-niveau .suivant { flex: 0 0 auto; font-size: 14px; font-weight: 700; color: #CDB8E6; }
+.compte-general { margin: 4px 0 16px; font-size: 18px; color: #F1E6FF; }
+.compte-general b { color: var(--or-clair); font-size: 1.15em; }
+.compte-gestes { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.compte-gestes .note { flex: 1 1 100%; margin: 2px 0 0; color: #CDB8E6; }
+.compte-tuiles { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+.compte-tuiles[hidden], .compte-corps[hidden] { display: none; }
+.compte-tuiles li { position: relative; display: grid; grid-template-columns: auto minmax(0, 1fr); grid-template-rows: auto auto auto; column-gap: 12px; align-items: center; padding: 14px 16px; background: linear-gradient(180deg, rgba(27, 16, 40, .92), rgba(18, 10, 28, .94)); box-shadow: 0 10px 22px rgba(0, 0, 0, .45); border: 2px solid rgba(215, 164, 33, .35); border-top: 4px solid var(--or); }
+.compte-tuiles img { grid-row: 1 / 4; width: 32px; height: 32px; image-rendering: pixelated; }
+.compte-tuiles .titre { font-size: 14px; font-weight: 700; color: #CDB8E6; }
+.compte-tuiles b { font-family: "Lilita One", "Fredoka", sans-serif; font-weight: 400; font-size: clamp(24px, 2.6vw, 32px); line-height: 1.1; color: var(--or-clair); overflow-wrap: anywhere; }
+.compte-tuiles .sous { font-size: 13px; color: #BFA6DA; }
+.compte-bloc { min-width: 0; padding: 18px 20px 20px; }
+.compte-ile-grille { grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); }
+.compte-bloc h2 { margin: 0 0 12px; font-size: 24px; color: var(--or-clair); }
+.compte-bloc h3 { margin: 0 0 8px; font-family: "Fredoka", sans-serif; font-weight: 700; font-size: 16px; color: #fff; }
+.compte-bloc .rien { color: #BFA6DA; font-weight: 600; }
+.zone-compte .fiche-aspects { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.zone-compte .fiche-aspects li { grid-template-columns: 110px minmax(0, 1fr) 34px; font-size: 15px; }
+.compte-themes { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.compte-themes a { display: grid; gap: 2px; height: 100%; padding: 10px 12px; text-decoration: none; background: rgba(255, 255, 255, .05); border: 2px solid rgba(215, 164, 33, .3); transition: transform .15s ease, border-color .15s ease; }
+.compte-themes a:hover { transform: translateY(-2px); border-color: var(--or-clair); }
+.compte-themes a:focus-visible { outline: 3px solid var(--or-clair); outline-offset: 2px; }
+.compte-themes .theme { font-size: 13px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #CDB8E6; }
+.compte-themes b { font-family: "Lilita One", "Fredoka", sans-serif; font-weight: 400; font-size: 28px; line-height: 1.1; color: var(--or-clair); }
+.compte-themes .cat { font-size: 14px; color: #F1E6FF; }
+.compte-themes li.rien b { color: #BFA6DA; }
+.ile-nom { margin: 0; font-family: "Lilita One", "Fredoka", sans-serif; font-size: 28px; line-height: 1.1; color: #fff; }
+.zone-compte .fiche-etoiles { margin: 4px 0 10px; font-size: 22px; }
+.compte-achats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+.compte-liste { list-style: none; margin: 0; padding: 0; }
+.compte-liste li { display: grid; grid-template-columns: 96px minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 8px 0; border-top: 1px dashed rgba(215, 164, 33, .3); font-size: 15px; color: #F1E6FF; }
+.compte-liste li:first-child { border-top: 0; }
+.compte-liste .quand { color: #BFA6DA; font-size: 13.5px; }
+.compte-liste b { color: var(--or-clair); white-space: nowrap; }
+.compte-liste li.rien { display: block; }
+.compte-statue.vide { display: none; }
+
+@media (max-width: 960px) {
+  .connexion { padding: 96px 0 56px; min-height: 0; }
+  .connexion-grille { grid-template-columns: minmax(0, 1fr); }
+  .compte-tete { grid-template-columns: 220px minmax(0, 1fr); gap: 16px 24px; }
+  .compte-tuiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .compte-themes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+/* l'île et ses exploits l'un sous l'autre (la règle du kit, .une-grande, à 768 px ; celle-ci, plus bas dans la cascade, la redit) */
+@media (max-width: 768px) { .compte-ile-grille { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 640px) {
+  .zone-compte { padding: 88px 0 56px; }
+  .compte-tete { grid-template-columns: minmax(0, 1fr); text-align: center; }
+  .compte-statue { width: 64%; max-width: 240px; margin: 0 auto; }
+  .compte-qui .titres, .compte-gestes { justify-content: center; }
+  .zone-compte .fiche-niveau { margin-left: auto; margin-right: auto; }
+  .compte-corps, .compte-achats, .zone-compte .fiche-aspects { grid-template-columns: minmax(0, 1fr); }
+  .compte-tuiles li { padding: 12px; }
+  .compte-liste li { grid-template-columns: 74px minmax(0, 1fr) auto; font-size: 14px; }
+  .panneau-connexion { padding: 20px 16px; }
+}
+/* (29/10/2026, la tête) UN BANNI VOIT SON COMPTE : une ligne sur sa sanction, sous son nom (le motif, la fin ou « définitivement ») */
+.compte-sanction { margin: 10px 0 4px; padding: 9px 14px 10px; font-weight: 700; line-height: 1.4; color: #FFF4F2; background: linear-gradient(180deg, rgba(150, 36, 30, .6), rgba(96, 20, 18, .65)); border: 2px solid #E0584B; }
+.compte-sanction[hidden] { display: none; }
+/* (29/10/2026) une tuile sans image : son texte sur toute la largeur ; au téléphone, l'image et le titre sur une ligne, la valeur dessous,
+   sur toute la largeur (jamais un nombre coupé en deux lignes) */
+.compte-tuiles li.sans-icone { grid-template-columns: minmax(0, 1fr); }
+@media (max-width: 640px) {
+  .compte-tuiles li { grid-template-columns: auto minmax(0, 1fr); grid-template-rows: auto; row-gap: 2px; column-gap: 8px; }
+  .compte-tuiles img { grid-row: 1; width: 24px; height: 24px; }
+  .compte-tuiles b, .compte-tuiles .sous { grid-column: 1 / -1; }
+  .compte-tuiles b { font-size: 24px; overflow-wrap: normal; white-space: nowrap; }
+  .compte-tuiles li.sans-icone { grid-template-columns: minmax(0, 1fr); }
+}
+/* (la tête, 29/10) jamais un mot coupé par la page dans un panneau */
+.compte-bloc, .compte-tuiles li, .panneau-connexion, .etapes-compte > * { hyphens: manual; -webkit-hyphens: manual; }
+/* (29/10/2026, le propriétaire : « donner envie [...] de monter ») le prochain déblocage, et « Pour monter » sous les aspects */
+.fiche-niveau .prochain { display: block; flex-basis: 100%; margin-top: 4px; font-size: 14px; font-weight: 700; color: #FFE7A3; }
+.compte-monter { display: grid; gap: 8px; margin-top: 14px; padding-top: 12px; border-top: 1px dashed rgba(215, 164, 33, .4); }
+.compte-monter[hidden] { display: none; }
+.compte-monter .but { margin: 0; font-weight: 700; color: #fff; }
+.compte-monter .conseil { margin: 0; font-size: 14px; color: #F3DFB8; }
+.compte-monter .cl-barre { height: 10px; }
+/* (Lighthouse, 29/10) tant que le compte se lit : le haut garde la hauteur de l'écran (le pied de page ne saute pas) */
+.zone-compte.en-attente { min-height: 100svh; }
+/* (b5, le 29/10) LES QUESTIONS SUR TON COMPTE (connexion.html) : sur la mer du kit, une liste qui s'ouvre d'un clic, puis le launcher */
+.faq-compte { padding: 54px 0 70px; }
+.faq-compte h2 { text-align: center; font-size: clamp(26px, 3vw, 38px); color: #FFF4D6; text-shadow: 0 3px 0 rgba(0, 0, 0, .45); margin-bottom: 26px; }
+.faq-liste { display: grid; gap: 12px; max-width: 820px; margin: 0 auto; }
+.faq-liste details { background: rgba(18, 10, 28, .82); border: 2px solid rgba(255, 215, 94, .35); box-shadow: 0 6px 0 rgba(0, 0, 0, .3); }
+.faq-liste details[open] { border-color: var(--or); }
+.faq-liste summary { list-style: none; display: flex; align-items: center; justify-content: space-between; gap: 14px; min-height: 52px; padding: 12px 18px; cursor: pointer; font-family: "Lilita One", sans-serif; font-size: clamp(19px, 2.2vw, 23px); color: #FFF4D6; }
+.faq-liste summary::-webkit-details-marker { display: none; }
+.faq-liste summary::marker { content: ""; }
+.faq-liste summary::after { content: "+"; flex: 0 0 auto; width: 30px; height: 30px; line-height: 26px; text-align: center; font-size: 24px; color: #3B2508; background: var(--or-clair); border: 2px solid var(--or-fonce); }
+.faq-liste details[open] summary::after { content: "−"; }
+.faq-liste summary:hover, .faq-liste summary:focus-visible { color: var(--or-clair); }
+.faq-liste summary:focus-visible { outline: 3px solid var(--or-clair); outline-offset: 2px; }
+.faq-liste details > p, .faq-liste details > ul { margin: 0; padding: 0 18px 16px; font-size: 17px; color: #EADCFA; }
+.faq-liste details > ul { padding-left: 38px; display: grid; gap: 4px; }
+.faq-liste details b { color: #FFF4D6; }
+.faq-liste a { color: var(--or-clair); }
+.faq-fin { display: flex; flex-direction: column; align-items: center; gap: 12px; margin-top: 34px; text-align: center; }
+.faq-fin p { margin: 0; font-family: "Lilita One", sans-serif; font-size: clamp(22px, 3.4vw, 36px); color: #FFF4D6; text-shadow: 0 3px 0 rgba(0, 0, 0, .45); }
+.faq-liste code { color: var(--or-clair); }

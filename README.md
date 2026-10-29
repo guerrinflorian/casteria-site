@@ -1,7 +1,8 @@
 # Casteria, le site
 
 La vitrine du serveur Minecraft Casteria : l'accueil, le guide « Par où commencer », le classement des joueurs et la
-boutique des crédits.
+boutique des crédits ; et (le prototype du 29/10/2026) la connexion avec le compte du jeu, le compte du joueur et l'espace
+de l'équipe, qui lisent l'API du site (son contrat : `API.md`, à côté de cette copie).
 
 ## Le voir tourner (GitHub Codespaces ou ton PC)
 
@@ -11,7 +12,12 @@ npm run dev
 
 Puis ouvre l'adresse affichée (le port 3000 ; dans Codespaces, clique sur « Ouvrir dans le navigateur »).
 Les pages n'ont besoin de rien : c'est un site statique (du HTML, du CSS et un peu de JavaScript) ; `serveur.js` est un
-tout petit serveur Node qui sert les fichiers tels quels. Seul le classement lit quelque chose ailleurs : la page lit le
+tout petit serveur Node qui sert les fichiers tels quels. (Le prototype du 29/10/2026) Le classement, la connexion, le
+compte et l'espace de l'équipe lisent l'API du site (`/api/...`, sur le VPS de casteria.fr ; le contrat : `API.md`) par UN
+script, `js/api.js` ; tant que l'API n'existe pas, son interrupteur `var ESSAI = true` leur fait lire `donnees-essai/` (des
+réponses de l'API avec des pseudos et des chiffres inventés, chacune marquée `"essai": true`) et un bandeau « Données
+d'essai » le dit sur la page ; le mot de passe des comptes d'essai est écrit sur la page de connexion. Ce qui suit est
+l'état d'avant : la page lisait le
 fichier `classement.json` d'un gist GitHub, que le serveur du jeu réécrit lui-même au plus toutes les 5 minutes (son
 compte et son identifiant : `GIST_COMPTE` et `GIST_ID`, en tête de `js/classement.js`). Tant que `GIST_ID` est vide, ou si
 le fichier ne répond pas, la page dit « Le classement ne s'affiche pas pour l'instant. En jeu, tape /top. », et tout le
@@ -32,7 +38,14 @@ fichier sans eux s'affiche comme avant, une carte par catégorie.
 | `donjons.html` | les donjons (19/10/2026) : Anselme, le Temple Creux et le Sanctuaire des Sables (leurs trois niveaux), dedans (une pile de cartes), le butin et le classement par taille de groupe ; jamais un boss ni une salle de boss |
 | `evenements.html`, `css/evenements.css` | les événements (28/10/2026, la 152) : le Défi Éclair d'abord (ses heures, ses points, les clés du podium), ses quatorze jeux en carrousel (`assets/evenements/defi-<jeu>.png` : l'écran de chacun, en pixels, la légende est la règle que le jeu affiche), le Sol qui lâche et la Bataille de neige, la file (/participer), puis le programme d'une journée et les rendez-vous (l'heure dorée, la chasse au trésor, la loterie, le calcul du tchat, la mer). Chaque heure et chaque gain lus dans le jeu (`ev_eclair.js`, `ai_evt_cadre.js`, `ah_evenements.js`, la table de la mer) : à suivre quand ils changent. Jamais « salle du trône » (un mot refusé par le vérificateur) |
 | `css/pages.css` | l'habillage du casino, des donjons, et sur l'accueil des deux portes du palais et de la Gazette du palais |
-| `classement.html` | le classement : les mêmes catégories que `/top` en jeu, le Score de Casteria d'abord (son podium), puis l'île, les jeux, les boss, la mer et le progrès, les dix premiers de chacune ; lus à l'ouverture par `js/classement.js` dans le fichier `classement.json` du gist que le serveur du jeu publie ; habillage : `css/classement.css` |
+| `classement.html` | (le prototype du 29/10/2026) le classement : les huit thèmes de `/top` en onglets (Général, Fortune, Îles, Hasard, Boss, Mer, Progrès, Défis), les classements du thème (un jeu de hasard : ses cinq colonnes ; un donjon : son niveau et les joueurs du groupe), le podium des trois premiers avec leur peau en 3D (ils regardent la souris, le premier lève le bras), la liste jusqu'au 100e (la tête de chaque joueur, sa place, sa valeur, une barre ; une île : son nom, son hôte, ses amis), la recherche d'un pseudo, la fiche d'un joueur au survol et au clic, « Toi » surligné ; lu par `js/classement.js` dans `GET /api/classement` (`API.md` 2.2) ; habillage : `css/classement.css` |
+| `connexion.html`, `js/connexion.js` | (le prototype) la connexion : le pseudo exact et le mot de passe du jeu (`/register` en jeu d'abord), `POST /api/connexion` ; les erreurs dites simplement, trop d'essais ; hors de Google |
+| `compte.html`, `js/compte.js`, `css/compte.css` | (le prototype) le compte du joueur (`GET /api/moi`) : sa peau en 3D et trois poses, son grade, ses jetons et crédits, son niveau, ses places, son île, ses boss, ses achats, « La boutique » avec son pseudo déjà rempli ; hors de Google |
+| `admin.html`, `js/admin.js`, `js/graphe.js`, `css/admin.css` | (le prototype) l'espace de l'équipe (l'Admin, le Responsable, le Fondateur ; une session de 12 heures) : le tableau de bord, les ventes, les tunnels, ce que les joueurs regardent et font, la fiche d'un joueur avec tout son casier (les sanctions en cours en haut, l'histoire, les notes, les signalements reçus et faits), le tchat en direct (UN tchat pour tout le réseau, SSE) ; des graphiques maison en SVG. Ses règles (le propriétaire, 29/10) : aucune liste écrite dans la page (tout vient des données, avec son nom), une valeur absente dit « pas encore de données » (jamais 0), chaque tuile dit l'heure de sa donnée et l'état de sa source ; le banc qui refait chaque chiffre à la main : `outils/banc_admin.js` du dossier du prototype (hors du site) ; hors de Google |
+| `js/api.js`, `js/peau.js` | (le prototype) l'API du site et son interrupteur des données d'essai ; les peaux (la tête, le joueur de face, la 3D chargée après la page) |
+| `assets/vendor/skinview3d/` | skinview3d 3.4.2 (la 3D des peaux, trois.js dedans), copiée telle quelle, avec ses licences MIT (`LICENCES.txt`) : jamais un CDN |
+| `assets/peaux/` | `casteria-defaut.png` : la peau de qui n'en a pas (un dessin du site, jamais une texture de Mojang) ; `essai/` : les peaux dessinées pour les données d'essai (`outils/peaux_essai.js` du dossier du prototype) |
+| `donnees-essai/` | (le prototype) les réponses d'essai de l'API, des pseudos inventés : ne part pas en ligne avec la vraie API (`ESSAI = false`) |
 | `boutique.html`, `css/boutique.css` | la boutique (depuis la 140 du jeu : « Des crédits en jouant », les missions du jour, la série, les votes et les quêtes de Ludovic, chaque chiffre lu dans la table CJ de `credits_jeu.js` du jeu, à suivre quand elle change) : tes packs de Tebex, lus en direct (`js/boutique.config.js`, `js/boutique.js`), ce qui rassure (le paiement chez Tebex, les crédits à la connexion, le jeu gratuit) et à quoi servent les crédits. Redessinée le 20/10/2026 dans la nuit et l'or du site (plus de parchemin ni de bouton vert) : sur téléphone et tablette une ligne par pack, sur ordinateur les cinq côte à côte, le meilleur prix mis en avant à sa place |
 | `vote.html`, `css/vote.css` | voter pour Casteria (22/10/2026) : le haut en cinéma (la Caisse de Vote qui s'ouvre sous sa clé ; l'image du propriétaire), les trois gestes, les sites de vote, ce qu'on gagne (une Clé de Vote à chaque vote, 3 par jour au plus : `vote.js` du jeu), le pseudo exact, `/vote` en jeu. LES SITES DE VOTE sont écrits à UN seul endroit, la liste `<ul class="sites-vote">` de la page (le modèle d'un site est dans le commentaire juste au-dessus) : vide, elle se cache et « tape /vote » prend sa place ; c'est la seule adresse d'un autre domaine que le vérificateur admet (en https, `target="_blank"`, `rel="noopener"`). Le 22/10/2026, aucun site n'est inscrit dans le jeu (« votesites » à la console du palais) : la liste est vide. Le lien « Voter » est dans le menu et le pied de chaque page |
 | `reglement.html` | le règlement (21/10/2026) : les huit règles, les sanctions, signaler et contester, l'équipe ; les mêmes mots que le Discord (📜・règlement) et le jeu (Gaspard, /aide) |
@@ -67,10 +80,13 @@ Ensuite, chaque `git push` sur `main` remet le site en ligne.
 Chaque page y mène par son en-tête : le mot « Classement » sur ordinateur ; sur tablette et téléphone, sa coupe en
 pixels (`assets/icones/classement.png`), à côté de la Boutique et avant « Jouer », une cible de 44 px pour le doigt.
 
-La page `classement.html` montre les mêmes classements que `/top` en jeu : `js/classement.js` lit le fichier
-`classement.json` du gist que le serveur du jeu réécrit lui-même toutes les 5 minutes (`leaderboard.js` du jeu, sur son
-serveur maître) ; les catégories, leur ordre, les familles et le Score de Casteria viennent donc du jeu, jamais d'une
-copie ici. **La fonction `api/classement.js`, qui lisait la base du jeu, est retirée (le 20/10/2026)** : la base refuse
+La page `classement.html` montre les mêmes classements que `/top` en jeu. (Le prototype du 29/10/2026) `js/classement.js`
+les lit dans `GET /api/classement?theme=&categorie=&taille=` (par `js/api.js`, `API.md` 2.2), que l'API du VPS sert à partir
+de ce que le jeu écrit dans sa base (`res_site_classement`, à ajouter par le côté jeu : le même objet que le gist d'avant,
+cent lignes par catégorie) ; les thèmes, les catégories, leur ordre et le classement général viennent donc du jeu, jamais
+d'une copie ici. Avant : `js/classement.js` lisait le fichier `classement.json` du gist que le serveur du jeu réécrit
+lui-même toutes les 5 minutes (`leaderboard.js` du jeu, sur son serveur maître) ; `js/site.js` y lit encore les joueurs en
+ligne (à basculer sur `GET /api/en-ligne`). **La fonction `api/classement.js`, qui lisait la base du jeu, est retirée (le 20/10/2026)** : la base refuse
 les connexions venues de Vercel, la page ne la lisait plus, et sa copie du calcul du Score ne suivait plus le jeu ;
 `outils/verifier.js` refuse son retour.
 

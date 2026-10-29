@@ -24,7 +24,10 @@
 <link rel="apple-touch-icon" href="assets/logo/icone-apple-180.png">
 <link rel="preload" as="image" type="image/webp" media="(max-aspect-ratio: 2/3)" imagesrcset="assets/images/casteria-grand-voyage-portrait-720.webp 720w, assets/images/casteria-grand-voyage-portrait-1080.webp 1080w" imagesizes="100vw" fetchpriority="high">
 <link rel="preload" as="image" type="image/webp" media="(min-aspect-ratio: 2001/3000)" imagesrcset="assets/images/casteria-grand-voyage-1280.webp 1280w, assets/images/casteria-grand-voyage-1920.webp 1920w" imagesizes="100vw" fetchpriority="high">
+<link rel="preload" href="assets/polices/fredoka.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/polices/lilita_one.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/motifs.css">
 <link rel="stylesheet" href="css/scene.css">
 <link rel="stylesheet" href="css/combat.css">
 <link rel="stylesheet" href="css/voyage.css">
@@ -105,6 +108,7 @@
     </div>
   </div>
 </section>
+<div class="frise frise-creneaux" aria-hidden="true"></div>
 
 <!-- LA PROGRESSION : tout rapporte de l'XP (aide.js « Les niveaux ») ; les huit rangs (niveaux.js, RANGS) ; les quêtes de Ludovic
      (aide.js « Les quêtes du Chroniqueur ») ; les missions du jour (aide.js « Les missions du jour », le crédit dès le niveau 20 :
@@ -136,6 +140,7 @@
     <p class="apparait" style="text-align:center;margin:44px auto 0;max-width:760px;font-size:18px">Tu débutes ? Le <a href="commencer.html">guide du débutant</a> te prend par la main, de ton île à ton premier boss.</p>
   </div>
 </section>
+<div class="frise frise-etoiles" aria-hidden="true"></div>
 
 <!-- LE COMBAT : aide.js, « Le nouveau combat », « Le combo et le balayage », « Deux mains ou une main », « Le bouclier »,
      « Les six armes », « Le combat entre joueurs » ; le Sabre de l'Oni : aide.js « Les armes uniques des boss » ; la fin de
@@ -156,6 +161,7 @@
     </div>
   </div>
 </section>
+<div class="frise frise-parchemin" aria-hidden="true"></div>
 
 <!-- LES COMPAGNONS : les familiers (aide.js « Les familiers », forum.js g_compagnons), les montures (aide.js « Les montures »,
      la 152 ; les niveaux d'Octave : forum.js g_compagnons), les bébés de boss (aide.js, la chance du Yéti : 1 sur 33), l'écurie
@@ -189,6 +195,7 @@
     </div>
   </div>
 </section>
+<div class="frise frise-etoiles" aria-hidden="true"></div>
 
 <!-- LA FIN DE PARTIE : forum.js g_planete (l'Esquif, l'air, la gravité, les anneaux, la dépouille), l'accueil (#planete : les
      anneaux aux niveaux 60, 63 et 66, les bêtes à l'œuf, la récolte à la foreuse) ; le dernier adversaire n'est JAMAIS nommé -->
@@ -209,6 +216,7 @@
     </div>
   </div>
 </section>
+<div class="frise frise-parchemin" aria-hidden="true"></div>
 
 <!-- LA FAQ : la même, mot pour mot, que celle du JSON-LD (FAQPage) ; puis « Jouer gratuitement » et le launcher par système
      (les liens figés de la release « installateur », ceux de l'accueil) -->
@@ -246,7 +254,7 @@
   <div class="dedans">
     <div class="col">
       <img src="assets/logo/casteria-logo-300.webp" alt="Casteria" width="70" height="70" loading="lazy">
-      <nav aria-label="Le pied de page"><a href="./">Accueil</a><a href="commencer.html">Par où commencer</a><a href="evenements.html">Les événements</a><a href="pirates.html">La mer et les pirates</a><a href="donjons.html">Les donjons</a><a href="casino.html">Le casino</a><a href="./#combat">Le combat</a><a href="classement.html">Classement</a><a href="boutique.html">Boutique</a><a href="vote.html">Voter</a><a href="reglement.html">Le règlement</a><a href="./#telecharger">Télécharger</a><a href="serveur-minecraft-ile.html">Serveur Minecraft d'île</a><a href="serveur-minecraft-modde.html">Serveur moddé</a><a href="launcher-minecraft-modde.html">Launcher moddé</a><a href="serveur-minecraft-rpg.html">Serveur RPG</a><a href="serveur-minecraft-boss.html">Boss et donjons</a><a href="mentions-legales.html">Mentions légales</a><a href="confidentialite.html">Confidentialité</a><a href="conditions.html">Conditions</a></nav>
+      <nav aria-label="Le pied de page"><a href="./">Accueil</a><a href="commencer.html">Par où commencer</a><a href="evenements.html">Les événements</a><a href="pirates.html">La mer et les pirates</a><a href="donjons.html">Les donjons</a><a href="casino.html">Le casino</a><a href="./#boss">Les boss</a><a href="classement.html">Classement</a><a href="carte.html">La carte</a><a href="exploits.html">Les exploits</a><a href="boutique.html">Boutique</a><a href="vote.html">Voter</a><a href="compte.html">Mon compte</a><a href="reglement.html">Le règlement</a><a href="./#telecharger">Télécharger</a><a href="serveur-minecraft-ile.html">Serveur Minecraft d'île</a><a href="serveur-minecraft-modde.html">Serveur moddé</a><a href="launcher-minecraft-modde.html">Launcher moddé</a><a href="serveur-minecraft-rpg.html">Serveur RPG</a><a href="serveur-minecraft-boss.html">Boss et donjons</a><a href="mentions-legales.html">Mentions légales</a><a href="confidentialite.html">Confidentialité</a><a href="conditions.html">Conditions</a></nav>
     </div>
     <small>Casteria est un serveur Minecraft indépendant, créé par des joueurs. Il n'est ni affilié à Mojang ni à Microsoft, ni approuvé par eux. Minecraft est une marque de Mojang Studios.</small>
   </div>

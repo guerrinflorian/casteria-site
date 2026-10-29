@@ -22,10 +22,13 @@
 <link rel="icon" type="image/png" sizes="32x32" href="assets/logo/favicon-32.png">
 <link rel="icon" type="image/png" sizes="256x256" href="assets/logo/icone-256.png">
 <link rel="apple-touch-icon" href="assets/logo/icone-apple-180.png">
+<link rel="preload" href="assets/polices/fredoka.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/polices/lilita_one.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/carrousel.css">
 <link rel="stylesheet" href="css/scene.css">
 <link rel="stylesheet" href="css/pages.css">
+<link rel="stylesheet" href="css/motifs.css">
 <link rel="stylesheet" href="css/evenements.css">
 <script type="application/ld+json">
 { "@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
@@ -79,6 +82,45 @@
     </div>
   </div>
 </section>
+
+<!-- LE PROCHAIN RENDEZ-VOUS EN GRAND (b5, le 29/10/2026) : son compte à rebours aux heures de Paris, ce qu'on y gagne,
+     les trois suivants ; tenu par js/evenements.js (chaque heure lue dans le jeu : son en-tête). Sans JavaScript : le Défi
+     Éclair, le rendez-vous de chaque soir -->
+<section class="pan prochain fond-ciel relief" id="prochain" aria-labelledby="prochain-titre">
+  <div class="dedans">
+    <article class="carte-prochain coins-or" data-prochain data-evt="eclair" aria-live="polite">
+      <p class="sur-titre" id="prochain-titre">Le prochain rendez-vous</p>
+      <h2 data-c="nom">Le Défi Éclair</h2>
+      <p class="prochain-quand" data-c="quand">chaque soir à 20&#160;h&#160;15</p>
+      <div class="compte" aria-label="Le temps qui reste">
+        <span class="case case-j"><b data-c="j">0</b><small>jours</small></span>
+        <span class="case"><b data-c="h">00</b><small>heures</small></span>
+        <span class="case"><b data-c="m">00</b><small>minutes</small></span>
+        <span class="case"><b data-c="s">00</b><small>secondes</small></span>
+      </div>
+      <p class="prochain-etat" data-c="etat"></p>
+      <p class="prochain-phrase" data-c="phrase">Cinq jeux rapides tirés parmi quatorze, environ six minutes. Personne n'est éliminé.</p>
+      <div class="prochain-gain">
+        <span class="gain-titre">À gagner</span>
+        <strong data-c="gain">La Clé Royale au 1er</strong>
+        <span data-c="plus">la Clé de l'Aventurier au 2e et la Clé de Vote au 3e dès 5 joueurs ; des jetons dès ta première réponse</span>
+      </div>
+      <div class="gestes">
+        <a class="bouton bouton-orange grand" href="./#telecharger"><span class="triangle" aria-hidden="true"></span>Rejoins le prochain</a>
+        <a class="lien-doux" data-c="lien" href="#defi">Comment ça se joue <span class="chevron" aria-hidden="true"></span></a>
+      </div>
+    </article>
+    <div class="ensuite">
+      <p class="ensuite-titre">Ensuite</p>
+      <ol data-ensuite>
+        <li><time>18&#160;h&#160;30</time><b>Le Sol qui lâche</b><span>Des clés dès 4 joueurs</span></li>
+        <li><time>19&#160;h&#160;30</time><b>L'heure dorée</b><span>Tes ventes à +10&#160;%</span></li>
+        <li><time>21&#160;h</time><b>La Bataille de neige</b><span>Des clés pour l'équipe gagnante</span></li>
+      </ol>
+    </div>
+  </div>
+</section>
+<div class="frise frise-creneaux" aria-hidden="true"></div>
 
 <!-- LE DÉFI ÉCLAIR, NOTRE ÉVÉNEMENT À NOUS : ses heures, son déroulé, ses points, ses gains -->
 <section class="pan defi" id="defi" aria-labelledby="defi-titre">
@@ -182,23 +224,77 @@
   <div class="dedans">
     <div class="tete apparait">
       <span class="sur-titre">Le programme</span>
-      <h2 id="programme-titre">Une journée au palais</h2>
+      <h2 id="programme-titre">La semaine au palais</h2>
       <p>Aux heures de Paris. En jeu, /events dit ce qui se passe et ce qui vient, et ton écran te prévient avant chaque rendez-vous.</p>
     </div>
-    <ol class="journee">
-      <li class="apparait"><time>18&#160;h&#160;30</time><span><b>Le Sol qui lâche</b>tous les jours</span></li>
-      <li class="apparait"><time>19&#160;h&#160;30</time><span><b>L'heure dorée</b>jusqu'à 20&#160;h, tous les jours</span></li>
-      <li class="apparait"><time>20&#160;h</time><span><b>Le tirage de la loterie</b>et son feu d'artifice</span></li>
-      <li class="apparait vedette"><time>20&#160;h&#160;15</time><span><b>Le Défi Éclair</b>tous les jours ; le week-end aussi à 11&#160;h et 14&#160;h&#160;30</span></li>
-      <li class="apparait"><time>21&#160;h</time><span><b>La Bataille de neige</b>tous les jours</span></li>
+    <!-- LA SEMAINE EN FRISE (b5, le 29/10/2026) : les mêmes heures que js/evenements.js (son en-tête dit où chacune est lue dans
+         le jeu) ; aujourd'hui et le prochain rendez-vous s'allument ; au téléphone, les jours glissent -->
+    <ol class="semaine" data-semaine aria-label="La semaine des événements">
+      <li class="jour" data-jour="1"><h3>Lundi</h3><ol>
+        <li class="puce puce-sol" data-evt="sol" data-min="1110"><time>18&#160;h&#160;30</time>Le Sol qui lâche</li>
+        <li class="puce puce-flotte" data-evt="flotte" data-min="1140"><time>19&#160;h</time>La flotte de Morvan</li>
+        <li class="puce puce-doree" data-evt="doree" data-min="1170"><time>19&#160;h&#160;30</time>L'heure dorée</li>
+        <li class="puce puce-eclair" data-evt="eclair" data-min="1215"><time>20&#160;h&#160;15</time>Le Défi Éclair</li>
+        <li class="puce puce-neige" data-evt="neige" data-min="1260"><time>21&#160;h</time>La Bataille de neige</li>
+      </ol></li>
+      <li class="jour" data-jour="2"><h3>Mardi</h3><ol>
+        <li class="puce puce-sol" data-evt="sol" data-min="1110"><time>18&#160;h&#160;30</time>Le Sol qui lâche</li>
+        <li class="puce puce-flotte" data-evt="flotte" data-min="1140"><time>19&#160;h</time>La flotte de Morvan</li>
+        <li class="puce puce-doree" data-evt="doree" data-min="1170"><time>19&#160;h&#160;30</time>L'heure dorée</li>
+        <li class="puce puce-eclair" data-evt="eclair" data-min="1215"><time>20&#160;h&#160;15</time>Le Défi Éclair</li>
+        <li class="puce puce-neige" data-evt="neige" data-min="1260"><time>21&#160;h</time>La Bataille de neige</li>
+      </ol></li>
+      <li class="jour" data-jour="3"><h3>Mercredi</h3><ol>
+        <li class="puce puce-chasse" data-evt="chasse" data-min="900"><time>15&#160;h</time>La chasse au trésor</li>
+        <li class="puce puce-sol" data-evt="sol" data-min="1110"><time>18&#160;h&#160;30</time>Le Sol qui lâche</li>
+        <li class="puce puce-flotte" data-evt="flotte" data-min="1140"><time>19&#160;h</time>La flotte de Morvan</li>
+        <li class="puce puce-doree" data-evt="doree" data-min="1170"><time>19&#160;h&#160;30</time>L'heure dorée</li>
+        <li class="puce puce-eclair" data-evt="eclair" data-min="1215"><time>20&#160;h&#160;15</time>Le Défi Éclair</li>
+        <li class="puce puce-neige" data-evt="neige" data-min="1260"><time>21&#160;h</time>La Bataille de neige</li>
+      </ol></li>
+      <li class="jour" data-jour="4"><h3>Jeudi</h3><ol>
+        <li class="puce puce-sol" data-evt="sol" data-min="1110"><time>18&#160;h&#160;30</time>Le Sol qui lâche</li>
+        <li class="puce puce-flotte" data-evt="flotte" data-min="1140"><time>19&#160;h</time>La flotte de Morvan</li>
+        <li class="puce puce-doree" data-evt="doree" data-min="1170"><time>19&#160;h&#160;30</time>L'heure dorée</li>
+        <li class="puce puce-eclair" data-evt="eclair" data-min="1215"><time>20&#160;h&#160;15</time>Le Défi Éclair</li>
+        <li class="puce puce-neige" data-evt="neige" data-min="1260"><time>21&#160;h</time>La Bataille de neige</li>
+      </ol></li>
+      <li class="jour" data-jour="5"><h3>Vendredi</h3><ol>
+        <li class="puce puce-sol" data-evt="sol" data-min="1110"><time>18&#160;h&#160;30</time>Le Sol qui lâche</li>
+        <li class="puce puce-flotte" data-evt="flotte" data-min="1140"><time>19&#160;h</time>La flotte de Morvan</li>
+        <li class="puce puce-doree" data-evt="doree" data-min="1170"><time>19&#160;h&#160;30</time>L'heure dorée</li>
+        <li class="puce puce-eclair" data-evt="eclair" data-min="1215"><time>20&#160;h&#160;15</time>Le Défi Éclair</li>
+        <li class="puce puce-neige" data-evt="neige" data-min="1260"><time>21&#160;h</time>La Bataille de neige</li>
+      </ol></li>
+      <li class="jour" data-jour="6"><h3>Samedi</h3><ol>
+        <li class="puce puce-eclair" data-evt="eclair" data-min="660"><time>11&#160;h</time>Le Défi Éclair</li>
+        <li class="puce puce-eclair" data-evt="eclair" data-min="870"><time>14&#160;h&#160;30</time>Le Défi Éclair</li>
+        <li class="puce puce-chasse" data-evt="chasse" data-min="960"><time>16&#160;h</time>La chasse au trésor</li>
+        <li class="puce puce-sol" data-evt="sol" data-min="1110"><time>18&#160;h&#160;30</time>Le Sol qui lâche</li>
+        <li class="puce puce-flotte" data-evt="flotte" data-min="1140"><time>19&#160;h</time>La flotte de Morvan</li>
+        <li class="puce puce-doree" data-evt="doree" data-min="1170"><time>19&#160;h&#160;30</time>L'heure dorée</li>
+        <li class="puce puce-eclair" data-evt="eclair" data-min="1215"><time>20&#160;h&#160;15</time>Le Défi Éclair</li>
+        <li class="puce puce-neige" data-evt="neige" data-min="1260"><time>21&#160;h</time>La Bataille de neige</li>
+      </ol></li>
+      <li class="jour" data-jour="0"><h3>Dimanche</h3><ol>
+        <li class="puce puce-eclair" data-evt="eclair" data-min="660"><time>11&#160;h</time>Le Défi Éclair</li>
+        <li class="puce puce-eclair" data-evt="eclair" data-min="870"><time>14&#160;h&#160;30</time>Le Défi Éclair</li>
+        <li class="puce puce-sol" data-evt="sol" data-min="1110"><time>18&#160;h&#160;30</time>Le Sol qui lâche</li>
+        <li class="puce puce-flotte" data-evt="flotte" data-min="1140"><time>19&#160;h</time>La flotte de Morvan</li>
+        <li class="puce puce-doree" data-evt="doree" data-min="1170"><time>19&#160;h&#160;30</time>L'heure dorée</li>
+        <li class="puce puce-eclair" data-evt="eclair" data-min="1215"><time>20&#160;h&#160;15</time>Le Défi Éclair</li>
+        <li class="puce puce-neige" data-evt="neige" data-min="1260"><time>21&#160;h</time>La Bataille de neige</li>
+      </ol></li>
     </ol>
+    <p class="semaine-note">Chaque jour aussi : la loterie à 0&#160;h, 4&#160;h, 8&#160;h, 12&#160;h, 16&#160;h et 20&#160;h ; le calcul du tchat environ toutes les 40&#160;minutes. Vers 4&#160;h&#160;56, le serveur redémarre pour la nuit.</p>
+    <div class="frise frise-etoiles courte" aria-hidden="true"></div>
     <div class="rendez-vous">
-      <article class="apparait">
+      <article class="apparait rdv-doree">
         <picture><source type="image/webp" srcset="assets/evenements/photo-heure-doree.webp"><img class="photo-rdv" src="assets/evenements/photo-heure-doree.jpg" alt="Le ciel orangé de l'heure dorée au-dessus des remparts du palais" width="960" height="540" loading="lazy"></picture>
         <h3>L'heure dorée</h3>
         <p>De 19&#160;h&#160;30 à 20&#160;h : un ciel doré sur le palais, tes ventes à +10&#160;% pour tous, le colporteur de passage, et le tirage de 20&#160;h finit en feu d'artifice.</p>
       </article>
-      <article class="apparait" style="--retard:.1s">
+      <article class="apparait rdv-chasse" style="--retard:.1s">
         <picture><source type="image/webp" srcset="assets/evenements/photo-chasse.webp"><img class="photo-rdv" src="assets/evenements/photo-chasse.jpg" alt="L'entrée du palais : à gauche, un coffre de la chasse au trésor sous sa colonne d'or ; Gaspard, le Majordome, sur l'allée" width="960" height="540" loading="lazy"></picture>
         <h3>La chasse au trésor</h3>
         <p>Le mercredi à 15&#160;h et le samedi à 16&#160;h : cinq coffres d'or apparaissent au palais, un toutes les 2 minutes, sous une colonne d'or. Le premier qui clique gagne des jetons ou une clé ; un coffre par joueur, et l'un des cinq est le gros lot : des jetons doublés et une clé.</p>
@@ -225,12 +321,13 @@
   <div class="dedans">
     <div class="col">
       <img src="assets/logo/casteria-logo-300.webp" alt="Casteria" width="70" height="70" loading="lazy">
-      <nav aria-label="Le pied de page"><a href="./">Accueil</a><a href="commencer.html">Par où commencer</a><a href="evenements.html">Les événements</a><a href="pirates.html">La mer et les pirates</a><a href="donjons.html">Les donjons</a><a href="casino.html">Le casino</a><a href="./#combat">Le combat</a><a href="classement.html">Classement</a><a href="boutique.html">Boutique</a><a href="vote.html">Voter</a><a href="reglement.html">Le règlement</a><a href="./#telecharger">Télécharger</a><a href="serveur-minecraft-ile.html">Serveur Minecraft d'île</a><a href="serveur-minecraft-modde.html">Serveur moddé</a><a href="launcher-minecraft-modde.html">Launcher moddé</a><a href="serveur-minecraft-rpg.html">Serveur RPG</a><a href="serveur-minecraft-boss.html">Boss et donjons</a><a href="mentions-legales.html">Mentions légales</a><a href="confidentialite.html">Confidentialité</a><a href="conditions.html">Conditions</a></nav>
+      <nav aria-label="Le pied de page"><a href="./">Accueil</a><a href="commencer.html">Par où commencer</a><a href="evenements.html">Les événements</a><a href="pirates.html">La mer et les pirates</a><a href="donjons.html">Les donjons</a><a href="casino.html">Le casino</a><a href="./#boss">Les boss</a><a href="classement.html">Classement</a><a href="carte.html">La carte</a><a href="exploits.html">Les exploits</a><a href="boutique.html">Boutique</a><a href="vote.html">Voter</a><a href="compte.html">Mon compte</a><a href="reglement.html">Le règlement</a><a href="./#telecharger">Télécharger</a><a href="serveur-minecraft-ile.html">Serveur Minecraft d'île</a><a href="serveur-minecraft-modde.html">Serveur moddé</a><a href="launcher-minecraft-modde.html">Launcher moddé</a><a href="serveur-minecraft-rpg.html">Serveur RPG</a><a href="serveur-minecraft-boss.html">Boss et donjons</a><a href="mentions-legales.html">Mentions légales</a><a href="confidentialite.html">Confidentialité</a><a href="conditions.html">Conditions</a></nav>
     </div>
     <small>Casteria est un serveur Minecraft indépendant, créé par des joueurs. Il n'est ni affilié à Mojang ni à Microsoft, ni approuvé par eux. Minecraft est une marque de Mojang Studios.</small>
   </div>
 </footer>
 <script src="js/carrousel.js" defer></script>
 <script src="js/site.js" defer></script>
+<script src="js/evenements.js" defer></script>
 </body>
 </html>

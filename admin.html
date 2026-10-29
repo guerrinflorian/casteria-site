@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>L'espace de l'équipe de Casteria</title>
+<meta name="description" content="L'espace de l'équipe de Casteria, réservé à l'Admin, au Responsable et au Fondateur : les ventes, les tunnels d'achat, ce que les joueurs consultent et font en jeu, la fiche d'un joueur et le tchat en direct.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#1B1028">
+<link rel="icon" href="favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/logo/favicon-32.png">
+<link rel="apple-touch-icon" href="assets/logo/icone-apple-180.png">
+<link rel="preload" href="assets/polices/fredoka.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/polices/lilita_one.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/motifs.css">
+<link rel="stylesheet" href="css/classement.css">
+<link rel="stylesheet" href="css/admin.css">
+</head>
+<body class="page-admin">
+<div class="progres" aria-hidden="true"></div>
+<header class="barre verre posee">
+  <a class="marque" href="./" aria-label="Casteria, l'accueil"><img src="assets/logo/casteria-logo-300.webp" alt="Logo de Casteria" width="46" height="46"><span>Casteria</span></a>
+  <nav aria-label="Le menu">
+    <a href="./#voyage">Le jeu</a>
+    <a href="commencer.html">Par où commencer</a>
+    <a href="evenements.html">Événements</a>
+    <a class="classement" href="classement.html" aria-label="Classement"><img class="pixel" src="assets/icones/classement.png" alt="" width="20" height="20">Classement</a>
+    <a class="voter" href="vote.html">Voter</a>
+    <a class="boutique" href="boutique.html"><img class="pixel" src="assets/icones/credit.png" alt="" width="20" height="20">Boutique</a>
+    <a class="compte" href="compte.html">Mon compte</a>
+    <a class="bouton bouton-or petit" href="./#telecharger">Jouer</a>
+  </nav>
+</header>
+
+<main>
+<!-- L'ESPACE DE L'ÉQUIPE (le prototype du 29/10/2026) : réservé à l'Admin, au Responsable et au Fondateur. La page demande
+     /api/moi puis chaque adresse /api/admin/... (API.md, section 4) : c'est l'API qui refuse (403) à tout autre ; la page ne
+     fait que le dire. Les graphiques : js/graphe.js (maison, en SVG) ; le reste : js/admin.js. -->
+<section class="sombre admin fond-carte relief" id="admin">
+  <div class="dedans admin-grille">
+    <aside class="admin-menu panneau-bois" id="admin-menu" hidden>
+      <p class="sur-titre">L'équipe</p>
+      <nav aria-label="L'espace de l'équipe" id="admin-nav">
+        <a href="#tableau" data-vue="tableau">Tableau de bord</a>
+        <a href="#ventes" data-vue="ventes">Les ventes</a>
+        <a href="#tunnels" data-vue="tunnels">Les tunnels</a>
+        <a href="#consultations" data-vue="consultations">Ce qu'ils regardent</a>
+        <a href="#jeu" data-vue="jeu">Ce qu'ils font en jeu</a>
+        <a href="#joueurs" data-vue="joueurs">Un joueur</a>
+        <a href="#tchat" data-vue="tchat">Le tchat en direct</a>
+      </nav>
+      <p class="admin-qui" id="admin-qui"></p>
+    </aside>
+    <div class="admin-contenu">
+      <div class="admin-tete">
+        <h1 id="admin-titre">L'espace de l'équipe</h1>
+        <p class="admin-sous" id="admin-sous">On vérifie ton grade...</p>
+        <div class="admin-filtres" id="admin-filtres" hidden>
+          <div class="admin-choix" role="group" aria-label="La période" id="filtre-jours">
+            <button type="button" data-jours="7" aria-pressed="false">7 jours</button>
+            <button type="button" data-jours="30" aria-pressed="true">30 jours</button>
+            <button type="button" data-jours="90" aria-pressed="false">90 jours</button>
+          </div>
+          <div class="admin-choix" role="group" aria-label="Le pas des courbes" id="filtre-pas">
+            <button type="button" data-pas="jour" aria-pressed="true">Par jour</button>
+            <button type="button" data-pas="semaine" aria-pressed="false">Par semaine</button>
+          </div>
+        </div>
+      </div>
+      <div class="frise frise-etoiles" aria-hidden="true"></div>
+      <div class="admin-vue" id="admin-vue" aria-live="polite"></div>
+    </div>
+  </div>
+</section>
+<div class="frise frise-corde" aria-hidden="true"></div>
+</main>
+
+<footer>
+  <div class="dedans">
+    <div class="col">
+      <img src="assets/logo/casteria-logo-300.webp" alt="Casteria" width="70" height="70" loading="lazy">
+      <nav aria-label="Le pied de page"><a href="./">Accueil</a><a href="classement.html">Classement</a><a href="boutique.html">Boutique</a><a href="vote.html">Voter</a><a href="compte.html">Mon compte</a><a href="reglement.html">Le règlement</a><a href="mentions-legales.html">Mentions légales</a><a href="confidentialite.html">Confidentialité</a></nav>
+    </div>
+    <small>Casteria est un serveur Minecraft indépendant, créé par des joueurs. Il n'est ni affilié à Mojang ni à Microsoft, ni approuvé par eux. Minecraft est une marque de Mojang Studios.</small>
+  </div>
+</footer>
+<script src="js/site.js" defer></script>
+<script src="js/api.js" defer></script>
+<script src="js/peau.js" defer></script>
+<script src="js/graphe.js" defer></script>
+<script src="js/admin.js" defer></script>
+</body>
+</html>

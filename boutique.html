@@ -22,7 +22,10 @@
 <link rel="icon" type="image/png" sizes="32x32" href="assets/logo/favicon-32.png">
 <link rel="icon" type="image/png" sizes="256x256" href="assets/logo/icone-256.png">
 <link rel="apple-touch-icon" href="assets/logo/icone-apple-180.png">
+<link rel="preload" href="assets/polices/fredoka.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/polices/lilita_one.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/motifs.css">
 <link rel="stylesheet" href="css/scene.css">
 <link rel="stylesheet" href="css/boutique.css">
 <script type="application/ld+json">
@@ -80,6 +83,7 @@
     </div>
   </div>
 </section>
+<div class="frise frise-creneaux" aria-hidden="true"></div>
 
 <section class="sombre boutique-etal" id="acheter">
   <div class="dedans">
@@ -149,6 +153,7 @@
     </ul>
   </div>
 </section>
+<div class="frise frise-etoiles" aria-hidden="true"></div>
 
 <!-- LES CRÉDITS GAGNÉS EN JOUANT (la 140, 22/10/2026 ; le propriétaire : « des crédits gagnés EN JOUANT, pour qu'on ne dise pas
      pay to win ») : les chiffres de la table CJ de credits_jeu.js du jeu, à suivre quand elle change -->
@@ -167,6 +172,7 @@
     </ul>
   </div>
 </section>
+<div class="frise frise-etoiles" aria-hidden="true"></div>
 
 <!-- LES GRADES DE JOUEUR (la 150, 27/10/2026 ; le propriétaire : « faut donner envie d'acheter les grades et montrer dans la
      boutique le truc animé et les avantages et le comparatif ») : les chiffres de la table GRADES de grades_payants.js du jeu,
@@ -220,6 +226,7 @@
     </ul>
   </div>
 </section>
+<div class="frise frise-etoiles" aria-hidden="true"></div>
 
 <section class="sombre boutique-offres" id="offres">
   <div class="dedans">
@@ -274,7 +281,7 @@
   <div class="dedans">
     <div class="col">
       <img src="assets/logo/casteria-logo-300.webp" alt="Casteria" width="70" height="70" loading="lazy">
-      <nav aria-label="Le pied de page"><a href="./">Accueil</a><a href="commencer.html">Par où commencer</a><a href="evenements.html">Les événements</a><a href="pirates.html">La mer et les pirates</a><a href="donjons.html">Les donjons</a><a href="casino.html">Le casino</a><a href="./#combat">Le combat</a><a href="classement.html">Classement</a><a href="boutique.html">Boutique</a><a href="vote.html">Voter</a><a href="reglement.html">Le règlement</a><a href="./#telecharger">Télécharger</a><a href="serveur-minecraft-ile.html">Serveur Minecraft d'île</a><a href="serveur-minecraft-modde.html">Serveur moddé</a><a href="launcher-minecraft-modde.html">Launcher moddé</a><a href="serveur-minecraft-rpg.html">Serveur RPG</a><a href="serveur-minecraft-boss.html">Boss et donjons</a><a href="mentions-legales.html">Mentions légales</a><a href="confidentialite.html">Confidentialité</a><a href="conditions.html">Conditions</a></nav>
+      <nav aria-label="Le pied de page"><a href="./">Accueil</a><a href="commencer.html">Par où commencer</a><a href="evenements.html">Les événements</a><a href="pirates.html">La mer et les pirates</a><a href="donjons.html">Les donjons</a><a href="casino.html">Le casino</a><a href="./#boss">Les boss</a><a href="classement.html">Classement</a><a href="carte.html">La carte</a><a href="exploits.html">Les exploits</a><a href="boutique.html">Boutique</a><a href="vote.html">Voter</a><a href="compte.html">Mon compte</a><a href="reglement.html">Le règlement</a><a href="./#telecharger">Télécharger</a><a href="serveur-minecraft-ile.html">Serveur Minecraft d'île</a><a href="serveur-minecraft-modde.html">Serveur moddé</a><a href="launcher-minecraft-modde.html">Launcher moddé</a><a href="serveur-minecraft-rpg.html">Serveur RPG</a><a href="serveur-minecraft-boss.html">Boss et donjons</a><a href="mentions-legales.html">Mentions légales</a><a href="confidentialite.html">Confidentialité</a><a href="conditions.html">Conditions</a></nav>
     </div>
     <small>Casteria est un serveur Minecraft indépendant, créé par des joueurs. Il n'est ni affilié à Mojang ni à Microsoft, ni approuvé par eux. Minecraft est une marque de Mojang Studios.</small>
   </div>
@@ -284,6 +291,7 @@
      joueur est envoyé sur la page de paiement de Tebex, comme avant. -->
 <script src="js/site.js" defer></script>
 <script src="js/boutique.config.js" defer></script>
+<script src="js/api.js" defer></script>
 <script src="js/boutique.js" defer></script>
 </body>
 </html>

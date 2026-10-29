@@ -24,7 +24,10 @@
 <link rel="apple-touch-icon" href="assets/logo/icone-apple-180.png">
 <link rel="preload" as="image" type="image/webp" media="(max-aspect-ratio: 2/3)" imagesrcset="assets/images/casteria-vote-caisses-portrait-720.webp 720w, assets/images/casteria-vote-caisses-portrait-1080.webp 1080w" imagesizes="100vw" fetchpriority="high">
 <link rel="preload" as="image" type="image/webp" media="(min-aspect-ratio: 2001/3000)" imagesrcset="assets/images/casteria-vote-caisses-1280.webp 1280w, assets/images/casteria-vote-caisses-1920.webp 1920w, assets/images/casteria-vote-caisses-2560.webp 2560w" imagesizes="100vw" fetchpriority="high">
+<link rel="preload" href="assets/polices/fredoka.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/polices/lilita_one.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/motifs.css">
 <link rel="stylesheet" href="css/scene.css">
 <link rel="stylesheet" href="css/vote.css">
 <script type="application/ld+json">
@@ -81,6 +84,7 @@
     </div>
   </div>
 </section>
+<div class="frise frise-creneaux" aria-hidden="true"></div>
 
 <!-- COMMENT VOTER : trois gestes, puis les sites de vote -->
 <section class="clair vote-gestes" id="voter">
@@ -88,7 +92,7 @@
     <div class="tete apparait">
       <span class="ruban">Trois gestes</span>
       <h2>Comment voter</h2>
-      <p>Rien à taper en jeu après ton vote : c'est le site de vote qui prévient le serveur.</p>
+      <p>Sur Serveur Privé, rien à taper en jeu après ton vote : c'est le site qui prévient le serveur.</p>
     </div>
     <ol class="etapes trois fil">
       <li class="apparait" style="--retard:.05s"><div class="carte"><h3>Clique sur Serveur Privé</h3><p>Le bouton juste en dessous ouvre la page de vote de Casteria. En jeu, /vote te donne le même lien, et le temps qu'il te reste avant de revoter.</p></div></li>
@@ -104,11 +108,16 @@
          (23/10/2026, le propriétaire : « sur le site, il faut pouvoir voter en étant redirigé ; j'ai mis sur Serveur Privé que
          ça demande le pseudo ») Serveur Privé, le premier site : sa page demande le pseudo (aucune façon documentée de le
          passer dans l'adresse) ; la clé arrive en 6 à 7 s par le pont des votes (casteria-moteur 1.0.19, la 141). -->
-    <p class="vote-consigne apparait">Sur la page du site, écris ton pseudo du jeu, exactement. Ta Clé de Vote arrive en jeu quelques secondes après ton vote.</p>
-    <ul class="sites-vote" id="sites-vote" aria-label="Les sites où voter pour Casteria"><li><a class="site-vote" href="https://serveur-prive.net/minecraft/casteria/vote" target="_blank" rel="noopener"><b>Voter sur Serveur Privé</b><span>un vote toutes les 1 h 30</span></a></li></ul>
+    <!-- (b5, le 29/10/2026 ; la tete) LE SECOND SITE, serveursminecraft.org (le serveur 7794) : il verifie le vote par l'ADRESSE
+         de la connexion, pas par le pseudo : sa carte le dit. ELLE RESTE CACHEE tant que le drapeau de la liste vaut « eteint »
+         (data-serveursminecraft, css/vote.css) : la tete l'allume (« allume ») avec le jeu, apres un vrai vote vu. Jamais
+         l'autre site de listes que le proprietaire refuse (son nom n'est ecrit nulle part : outils/verifier.js le refuse). -->
+    <p class="vote-consigne apparait">Sur Serveur Privé, écris ton pseudo du jeu, exactement. Ta Clé de Vote arrive en jeu quelques secondes après ton vote.</p>
+    <ul class="sites-vote" id="sites-vote" data-serveursminecraft="eteint" aria-label="Les sites où voter pour Casteria"><li><a class="site-vote" href="https://serveur-prive.net/minecraft/casteria/vote" target="_blank" rel="noopener"><b>Voter sur Serveur Privé</b><span>un vote toutes les 1 h 30</span></a></li><li class="site-sm"><a class="site-vote" href="https://www.serveursminecraft.org/serveur/7794/" target="_blank" rel="noopener"><b>Voter sur ServeursMinecraft.org</b><span>Un vote toutes les 24 heures. Vote depuis la même connexion que le jeu, puis tape /vote en jeu et clique « J'ai voté » : ta Clé arrive en quelques secondes.</span></a></li></ul>
     <p class="sites-vides apparait">La liste des sites où voter est dans le jeu : tape <code>/vote</code>, clique sur un site, et vote.</p>
   </div>
 </section>
+<div class="frise frise-etoiles" aria-hidden="true"></div>
 
 <!-- CE QUE TU GAGNES : la clé en grand, au-dessus de la Caisse de Vote -->
 <section class="sombre vote-gains" id="gains">
@@ -129,6 +138,7 @@
     </div>
   </div>
 </section>
+<div class="frise frise-parchemin" aria-hidden="true"></div>
 
 <!-- TON PSEUDO EXACT : la pancarte du champ, comme sur un site de vote -->
 <section class="clair vote-pseudo">
@@ -140,6 +150,7 @@
     </div>
   </div>
 </section>
+<div class="frise frise-etoiles" aria-hidden="true"></div>
 
 <!-- BON À SAVOIR -->
 <section class="sombre vote-savoir">
@@ -168,7 +179,7 @@
   <div class="dedans">
     <div class="col">
       <img src="assets/logo/casteria-logo-300.webp" alt="Casteria" width="70" height="70" loading="lazy">
-      <nav aria-label="Le pied de page"><a href="./">Accueil</a><a href="commencer.html">Par où commencer</a><a href="evenements.html">Les événements</a><a href="pirates.html">La mer et les pirates</a><a href="donjons.html">Les donjons</a><a href="casino.html">Le casino</a><a href="./#combat">Le combat</a><a href="classement.html">Classement</a><a href="boutique.html">Boutique</a><a href="vote.html">Voter</a><a href="reglement.html">Le règlement</a><a href="./#telecharger">Télécharger</a><a href="serveur-minecraft-ile.html">Serveur Minecraft d'île</a><a href="serveur-minecraft-modde.html">Serveur moddé</a><a href="launcher-minecraft-modde.html">Launcher moddé</a><a href="serveur-minecraft-rpg.html">Serveur RPG</a><a href="serveur-minecraft-boss.html">Boss et donjons</a><a href="mentions-legales.html">Mentions légales</a><a href="confidentialite.html">Confidentialité</a><a href="conditions.html">Conditions</a></nav>
+      <nav aria-label="Le pied de page"><a href="./">Accueil</a><a href="commencer.html">Par où commencer</a><a href="evenements.html">Les événements</a><a href="pirates.html">La mer et les pirates</a><a href="donjons.html">Les donjons</a><a href="casino.html">Le casino</a><a href="./#boss">Les boss</a><a href="classement.html">Classement</a><a href="carte.html">La carte</a><a href="exploits.html">Les exploits</a><a href="boutique.html">Boutique</a><a href="vote.html">Voter</a><a href="compte.html">Mon compte</a><a href="reglement.html">Le règlement</a><a href="./#telecharger">Télécharger</a><a href="serveur-minecraft-ile.html">Serveur Minecraft d'île</a><a href="serveur-minecraft-modde.html">Serveur moddé</a><a href="launcher-minecraft-modde.html">Launcher moddé</a><a href="serveur-minecraft-rpg.html">Serveur RPG</a><a href="serveur-minecraft-boss.html">Boss et donjons</a><a href="mentions-legales.html">Mentions légales</a><a href="confidentialite.html">Confidentialité</a><a href="conditions.html">Conditions</a></nav>
     </div>
     <small>Casteria est un serveur Minecraft indépendant, créé par des joueurs. Il n'est ni affilié à Mojang ni à Microsoft, ni approuvé par eux. Minecraft est une marque de Mojang Studios.</small>
   </div>

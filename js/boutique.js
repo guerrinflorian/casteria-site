@@ -42,6 +42,17 @@
   var erreurPseudo = document.getElementById('pseudo-erreur'), erreurAchat = document.getElementById('achat-erreur'), titrePack = document.getElementById('achat-pack')
   var merciAchat = document.getElementById('achat-merci')
   var choisi = null, enCours = false, dernier = ''
+  // (29/10/2026, la tête) LE PSEUDO DE QUI EST CONNECTÉ remplit le champ tout seul (GET /api/moi, par CasteriaApi de
+  // js/api.js, la même origine) ; la case « C'est bien mon pseudo » reste à cocher : la page ne la coche jamais
+  var pseudoConnecte = ''
+  if (window.CasteriaApi && typeof window.CasteriaApi.moi === 'function') {
+    window.CasteriaApi.moi().then(function (r) {
+      var p = r && r.statut === 200 && r.corps ? String(r.corps.pseudo || '') : ''
+      if (!PSEUDO.test(p)) return
+      pseudoConnecte = p
+      if (!form.hidden && !champ.value) { champ.value = p; relu() }
+    })
+  }
 
   // ---------- les packs ----------
   function etat(texte, reessayer) {
@@ -127,7 +138,7 @@
     payer.textContent = 'Payer ' + prix(p)
     form.hidden = false
     erreurAchat.hidden = true
-    try { if (!champ.value) champ.value = sessionStorage.getItem('casteria_pseudo') || '' } catch (e) {}
+    try { if (!champ.value) champ.value = pseudoConnecte || sessionStorage.getItem('casteria_pseudo') || '' } catch (e) {}
     relu()
     try { form.scrollIntoView({ behavior: 'smooth', block: 'center' }) } catch (e) { form.scrollIntoView() }
     try { champ.focus({ preventScroll: true }) } catch (e) { champ.focus() }

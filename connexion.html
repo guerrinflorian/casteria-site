@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Connexion à ton compte Casteria</title>
+<meta name="description" content="Connecte-toi au site de Casteria avec ton pseudo exact et le mot de passe que tu tapes en jeu : ta place surlignée au classement, ton compte, et la boutique avec ton pseudo déjà rempli.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#1B1028">
+<link rel="icon" href="favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/logo/favicon-32.png">
+<link rel="apple-touch-icon" href="assets/logo/icone-apple-180.png">
+<link rel="preload" href="assets/polices/fredoka.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/polices/lilita_one.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/motifs.css">
+<link rel="stylesheet" href="css/compte.css">
+</head>
+<body>
+<div class="progres" aria-hidden="true"></div>
+<header class="barre verre posee">
+  <a class="marque" href="./" aria-label="Casteria, l'accueil"><img src="assets/logo/casteria-logo-300.webp" alt="Logo de Casteria" width="46" height="46"><span>Casteria</span></a>
+  <nav aria-label="Le menu">
+    <a href="./#voyage">Le jeu</a>
+    <a href="commencer.html">Par où commencer</a>
+    <a href="evenements.html">Événements</a>
+    <a class="classement" href="classement.html" aria-label="Classement"><img class="pixel" src="assets/icones/classement.png" alt="" width="20" height="20">Classement</a>
+    <a class="voter" href="vote.html">Voter</a>
+    <a class="boutique" href="boutique.html"><img class="pixel" src="assets/icones/credit.png" alt="" width="20" height="20">Boutique</a>
+    <a class="compte" href="compte.html" aria-current="page">Mon compte</a>
+    <a class="bouton bouton-or petit" href="./#telecharger">Jouer</a>
+  </nav>
+</header>
+
+<main>
+<!-- LA CONNEXION (le prototype du 29/10/2026) : le compte du JEU (DirectAuth : /register en jeu, puis /login), jamais un
+     compte du site. Le formulaire part en POST vers /api/connexion (API.md 1.4) : jamais le mot de passe dans l'adresse ni
+     dans un journal. js/connexion.js le prend en main (les erreurs dites simplement, trop d'essais, la casse du pseudo). -->
+<section class="sombre connexion fond-carte relief" id="connexion-zone">
+  <div class="dedans connexion-grille">
+    <div class="connexion-texte">
+      <p class="sur-titre">Ton compte Casteria</p>
+      <h1>Connecte-toi avec ton compte du jeu</h1>
+      <p class="accroche">Le même pseudo, le même mot de passe qu'en jeu. Une fois connecté :</p>
+      <ul class="atouts-compte">
+        <li><b>Ta place, surlignée</b> dans chaque classement (au classement général, même au-delà du 100e).</li>
+        <li><b>Ton compte</b> : ta peau en 3D, ton niveau, tes jetons et tes crédits, ton île, tes achats.</li>
+        <li><b>La boutique</b> avec ton pseudo déjà rempli.</li>
+      </ul>
+    </div>
+
+    <form class="panneau-connexion panneau-nuit coins-or" id="connexion" method="post" action="/api/connexion" novalidate>
+      <h2>Se connecter</h2>
+      <p class="consigne" id="connexion-consigne">Ton <b>pseudo exact</b> (les majuscules comptent) et le mot de passe que tu tapes en jeu après <code>/login</code>.</p>
+      <label for="pseudo">Pseudo</label>
+      <input id="pseudo" name="pseudo" type="text" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" minlength="3" maxlength="16" required aria-describedby="pseudo-aide">
+      <p class="aide-champ" id="pseudo-aide">3 à 16 caractères : des lettres sans accent, des chiffres et le tiret du bas _.</p>
+      <label for="mot-de-passe">Mot de passe</label>
+      <div class="mdp">
+        <input id="mot-de-passe" name="mot_de_passe" type="password" autocomplete="current-password" maxlength="32" required>
+        <button type="button" class="voir" id="voir-mdp" aria-controls="mot-de-passe" aria-pressed="false">Voir</button>
+      </div>
+      <p class="erreur" id="connexion-erreur" role="alert" hidden></p>
+      <button class="bouton bouton-or grand envoyer" id="connexion-envoyer" type="submit">Se connecter</button>
+      <p class="oubli">Mot de passe oublié ? Demande à un membre de l'équipe, en jeu ou sur le <a href="/discord">Discord</a>.</p>
+      <div class="pas-de-compte">
+        <h3>Pas encore de compte ?</h3>
+        <p>Il se crée <b>en jeu</b> : lance Casteria avec le launcher, choisis ton pseudo, puis tape <code>/register</code> et un mot de passe (6 lettres ou chiffres au moins). Reviens ensuite ici, avec le même pseudo et le même mot de passe.</p>
+        <a class="bouton bouton-bois" href="./#telecharger">Télécharger le launcher</a>
+      </div>
+    </form>
+    <noscript><p class="erreur">Pour te connecter, active JavaScript dans ton navigateur.</p></noscript>
+  </div>
+</section>
+<div class="frise frise-corde" aria-hidden="true"></div>
+<!-- TON COMPTE EN TROIS GESTES, sur le bois du port : trois cartes de parchemin, un peu décalées (le kit : .decalees) -->
+<section class="fond-bois relief connexion-gestes">
+  <div class="dedans">
+    <h2>Ton compte en trois gestes</h2>
+    <ol class="decalees etapes-compte">
+      <li class="carte"><span class="num-etape" aria-hidden="true">1</span><h3>Lance Casteria</h3><p>Le launcher installe tout. Choisis ton pseudo : c'est lui que tu taperas ici, aux majuscules près.</p></li>
+      <li class="carte"><span class="num-etape" aria-hidden="true">2</span><h3>Crée ton mot de passe</h3><p>En jeu, tape <code>/register</code> puis un mot de passe de 6 lettres ou chiffres au moins. À chaque venue ensuite : <code>/login</code>.</p></li>
+      <li class="carte"><span class="num-etape" aria-hidden="true">3</span><h3>Connecte-toi ici</h3><p>Le même pseudo, le même mot de passe : ta place surlignée au classement, ton compte, et la boutique avec ton pseudo.</p></li>
+    </ol>
+  </div>
+</section>
+<div class="frise frise-vague" aria-hidden="true"></div>
+<!-- LES QUESTIONS SUR TON COMPTE (b5, le 29/10/2026 ; le propriétaire : « mettre dans la FAQ ce que comporte le site, ce qu'on peut
+     voir dedans ») : chaque réponse dit ce que le site tient vraiment (l'API du site : /api/moi pour le compte, /api/joueur/<pseudo>
+     pour le profil public et son image) ; la même liste que la page « Le site casteria.fr » de /aide et le texte du Discord -->
+<section class="fond-mer relief faq-compte" id="questions" aria-labelledby="questions-titre">
+  <div class="dedans">
+    <h2 id="questions-titre">Tes questions sur le site</h2>
+    <div class="faq-liste">
+      <details open>
+        <summary>Comment je me connecte&#160;?</summary>
+        <p>Avec ton compte du jeu : ton pseudo exact (les majuscules comptent) et le mot de passe que tu tapes en jeu après <code>/login</code>. Pas de compte à créer ici.</p>
+      </details>
+      <details>
+        <summary>Qu'est-ce que je trouve sur le site&#160;?</summary>
+        <ul>
+          <li><b>Ton compte</b> : ton niveau, ta place, tes jetons, tes crédits, ton île et tes achats.</li>
+          <li><b>Le classement</b>, avec la tête de chaque joueur et le podium en 3D.</li>
+          <li><b>Ton profil public</b> et son image à partager.</li>
+          <li><b>La carte vivante</b> des îles et des navires.</li>
+          <li><b>Les grands exploits</b> du serveur.</li>
+        </ul>
+      </details>
+      <details>
+        <summary>Qui voit mon profil&#160;?</summary>
+        <p>Tout le monde : ta peau, ton grade, ton niveau, ta place aux classements, ton île, tes victoires contre les boss et tes records. Tes jetons, tes crédits et tes achats, eux, ne se voient que dans ton compte, une fois connecté.</p>
+      </details>
+      <details>
+        <summary>Et mon île&#160;?</summary>
+        <p>Son nom, ses étoiles et sa place au classement des îles sont sur ton profil. En jeu, ta plaque « Visites » choisit qui y entre : fermée, seuls toi et tes amis y venez.</p>
+      </details>
+      <details>
+        <summary>J'ai oublié mon mot de passe</summary>
+        <p>Ouvre un ticket sur le <a href="/discord">Discord</a> : l'équipe vérifie que c'est bien toi avant de le remettre. Tu t'en souviens et veux le changer : en jeu, <code>/changepassword</code> suivi de l'ancien et du nouveau.</p>
+      </details>
+      <details>
+        <summary>Que garde le site sur moi&#160;?</summary>
+        <p>Ton mot de passe sert seulement à vérifier que c'est toi : le site ne le garde jamais. Deux cookies retiennent ta connexion, et partent quand tu te déconnectes. Tout le détail : <a href="confidentialite.html">ce que Casteria garde sur toi</a>.</p>
+      </details>
+    </div>
+    <div class="faq-fin">
+      <p>Prêt&#160;? Télécharge le launcher.</p>
+      <a class="bouton bouton-or grand" href="./#telecharger">Télécharger le launcher</a>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="dedans">
+    <div class="col">
+      <img src="assets/logo/casteria-logo-300.webp" alt="Casteria" width="70" height="70" loading="lazy">
+      <nav aria-label="Le pied de page"><a href="./">Accueil</a><a href="commencer.html">Par où commencer</a><a href="evenements.html">Les événements</a><a href="pirates.html">La mer et les pirates</a><a href="donjons.html">Les donjons</a><a href="casino.html">Le casino</a><a href="./#boss">Les boss</a><a href="classement.html">Classement</a><a href="carte.html">La carte</a><a href="exploits.html">Les exploits</a><a href="boutique.html">Boutique</a><a href="vote.html">Voter</a><a href="compte.html">Mon compte</a><a href="reglement.html">Le règlement</a><a href="./#telecharger">Télécharger</a><a href="serveur-minecraft-ile.html">Serveur Minecraft d'île</a><a href="serveur-minecraft-modde.html">Serveur moddé</a><a href="launcher-minecraft-modde.html">Launcher moddé</a><a href="serveur-minecraft-rpg.html">Serveur RPG</a><a href="serveur-minecraft-boss.html">Boss et donjons</a><a href="mentions-legales.html">Mentions légales</a><a href="confidentialite.html">Confidentialité</a><a href="conditions.html">Conditions</a></nav>
+    </div>
+    <small>Casteria est un serveur Minecraft indépendant, créé par des joueurs. Il n'est ni affilié à Mojang ni à Microsoft, ni approuvé par eux. Minecraft est une marque de Mojang Studios.</small>
+  </div>
+</footer>
+<script src="js/site.js" defer></script>
+<script src="js/api.js" defer></script>
+<script src="js/connexion.js" defer></script>
+</body>
+</html>

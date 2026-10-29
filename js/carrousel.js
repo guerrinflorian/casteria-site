@@ -48,6 +48,11 @@
     lu.className = 'carrousel-lu'; lu.setAttribute('aria-live', 'polite')
     boite.appendChild(avant); boite.appendChild(points); boite.appendChild(apres); boite.appendChild(lu)
     c.parentNode.insertBefore(boite, c.nextSibling)
+    // (b5, l'assemblage du 29/10 ; la tete : 44 px au doigt pour chaque point) chaque point a sa zone de 44 px : une rangee qui
+    // ne tient pas entre les deux fleches (le Defi et ses quatorze jeux au telephone) s'efface ; les fleches et le doigt restent
+    function placePoints() { points.hidden = n * 44 > boite.clientWidth - 2 * 40 - 2 * 14 }
+    placePoints()
+    window.addEventListener('resize', placePoints, { passive: true })
     var dernier = -1
     return {
       // i : la vue montrée ; auDebut, aLaFin : la rangée est à un bout (sa flèche se grise) ; une pile n'a pas de bout

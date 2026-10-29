@@ -1,8 +1,8 @@
 /* Casteria, le site : les couleurs, les polices et les matières du launcher et des écrans du serveur
    (parchemin, cadre en bois à coins dorés, ruban rouge, boutons pixel). Aucune texture du jeu de base. */
 
-@font-face { font-family: "Fredoka"; src: url("../assets/polices/fredoka.ttf") format("truetype"); font-weight: 300 700; font-display: swap; }
-@font-face { font-family: "Lilita One"; src: url("../assets/polices/lilita_one.ttf") format("truetype"); font-display: swap; }
+@font-face { font-family: "Fredoka"; src: url("../assets/polices/fredoka.woff2") format("woff2"), url("../assets/polices/fredoka.ttf") format("truetype"); font-weight: 300 700; font-display: swap; }
+@font-face { font-family: "Lilita One"; src: url("../assets/polices/lilita_one.woff2") format("woff2"), url("../assets/polices/lilita_one.ttf") format("truetype"); font-display: swap; }
 
 :root {
   --parchemin: #FFF8E7; --parchemin-2: #F7EDD3; --parchemin-3: #EAD9B2;
@@ -270,10 +270,14 @@ html.photo .heros { min-height: 880px; } html.photo .apparait { opacity: 1; tran
 .tableau img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; image-rendering: auto; }
 .tableau figcaption { image-rendering: auto; background: var(--parchemin-2) url("../assets/matieres/parchemin.png") 0 0 / 96px 96px repeat; color: var(--encre); font-weight: 600; font-size: 17px; text-align: center; padding: 12px 16px 10px; }
 .tableau.grand figcaption { font-size: 19px; }
-.apparait { opacity: 0; transform: translateY(34px); transition: opacity .8s ease, transform .8s cubic-bezier(.2, .8, .2, 1); transition-delay: var(--retard, 0s); }
-.apparait.de-gauche { transform: translateX(-50px); } .apparait.de-droite { transform: translateX(50px); } .apparait.grandit { transform: scale(.88); }
-/* sur un écran étroit, ce qui glisse de côté dépasserait de l'écran et élargirait toute la page : ça monte, comme le reste */
-@media (max-width: 960px) { .apparait.de-gauche, .apparait.de-droite { transform: translateY(34px); } }
+/* (b5, l'assemblage du 29/10 ; la tete) l'etat « cache avant d'apparaitre » SEULEMENT quand les scripts tournent : une page lue
+   sans JavaScript (ou par un robot qui ne le lance pas) montre tout son texte, d'emblee */
+@media (scripting: enabled) {
+  .apparait { opacity: 0; transform: translateY(34px); transition: opacity .8s ease, transform .8s cubic-bezier(.2, .8, .2, 1); transition-delay: var(--retard, 0s); }
+  .apparait.de-gauche { transform: translateX(-50px); } .apparait.de-droite { transform: translateX(50px); } .apparait.grandit { transform: scale(.88); }
+  /* sur un écran étroit, ce qui glisse de côté dépasserait de l'écran et élargirait toute la page : ça monte, comme le reste */
+  @media (max-width: 960px) { .apparait.de-gauche, .apparait.de-droite { transform: translateY(34px); } }
+}
 .apparait.vu { opacity: 1; transform: none; }
 
 @media (max-width: 960px) {
@@ -409,6 +413,8 @@ main img, main video { max-height: 100svh; }
   .barre nav a.classement img { display: block; }
   .barre { padding: 8px 14px; }
   .barre .marque { font-size: 20px; } .barre .marque img { width: 36px; height: 36px; }
+  /* (b5, l'assemblage du 29/10 ; la tete) le dessin reste a 36, la zone du clic a 44 au doigt */
+  .barre .marque { min-height: 44px; padding: 4px 4px 4px 0; }
   /* le haut de page sur téléphone : la scène en volume D'ABORD (une image dès le premier écran), le texte dessous */
   .vitrine-tete.accueil { padding: 84px 0 40px; min-height: 0; }
   .vitrine-tete.accueil::before { background: linear-gradient(180deg, rgba(27, 16, 40, .6) 0%, rgba(42, 23, 64, .12) 18%, rgba(42, 23, 64, .35) 40%, rgba(27, 16, 40, .93) 56%, var(--nuit) 100%); }
@@ -676,3 +682,33 @@ html.photo .en-ligne::before { animation: none; }
 @media (max-width: 560px) { .cartes.decouvrir { grid-template-columns: 1fr; } }
 /* (29/10/2026) les titres coupés en deux lignes égales : jamais un mot seul sur la seconde (« Ce qu'un skyblock classique n'a / pas ») */
 h1, h2, h3 { text-wrap: balance; }
+/* (29/10/2026, le prototype du compte et du classement) LE BANDEAU DES DONNÉES D'ESSAI (js/api.js, ESSAI) : une bande fine tout en
+   haut, au-dessus de la barre, tant que les pages lisent donnees-essai/ au lieu de l'API ; jamais quand ESSAI est faux */
+.essai-bandeau { position: fixed; inset: 0 0 auto 0; z-index: 61; height: 20px; margin: 0; padding: 0 10px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; line-height: 1; color: #241505; background: repeating-linear-gradient(135deg, #FFD75E 0 14px, #F3C746 14px 28px); border-bottom: 2px solid #241505; pointer-events: none; white-space: nowrap; overflow: hidden; }
+/* la barre du haut descend sous lui : il ne cache rien de la page */
+html.essai .barre { top: 20px; }
+/* (29/10/2026 ; le propriétaire : « sur mobile faire un petit menu déroulant plutôt que les icônes ») LE MENU DÉROULANT DU
+   TÉLÉPHONE ET DE LA TABLETTE (js/site.js, menuTelephone) : à 960 px et moins, la barre montre le logo, le bouton « Menu » et
+   « Jouer » ; les icônes du Classement et de la Boutique partent dans la liste, en mots, une ligne de 48 px chacune. Rien de
+   ceci sur un ordinateur. Aucun arrondi. */
+.menu-bouton, .menu-tiroir { display: none; }
+@media (max-width: 960px) {
+  .barre nav a.classement, .barre nav a.boutique { display: none; }
+  .barre nav { margin-left: 10px; }
+  .menu-bouton { display: inline-flex; align-items: center; gap: 10px; margin-left: auto; min-height: 44px; padding: 0 14px; font-family: "Fredoka", sans-serif; font-weight: 700; font-size: 16px; color: #FFF4D6; cursor: pointer; background: rgba(255, 255, 255, .06); border: 2px solid rgba(215, 164, 33, .65); }
+  .menu-bouton:hover, .barre.menu-ouvert .menu-bouton { background: rgba(255, 215, 94, .14); }
+  .menu-bouton:focus-visible { outline: 3px solid var(--or-clair); outline-offset: 2px; }
+  .menu-barres { position: relative; display: block; width: 18px; height: 2px; background: currentColor; box-shadow: 0 -6px 0 currentColor, 0 6px 0 currentColor; transition: transform .2s ease, box-shadow .2s ease; }
+  .barre.menu-ouvert .menu-barres { transform: rotate(45deg); box-shadow: 0 0 0 currentColor, 0 0 0 currentColor; }
+  .barre.menu-ouvert .menu-barres::after { content: ""; position: absolute; inset: 0; background: currentColor; transform: rotate(-90deg); }
+  .menu-tiroir { display: block; position: absolute; top: calc(100% + 6px); left: 8px; right: 8px; max-height: calc(100svh - 80px); overflow-y: auto; padding: 6px; background-color: #1B1028; background-image: linear-gradient(180deg, rgba(42, 23, 64, .97), rgba(27, 16, 40, .98)), url("../assets/motifs/ciel.svg"); background-size: auto, 64px 64px; border: 3px solid var(--or); box-shadow: 0 0 0 3px #120a1c, 0 24px 50px rgba(0, 0, 0, .6); }
+  .menu-tiroir[hidden] { display: none; }
+  .menu-tiroir ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; }
+  .menu-tiroir a { display: flex; align-items: center; min-height: 48px; padding: 10px 14px; font-family: "Fredoka", sans-serif; font-weight: 700; font-size: 17px; line-height: 1.2; color: #F3E7FF; text-decoration: none; background: rgba(255, 255, 255, .04); border-left: 4px solid transparent; }
+  .menu-tiroir a:hover, .menu-tiroir a:focus-visible { background: rgba(255, 215, 94, .12); color: #fff; outline: none; border-left-color: var(--or-clair); }
+  .menu-tiroir a[aria-current="page"] { color: var(--or-clair); border-left-color: var(--or); background: rgba(181, 53, 43, .35); }
+}
+@media (max-width: 520px) { .menu-tiroir ul { grid-template-columns: minmax(0, 1fr); } .menu-bouton { padding: 0 12px; } }
+@media (prefers-reduced-motion: reduce) { .menu-barres { transition: none; } }
+/* (29/10/2026) pour une photo de la page entière (?photo) : le bandeau de l'ouverture au bas de la page, pas au milieu */
+html.photo body { position: relative; } html.photo .ouverture { position: absolute; }
