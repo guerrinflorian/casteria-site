@@ -76,8 +76,6 @@
 .trois-sabliers article { border: 0; border-radius: var(--r-carte); background: linear-gradient(180deg, #FFFBF1, #FBF0D9); box-shadow: 0 10px 24px rgba(40, 22, 10, .16), 0 0 0 1px rgba(74, 47, 28, .08); }
 .trois-sabliers h3 { font-size: 30px; color: var(--brun); }
 .boss-k.desert { margin-top: 46px; }
-/* la crème du kit (css/kit.css) : css/scene.css, chargée après lui, remettait le grain de parchemin en pixels */
-.pan-parchemin { background: linear-gradient(180deg, #FBF2DE 0%, #F4E4C3 100%); image-rendering: auto; }
 
 /* ==== LE CASINO : l'enseigne et ses ampoules gardées, mais arrondie ; les minerais en pilules ; chaque écran, photo, cote et
    borne en carte arrondie au filet d'or fin ; plus rien de penché ==== */
@@ -125,3 +123,49 @@
   .vide-mot { font-size: 22px; }
   .vide-gestes { justify-content: center; }
 }
+
+/* ==== LES PAGES D'ENTRÉE (serveur-minecraft-ile, -modde, -rpg, -boss, launcher-minecraft-modde ; la tête, 30/10 : l'habillage
+   seul, jamais un mot du texte) : le cadre de bois, les pancartes penchées, la route aux bornes carrées, les écrans penchés et les
+   objets en parchemin deviennent des cartes arrondies ==== */
+.cadre-bois { border: 0; border-image: none; border-radius: 24px; overflow: hidden; image-rendering: auto; box-shadow: var(--ombre-douce), 0 0 0 1px rgba(255, 255, 255, .12); }
+.cadre-bois > * { background: none; }
+.launcher .cadre-bois { border-width: 0; }
+.pancarte.p1, .pancarte.p2 { transform: none; }
+.pancarte:hover { transform: translateY(-4px); }
+.route .pas-photo { border: 1px solid rgba(255, 215, 94, .45); border-radius: 22px; box-shadow: 0 22px 44px rgba(0, 0, 0, .45); }
+.route .pas-photo > img:first-child { border-radius: 21px; }
+.route .pas-photo:hover { transform: translateY(-5px); box-shadow: 0 0 34px rgba(255, 215, 94, .25), 0 26px 48px rgba(0, 0, 0, .5); }
+.route::before { width: 4px; border-radius: 2px; background: repeating-linear-gradient(180deg, rgba(255, 207, 90, .7) 0 10px, rgba(255, 207, 90, 0) 10px 24px); }
+.route .borne { border: 0; border-radius: 20px; background: linear-gradient(180deg, #FFE08A, var(--or-k) 45%, var(--or-k2)); box-shadow: 0 5px 0 var(--or-k-fonce), 0 0 0 6px var(--nuit), 0 0 24px rgba(255, 207, 90, .35); }
+.route .borne small { color: #7A4A12; }
+.route .borne b { color: #4A2B07; text-shadow: none; font-family: var(--police-titre); }
+.trois-ecrans figure .ecran-penche { transform: none; }
+.ecran-large { border: 1px solid rgba(255, 207, 90, .5); border-radius: 22px; overflow: hidden; box-shadow: var(--ombre-douce); }
+.victoire-ecran { border: 1px solid rgba(255, 207, 90, .5); border-radius: 22px; transform: none; }
+.victoire-ecran img { border-radius: 21px; }
+.victoire-ecran .bulle-entree, .victoire-ecran .bulle-defaite { border: 0; border-radius: 16px; box-shadow: 0 8px 18px rgba(0, 0, 0, .35); }
+.victoire-ecran .bulle-entree::after, .victoire-ecran .bulle-defaite::after { border: 0; }
+.fenetre-launcher .capture { transform: none; border-radius: 20px; }
+/* les objets faits maison : des cartes crème arrondies (plus de cadre ni de parchemin en pixels) */
+.objet { border: 0; border-image: none; border-radius: 18px; image-rendering: auto; background: linear-gradient(180deg, #FFFBF1, #FBF0D9); box-shadow: 0 8px 20px rgba(40, 22, 10, .14), 0 0 0 1px rgba(74, 47, 28, .08); }
+.objet:hover img { transform: scale(1.08); }
+@media (max-width: 620px) {
+  .objets .famille > summary { border: 0; border-image: none; border-radius: 16px; image-rendering: auto; background: linear-gradient(180deg, #FFFBF1, #FBF0D9); box-shadow: 0 6px 14px rgba(40, 22, 10, .12), 0 0 0 1px rgba(74, 47, 28, .08); }
+}
+@media (max-width: 760px) {
+  .victoire-ecran img { border: 0; border-radius: 18px; box-shadow: 0 12px 26px rgba(0, 0, 0, .5); }
+}
+/* nos illustrations posées sur une carte (décor seul : alt vide, aucun mot de plus pour les moteurs) */
+.carte-illu { position: relative; }
+.carte-illu .illu-coin { position: absolute; right: -14px; top: -34px; width: 104px; height: auto; pointer-events: none; filter: drop-shadow(0 10px 12px rgba(40, 22, 10, .35)); }
+.carte-illu h3 { padding-right: 78px; }
+/* les trois étapes « fil » : droites, reliées par un trait d'or doux ; le quai des boutons de téléchargement arrondi */
+.etapes.trois.fil li:nth-child(n) .carte { transform: none; }
+.etapes.trois.fil::before { top: 3px; height: 3px; border-top: 0; border-radius: 2px; background: linear-gradient(90deg, transparent, rgba(243, 169, 58, .7) 12%, rgba(243, 169, 58, .7) 88%, transparent); }
+.plateformes.quai { border: 1px solid rgba(255, 207, 90, .45); border-radius: 28px; box-shadow: var(--ombre-douce); }
+/* les numéros de « Ce que rapporte un boss » : des pastilles d'or à lèvre, comme les étapes du kit */
+.victoire-temps li::before { border: 0; border-radius: 11px; color: #4A2B07; background: linear-gradient(180deg, #FFE08A, var(--or-k) 50%, var(--or-k2)); box-shadow: 0 3px 0 var(--or-k-fonce); font-family: var(--police-bouton); text-shadow: none; }
+/* le combat et la planète : leurs quatre photos en cartes arrondies (la couleur de chaque bande en filet fin dessous) */
+.cartes-combat figure, .cartes-planete figure { border-top: 0; border-radius: var(--r-carte); overflow: hidden; border: 1px solid var(--trait); box-shadow: var(--ombre-douce); }
+.cartes-combat figure { background: linear-gradient(180deg, var(--carte-2), var(--carte)); box-shadow: var(--ombre-douce), inset 0 -3px 0 rgba(255, 207, 90, .55); }
+.cartes-planete figure { box-shadow: var(--ombre-douce), inset 0 -3px 0 rgba(255, 138, 60, .6); }

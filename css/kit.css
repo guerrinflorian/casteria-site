@@ -329,3 +329,11 @@ html body .pancarte-pseudo { border-radius: var(--r-panneau); border-width: 2px;
 html body .pancarte-pseudo .champ-exemple { border-radius: 12px; overflow: hidden; }
 /* (67, 00:1x) css/scene.css se charge APRÈS le kit et remettait le grain de parchemin : la crème du kit passe devant */
 html body .pan-parchemin, html body .clair { background: linear-gradient(180deg, #FBF2DE 0%, #F4E4C3 100%); image-rendering: auto; color: var(--brun); }
+/* le bandeau « Casteria ouvre bientôt » (js/site.js) : un verre sombre arrondi qui flotte au bas de l'écran, comme la barre en haut ;
+   le badge des joueurs en ligne : une pilule, son point rond */
+html body .ouverture { left: 10px; right: 10px; bottom: 10px; padding: 10px 16px; border: 1px solid rgba(255, 207, 90, .45); border-top-width: 1px; border-radius: 18px;
+  background: rgba(22, 15, 38, .9); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); box-shadow: 0 14px 34px rgba(0, 0, 0, .45); color: #F4ECFF; }
+html.avec-ouverture body { padding-bottom: 84px; }
+@media (max-width: 600px) { html body .ouverture { left: 8px; right: 8px; bottom: 8px; padding: 8px 12px; border-radius: 16px; } html.avec-ouverture body { padding-bottom: 104px; } }
+html body .en-ligne { border-radius: 999px; border-width: 1px; }
+html body .en-ligne::before { border-radius: 50%; }

@@ -33,6 +33,7 @@
 <link rel="stylesheet" href="css/kit.css">
 <link rel="stylesheet" href="css/scene.css">
 <link rel="stylesheet" href="css/voyage.css">
+<link rel="stylesheet" href="css/pages_k.css">
 <!-- LES DONNÉES POUR GOOGLE : le fil d'Ariane, la FAQ de la page (mot pour mot), et le jeu, la même entité que sur l'accueil.
      (29/10/2026, la tête) le même « @id » (https://casteria.fr/#jeu) et le même « operatingSystem » sont sur le VideoGame de
      index.html : Google lit une seule entité. -->
@@ -108,7 +109,6 @@
     </div>
   </div>
 </section>
-<div class="frise frise-creneaux" aria-hidden="true"></div>
 
 <!-- CE QUE CASTERIA GARDE DE L'ESPRIT SKYBLOCK : l'île de départ (aide.js, « Ton île sur la mer » : 100 × 100, le départ en
      8 × 8, le Noyau ; « Le Casse-cailloux » : deux offerts), les machines (aide.js, « Les machines de l'île » ; niveaux.js : la
@@ -128,9 +128,9 @@
       </figure>
     </div>
     <div class="cartes">
-      <article class="carte apparait" style="--retard:.05s">
+      <article class="carte apparait carte-illu" style="--retard:.05s">
         <div class="signe" aria-hidden="true">&#127965;&#65039;</div>
-        <h3>Ton île de départ</h3>
+        <img class="illu-coin" src="assets/illustrations/bete_mouton_cerisier_512.png" alt="" aria-hidden="true" width="512" height="512" loading="lazy" decoding="async"><h3>Ton île de départ</h3>
         <p>Gaspard t'accueille au palais, puis <code>/ile</code> t'emmène chez toi. Ton île mesure 100&#160;×&#160;100 blocs, mais tu commences au centre, dans 8&#160;×&#160;8, derrière un mur translucide. Au milieu, le Noyau : là, tu vends et tu reçois tes visiteurs. Deux Casse-cailloux t'attendent dans ton sac.</p>
       </article>
       <article class="carte apparait" style="--retard:.15s">
@@ -146,7 +146,6 @@
     </div>
   </div>
 </section>
-<div class="frise frise-etoiles" aria-hidden="true"></div>
 
 <!-- CE QU'UN SKYBLOCK CLASSIQUE N'A PAS : la mer (pirates.html ; index.html, le voyage : la Chaloupe au niveau 15, le Vaisseau
      amiral au 60), les boss et les donjons (index.html : le Roi Champignon au niveau 3, les panoplies ; le Temple Creux au 16, le
@@ -191,7 +190,6 @@
     </ul>
   </div>
 </section>
-<div class="frise frise-parchemin" aria-hidden="true"></div>
 
 <!-- TON ÎLE NE DORT JAMAIS : la réserve des machines (aide.js, « Les machines de l'île » : 30 min ; « L'Entrepôt et les bonus
      d'île » : jusqu'à 4 h ; niveaux.js : l'Entrepôt au niveau 5), le comptoir (aide.js, « Le comptoir du marchand » : toutes
@@ -217,7 +215,6 @@
     </div>
   </div>
 </section>
-<div class="frise frise-etoiles" aria-hidden="true"></div>
 
 <!-- JOUER SUR TON ÎLE À PLUSIEURS : aide.js, « Jouer à plusieurs » (6 amis, 7 à 10 avec un grade ; les droits ; /ic) et « Les
      droits forts » (même absent, la récolte est pour l'ami) ; « Ton île sur la mer » (fermée aux visites par défaut) -->
@@ -241,7 +238,6 @@
     </article>
   </div>
 </section>
-<div class="frise frise-parchemin" aria-hidden="true"></div>
 
 <!-- REJOINDRE CASTERIA GRATUITEMENT : les liens figés de la release « installateur » (ceux de index.html), chacun avec son
      data-track ; le crack accepté (index.html ; forum.js, f_crack), /register et /login (index.html), la file d'attente
@@ -268,7 +264,6 @@
     <p class="apparait">Casteria se joue seulement par son launcher ; serveur plein, il te garde ta place dans la file d'attente. Le détail : <a href="launcher-minecraft-modde.html">le launcher Minecraft moddé de Casteria</a>, et <a href="./#telecharger">l'aide à l'installation de l'accueil</a>.</p>
   </div>
 </section>
-<div class="frise frise-etoiles" aria-hidden="true"></div>
 
 <!-- LA FAQ : les mêmes questions et réponses, mot pour mot, dans le bloc FAQPage du JSON-LD (en tête de page) -->
 <section class="pan pan-nuit" id="faq" aria-labelledby="faq-titre">
@@ -288,7 +283,6 @@
     </div>
   </div>
 </section>
-<div class="frise frise-etoiles" aria-hidden="true"></div>
 
 <!-- LE BAS DE PAGE : « Jouer gratuitement » une seconde fois, le Discord, et la page du serveur moddé -->
 <section class="final" id="final" aria-labelledby="final-titre">
