@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Serveur Minecraft d'île, alternative au Skyblock | Casteria</title>
+<meta name="description" content="Casteria, serveur Minecraft d'île pour les fans de skyblock : ton île sur la mer, tes machines, des pirates, des boss, une planète. Joue gratuitement !">
+<meta name="theme-color" content="#1B1028">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:site_name" content="Casteria">
+<meta property="og:title" content="Casteria : un serveur Minecraft d'île, dans l'esprit du skyblock">
+<meta property="og:description" content="Ton île sur la mer, tes machines qui produisent seules, des pirates, des boss et une planète : une alternative au skyblock, gratuite et en français.">
+<meta property="og:url" content="https://casteria.fr/serveur-minecraft-ile.html">
+<link rel="canonical" href="https://casteria.fr/serveur-minecraft-ile.html">
+<meta property="og:image" content="https://casteria.fr/assets/images/casteria-serveur-minecraft-partage.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Casteria, ton île sur la mer : le palais au soleil couchant, une montgolfière et le logo de Casteria">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/logo/favicon-32.png">
+<link rel="icon" type="image/png" sizes="256x256" href="assets/logo/icone-256.png">
+<link rel="apple-touch-icon" href="assets/logo/icone-apple-180.png">
+<link rel="preload" href="assets/polices/lilita_one.ttf" as="font" type="font/ttf" crossorigin>
+<link rel="preload" href="assets/polices/fredoka.ttf" as="font" type="font/ttf" crossorigin>
+<link rel="preload" as="image" type="image/webp" media="(max-aspect-ratio: 2/3)" imagesrcset="assets/images/casteria-evenements-couchant-portrait-768.webp 768w" imagesizes="100vw" fetchpriority="high">
+<link rel="preload" as="image" type="image/webp" media="(min-aspect-ratio: 2001/3000)" imagesrcset="assets/images/casteria-evenements-couchant-1280.webp 1280w, assets/images/casteria-evenements-couchant-1920.webp 1920w" imagesizes="100vw" fetchpriority="high">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/scene.css">
+<link rel="stylesheet" href="css/voyage.css">
+<!-- LES DONNÉES POUR GOOGLE : le fil d'Ariane, la FAQ de la page (mot pour mot), et le jeu, la même entité que sur l'accueil.
+     TODO (la tête) : porter le même « @id » (https://casteria.fr/#jeu) et le même « operatingSystem » sur le VideoGame de
+     index.html, pour que Google lise une seule entité. -->
+<script type="application/ld+json">
+{ "@context": "https://schema.org", "@graph": [
+  { "@type": "BreadcrumbList", "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Casteria", "item": "https://casteria.fr/" },
+    { "@type": "ListItem", "position": 2, "name": "Serveur Minecraft d'île", "item": "https://casteria.fr/serveur-minecraft-ile.html" } ] },
+  { "@type": "FAQPage", "mainEntity": [
+    { "@type": "Question", "name": "Casteria, c'est un skyblock ?", "acceptedAnswer": { "@type": "Answer", "text": "Non, mais il est dans l'esprit du skyblock : tu pars de presque rien et tu bâtis ton île. Sauf qu'ici, elle est posée sur la mer, pas dans le vide, et le jeu continue au-delà : la mer, les boss, les donjons, la planète." } },
+    { "@type": "Question", "name": "Casteria, c'est un serveur oneblock ?", "acceptedAnswer": { "@type": "Answer", "text": "Non plus : tu ne commences pas sur un bloc unique, mais au centre d'une vraie île de 100\u00a0×\u00a0100 blocs, avec son Noyau et deux machines dans ton sac." } },
+    { "@type": "Question", "name": "Je cherche un serveur skyblock FR : Casteria peut me plaire ?", "acceptedAnswer": { "@type": "Answer", "text": "Si tu aimes faire grandir une île, oui : Casteria est une alternative au skyblock, en français de ses écrans à son aide (/aide), avec la mer et les boss en plus." } },
+    { "@type": "Question", "name": "C'est vraiment gratuit ?", "acceptedAnswer": { "@type": "Answer", "text": "Oui, tu peux tout jouer sans rien payer. La boutique vend des crédits, qui se gagnent aussi en jouant : missions du jour, votes, quêtes de Ludovic." } },
+    { "@type": "Question", "name": "Faut-il acheter Minecraft ?", "acceptedAnswer": { "@type": "Answer", "text": "Non, le crack est accepté : choisis ton pseudo dans le launcher et joue. Ton mot de passe protège ton compte : /register la première fois, puis /login." } },
+    { "@type": "Question", "name": "Peut-on jouer à plusieurs sur la même île ?", "acceptedAnswer": { "@type": "Answer", "text": "Oui : /amis invite jusqu'à 6 amis sur ton île (7 à 10 avec un grade), avec les droits que tu choisis pour chacun." } },
+    { "@type": "Question", "name": "Mes machines produisent-elles quand je ne joue pas ?", "acceptedAnswer": { "@type": "Answer", "text": "Oui, un temps : chaque machine garde 30 minutes de production d'avance, jusqu'à 4 heures avec l'Entrepôt du Noyau. Ensuite, elle attend ta récolte." } } ] },
+  { "@type": "VideoGame", "@id": "https://casteria.fr/#jeu", "name": "Casteria", "inLanguage": "fr", "url": "https://casteria.fr/",
+    "image": "https://casteria.fr/assets/images/casteria-decollage-partage.jpg",
+    "description": "Serveur Minecraft français moddé : une île sur la mer par joueur, une économie en jetons, des boss et leurs panoplies, deux donjons à faire en groupe, un casino à minerais, des navires et des pirates, une planète sous un trou noir.",
+    "gamePlatform": ["PC", "Mac", "Linux"], "operatingSystem": "Windows, macOS, Linux", "applicationCategory": "Game", "genre": ["Serveur Minecraft", "Île", "Économie", "Aventure"],
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
+    "gameServer": { "@type": "GameServer", "name": "Casteria", "game": { "@type": "VideoGame", "name": "Minecraft Java Edition 1.21.1" } } }
+] }
+</script>
+</head>
+<body>
+<div class="progres" aria-hidden="true"></div>
+<header class="barre verre posee">
+  <a class="marque" href="./" aria-label="Casteria, l'accueil"><img src="assets/logo/casteria-logo-300.webp" alt="Logo de Casteria" width="46" height="46"><span>Casteria</span></a>
+  <nav aria-label="Le menu">
+    <a href="./#voyage">Le jeu</a>
+    <a href="commencer.html">Par où commencer</a>
+    <a href="evenements.html">Événements</a>
+    <a class="classement" href="classement.html" aria-label="Classement"><img class="pixel" src="assets/icones/classement.png" alt="" width="20" height="20">Classement</a>
+    <a class="voter" href="vote.html">Voter</a>
+    <a class="boutique" href="boutique.html"><img class="pixel" src="assets/icones/credit.png" alt="" width="20" height="20">Boutique</a>
+    <a class="bouton bouton-or petit" href="./#telecharger">Jouer</a>
+  </nav>
+</header>
+
+<main>
+<!-- LA PAGE « SERVEUR MINECRAFT D'ÎLE » (29/10/2026, pour Google et les annonces Google Ads ; la règle du propriétaire :
+     Casteria n'est PAS un skyblock, il est « dans l'esprit du skyblock », « pour les fans de skyblock », « une alternative au
+     skyblock »). Chaque fait est lu dans le jeu (/aide : aide.js ; niveaux.js) ou sur les pages du site. Le haut en cinéma :
+     l'île du palais au soleil couchant (la photo des événements, sa version portrait sur un téléphone). -->
+<section class="heros vitrine-tete plein-cadre page-cinema" id="haut">
+  <div class="fond plein-cadre">
+    <div class="plan">
+      <picture>
+        <source media="(max-aspect-ratio: 2/3)" type="image/webp" srcset="assets/images/casteria-evenements-couchant-portrait-768.webp 768w" sizes="100vw">
+        <source media="(max-aspect-ratio: 2/3)" srcset="assets/images/casteria-evenements-couchant-portrait-768.jpg 768w" sizes="100vw">
+        <source type="image/webp" srcset="assets/images/casteria-evenements-couchant-1280.webp 1280w, assets/images/casteria-evenements-couchant-1920.webp 1920w" sizes="100vw">
+        <img src="assets/images/casteria-evenements-couchant-1920.jpg" alt="L'île du palais de Casteria au soleil couchant, son phare et ses lanternes qui se reflètent dans la mer" width="1920" height="1080" fetchpriority="high" decoding="async">
+      </picture>
+    </div>
+  </div>
+  <div class="cinema-texte">
+    <div class="cinema-titre">
+    <p class="sur-ligne">Une alternative au skyblock</p>
+    <h1>Un serveur Minecraft d'île <span class="or">pour les fans de Skyblock</span></h1>
+    </div>
+    <div class="cinema-geste">
+    <p class="cinema-accroche">Sur Casteria, tu pars de presque rien et tu bâtis ton île, dans l'esprit du skyblock. Mais elle est posée sur la mer, pas dans le vide : autour d'elle t'attendent des pirates, des boss et même une planète.</p>
+    <div class="gestes">
+      <a class="bouton bouton-orange grand" href="#telecharger"><span class="triangle" aria-hidden="true"></span>Jouer gratuitement</a>
+      <a class="bouton bouton-discord grand" href="/discord" aria-label="Rejoindre le Discord de Casteria" data-track="discord"><svg class="logo-discord" viewBox="0 0 127.14 96.36" aria-hidden="true" focusable="false"><path fill="currentColor" d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/></svg><span class="mot">Discord</span></a>
+      <a class="lien-doux" href="#esprit">Ce que tu y retrouves <span class="chevron" aria-hidden="true"></span></a>
+    </div>
+    <p class="crack-accepte"><span class="coche" aria-hidden="true"></span>Crack accepté : joue sans acheter Minecraft</p>
+    <p class="preuves">Gratuit <i aria-hidden="true">&#183;</i> en français <i aria-hidden="true">&#183;</i> Minecraft 1.21.1</p>
+    </div>
+  </div>
+</section>
+
+<!-- CE QUE CASTERIA GARDE DE L'ESPRIT SKYBLOCK : l'île de départ (aide.js, « Ton île sur la mer » : 100 × 100, le départ en
+     8 × 8, le Noyau ; « Le Casse-cailloux » : deux offerts), les machines (aide.js, « Les machines de l'île » ; niveaux.js : la
+     récolte du Noyau au niveau 10), le mur (aide.js, « Agrandir : le mur » : 4 blocs ; « Le pont et ton île 2 » : niveau 35,
+     96 × 96) -->
+<section class="clair" id="esprit">
+  <div class="dedans">
+    <div class="tete apparait">
+      <span class="ruban">Ton île</span>
+      <h2>Ce que Casteria garde de l'esprit skyblock</h2>
+      <p>Tu aimes partir de presque rien et voir ton île grandir&#160;? Sur ce serveur Minecraft d'île, c'est le cœur du jeu : ni mine commune ni ferme partagée, tout ce que tu gagnes vient de chez toi.</p>
+    </div>
+    <div class="galerie seule">
+      <figure class="tableau grand apparait grandit">
+        <img src="assets/images/casteria-ile-sur-la-mer-2010.jpg" alt="Une île de joueur sur Casteria vue du ciel : des prés en terrasses, un enclos, un long pont de bois et la mer tout autour" width="1080" height="608" loading="lazy">
+        <figcaption>Une île de joueur, quelques murs plus loin.</figcaption>
+      </figure>
+    </div>
+    <div class="cartes">
+      <article class="carte apparait" style="--retard:.05s">
+        <div class="signe" aria-hidden="true">&#127965;&#65039;</div>
+        <h3>Ton île de départ</h3>
+        <p>Gaspard t'accueille au palais, puis <code>/ile</code> t'emmène chez toi. Ton île mesure 100&#160;×&#160;100 blocs, mais tu commences au centre, dans 8&#160;×&#160;8, derrière un mur translucide. Au milieu, le Noyau : là, tu vends et tu reçois tes visiteurs. Deux Casse-cailloux t'attendent dans ton sac.</p>
+      </article>
+      <article class="carte apparait" style="--retard:.15s">
+        <div class="signe" aria-hidden="true">&#9881;&#65039;</div>
+        <h3>Des machines qui produisent seules</h3>
+        <p>Pose une machine : elle travaille pendant que tu fais autre chose. Après le Casse-cailloux viennent la Scierie, la Forge à cuivre, la Fonderie d'or et d'autres, chacune à son niveau. Un clic droit récolte, <code>/sell all</code> vend, <code>/catalogue</code> en vend de nouvelles contre des jetons.</p>
+      </article>
+      <article class="carte apparait" style="--retard:.25s">
+        <div class="signe" aria-hidden="true">&#129521;</div>
+        <h3>Agrandir ton île</h3>
+        <p>Pour gagner de la place, fais reculer le mur : son prix flotte dedans, des objets puis des jetons, et le côté payé recule de 4 blocs. Chaque palier a son thème, jusqu'aux objets à gagner à la roue (<code>/roue</code>). Au niveau 35, une fois ton île à 96&#160;×&#160;96, le pont de l'est mène à ton île 2.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- CE QU'UN SKYBLOCK CLASSIQUE N'A PAS : la mer (pirates.html ; index.html, le voyage : la Chaloupe au niveau 15, le Vaisseau
+     amiral au 60), les boss et les donjons (index.html : le Roi Champignon au niveau 3, les panoplies ; le Temple Creux au 16, le
+     Sanctuaire des Sables au 23), la planète (index.html : l'Esquif en cinq paliers, les anneaux aux niveaux 60, 63 et 66).
+     Seuls le Roi Champignon et le Yéti sont nommés ou montrés ; jamais un nombre de boss (et jamais un nombre juste avant le
+     mot « boss », même à travers une balise : le vérificateur du site le lit comme un compte). -->
+<section class="pan pan-violet" id="au-dela" aria-labelledby="au-dela-titre">
+  <div class="dedans">
+    <div class="tete apparait">
+      <span class="sur-titre">Bien plus qu'une île</span>
+      <h2 id="au-dela-titre">Ce qu'un skyblock classique n'a pas</h2>
+      <p>Dans un skyblock classique, tout se joue sur une île suspendue dans le vide. Ici, ton île n'est que le départ : autour d'elle, une vraie mer, des arènes, des donjons et un ciel à traverser.</p>
+    </div>
+    <ul class="route">
+      <li class="pas apparait">
+        <div class="pas-photo"><img src="assets/images/casteria-fregate-couchant-2010.jpg" alt="La Frégate, un navire de Casteria à la coque violette, sur la mer au soleil couchant" width="1280" height="720" loading="lazy"></div>
+        <div class="pas-mots">
+          <p class="pas-niveau">Dès le niveau 15, ton premier navire</p>
+          <h3>La mer et les pirates</h3>
+          <p>Ta Chaloupe s'achète à la Borne du port. Tu tiens la barre, tu coules des pirates au canon et tu remontes des cargaisons au filet, seul ou à deux sur le même pont. Quatre navires plus grands suivent, jusqu'au Vaisseau amiral.</p>
+          <a class="pas-lien" href="pirates.html">La mer et ses pirates <span aria-hidden="true">&#8250;</span></a>
+        </div>
+      </li>
+      <li class="pas apparait">
+        <div class="pas-photo"><img src="assets/images/casteria-boss-arene-minecraft.jpg" alt="Un joueur en armure face au Yéti des Glaces, sur la glace de son arène" width="1280" height="720" loading="lazy"></div>
+        <div class="pas-mots">
+          <p class="pas-niveau">Dès le niveau 3, ton premier combat</p>
+          <h3>Les boss et les donjons</h3>
+          <p>Tape <code>/boss</code> : le Roi Champignon t'attend dans son arène. Chaque victoire ouvre le boss suivant, et chaque boss a son armure, dont les quatre pièces réunies éveillent un pouvoir. Anselme t'ouvre <a href="donjons.html">deux donjons</a>, seul ou à trois : le Temple Creux au niveau 16, le Sanctuaire des Sables au niveau 23.</p>
+          <a class="pas-lien" href="serveur-minecraft-boss.html">Les boss et leurs armures <span aria-hidden="true">&#8250;</span></a>
+        </div>
+      </li>
+      <li class="pas apparait">
+        <div class="pas-photo"><img src="assets/images/casteria-planete-trou-noir-esquif.jpg" alt="L'Esquif posé sur le sol brûlant de la planète, devant un trou noir cerclé de feu" width="1280" height="720" loading="lazy"></div>
+        <div class="pas-mots">
+          <p class="pas-niveau">Au niveau 60, le grand départ</p>
+          <h3>La planète</h3>
+          <p>Sur ton île 2 repose l'Esquif, une fusée en ruine. Rénovée en cinq paliers, elle t'emmène sur une planète sous un trou noir, où l'air se compte et où le sol brûle. Ses trois anneaux s'ouvrent aux niveaux 60, 63 et 66.</p>
+          <a class="pas-lien" href="./#planete">Le voyage jusqu'au trou noir <span aria-hidden="true">&#8250;</span></a>
+        </div>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- TON ÎLE NE DORT JAMAIS : la réserve des machines (aide.js, « Les machines de l'île » : 30 min ; « L'Entrepôt et les bonus
+     d'île » : jusqu'à 4 h ; niveaux.js : l'Entrepôt au niveau 5), le comptoir (aide.js, « Le comptoir du marchand » : toutes
+     les 5 min, même absent), les épreuves (aide.js, « Les épreuves de ton île » ; index.html : toutes les 10 à 15 minutes,
+     les quatre), la Mine, la Batterie et la Tour du ciel (index.html, la Gazette ; aide.js, la gemme de la Mine) -->
+<section class="clair" id="ile-vivante">
+  <div class="dedans">
+    <div class="tete apparait">
+      <span class="ruban">Même sans toi</span>
+      <h2>Ton île ne dort jamais</h2>
+      <p>Quand tu as le dos tourné, ton île travaille. Chaque machine garde 30 minutes de production d'avance, puis attend ta récolte ; l'Entrepôt du Noyau, ouvert au niveau 5, l'allonge jusqu'à 4 heures. Le comptoir du marchand vide son coffre au marché toutes les 5 minutes, même en ton absence.</p>
+    </div>
+    <div class="launcher">
+      <div class="cadre-bois apparait de-gauche"><img src="assets/images/casteria-ecran-ile-2026.jpg" alt="L'écran de l'île : l'île peinte sur la mer, avec la Mine, la Batterie, la Tour du ciel, le ponton, l'écurie et l'Esquif à leur place" width="694" height="424" loading="lazy"></div>
+      <div class="apparait de-droite">
+        <p>Et quand tu y joues, une épreuve tombe toutes les 10 à 15 minutes sur une machine, un enclos ou le Noyau : surchauffe, fuites, bête évadée, pie voleuse. De l'adresse, jamais de la chance : réussie, un gain ; ratée, un malus.</p>
+        <ul class="atouts">
+          <li><b>La Mine, au niveau 17.</b> Cinq étages sous tes pieds, et des gemmes à sertir sur tes machines.</li>
+          <li><b>La Batterie côtière, au niveau 24.</b> Un canon sur ta rive ouest, pour couler la voile qui passe au soleil couchant.</li>
+          <li><b>La Tour du ciel, au niveau 30.</b> Un ciel de jour et un ciel de nuit pour ton île, choisis à son pupitre.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- JOUER SUR TON ÎLE À PLUSIEURS : aide.js, « Jouer à plusieurs » (6 amis, 7 à 10 avec un grade ; les droits ; /ic) et « Les
+     droits forts » (même absent, la récolte est pour l'ami) ; « Ton île sur la mer » (fermée aux visites par défaut) -->
+<section class="pan pan-vert" id="a-plusieurs" aria-labelledby="a-plusieurs-titre">
+  <div class="dedans deux-colonnes">
+    <div class="texte apparait">
+      <span class="sur-titre">Avec tes amis</span>
+      <h2 id="a-plusieurs-titre">Jouer sur ton île à plusieurs</h2>
+      <p>Une île se partage. Tape <code>/amis</code>, puis le pseudo d'un joueur : jusqu'à 6 amis peuvent rejoindre ton île (de 7 à 10 avec un grade), et tu choisis leurs droits un par un.</p>
+      <p>Ton île reste fermée aux visites tant que tu ne l'ouvres pas, au Noyau ; tes amis qui ont le droit Venir y entrent toujours. <code>/ic</code> vous donne le tchat de ton île. Ton Noyau et tes réglages restent à toi.</p>
+    </div>
+    <article class="carte pancarte apparait">
+      <span class="num">Les droits</span>
+      <h3>Ce que tes amis peuvent faire</h3>
+      <ul>
+        <li>Venir, même quand ton île est fermée.</li>
+        <li>Construire, et t'aider à payer tes murs.</li>
+        <li>Ouvrir tes rangements (Coffres) et s'occuper de tes bêtes libres (Bêtes).</li>
+        <li>Machines, Enclos et Mine : trois droits forts, jamais donnés d'avance. Avec eux, un ami récolte même en ton absence, et sa récolte est pour lui.</li>
+      </ul>
+    </article>
+  </div>
+</section>
+
+<!-- REJOINDRE CASTERIA GRATUITEMENT : les liens figés de la release « installateur » (ceux de index.html), chacun avec son
+     data-track ; le crack accepté (index.html ; forum.js, f_crack), /register et /login (index.html), la file d'attente
+     (index.html ; forum.js, f_lancement) -->
+<section class="clair telecharge" id="telecharger">
+  <div class="dedans">
+    <div class="tete apparait">
+      <span class="ruban">C'est gratuit</span>
+      <h2>Rejoindre Casteria gratuitement</h2>
+      <p>Le launcher et le serveur sont gratuits : tu peux tout jouer sans rien payer. Le crack est accepté, ton pseudo suffit.</p>
+    </div>
+    <ol class="etapes trois fil">
+      <li class="apparait" style="--retard:.05s"><div class="carte"><h3>Télécharge le launcher</h3><p>Choisis ton ordinateur juste en dessous : il installe le jeu et ses mods, puis se met à jour seul.</p></div></li>
+      <li class="apparait" style="--retard:.15s"><div class="carte"><h3>Choisis ton pseudo</h3><p>Puis clique sur JOUER. Garde toujours le même, majuscules comprises : ton île est à ce nom.</p></div></li>
+      <li class="apparait" style="--retard:.25s"><div class="carte"><h3>Crée ton mot de passe</h3><p>La première fois, tape <code>/register</code> et un mot de passe de 6 lettres ou chiffres au moins, dans la minute ; ensuite, <code>/login</code>, dans les 40 secondes.</p></div></li>
+    </ol>
+    <div class="plateformes quai apparait">
+      <img class="quai-g" src="assets/volume/yeti.png" alt="" width="520" height="520" loading="lazy"><img class="quai-d" src="assets/volume/kraken.png" alt="" width="520" height="520" loading="lazy">
+      <a class="bouton bouton-vert grand" href="https://github.com/guerrinflorian/casteria-mc/releases/download/installateur/Casteria-Installation.exe" rel="noopener" data-track="download-windows"><svg class="picto" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M12 4v16M3 12h18" fill="none" stroke="currentColor" stroke-width="2.6"/></svg>Windows</a>
+      <a class="bouton bouton-or grand" href="https://github.com/guerrinflorian/casteria-mc/releases/download/installateur/Casteria-mac-apple-silicon.zip" rel="noopener" data-track="download-mac"><svg class="picto" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M12 16v4M8 20.5h8" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>Mac (puce Apple)</a>
+      <a class="bouton bouton-or grand" href="https://github.com/guerrinflorian/casteria-mc/releases/download/installateur/Casteria-mac-intel.zip" rel="noopener" data-track="download-mac"><svg class="picto" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M12 16v4M8 20.5h8" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>Mac (Intel)</a>
+      <a class="bouton bouton-bois grand" href="https://github.com/guerrinflorian/casteria-mc/releases/tag/installateur" rel="noopener" data-track="download-linux"><svg class="picto" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M7 9l3.5 3L7 15M13 15.5h4" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Linux</a>
+    </div>
+    <p class="apparait">Casteria se joue seulement par son launcher ; serveur plein, il te garde ta place dans la file d'attente. Le détail : <a href="launcher-minecraft-modde.html">le launcher Minecraft moddé de Casteria</a>, et <a href="./#telecharger">l'aide à l'installation de l'accueil</a>.</p>
+  </div>
+</section>
+
+<!-- LA FAQ : les mêmes questions et réponses, mot pour mot, dans le bloc FAQPage du JSON-LD (en tête de page) -->
+<section class="pan pan-nuit" id="faq" aria-labelledby="faq-titre">
+  <div class="dedans">
+    <div class="tete apparait">
+      <h2 id="faq-titre">FAQ : Casteria et le skyblock</h2>
+      <p>Ce qu'on nous demande avant de poser son premier bloc.</p>
+    </div>
+    <div class="astuces notes">
+      <article class="carte apparait"><h3>Casteria, c'est un skyblock&#160;?</h3><p>Non, mais il est dans l'esprit du skyblock : tu pars de presque rien et tu bâtis ton île. Sauf qu'ici, elle est posée sur la mer, pas dans le vide, et le jeu continue au-delà : la mer, les boss, les donjons, la planète.</p></article>
+      <article class="carte apparait"><h3>Casteria, c'est un serveur oneblock&#160;?</h3><p>Non plus : tu ne commences pas sur un bloc unique, mais au centre d'une vraie île de 100&#160;×&#160;100 blocs, avec son Noyau et deux machines dans ton sac.</p></article>
+      <article class="carte apparait"><h3>Je cherche un serveur skyblock FR : Casteria peut me plaire&#160;?</h3><p>Si tu aimes faire grandir une île, oui : Casteria est une alternative au skyblock, en français de ses écrans à son aide (/aide), avec la mer et les boss en plus.</p></article>
+      <article class="carte apparait"><h3>C'est vraiment gratuit&#160;?</h3><p>Oui, tu peux tout jouer sans rien payer. La boutique vend des crédits, qui se gagnent aussi en jouant : missions du jour, votes, quêtes de Ludovic.</p></article>
+      <article class="carte apparait"><h3>Faut-il acheter Minecraft&#160;?</h3><p>Non, le crack est accepté : choisis ton pseudo dans le launcher et joue. Ton mot de passe protège ton compte : /register la première fois, puis /login.</p></article>
+      <article class="carte apparait"><h3>Peut-on jouer à plusieurs sur la même île&#160;?</h3><p>Oui : /amis invite jusqu'à 6 amis sur ton île (7 à 10 avec un grade), avec les droits que tu choisis pour chacun.</p></article>
+      <article class="carte apparait"><h3>Mes machines produisent-elles quand je ne joue pas&#160;?</h3><p>Oui, un temps : chaque machine garde 30 minutes de production d'avance, jusqu'à 4 heures avec l'Entrepôt du Noyau. Ensuite, elle attend ta récolte.</p></article>
+    </div>
+  </div>
+</section>
+
+<!-- LE BAS DE PAGE : « Jouer gratuitement » une seconde fois, le Discord, et la page du serveur moddé -->
+<section class="final" id="final" aria-labelledby="final-titre">
+  <div class="final-fond" aria-hidden="true"><div class="pointeur"><img src="assets/images/casteria-planete-trou-noir-comete.jpg" alt="" width="2048" height="1152" loading="lazy"></div></div>
+  <div class="etincelles" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  <div class="dedans deux-colonnes">
+    <div class="texte apparait">
+      <span class="sur-titre">À toi de bâtir</span>
+      <h2 id="final-titre">Ton île t'attend.</h2>
+      <p>Télécharge le launcher, choisis ton pseudo, clique sur JOUER, et <code>/ile</code> t'emmène chez toi.</p>
+      <div class="gestes" style="display:flex;flex-wrap:wrap;align-items:center;gap:12px"><a class="bouton bouton-orange grand" href="#telecharger"><span class="triangle" aria-hidden="true"></span>Jouer gratuitement</a> <a class="bouton bouton-discord" href="/discord" aria-label="Rejoindre le Discord de Casteria" data-track="discord"><svg class="logo-discord" viewBox="0 0 127.14 96.36" aria-hidden="true" focusable="false"><path fill="currentColor" d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/></svg><span class="mot">Discord</span></a> <a class="bouton-verre" href="serveur-minecraft-modde.html">Le serveur moddé en détail <span class="fleche" aria-hidden="true">&#8250;</span></a></div>
+    </div>
+    <div class="final-sprite" aria-hidden="true"><div class="pointeur"><img class="flotte f-sol" src="assets/volume/fregate.webp" alt="" width="855" height="1027" loading="lazy"></div></div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="dedans">
+    <div class="col">
+      <img src="assets/logo/casteria-logo-300.webp" alt="Casteria" width="70" height="70" loading="lazy">
+      <nav aria-label="Le pied de page"><a href="./">Accueil</a><a href="commencer.html">Par où commencer</a><a href="evenements.html">Les événements</a><a href="pirates.html">La mer et les pirates</a><a href="donjons.html">Les donjons</a><a href="casino.html">Le casino</a><a href="./#combat">Le combat</a><a href="classement.html">Classement</a><a href="boutique.html">Boutique</a><a href="vote.html">Voter</a><a href="reglement.html">Le règlement</a><a href="./#telecharger">Télécharger</a><a href="serveur-minecraft-ile.html">Serveur Minecraft d'île</a><a href="serveur-minecraft-modde.html">Serveur moddé</a><a href="launcher-minecraft-modde.html">Launcher moddé</a><a href="serveur-minecraft-rpg.html">Serveur RPG</a><a href="serveur-minecraft-boss.html">Boss et donjons</a><a href="mentions-legales.html">Mentions légales</a><a href="confidentialite.html">Confidentialité</a><a href="conditions.html">Conditions</a></nav>
+    </div>
+    <small>Casteria est un serveur Minecraft indépendant, créé par des joueurs. Il n'est ni affilié à Mojang ni à Microsoft, ni approuvé par eux. Minecraft est une marque de Mojang Studios.</small>
+  </div>
+</footer>
+<script src="js/site.js" defer></script>
+</body>
+</html>

@@ -20,7 +20,11 @@ const PAGES = [['index.html', '', '1.0'], ['commencer.html', 'commencer.html', '
   // (19/10/2026) le Discord répond à /discord, sans « .html » (vercel.json, « rewrites ») : c'est son adresse
   ['discord.html', 'discord', '0.5'],
   // (23/10/2026, 84) les trois pages légales
-  ['mentions-legales.html', 'mentions-legales.html', '0.3'], ['confidentialite.html', 'confidentialite.html', '0.3'], ['conditions.html', 'conditions.html', '0.3']]
+  ['mentions-legales.html', 'mentions-legales.html', '0.3'], ['confidentialite.html', 'confidentialite.html', '0.3'], ['conditions.html', 'conditions.html', '0.3'],
+  // (29/10/2026, le propriétaire) les cinq pages SEO
+  ['serveur-minecraft-ile.html', 'serveur-minecraft-ile.html', '0.8', 'assets/images/casteria-serveur-minecraft-partage.jpg'], ['serveur-minecraft-modde.html', 'serveur-minecraft-modde.html', '0.8'],
+  ['launcher-minecraft-modde.html', 'launcher-minecraft-modde.html', '0.8', 'assets/images/casteria-commencer-palais-partage.jpg'], ['serveur-minecraft-rpg.html', 'serveur-minecraft-rpg.html', '0.8'],
+  ['serveur-minecraft-boss.html', 'serveur-minecraft-boss.html', '0.8']]
 // l'image de partage : 1200 x 630, le format des réseaux (l'image d'origine, plus large, y perdait ses bords)
 const IMAGE = 'assets/images/casteria-decollage-partage.jpg'
 const jour = new Date().toISOString().slice(0, 10)

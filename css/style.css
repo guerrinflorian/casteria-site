@@ -666,3 +666,13 @@ html.avec-ouverture body { padding-bottom: 64px; }
 html.photo .en-ligne::before { animation: none; }
 /* (27/10/2026) fermé : le badge dit « Ouverture bientôt » (js/site.js, bandeauOuverture) ; son carré est d'or, il ne bat pas (jamais le vert de « en ligne ») */
 .en-ligne.ferme::before { background: #E8B830; box-shadow: 0 0 9px #E8B830; animation: none; }
+/* (29/10/2026) « Découvrir » à l'accueil : cinq cartes-liens vers les pages de Casteria par sujet (trois puis deux) */
+.cartes.decouvrir { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+.cartes.decouvrir > .carte { grid-column: span 2; display: block; text-decoration: none; }
+.cartes.decouvrir > .carte:nth-child(4) { grid-column: 2 / span 2; }
+.cartes.decouvrir > .carte h3 { font-size: 23px; }
+.cartes.decouvrir > .carte:focus-visible { outline: 3px solid var(--or); outline-offset: 4px; }
+@media (max-width: 900px) { .cartes.decouvrir { grid-template-columns: 1fr 1fr; } .cartes.decouvrir > .carte, .cartes.decouvrir > .carte:nth-child(4) { grid-column: auto; } }
+@media (max-width: 560px) { .cartes.decouvrir { grid-template-columns: 1fr; } }
+/* (29/10/2026) les titres coupés en deux lignes égales : jamais un mot seul sur la seconde (« Ce qu'un skyblock classique n'a / pas ») */
+h1, h2, h3 { text-wrap: balance; }

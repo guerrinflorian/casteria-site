@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Serveur Minecraft avec boss et donjons | Casteria</title>
+<meta name="description" content="Casteria, serveur Minecraft avec boss en arène : panoplies à pouvoirs, mode Héroïque, donjons seul ou à trois. Gratuit, crack accepté : viens les défier !">
+<meta name="theme-color" content="#1B1028">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:site_name" content="Casteria">
+<meta property="og:title" content="Les boss de Casteria : arène après arène">
+<meta property="og:description" content="Des boss en arène, des panoplies à pouvoirs, un mode Héroïque, et deux donjons à faire seul ou à trois.">
+<meta property="og:url" content="https://casteria.fr/serveur-minecraft-boss.html">
+<link rel="canonical" href="https://casteria.fr/serveur-minecraft-boss.html">
+<meta property="og:image" content="https://casteria.fr/assets/images/casteria-decollage-partage.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Casteria : de nuit, une fusée décolle de l'île du palais vers le trou noir ; le logo au dragon violet">
+<meta name="twitter:card" content="summary_large_image">
+<!-- TODO : une image de partage propre aux boss (1200 x 630) ; aucune n'existe encore dans assets/images (la photo de
+     l'arène du Yéti ne fait que 1280 x 720) : en attendant, celle de tout le site -->
+
+<link rel="icon" href="favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/logo/favicon-32.png">
+<link rel="icon" type="image/png" sizes="256x256" href="assets/logo/icone-256.png">
+<link rel="apple-touch-icon" href="assets/logo/icone-apple-180.png">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/carrousel.css">
+<link rel="stylesheet" href="css/scene.css">
+<link rel="stylesheet" href="css/voyage.css">
+<link rel="stylesheet" href="css/pages.css">
+<!-- LA PAGE « SERVEUR MINECRAFT AVEC BOSS » (29/10/2026, pour Google et la publicité) : chaque fait est lu dans le jeu ou sur le
+     site (aide.js, niveaux.js, ai_armures_textes.js, config/casinoboss/boss.json, forum.js, donjons.html). Seuls se nomment le
+     Roi Champignon, le Yéti des glaces, le Kraken des Abysses et l'Oni Samouraï ; jamais un nombre de boss ; les donjons sans
+     leurs boss ; dans les arènes, on se bat seul. La FAQ du JSON-LD est celle de la page, mot pour mot. -->
+<script type="application/ld+json">
+{ "@context": "https://schema.org", "@graph": [
+  { "@type": "BreadcrumbList", "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Casteria", "item": "https://casteria.fr/" },
+    { "@type": "ListItem", "position": 2, "name": "Serveur Minecraft avec boss", "item": "https://casteria.fr/serveur-minecraft-boss.html" } ] },
+  { "@type": "FAQPage", "mainEntity": [
+    { "@type": "Question", "name": "Dès quel niveau peut-on affronter un boss ?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Au niveau 3 : avec /boss, tu défies alors le Roi Champignon dans sa clairière. Une victoire débloque le boss suivant, dès que tu atteins son niveau." } },
+    { "@type": "Question", "name": "Que se passe-t-il si je perds contre un boss ?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Rien de grave : dans les arènes de /boss, tu ne perds rien et tu rentres là où tu étais. Relis sa fiche dans /boss, qui dit sa ruse, puis retente ta chance." } },
+    { "@type": "Question", "name": "Peut-on affronter un boss à plusieurs ?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Non : dans son arène, tu y vas seul, et chaque victoire est la tienne. Pour jouer en groupe, les donjons d'Anselme se font jusqu'à trois." } },
+    { "@type": "Question", "name": "Le mode Héroïque donne-t-il une autre armure ?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Non : l'armure reste la même, mais chaque pièce a deux fois plus de chances de tomber, et tu gagnes trois éclats au lieu d'un. En échange, le boss a 2,2 fois plus de vie et une phase de plus." } },
+    { "@type": "Question", "name": "À quoi servent les éclats de boss ?",
+      "acceptedAnswer": { "@type": "Answer", "text": "À la forge des boss (/forge), les éclats d'un boss deviennent la pièce de son armure qui te manque, celle que tu choisis. Ils se vendent et s'échangent entre joueurs, mais ni /sell ni la roue ne les prennent." } },
+    { "@type": "Question", "name": "Faut-il acheter Minecraft pour jouer ?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Non, aucun achat : le crack est accepté. Le launcher moddé de Casteria, gratuit, met en place Minecraft 1.21.1 et tous ses mods, sur Windows, Mac et Linux." } } ] },
+  { "@type": "VideoGame", "@id": "https://casteria.fr/#jeu", "name": "Casteria", "inLanguage": "fr", "url": "https://casteria.fr/",
+    "image": "https://casteria.fr/assets/images/casteria-decollage-partage.jpg",
+    "description": "Serveur Minecraft français moddé : une île sur la mer par joueur, une économie en jetons, des boss et leurs panoplies, deux donjons à faire en groupe, un casino à minerais, des navires et des pirates, une planète sous un trou noir.",
+    "gamePlatform": ["PC", "Mac", "Linux"], "operatingSystem": "Windows, macOS, Linux", "applicationCategory": "Game", "genre": ["Serveur Minecraft", "Île", "Économie", "Aventure"],
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
+    "gameServer": { "@type": "GameServer", "name": "Casteria", "game": { "@type": "VideoGame", "name": "Minecraft Java Edition 1.21.1" } } }
+] }
+</script>
+</head>
+<body>
+<div class="progres" aria-hidden="true"></div>
+<header class="barre verre posee">
+  <a class="marque" href="./" aria-label="Casteria, l'accueil"><img src="assets/logo/casteria-logo-300.webp" alt="Logo de Casteria" width="46" height="46"><span>Casteria</span></a>
+  <nav aria-label="Le menu">
+    <a href="./#voyage">Le jeu</a>
+    <a href="commencer.html">Par où commencer</a>
+    <a href="evenements.html">Événements</a>
+    <a class="classement" href="classement.html" aria-label="Classement"><img class="pixel" src="assets/icones/classement.png" alt="" width="20" height="20">Classement</a>
+    <a class="voter" href="vote.html">Voter</a>
+    <a class="boutique" href="boutique.html"><img class="pixel" src="assets/icones/credit.png" alt="" width="20" height="20">Boutique</a>
+    <a class="bouton bouton-or petit" href="./#telecharger">Jouer</a>
+  </nav>
+</header>
+
+<main>
+<!-- LE HAUT DE PAGE : la photo de l'arène du Yéti (un joueur face à lui, sur le lac gelé), et devant elle, en volume, les
+     modèles de trois boss qui se montrent (l'Oni, le Kraken, le Roi Champignon), comme le haut du règlement -->
+<section class="heros vitrine-tete page" id="haut">
+  <div class="fond" aria-hidden="true"><img src="assets/images/casteria-boss-arene-minecraft.jpg" alt="Un joueur en armure sombre face au Yéti des glaces, sur la glace de son arène, sous un éclat de givre" width="1280" height="720" fetchpriority="high" decoding="async" style="object-position: 72% 40%"></div>
+  <div class="dedans grille">
+    <div class="texte">
+      <span class="ruban">Boss et donjons</span>
+      <h1>Serveur Minecraft avec boss : <span>arène après arène</span></h1>
+      <p class="accroche">Sur Casteria, chaque boss t'attend dans sa propre arène : le Roi Champignon dès le niveau 3, puis un nouveau à chaque victoire. Gagne leurs armures et leurs pouvoirs, ose le mode Héroïque, et pars en donjon jusqu'à trois.</p>
+      <div class="gestes">
+        <a class="bouton bouton-orange grand" href="./#telecharger"><span class="triangle" aria-hidden="true"></span>Jouer gratuitement</a>
+        <a class="bouton bouton-discord grand" href="/discord" aria-label="Rejoindre le Discord de Casteria" data-track="discord"><svg class="logo-discord" viewBox="0 0 127.14 96.36" aria-hidden="true" focusable="false"><path fill="currentColor" d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/></svg><span class="mot">Discord</span></a>
+        <a class="lien-doux" href="#boss">Voir les boss <span class="chevron" aria-hidden="true"></span></a>
+      </div>
+      <p class="crack-accepte"><span class="coche" aria-hidden="true"></span>Crack accepté : pas besoin d'acheter Minecraft</p>
+      <p class="autres">Gratuit <i aria-hidden="true">&#183;</i> Windows, Mac et Linux <i aria-hidden="true">&#183;</i> le launcher installe tout</p>
+    </div>
+    <div class="scene" aria-hidden="true">
+      <span class="vol sol v-a" data-v="-0.05"><img src="assets/volume/oni_samourai.webp" alt="Le modèle de l'Oni Samouraï, un boss de Casteria" width="774" height="849" fetchpriority="high" decoding="async"></span>
+      <span class="vol v-b" data-v="-0.18"><img src="assets/volume/kraken.png" alt="Le modèle du Kraken des Abysses, un boss de Casteria" width="520" height="520" decoding="async"></span>
+      <span class="vol sol v-c" data-v="-0.08"><img src="assets/volume/roi_champignon.png" alt="Le modèle du Roi Champignon, le premier boss de Casteria" width="520" height="520" decoding="async"></span>
+      <i class="eclat e1"></i><i class="eclat e2"></i><i class="eclat e3"></i>
+    </div>
+  </div>
+</section>
+
+<!-- LES BOSS : aide.js « Les boss des arènes » (seul ; tomber ne coûte rien ; la 1re victoire et les 3 victoires payées du jour),
+     « Ils visent là où tu vas », « Ruser contre un boss », « L'entrée d'un boss » ; les niveaux et les lieux : niveaux.js
+     (boss_1 au 3, boss_4 au 15, boss_5 au 19, boss_6 au 23) ; les trois entrées : les vidéos de l'accueil -->
+<section class="pan pan-nuit boss-bande" id="boss" aria-labelledby="boss-titre">
+  <div class="dedans">
+    <div class="texte apparait">
+      <span class="sur-titre">Un boss par arène</span>
+      <h2 id="boss-titre">Les boss de Casteria</h2>
+      <p>Sur ce serveur Minecraft avec boss, tout commence par /boss : le Roi Champignon te défie dès le niveau 3, dans sa clairière aux champignons. Chaque boss vaincu débloque le suivant, dès que tu as son niveau : le Yéti des glaces au niveau 15, le Kraken des Abysses au 19, l'Oni Samouraï au 23, et d'autres encore plus loin sur <a href="serveur-minecraft-rpg.html">ta route de RPG, du niveau 1 au 70</a>. Chacun fait son entrée, a sa voix, ses attaques et ses phases.</p>
+      <p>Dans l'arène, tu es seul face à lui, et une défaite ne te coûte rien. Il vise là où tu vas : si tu cours, ses coups tombent devant toi, et sa frappe du ciel s'annonce 1,5 seconde avant. Au corps à corps, jamais de riposte.</p>
+      <p>Alors ruse : ton bouclier levé juste avant son coup le fait vaciller, et tu as 2 secondes de coups critiques. Après ses grosses attaques, vise ce qui brille d'or : tes coups y comptent deux fois et demie. Dans le dos, c'est 30 % de plus.</p>
+      <p class="geste">Fais glisser la carte du dessus : la suivante apparaît.</p>
+    </div>
+    <div class="apparait" data-carrousel="pile" data-nom="Les entrées des boss" style="--vue: min(80vw, 520px)">
+      <figure class="vue"><video data-auto muted loop playsinline preload="none" poster="assets/affiches/entree_yeti.jpg" data-src="assets/videos/entree_yeti.mp4" aria-label="Vidéo : le Yéti des glaces fait son entrée sur son lac gelé"></video><figcaption><strong>Le Yéti des glaces</strong>Niveau 15, un lac gelé pour arène.</figcaption></figure>
+      <figure class="vue"><video data-auto muted loop playsinline preload="none" poster="assets/affiches/entree_kraken.jpg" data-src="assets/videos/entree_kraken.mp4" aria-label="Vidéo : le Kraken des Abysses fait son entrée, sorti du fond de la mer"></video><figcaption><strong>Le Kraken des Abysses</strong>Niveau 19, venu du fond de la mer.</figcaption></figure>
+      <figure class="vue"><video data-auto muted loop playsinline preload="none" poster="assets/affiches/entree_oni.jpg" data-src="assets/videos/entree_oni.mp4" aria-label="Vidéo : l'Oni Samouraï fait son entrée, son sabre à la main"></video><figcaption><strong>L'Oni Samouraï</strong>Niveau 23, dans son temple d'Orient.</figcaption></figure>
+    </div>
+  </div>
+  <div class="dedans victoire apparait">
+    <figure class="victoire-ecran">
+      <img src="assets/images/casteria-victoire-boss-3d-roi-champignon.jpg" alt="Le Roi Champignon vaincu vole en morceaux ; une colonne de lumière fait jaillir des jetons et une couronne dorée flotte au-dessus du joueur" width="1280" height="720" loading="lazy">
+    </figure>
+    <div class="victoire-texte">
+      <span class="sur-titre">Ta victoire</span>
+      <h3>Ce que rapporte un boss</h3>
+      <ol class="victoire-temps">
+        <li>La première victoire : des jetons, des tickets et de l'XP, 120 contre le Roi Champignon, 60 de plus à chaque boss suivant.</li>
+        <li>Ensuite, trois victoires payées par jour, tous boss confondus.</li>
+        <li>À chaque victoire : un éclat de ce boss, une chance de gagner une pièce de son armure, et parfois une arme unique.</li>
+      </ol>
+      <p>Et ton meilleur temps sur chaque boss entre au classement : /top, onglet «&#160;Boss&#160;».</p>
+    </div>
+  </div>
+</section>
+
+<!-- LES PANOPLIES : aide.js « Les armures des boss » (4 pièces ; 10, 40, 70 % puis tout ; gardées à ta mort, échangées, vendues)
+     et « Les éclats de boss et la forge » ; chaque bonus et chaque pouvoir : ai_armures_textes.js (roi_champignon, yeti_glaces,
+     kraken_abysses, oni_samourai) ; le Sabre de l'Oni : aide.js « Les armes uniques des boss » -->
+<section class="pan pan-violet" id="panoplies" aria-labelledby="panoplies-titre">
+  <div class="dedans">
+    <div class="tete apparait">
+      <span class="sur-titre">Leurs armures</span>
+      <h2 id="panoplies-titre">Les panoplies et leurs pouvoirs</h2>
+      <p>Chaque boss a son armure de quatre pièces, et chacune peut tomber à chaque victoire. Plus tu portes de pièces du même boss, plus son bonus grandit : 10 % avec une, 40 % avec deux, 70 % avec trois, tout avec les quatre, qui éveillent aussi son pouvoir, en 3D et en son.</p>
+    </div>
+    <div class="panoplies apparait">
+      <figure class="ecran-large"><video data-auto muted loop playsinline preload="none" poster="assets/affiches/panoplies_portees.jpg" data-src="assets/videos/panoplies_portees.mp4" aria-label="Vidéo : un joueur passe d'une panoplie de boss à l'autre, en commençant par celle du Roi Champignon"></video></figure>
+      <article class="carte pancarte p2">
+        <span class="num">La forge des boss</span>
+        <h3>Une pièce te manque ?</h3>
+        <p>Chaque victoire met un éclat de ce boss dans ton sac, trois en Héroïque. À la forge des boss (/forge), ses éclats deviennent la pièce de son armure que tu choisis.</p>
+        <ul>
+          <li>Tes pièces restent à toi quand tu meurs.</li>
+          <li>Pièces et éclats s'échangent (/echange) et se vendent (/hdv) entre joueurs.</li>
+        </ul>
+      </article>
+    </div>
+    <div class="astuces" style="margin-top:56px">
+      <article class="carte apparait">
+        <h3>Le Roi Champignon</h3>
+        <p><b>Son bonus :</b> un ticket demande 25 % de cultures en moins (18 blés au lieu de 24). <b>Spores :</b> les cultures à 5 blocs autour de toi poussent d'un cran toutes les 6 secondes.</p>
+      </article>
+      <article class="carte apparait">
+        <h3>Le Yéti des glaces</h3>
+        <p><b>Son bonus :</b> chaque coup a 25 % de chance de geler une créature 2 secondes (un boss, 1 seconde de lenteur). <b>Carapace de givre :</b> sous 30 % de vie, 50 % de dégâts en moins pendant 4 secondes, une fois par minute.</p>
+      </article>
+      <article class="carte apparait">
+        <h3>Le Kraken des Abysses</h3>
+        <p><b>Son bonus :</b> 15 % de butin en plus en mer (1&#160;150 jetons au lieu de 1&#160;000). <b>Abysses :</b> sous l'eau, tu respires, tu nages vite et tu y vois clair.</p>
+      </article>
+      <article class="carte apparait">
+        <h3>L'Oni Samouraï</h3>
+        <p><b>Son bonus :</b> tes coups font 10 % de dégâts en plus aux boss. <b>Rage de l'Oni :</b> sous 30 % de vie, Force I (+3 de dégâts par coup) pendant 6 secondes, une fois par minute. Il peut aussi lâcher son sabre, qui fait exploser la bête frappée trois fois en 4 secondes.</p>
+      </article>
+    </div>
+    <p class="apparait" style="text-align:center;margin:40px auto 0;max-width:760px;font-size:18px">Les autres armures, tu les découvriras en jeu. Comme les boss, elles n'existent nulle part ailleurs : elles ont été créées pour ce <a href="serveur-minecraft-modde.html">serveur Minecraft moddé</a>.</p>
+  </div>
+</section>
+
+<!-- LE MODE HÉROÏQUE : aide.js « Le mode Héroïque » ; ses chiffres : config/casinoboss/boss.json, « defaut », « heroique » (vie
+     2,2 ; defense 0,05 ; chances 2) ; les éclats : 1, puis 3 en Héroïque (aide.js, la forge ; forum.js g_combat) ; la même
+     armure, jamais un objet à part (CLAUDE.md) -->
+<section class="pan pan-parchemin" id="heroique" aria-labelledby="heroique-titre">
+  <div class="dedans">
+    <div class="tete apparait">
+      <span class="sur-titre encre">Encore plus dur</span>
+      <h2 id="heroique-titre">Le mode Héroïque</h2>
+      <p>Un boss vaincu une première fois révèle son mode Héroïque : dans sa fiche de /boss, le bouton «&#160;Héroïque&#160;» t'attend à côté d'«&#160;Affronter&#160;». Même boss, nouvelles attaques, même armure : l'Héroïque ne donne aucun objet à part, seulement de meilleures chances.</p>
+    </div>
+    <div class="cartes">
+      <article class="carte apparait" style="--retard:.05s"><div class="signe" aria-hidden="true">&#128165;</div><h3>Bien plus coriace</h3><p>2,2 fois plus de vie, 5 % de dégâts en moins sous tes coups, et une phase de plus.</p></article>
+      <article class="carte apparait" style="--retard:.15s"><div class="signe" aria-hidden="true">&#127922;</div><h3>Deux fois plus de chances</h3><p>Chaque pièce de son armure tombe deux fois plus souvent, et tu repars avec trois éclats au lieu d'un.</p></article>
+      <article class="carte apparait" style="--retard:.25s"><div class="signe" aria-hidden="true">&#9201;&#65039;</div><h3>Son classement</h3><p>Une victoire en Héroïque compte dans tes trois victoires payées du jour. Ses meilleurs temps : /top, onglet «&#160;Boss&#160;», bouton «&#160;Mode&#160;».</p></article>
+    </div>
+  </div>
+</section>
+
+<!-- LES DONJONS (jamais leurs boss) : donjons.html (Anselme, les deux donjons, leurs niveaux, les 3 vies, les 40 minutes, les
+     épreuves, les trésors cachés, les coffres, la part à deux et à trois) ; /donjon inviter : forum.js g_palais ; le classement par
+     taille de groupe : aide.js « Le classement des boss » ; les stèles : css/pages.css -->
+<section class="pan donjon-steles" id="donjons" aria-labelledby="donjons-titre">
+  <div class="dedans">
+    <div class="tete apparait">
+      <span class="sur-titre">Chez Anselme, au palais</span>
+      <h2 id="donjons-titre">Les donjons, seul ou à trois</h2>
+      <p>Dans les arènes, tu combats seul ; les donjons, eux, se partagent. Anselme, le Gardien du Temple, emmène ton groupe, jusqu'à trois joueurs, dans deux donjons de trois niveaux chacun. Il faut vaincre un niveau pour ouvrir le suivant, et la première clé de chaque niveau ne te coûte rien.</p>
+    </div>
+    <div class="steles">
+      <article class="stele temple apparait de-gauche">
+        <h3>Le Temple Creux</h3>
+        <p class="stele-dit">De la pierre moussue, des cellules, une citerne et des feux d'âme à rallumer. Garde du lait sur toi : il efface le poison, la lenteur et l'aveuglement de ses créatures.</p>
+        <ol class="marches" aria-label="Les trois niveaux du Temple Creux">
+          <li><b>I</b><span>niveau 16</span></li>
+          <li><b>II</b><span>niveau 29</span></li>
+          <li><b>III</b><span>niveau 48</span></li>
+        </ol>
+      </article>
+      <article class="stele sanctuaire apparait de-droite">
+        <h3>Le Sanctuaire des Sables</h3>
+        <p class="stele-dit">Plus exigeant : un couloir de flèches, les feux du soleil, et une salle dorée où l'on te prête un arc.</p>
+        <ol class="marches" aria-label="Les trois niveaux du Sanctuaire des Sables">
+          <li><b>I</b><span>niveau 23</span></li>
+          <li><b>II</b><span>niveau 38</span></li>
+          <li><b>III</b><span>niveau 55</span></li>
+        </ol>
+      </article>
+    </div>
+    <p class="apparait" style="text-align:center;margin:40px auto 0;max-width:820px;font-size:18px">Le groupe partage trois vies et dispose de 40 minutes. D'une partie à l'autre, les épreuves ne sont jamais les mêmes, trois trésors se cachent à chaque fois, et chaque salle vaincue ouvre un coffre par joueur : à deux, chacun touche 95 % des jetons et des matières, et 90 % à trois. Le chef invite avec /donjon inviter, et chaque niveau a son classement, seul, à deux ou à trois. <a href="donjons.html">Tout sur le Temple Creux et le Sanctuaire des Sables</a>.</p>
+  </div>
+</section>
+
+<!-- LA FAQ : la même, mot pour mot, que celle du JSON-LD (FAQPage) ; puis « Jouer gratuitement » et le launcher par système
+     (les liens figés de la release « installateur », ceux de l'accueil) -->
+<section class="clair" id="faq">
+  <div class="dedans">
+    <div class="tete apparait">
+      <h2>FAQ : les boss et les donjons</h2>
+      <p>Avant d'entrer dans l'arène : ce qu'on nous demande le plus.</p>
+    </div>
+    <div class="astuces notes">
+      <article class="carte apparait"><h3>Dès quel niveau peut-on affronter un boss&#160;?</h3><p>Au niveau 3 : avec /boss, tu défies alors le Roi Champignon dans sa clairière. Une victoire débloque le boss suivant, dès que tu atteins son niveau.</p></article>
+      <article class="carte apparait"><h3>Que se passe-t-il si je perds contre un boss&#160;?</h3><p>Rien de grave : dans les arènes de /boss, tu ne perds rien et tu rentres là où tu étais. Relis sa fiche dans /boss, qui dit sa ruse, puis retente ta chance.</p></article>
+      <article class="carte apparait"><h3>Peut-on affronter un boss à plusieurs&#160;?</h3><p>Non : dans son arène, tu y vas seul, et chaque victoire est la tienne. Pour jouer en groupe, les donjons d'Anselme se font jusqu'à trois.</p></article>
+      <article class="carte apparait"><h3>Le mode Héroïque donne-t-il une autre armure&#160;?</h3><p>Non : l'armure reste la même, mais chaque pièce a deux fois plus de chances de tomber, et tu gagnes trois éclats au lieu d'un. En échange, le boss a 2,2 fois plus de vie et une phase de plus.</p></article>
+      <article class="carte apparait"><h3>À quoi servent les éclats de boss&#160;?</h3><p>À la forge des boss (/forge), les éclats d'un boss deviennent la pièce de son armure qui te manque, celle que tu choisis. Ils se vendent et s'échangent entre joueurs, mais ni /sell ni la roue ne les prennent.</p></article>
+      <article class="carte apparait"><h3>Faut-il acheter Minecraft pour jouer&#160;?</h3><p>Non, aucun achat : le crack est accepté. <a href="launcher-minecraft-modde.html">Le launcher moddé de Casteria</a>, gratuit, met en place Minecraft 1.21.1 et tous ses mods, sur Windows, Mac et Linux.</p></article>
+    </div>
+    <div class="plateformes apparait" style="margin-top:54px">
+      <a class="bouton bouton-orange grand" href="./#telecharger"><span class="triangle" aria-hidden="true"></span>Jouer gratuitement</a>
+      <a class="bouton bouton-discord grand" href="/discord" aria-label="Rejoindre le Discord de Casteria" data-track="discord"><svg class="logo-discord" viewBox="0 0 127.14 96.36" aria-hidden="true" focusable="false"><path fill="currentColor" d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/></svg><span class="mot">Discord</span></a>
+    </div>
+    <p class="note apparait" style="text-align:center;margin:30px 0 0">Ou prends tout de suite le launcher pour ton système :</p>
+    <div class="plateformes apparait">
+      <a class="bouton bouton-vert grand" href="https://github.com/guerrinflorian/casteria-mc/releases/download/installateur/Casteria-Installation.exe" rel="noopener" data-track="download-windows"><svg class="picto" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M12 4v16M3 12h18" fill="none" stroke="currentColor" stroke-width="2.6"/></svg>Windows</a>
+      <a class="bouton bouton-or grand" href="https://github.com/guerrinflorian/casteria-mc/releases/download/installateur/Casteria-mac-apple-silicon.zip" rel="noopener" data-track="download-mac"><svg class="picto" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M12 16v4M8 20.5h8" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>Mac (puce Apple)</a>
+      <a class="bouton bouton-or grand" href="https://github.com/guerrinflorian/casteria-mc/releases/download/installateur/Casteria-mac-intel.zip" rel="noopener" data-track="download-mac"><svg class="picto" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M12 16v4M8 20.5h8" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>Mac (Intel)</a>
+      <a class="bouton bouton-bois grand" href="https://github.com/guerrinflorian/casteria-mc/releases/tag/installateur" rel="noopener" data-track="download-linux"><svg class="picto" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M7 9l3.5 3L7 15M13 15.5h4" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Linux</a>
+    </div>
+    <p class="note apparait" style="text-align:center;margin:8px 0 0">Un problème d'installation ? Voir <a href="./#aide">l'aide pour Windows, Mac et Linux</a>.</p>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="dedans">
+    <div class="col">
+      <img src="assets/logo/casteria-logo-300.webp" alt="Casteria" width="70" height="70" loading="lazy">
+      <nav aria-label="Le pied de page"><a href="./">Accueil</a><a href="commencer.html">Par où commencer</a><a href="evenements.html">Les événements</a><a href="pirates.html">La mer et les pirates</a><a href="donjons.html">Les donjons</a><a href="casino.html">Le casino</a><a href="./#combat">Le combat</a><a href="classement.html">Classement</a><a href="boutique.html">Boutique</a><a href="vote.html">Voter</a><a href="reglement.html">Le règlement</a><a href="./#telecharger">Télécharger</a><a href="serveur-minecraft-ile.html">Serveur Minecraft d'île</a><a href="serveur-minecraft-modde.html">Serveur moddé</a><a href="launcher-minecraft-modde.html">Launcher moddé</a><a href="serveur-minecraft-rpg.html">Serveur RPG</a><a href="serveur-minecraft-boss.html">Boss et donjons</a><a href="mentions-legales.html">Mentions légales</a><a href="confidentialite.html">Confidentialité</a><a href="conditions.html">Conditions</a></nav>
+    </div>
+    <small>Casteria est un serveur Minecraft indépendant, créé par des joueurs. Il n'est ni affilié à Mojang ni à Microsoft, ni approuvé par eux. Minecraft est une marque de Mojang Studios.</small>
+  </div>
+</footer>
+<script src="js/carrousel.js" defer></script>
+<script src="js/site.js" defer></script>
+</body>
+</html>

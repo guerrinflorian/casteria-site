@@ -1,7 +1,7 @@
 // Les règles du site, vérifiées en une seconde : npm run verifier (code 0 : tout est bon)
 'use strict'
 const fs = require('fs'), path = require('path')
-const RACINE = path.join(__dirname, '..'), PAGES = ['index.html', 'commencer.html', 'pirates.html', 'casino.html', 'donjons.html', 'evenements.html', 'classement.html', 'boutique.html', 'reglement.html', 'vote.html', 'discord.html', 'rejoindre.html', 'mentions-legales.html', 'confidentialite.html', 'conditions.html', 'merci.html', '404.html']
+const RACINE = path.join(__dirname, '..'), PAGES = ['index.html', 'commencer.html', 'pirates.html', 'casino.html', 'donjons.html', 'evenements.html', 'classement.html', 'boutique.html', 'reglement.html', 'vote.html', 'discord.html', 'rejoindre.html', 'mentions-legales.html', 'confidentialite.html', 'conditions.html', 'merci.html', '404.html', 'serveur-minecraft-ile.html', 'serveur-minecraft-modde.html', 'launcher-minecraft-modde.html', 'serveur-minecraft-rpg.html', 'serveur-minecraft-boss.html']
 // LES FICHIERS LOURDS PERMIS (aucun depuis le 13/10/2026 : la bande-annonce de l'accueil a été retirée sur la demande du
 // propriétaire) : un fichier de plus de 5 Mo n'entre ici qu'avec son plafond en Mo, et la vidéo qui le cite porte
 // « data-clic » (chargée au clic du visiteur), jamais « data-auto »
@@ -300,7 +300,7 @@ function verifierDiscord(faute) {
   for (const n of ailleurs) for (const m of lire(n).match(/(?:https?:)?\/\/(?:[a-z0-9-]+\.)?discord(?:app)?\.(?:gg|com)\/[A-Za-z0-9_/-]*/gi) || []) if (!((n === 'discord.html' && m === DISCORD) || (n === 'rejoindre.html' && m === PUB))) faute(n + ' : une adresse de Discord (' + m + ') : l\'invitation n\'est écrite que dans discord.html, les autres pages mènent à /discord')
   // (19/10/2026, le propriétaire : « mets-le dans la page d'accueil aussi, à côté / en dessous du Jouer gratuitement ») l'accueil
   // y mène juste après « Jouer gratuitement » : /discord, le logo de la marque (en ligne) et le mot
-  if (!/Jouer gratuitement<\/a>\s*(?:<!--[\s\S]*?-->\s*)?<a class="bouton bouton-discord grand" href="\/discord" aria-label="[^"]*Discord[^"]*"><svg class="logo-discord"[^>]*>[\s\S]*?<\/svg><span class="mot">Discord<\/span><\/a>/.test(lire('index.html'))) faute('index.html : le bouton du Discord (vers /discord, son logo et le mot « Discord ») doit suivre « Jouer gratuitement »')
+  if (!/Jouer gratuitement<\/a>\s*(?:<!--[\s\S]*?-->\s*)?<a class="bouton bouton-discord grand" href="\/discord" aria-label="[^"]*Discord[^"]*"(?: data-track="discord")?><svg class="logo-discord"[^>]*>[\s\S]*?<\/svg><span class="mot">Discord<\/span><\/a>/.test(lire('index.html'))) faute('index.html : le bouton du Discord (vers /discord, son logo et le mot « Discord ») doit suivre « Jouer gratuitement »')
   let vj = null
   try { vj = JSON.parse(lire('vercel.json')) } catch (e) { vj = null }
   if (!vj || !Array.isArray(vj.rewrites) || !vj.rewrites.some(r => r && r.source === '/discord' && r.destination === '/discord.html')) faute('vercel.json : /discord doit mener à discord.html (« rewrites » : { "source": "/discord", "destination": "/discord.html" })')

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Casteria : serveur Minecraft français moddé, de ton île au trou noir</title>
+<title>Casteria : serveur Minecraft moddé FR, île et boss</title>
 <meta name="description" content="Casteria, serveur Minecraft français moddé (1.21.1, NeoForge), crack accepté : ton île sur la mer, tes machines et tes bêtes, des boss, deux donjons, un casino à minerais, des navires pirates, puis une planète sous un trou noir. Le launcher installe tout.">
 <meta name="theme-color" content="#1B1028">
 <meta property="og:type" content="website">
@@ -39,10 +39,10 @@
     "publisher": { "@id": "https://casteria.fr/#casteria" } },
   { "@type": "Organization", "@id": "https://casteria.fr/#casteria", "name": "Casteria", "url": "https://casteria.fr/",
     "logo": "https://casteria.fr/assets/logo/casteria-logo.png" },
-  { "@type": "VideoGame", "name": "Casteria", "inLanguage": "fr", "url": "https://casteria.fr/",
+  { "@type": "VideoGame", "@id": "https://casteria.fr/#jeu", "name": "Casteria", "inLanguage": "fr", "url": "https://casteria.fr/",
     "image": "https://casteria.fr/assets/images/casteria-decollage-partage.jpg",
     "description": "Serveur Minecraft français moddé : une île sur la mer par joueur, une économie en jetons, des boss et leurs panoplies, deux donjons à faire en groupe, un casino à minerais, des navires et des pirates, une planète sous un trou noir.",
-    "gamePlatform": ["PC", "Mac", "Linux"], "applicationCategory": "Game", "genre": ["Serveur Minecraft", "Île", "Économie", "Aventure"],
+    "gamePlatform": ["PC", "Mac", "Linux"], "operatingSystem": "Windows, macOS, Linux", "applicationCategory": "Game", "genre": ["Serveur Minecraft", "Île", "Économie", "Aventure"],
     "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
     "gameServer": { "@type": "GameServer", "name": "Casteria", "game": { "@type": "VideoGame", "name": "Minecraft Java Edition 1.21.1" } } }
 ] }
@@ -101,7 +101,7 @@
       <!-- (19/10/2026, le propriétaire : « mets-le dans la page d'accueil aussi, à côté / en dessous du Jouer gratuitement, avec
            sur mobile un beau logo Discord et sur PC un beau logo et le texte Discord ! ») vers /discord (l'invitation n'est
            écrite que dans discord.html) ; le logo de la marque, en ligne ; sur un téléphone, le logo seul (css/scene.css) -->
-      <a class="bouton bouton-discord grand" href="/discord" aria-label="Rejoindre le Discord de Casteria"><svg class="logo-discord" viewBox="0 0 127.14 96.36" aria-hidden="true" focusable="false"><path fill="currentColor" d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/></svg><span class="mot">Discord</span></a>
+      <a class="bouton bouton-discord grand" href="/discord" aria-label="Rejoindre le Discord de Casteria" data-track="discord"><svg class="logo-discord" viewBox="0 0 127.14 96.36" aria-hidden="true" focusable="false"><path fill="currentColor" d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/></svg><span class="mot">Discord</span></a>
       <a class="lien-doux" href="#voyage">Voir le jeu <span class="chevron" aria-hidden="true"></span></a>
     </div>
     <!-- (29/10/2026, le propriétaire : « ajoute bien dans le site, bien visible, que le serveur accepte les crack ») -->
@@ -118,6 +118,7 @@
     <div class="texte monte">
       <span class="sur-titre">Prêt pour la suite ?</span>
       <h2>Ton aventure commence ici.</h2>
+      <p>Fan de skyblock ? Casteria en garde l'esprit, ton île et tes machines qui produisent toutes seules, puis t'emmène bien plus loin : sur la mer, face aux boss, jusqu'à la planète. <a href="serveur-minecraft-ile.html">Le serveur d'île pour les fans de skyblock</a>.</p>
       <p>Le launcher Casteria installe le jeu, les mods et les shaders, puis se met à jour tout seul. Tu cliques sur JOUER, tu arrives au palais.</p>
       <ol class="trois-gestes">
         <li><b>1</b>Télécharge le launcher</li>
@@ -348,7 +349,7 @@
         <article class="g-article monte"><h3>Le Défi Éclair</h3><p>Cinq jeux rapides au palais, tirés parmi quatorze, de La Suite de laines au Nombre unique. Personne n'est éliminé, rien à perdre : des jetons dès ta première réponse. <a href="evenements.html#jeux">Les quatorze jeux</a></p></article>
         <article class="g-article monte"><h3>Faites vos jeux !</h3><p>Au casino, le croupier annonce chaque partie : «&#160;Faites vos jeux&#160;», puis «&#160;Rien ne va plus&#160;» quand la bille part à la roulette. Au blackjack, il parle comme un villageois : «&#160;Hmmm... Faites vos jeux.&#160;»</p></article>
         <article class="g-article monte"><h3>Le mode Héroïque</h3><p>Bats un boss une fois : son mode Héroïque s'ouvre. Le même boss, bien plus dur, avec une phase de plus ; la même armure à gagner, avec plus de chances pour chaque pièce.</p></article>
-        <article class="g-article monte"><h3>Tes compagnons</h3><p>36 familiers te suivent partout. Certains ne s'achètent pas : tu les trouves dans ta Mine, en mer, sur la planète, dans tes champs, au casino ou au fond d'un donjon. Onze montures, au sol, dans les airs ou dans l'eau. Et dans tes enclos, des bêtes de commune à mythique.</p></article>
+        <article class="g-article monte"><h3>Tes compagnons</h3><p>36 familiers te suivent partout. Certains ne s'achètent pas : tu les trouves dans ta Mine, en mer, sur la planète, dans tes champs, au casino ou au fond d'un donjon. Douze montures, au sol, dans les airs ou dans l'eau. Et dans tes enclos, des bêtes de commune à mythique.</p></article>
         <article class="g-article monte"><h3>Ton île à plusieurs</h3><p>Avec /amis, invite tes amis et choisis leurs droits. Avec le droit Machines, un ami récolte tes machines même sans toi : sa récolte est pour lui.</p></article>
         <article class="g-article monte"><h3>Le Bac, à l'Établi</h3><p>Il garde 16 piles d'un seul objet (64 et 256 pour les plus grands) et montre son compte sur sa façade.</p></article>
         <article class="g-article monte"><h3>Objets et recettes</h3><p>/recettes ouvre le livre de chaque objet du serveur : sa recette, et à quoi il sert.</p></article>
@@ -397,7 +398,7 @@
       <article class="carte pancarte p2">
         <span class="num">Les panoplies</span>
         <h3>Chaque boss a son armure, et chaque armure son pouvoir</h3>
-        <p>Respirer sans fin sous l'eau. Sauter une seconde fois en l'air. Marcher sur la mer avec l'armure du Yéti. Chaque panoplie change ta façon de jouer.</p>
+        <p>Respirer sans fin sous l'eau. Sauter une seconde fois en l'air. Te couvrir d'une carapace de givre avec l'armure du Yéti. Chaque panoplie change ta façon de jouer.</p>
         <ul>
           <li>Chaque pièce donne déjà un bonus ; les quatre ensemble éveillent le pouvoir.</li>
           <li>À la forge, tes éclats de boss deviennent la pièce qui te manque.</li>
@@ -516,10 +517,10 @@
     </ol>
     <div class="plateformes quai apparait">
       <img class="quai-g" src="assets/volume/yeti.png" alt="" width="520" height="520" loading="lazy"><img class="quai-d" src="assets/volume/kraken.png" alt="" width="520" height="520" loading="lazy">
-      <a class="bouton bouton-vert grand" href="https://github.com/guerrinflorian/casteria-mc/releases/download/installateur/Casteria-Installation.exe" rel="noopener"><svg class="picto" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M12 4v16M3 12h18" fill="none" stroke="currentColor" stroke-width="2.6"/></svg>Windows</a>
-      <a class="bouton bouton-or grand" href="https://github.com/guerrinflorian/casteria-mc/releases/download/installateur/Casteria-mac-apple-silicon.zip" rel="noopener"><svg class="picto" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M12 16v4M8 20.5h8" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>Mac (puce Apple)</a>
-      <a class="bouton bouton-or grand" href="https://github.com/guerrinflorian/casteria-mc/releases/download/installateur/Casteria-mac-intel.zip" rel="noopener"><svg class="picto" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M12 16v4M8 20.5h8" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>Mac (Intel)</a>
-      <a class="bouton bouton-bois grand" href="https://github.com/guerrinflorian/casteria-mc/releases/tag/installateur" rel="noopener"><svg class="picto" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M7 9l3.5 3L7 15M13 15.5h4" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Linux</a>
+      <a class="bouton bouton-vert grand" href="https://github.com/guerrinflorian/casteria-mc/releases/download/installateur/Casteria-Installation.exe" rel="noopener" data-track="download-windows"><svg class="picto" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M12 4v16M3 12h18" fill="none" stroke="currentColor" stroke-width="2.6"/></svg>Windows</a>
+      <a class="bouton bouton-or grand" href="https://github.com/guerrinflorian/casteria-mc/releases/download/installateur/Casteria-mac-apple-silicon.zip" rel="noopener" data-track="download-mac"><svg class="picto" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M12 16v4M8 20.5h8" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>Mac (puce Apple)</a>
+      <a class="bouton bouton-or grand" href="https://github.com/guerrinflorian/casteria-mc/releases/download/installateur/Casteria-mac-intel.zip" rel="noopener" data-track="download-mac"><svg class="picto" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M12 16v4M8 20.5h8" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>Mac (Intel)</a>
+      <a class="bouton bouton-bois grand" href="https://github.com/guerrinflorian/casteria-mc/releases/tag/installateur" rel="noopener" data-track="download-linux"><svg class="picto" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M7 9l3.5 3L7 15M13 15.5h4" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Linux</a>
     </div>
 
     <div class="aide apparait" id="aide">
@@ -605,6 +606,24 @@
     <p class="note apparait">Le launcher est gratuit et se met à jour tout seul. À tout de suite sur Casteria !</p>
   </div>
 </section>
+
+<!-- ============ DÉCOUVRIR (29/10/2026, le propriétaire : un bloc qui mène aux cinq pages de Casteria par sujet) ============ -->
+<section class="clair" id="decouvrir" aria-labelledby="decouvrir-titre">
+  <div class="dedans">
+    <div class="tete apparait">
+      <span class="ruban">Découvrir</span>
+      <h2 id="decouvrir-titre">Casteria, sujet par sujet</h2>
+      <p>Tu cherches un serveur bien précis ? Chaque page te raconte une partie du jeu, en détail.</p>
+    </div>
+    <div class="cartes decouvrir">
+      <a class="carte apparait" href="serveur-minecraft-ile.html"><h3>Un serveur Minecraft d'île</h3><p>Pour les fans de skyblock : ton île, tes machines, puis toute la mer à explorer.</p></a>
+      <a class="carte apparait" href="serveur-minecraft-modde.html"><h3>Un serveur Minecraft moddé</h3><p>Des mods faits maison pour Casteria, installés pour toi, gratuitement.</p></a>
+      <a class="carte apparait" href="launcher-minecraft-modde.html"><h3>Le launcher Minecraft moddé</h3><p>Il installe le jeu et les mods, puis se met à jour tout seul.</p></a>
+      <a class="carte apparait" href="serveur-minecraft-rpg.html"><h3>Un serveur Minecraft RPG</h3><p>Des niveaux, des quêtes, des missions et un vrai combat.</p></a>
+      <a class="carte apparait" href="serveur-minecraft-boss.html"><h3>Des boss et des donjons</h3><p>Arène après arène, leurs panoplies et le mode Héroïque.</p></a>
+    </div>
+  </div>
+</section>
 </main>
 
 <footer>
@@ -612,7 +631,7 @@
     <div class="col">
       <img src="assets/logo/casteria-logo-300.webp" alt="Casteria" width="70" height="70" loading="lazy">
       <nav aria-label="Le pied de page">
-        <a href="./">Accueil</a><a href="commencer.html">Par où commencer</a><a href="evenements.html">Les événements</a><a href="pirates.html">La mer et les pirates</a><a href="donjons.html">Les donjons</a><a href="casino.html">Le casino</a><a href="#combat">Le combat</a><a href="classement.html">Classement</a><a href="boutique.html">Boutique</a><a href="vote.html">Voter</a><a href="reglement.html">Le règlement</a><a href="#telecharger">Télécharger</a>
+        <a href="./">Accueil</a><a href="commencer.html">Par où commencer</a><a href="evenements.html">Les événements</a><a href="pirates.html">La mer et les pirates</a><a href="donjons.html">Les donjons</a><a href="casino.html">Le casino</a><a href="#combat">Le combat</a><a href="classement.html">Classement</a><a href="boutique.html">Boutique</a><a href="vote.html">Voter</a><a href="reglement.html">Le règlement</a><a href="#telecharger">Télécharger</a><a href="serveur-minecraft-ile.html">Serveur Minecraft d'île</a><a href="serveur-minecraft-modde.html">Serveur moddé</a><a href="launcher-minecraft-modde.html">Launcher moddé</a><a href="serveur-minecraft-rpg.html">Serveur RPG</a><a href="serveur-minecraft-boss.html">Boss et donjons</a>
       <a href="mentions-legales.html">Mentions légales</a><a href="confidentialite.html">Confidentialité</a><a href="conditions.html">Conditions</a></nav>
     </div>
     <small>Casteria est un serveur Minecraft indépendant, créé par des joueurs. Il n'est ni affilié à Mojang ni à Microsoft, ni approuvé par eux. Minecraft est une marque de Mojang Studios.</small>

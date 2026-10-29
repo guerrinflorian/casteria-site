@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Serveur Minecraft RPG français : boss et quêtes | Casteria</title>
+<meta name="description" content="Casteria, serveur Minecraft RPG français : 70 niveaux, 130 quêtes, des boss en arène, des familiers et une planète. Gratuit, crack accepté : viens jouer !">
+<meta name="theme-color" content="#1B1028">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:site_name" content="Casteria">
+<meta property="og:title" content="Casteria, le serveur Minecraft RPG en français">
+<meta property="og:description" content="Des niveaux, des quêtes, des boss en arène, des familiers et une planète au bout de la route : la progression de Casteria.">
+<meta property="og:url" content="https://casteria.fr/serveur-minecraft-rpg.html">
+<link rel="canonical" href="https://casteria.fr/serveur-minecraft-rpg.html">
+<meta property="og:image" content="https://casteria.fr/assets/images/casteria-decollage-partage.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Casteria : de nuit, une fusée décolle de l'île du palais vers le trou noir ; le logo au dragon violet">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/logo/favicon-32.png">
+<link rel="icon" type="image/png" sizes="256x256" href="assets/logo/icone-256.png">
+<link rel="apple-touch-icon" href="assets/logo/icone-apple-180.png">
+<link rel="preload" as="image" type="image/webp" media="(max-aspect-ratio: 2/3)" imagesrcset="assets/images/casteria-grand-voyage-portrait-720.webp 720w, assets/images/casteria-grand-voyage-portrait-1080.webp 1080w" imagesizes="100vw" fetchpriority="high">
+<link rel="preload" as="image" type="image/webp" media="(min-aspect-ratio: 2001/3000)" imagesrcset="assets/images/casteria-grand-voyage-1280.webp 1280w, assets/images/casteria-grand-voyage-1920.webp 1920w" imagesizes="100vw" fetchpriority="high">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/scene.css">
+<link rel="stylesheet" href="css/combat.css">
+<link rel="stylesheet" href="css/voyage.css">
+<!-- LA PAGE « SERVEUR MINECRAFT RPG » (29/10/2026, pour Google et la publicité) : chaque fait est lu dans le jeu ou sur le site
+     (aide.js, niveaux.js, ai_armures_textes.js, les guides du Discord de outils/discord/forum.js) ; jamais un nombre de boss,
+     jamais un boss de la fin de partie nommé ; la FAQ du JSON-LD est celle de la page, mot pour mot ; le jeu (VideoGame) est le
+     même que celui de l'accueil -->
+<script type="application/ld+json">
+{ "@context": "https://schema.org", "@graph": [
+  { "@type": "BreadcrumbList", "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Casteria", "item": "https://casteria.fr/" },
+    { "@type": "ListItem", "position": 2, "name": "Serveur Minecraft RPG", "item": "https://casteria.fr/serveur-minecraft-rpg.html" } ] },
+  { "@type": "FAQPage", "mainEntity": [
+    { "@type": "Question", "name": "Casteria est-il vraiment un serveur Minecraft RPG ?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Oui : de l'expérience à presque chaque geste, 70 niveaux qui débloquent chacun quelque chose, des quêtes, des missions du jour, des boss en arène, et une planète au bout de la route." } },
+    { "@type": "Question", "name": "Faut-il acheter Minecraft pour jouer ?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Non : le crack est accepté, ton pseudo suffit. Tu as déjà Minecraft ? Tu joues pareil. Le launcher de Casteria est gratuit, sur Windows, Mac et Linux, et il installe tout lui-même, le jeu comme les mods." } },
+    { "@type": "Question", "name": "Quelle version de Minecraft faut-il ?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Casteria est un serveur Minecraft moddé en Java 1.21.1, avec NeoForge. Tu n'as rien à régler : le launcher prépare la bonne version et suit chaque mise à jour du serveur sans que tu touches à rien." } },
+    { "@type": "Question", "name": "Peut-on jouer entre amis ?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Oui : accueille-les sur ton île avec /amis, embarquez à deux sur ton navire pour couler des pirates, ou faites les donjons jusqu'à trois. Les boss des arènes, eux, se combattent seul : chaque victoire est la tienne." } },
+    { "@type": "Question", "name": "Je viens du skyblock : vais-je m'y retrouver ?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Oui, Casteria est pensé pour les fans de skyblock : tu pars d'un petit coin d'île et tu la fais grandir, machine après machine. Mais ici, ton île sur la mer n'est que le début, et une vraie progression de RPG t'emmène bien plus loin." } },
+    { "@type": "Question", "name": "Combien coûte le jeu ?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Rien. Le launcher comme le serveur sont gratuits. La boutique vend des crédits pour soutenir Casteria, et on en gagne aussi en jouant, avec les missions du jour, les votes et les fins de chapitre de Ludovic." } } ] },
+  { "@type": "VideoGame", "@id": "https://casteria.fr/#jeu", "name": "Casteria", "inLanguage": "fr", "url": "https://casteria.fr/",
+    "image": "https://casteria.fr/assets/images/casteria-decollage-partage.jpg",
+    "description": "Serveur Minecraft français moddé : une île sur la mer par joueur, une économie en jetons, des boss et leurs panoplies, deux donjons à faire en groupe, un casino à minerais, des navires et des pirates, une planète sous un trou noir.",
+    "gamePlatform": ["PC", "Mac", "Linux"], "operatingSystem": "Windows, macOS, Linux", "applicationCategory": "Game", "genre": ["Serveur Minecraft", "Île", "Économie", "Aventure"],
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
+    "gameServer": { "@type": "GameServer", "name": "Casteria", "game": { "@type": "VideoGame", "name": "Minecraft Java Edition 1.21.1" } } }
+] }
+</script>
+</head>
+<body>
+<div class="progres" aria-hidden="true"></div>
+<header class="barre verre posee">
+  <a class="marque" href="./" aria-label="Casteria, l'accueil"><img src="assets/logo/casteria-logo-300.webp" alt="Logo de Casteria" width="46" height="46"><span>Casteria</span></a>
+  <nav aria-label="Le menu">
+    <a href="./#voyage">Le jeu</a>
+    <a href="commencer.html">Par où commencer</a>
+    <a href="evenements.html">Événements</a>
+    <a class="classement" href="classement.html" aria-label="Classement"><img class="pixel" src="assets/icones/classement.png" alt="" width="20" height="20">Classement</a>
+    <a class="voter" href="vote.html">Voter</a>
+    <a class="boutique" href="boutique.html"><img class="pixel" src="assets/icones/credit.png" alt="" width="20" height="20">Boutique</a>
+    <a class="bouton bouton-or petit" href="./#telecharger">Jouer</a>
+  </nav>
+</header>
+
+<main>
+<!-- LE HAUT DE PAGE EN CINÉMA : le grand voyage (la frégate sur sa vague, le phare, le kraken, la fusée vers le trou noir), la
+     route entière d'un joueur en une image ; sa version portrait sur un téléphone -->
+<section class="heros vitrine-tete plein-cadre page-cinema" id="haut">
+  <div class="fond plein-cadre" aria-hidden="true">
+    <div class="plan">
+      <picture>
+        <source media="(max-aspect-ratio: 2/3)" type="image/webp" srcset="assets/images/casteria-grand-voyage-portrait-720.webp 720w, assets/images/casteria-grand-voyage-portrait-1080.webp 1080w" sizes="100vw">
+        <source media="(max-aspect-ratio: 2/3)" srcset="assets/images/casteria-grand-voyage-portrait-1080.jpg 1080w" sizes="100vw">
+        <source type="image/webp" srcset="assets/images/casteria-grand-voyage-1280.webp 1280w, assets/images/casteria-grand-voyage-1920.webp 1920w" sizes="100vw">
+        <img src="assets/images/casteria-grand-voyage-1920.jpg" alt="Le voyage de Casteria : une frégate aux voiles violettes sur une vague, un phare, un kraken géant qui sort de la mer et une fusée qui file vers un trou noir" width="1920" height="1072" fetchpriority="high" decoding="async">
+      </picture>
+    </div>
+  </div>
+  <div class="cinema-texte">
+    <div class="cinema-titre">
+    <p class="sur-ligne">Serveur Minecraft français <i aria-hidden="true">&#183;</i> RPG moddé 1.21.1</p>
+    <h1>Serveur Minecraft RPG : <span class="or">niveaux, boss et quêtes</span></h1>
+    </div>
+    <div class="cinema-geste">
+    <p class="cinema-accroche">Sur Casteria, chaque soirée te fait avancer : tu gravis 70 niveaux, tu remplis ton livre de quêtes, tu affrontes des boss dans leurs arènes, puis tu décolles vers une planète sous un trou noir.</p>
+    <div class="gestes">
+      <a class="bouton bouton-orange grand" href="./#telecharger"><span class="triangle" aria-hidden="true"></span>Jouer gratuitement</a>
+      <a class="bouton bouton-discord grand" href="/discord" aria-label="Rejoindre le Discord de Casteria" data-track="discord"><svg class="logo-discord" viewBox="0 0 127.14 96.36" aria-hidden="true" focusable="false"><path fill="currentColor" d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/></svg><span class="mot">Discord</span></a>
+      <a class="lien-doux" href="#progression">Voir la progression <span class="chevron" aria-hidden="true"></span></a>
+    </div>
+    <p class="crack-accepte"><span class="coche" aria-hidden="true"></span>Crack accepté : pas besoin d'acheter Minecraft</p>
+    <p class="preuves">Gratuit <i aria-hidden="true">&#183;</i> Windows, Mac et Linux <i aria-hidden="true">&#183;</i> le launcher installe tout</p>
+    </div>
+  </div>
+</section>
+
+<!-- LA PROGRESSION : tout rapporte de l'XP (aide.js « Les niveaux ») ; les huit rangs (niveaux.js, RANGS) ; les quêtes de Ludovic
+     (aide.js « Les quêtes du Chroniqueur ») ; les missions du jour (aide.js « Les missions du jour », le crédit dès le niveau 20 :
+     commencer.html) -->
+<section class="clair" id="progression">
+  <div class="dedans">
+    <div class="tete apparait">
+      <span class="ruban">Ta progression</span>
+      <h2>Une progression de MMORPG dans Minecraft</h2>
+      <p>Sur ce serveur Minecraft RPG, presque tout rapporte de l'expérience : tes ventes, tes récoltes, tes missions, tes quêtes, les mini-jeux, les donjons, ton île et les boss. Ta route se dessine niveau après niveau, et le but, le jeu te le dit lui-même : monter du niveau 1 au 70, battre les boss et briller au classement.</p>
+    </div>
+    <div class="cartes mosaique">
+      <article class="carte apparait" style="--retard:.05s">
+        <div class="signe" aria-hidden="true">&#11088;</div>
+        <h3>Les niveaux : de Naufragé à Légende</h3>
+        <p>Chaque niveau te donne des jetons, un ticket tous les cinq niveaux, et débloque un outil, un palier, un bonus ou un boss. Ton rang s'affiche devant ton nom : Naufragé au départ, puis Défricheur, Colon, Planteur, Négociant, Baron, Magnat, et Légende au niveau 60. Un Baron brille de paillettes d'or, un Magnat d'un or plus vif.</p>
+      </article>
+      <article class="carte apparait" style="--retard:.15s">
+        <div class="signe" aria-hidden="true">&#128214;</div>
+        <h3>Les quêtes de Ludovic</h3>
+        <p>Ludovic, le chroniqueur du palais, écrit ton histoire : 130 quêtes en dix chapitres, trois ouvertes à la fois. Chacune rapporte de 40 à 500 XP selon ses étoiles, presque toujours des jetons, parfois un œuf mystère, un titre ou une clé. Au bout de chaque chapitre : une clé de caisse et des tickets, puis, dès le deuxième, un objet introuvable ailleurs. Ton livre s'ouvre de partout avec /qp.</p>
+      </article>
+      <article class="carte apparait" style="--retard:.25s">
+        <img class="icone" src="assets/icones/ticket.png" alt="Un ticket de fortune, la récompense des missions du jour" width="64" height="64" loading="lazy">
+        <h3>Les missions du jour</h3>
+        <p>Chaque jour, trois missions : la facile vaut 1 ticket, la moyenne 2 (parfois 4), la difficile 4. La plupart donnent aussi des jetons, selon ton niveau. Elles changent à minuit. Réussis-les plusieurs jours d'affilée : ta série rapporte des tickets bonus. À partir du niveau 20, chaque mission ajoute 1 crédit.</p>
+      </article>
+    </div>
+    <p class="apparait" style="text-align:center;margin:44px auto 0;max-width:760px;font-size:18px">Tu débutes ? Le <a href="commencer.html">guide du débutant</a> te prend par la main, de ton île à ton premier boss.</p>
+  </div>
+</section>
+
+<!-- LE COMBAT : aide.js, « Le nouveau combat », « Le combo et le balayage », « Deux mains ou une main », « Le bouclier »,
+     « Les six armes », « Le combat entre joueurs » ; le Sabre de l'Oni : aide.js « Les armes uniques des boss » ; la fin de
+     combo : aide.js « Les fins de combo » -->
+<section class="pan pan-nuit combat" id="combat" aria-labelledby="combat-titre">
+  <div class="dedans">
+    <div class="texte apparait">
+      <span class="sur-titre">Le combat</span>
+      <h2 id="combat-titre">Un vrai système de combat</h2>
+      <p>Ici, on ne clique pas au hasard. Chaque arme a ses gestes, sa portée et son combo : maintiens le clic gauche, les coups s'enchaînent, jusqu'à quatre avec le katana, puis la suite repart. Une arme à deux mains cogne fort, au prix de ta main gauche ; avec une épée, tu gardes ton bouclier, qui arrête de face 60 % d'un coup, et 85 % s'il est en castérium.</p>
+      <p>À l'Établi, six armes ont chacune leur pouvoir : la lance de fer, l'arc triple, les dagues jumelles, le brassard d'esquive, la hachette de lancer et le marteau du Jugement. Hors des duels (/duel), tu ne blesses aucun joueur : tes ennemis, ce sont les monstres et <a href="serveur-minecraft-boss.html">les boss de Casteria, leurs panoplies et leur mode Héroïque</a>.</p>
+    </div>
+    <div class="cartes-combat">
+      <figure class="apparait"><img src="assets/images/casteria-combat-arme-de-boss.jpg" alt="Un joueur frappe avec le Sabre de l'Oni, une lame rouge qui laisse une traînée de braise" width="1152" height="720" loading="lazy"><figcaption><strong>Les armes de boss</strong>Certains boss lâchent une arme unique : le Sabre de l'Oni frappe trois fois en 4 secondes, et la bête visée explose.</figcaption></figure>
+      <figure class="apparait"><img src="assets/images/casteria-combat-balayage.jpg" alt="Un joueur balaie trois monstres d'un seul coup d'épée à deux mains, une traînée violette derrière la lame" width="1152" height="720" loading="lazy"><figcaption><strong>Le balayage</strong>Un grand coup à deux mains emporte plusieurs monstres dans le même mouvement.</figcaption></figure>
+      <figure class="apparait"><img src="assets/images/casteria-combat-dernier-coup.jpg" alt="Un joueur fait tournoyer une hache sombre aux tranchants de braise face à trois zombies du désert" width="1152" height="720" loading="lazy"><figcaption><strong>La fin de combo</strong>Le dernier coup d'une arme de boss a son effet : la cible prend 10 % de dégâts en plus.</figcaption></figure>
+      <figure class="apparait"><img src="assets/images/casteria-combat-barre-de-vie.jpg" alt="Des monstres blessés portent chacun une barre de vie verte au-dessus de la tête" width="1152" height="720" loading="lazy"><figcaption><strong>La barre de vie</strong>Monstres et boss portent la leur : tu vois d'un coup d'œil ce qu'il leur reste.</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<!-- LES COMPAGNONS : les familiers (aide.js « Les familiers », forum.js g_compagnons), les montures (aide.js « Les montures »,
+     la 152 ; les niveaux d'Octave : forum.js g_compagnons), les bébés de boss (aide.js, la chance du Yéti : 1 sur 33), l'écurie
+     (forum.js g_compagnons) ; la photo : celle de la boutique (la Wyverne royale et le Phénix d'or) -->
+<section class="clair" id="compagnons">
+  <div class="dedans">
+    <div class="tete apparait">
+      <span class="ruban">Tes compagnons</span>
+      <h2>Familiers et montures</h2>
+      <p>Dans un bon RPG, on ne voyage jamais seul. Tes familiers te suivent partout, tes montures te portent sur terre, dans les airs ou dans l'eau, et ils sont à toi pour toujours.</p>
+    </div>
+    <div class="galerie seule">
+      <figure class="tableau grand apparait">
+        <img src="assets/images/casteria-boutique-wyverne-1280.webp" alt="Au soleil couchant, un joueur vole sur sa Wyverne royale au-dessus d'une île, son Phénix d'or à côté de lui" width="1280" height="714" loading="lazy">
+        <figcaption>La Wyverne royale et le Phénix d'or, deux compagnons de la boutique.</figcaption>
+      </figure>
+    </div>
+    <div class="cartes">
+      <article class="carte apparait" style="--retard:.05s">
+        <h3>Les familiers</h3>
+        <p>Gaspard t'offre le Cochon volant. Les autres s'achètent une fois, en jetons, de la luciole (1&#160;440&#160;000 jetons) au dragon de castérium (13&#160;200&#160;000 jetons), et l'un d'eux est à -25 % chaque semaine. D'autres se méritent : on les déniche au fond de ta Mine, en mer, sur la planète ou dans tes champs. Un seul sort à la fois, et il ne se bat pas.</p>
+      </article>
+      <article class="carte apparait" style="--retard:.15s">
+        <h3>Les montures</h3>
+        <p>Au palais, Octave en vend en jetons : le Renard roux dès le niveau 25, puis le Scarabée d'or, le Loup d'orage, la Raie des nuages, l'Hippocampe royal et le Griffon d'or au niveau 60. La Raie et le Griffon volent. Tape /monture, puis Équiper ; accroupis-toi pour descendre.</p>
+      </article>
+      <article class="carte apparait" style="--retard:.25s">
+        <h3>Les plus rares</h3>
+        <p>Contre le Yéti des glaces, chaque victoire te laisse une chance sur 33 de repartir avec son petit, un familier. Le Lion ailé de castérium, qui vole, est la monture du grade Souverain. Et dès le niveau 44, l'écurie de ton île 2 loge jusqu'à 24 montures et 40 familiers.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- LA FIN DE PARTIE : forum.js g_planete (l'Esquif, l'air, la gravité, les anneaux, la dépouille), l'accueil (#planete : les
+     anneaux aux niveaux 60, 63 et 66, les bêtes à l'œuf, la récolte à la foreuse) ; le dernier adversaire n'est JAMAIS nommé -->
+<section class="planete" id="planete">
+  <div class="planete-fond" aria-hidden="true"><img src="assets/images/casteria-planete-fusee-trou-noir.jpg" alt="L'Esquif dressé sur le sol brûlant de la planète, devant le trou noir cerclé de feu, une comète dans le ciel étoilé" width="2048" height="1152" loading="lazy"></div>
+  <div class="dedans">
+    <div class="tete apparait">
+      <span class="sur-titre">Au bout de la route</span>
+      <h2>Le but final : la planète sous le trou noir</h2>
+      <p>L'Esquif, une fusée en ruine posée sur ton île 2, attend son heure. Son chemin s'ouvre quand toute ton île 2 est débloquée ; dès le niveau 60, tu la rénoves en cinq paliers, puis tu décolles. Là-haut, la gravité est basse, l'air se compte (120 secondes sans casque) et chaque geste rapporte bien plus d'expérience. Ses trois anneaux se débloquent au niveau 60, puis 63 et 66 : plus tu approches du centre, plus ça rapporte, et plus ton air file vite. Prudence : la mort y est vraie, tout ce que tu portes reste dix minutes dans ta dépouille. Tout au bord du vide, enfin, un ultime adversaire : celui-là, tu le combats seul.</p>
+    </div>
+    <figure class="ecran-large scene-large apparait"><video data-clic tabindex="0" muted loop playsinline preload="none" poster="assets/affiches/voyage_esquif.jpg" data-src="assets/videos/voyage_esquif.mp4" aria-label="Lancer la vidéo : l'Esquif quitte ton île et file vers le trou noir"></video><span class="jouer" aria-hidden="true"></span><figcaption>Le décollage de l'Esquif, cap sur le trou noir</figcaption></figure>
+    <div class="cartes-planete">
+      <figure class="apparait"><img src="assets/images/casteria-planete-trou-noir-esquif.jpg" alt="L'Esquif posé sur le sol de la planète, face au trou noir cerclé de feu" width="1280" height="720" loading="lazy"><figcaption><strong>L'Esquif</strong>Rénovée en cinq paliers, ta fusée t'emmène là-haut, toi ou un ami de ton île.</figcaption></figure>
+      <figure class="apparait"><img src="assets/images/casteria-planete-vue-d-ensemble.jpg" alt="Le ciel rouge de la planète : un trou noir cerclé de feu au-dessus d'un sol strié d'orange et de blanc, une comète au loin" width="1280" height="720" loading="lazy"><figcaption><strong>Les anneaux</strong>Le Bord lointain, l'Anneau médian, l'Anneau intérieur, puis l'Horizon, au bord du vide.</figcaption></figure>
+      <figure class="apparait"><img src="assets/images/casteria-planete-recolte.jpg" alt="L'écran de récolte d'un gisement de la planète, avec sa barre à arrêter au bon moment" width="680" height="400" loading="lazy"><figcaption><strong>Les gisements</strong>Ici, pas de pioche : chaque gisement se récolte à la foreuse, une par anneau.</figcaption></figure>
+      <figure class="apparait"><img src="assets/images/casteria-planete-salamandre-de-braise.jpg" alt="Une salamandre de braise sur le sol de la planète, devant le trou noir" width="1280" height="720" loading="lazy"><figcaption><strong>Les bêtes</strong>La salamandre de braise et les autres bêtes de là-haut se capturent d'un œuf de poule bien lancé.</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<!-- LA FAQ : la même, mot pour mot, que celle du JSON-LD (FAQPage) ; puis « Jouer gratuitement » et le launcher par système
+     (les liens figés de la release « installateur », ceux de l'accueil) -->
+<section class="clair" id="faq">
+  <div class="dedans">
+    <div class="tete apparait">
+      <h2>FAQ : le RPG de Casteria</h2>
+      <p>Avant de te lancer, les réponses aux questions les plus fréquentes.</p>
+    </div>
+    <div class="astuces notes">
+      <article class="carte apparait"><h3>Casteria est-il vraiment un serveur Minecraft RPG&#160;?</h3><p>Oui : de l'expérience à presque chaque geste, 70 niveaux qui débloquent chacun quelque chose, des quêtes, des missions du jour, des boss en arène, et une planète au bout de la route.</p></article>
+      <article class="carte apparait"><h3>Faut-il acheter Minecraft pour jouer&#160;?</h3><p>Non : le crack est accepté, ton pseudo suffit. Tu as déjà Minecraft ? Tu joues pareil. Le launcher de Casteria est gratuit, sur Windows, Mac et Linux, et il installe tout lui-même, le jeu comme les mods.</p></article>
+      <article class="carte apparait"><h3>Quelle version de Minecraft faut-il&#160;?</h3><p>Casteria est <a href="serveur-minecraft-modde.html">un serveur Minecraft moddé</a> en Java 1.21.1, avec NeoForge. Tu n'as rien à régler : le launcher prépare la bonne version et suit chaque mise à jour du serveur sans que tu touches à rien.</p></article>
+      <article class="carte apparait"><h3>Peut-on jouer entre amis&#160;?</h3><p>Oui : accueille-les sur ton île avec /amis, embarquez à deux sur ton navire pour <a href="pirates.html">couler des pirates</a>, ou faites les donjons jusqu'à trois. Les boss des arènes, eux, se combattent seul : chaque victoire est la tienne.</p></article>
+      <article class="carte apparait"><h3>Je viens du skyblock : vais-je m'y retrouver&#160;?</h3><p>Oui, Casteria est pensé pour les fans de skyblock : tu pars d'un petit coin d'île et tu la fais grandir, machine après machine. Mais ici, <a href="serveur-minecraft-ile.html">ton île sur la mer</a> n'est que le début, et une vraie progression de RPG t'emmène bien plus loin.</p></article>
+      <article class="carte apparait"><h3>Combien coûte le jeu&#160;?</h3><p>Rien. Le launcher comme le serveur sont gratuits. La boutique vend des crédits pour soutenir Casteria, et on en gagne aussi en jouant, avec les missions du jour, les votes et les fins de chapitre de Ludovic.</p></article>
+    </div>
+    <div class="plateformes apparait" style="margin-top:54px">
+      <a class="bouton bouton-orange grand" href="./#telecharger"><span class="triangle" aria-hidden="true"></span>Jouer gratuitement</a>
+      <a class="bouton bouton-discord grand" href="/discord" aria-label="Rejoindre le Discord de Casteria" data-track="discord"><svg class="logo-discord" viewBox="0 0 127.14 96.36" aria-hidden="true" focusable="false"><path fill="currentColor" d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/></svg><span class="mot">Discord</span></a>
+    </div>
+    <p class="note apparait" style="text-align:center;margin:30px 0 0">Ou télécharge directement le launcher :</p>
+    <div class="plateformes apparait">
+      <a class="bouton bouton-vert grand" href="https://github.com/guerrinflorian/casteria-mc/releases/download/installateur/Casteria-Installation.exe" rel="noopener" data-track="download-windows"><svg class="picto" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M12 4v16M3 12h18" fill="none" stroke="currentColor" stroke-width="2.6"/></svg>Windows</a>
+      <a class="bouton bouton-or grand" href="https://github.com/guerrinflorian/casteria-mc/releases/download/installateur/Casteria-mac-apple-silicon.zip" rel="noopener" data-track="download-mac"><svg class="picto" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M12 16v4M8 20.5h8" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>Mac (puce Apple)</a>
+      <a class="bouton bouton-or grand" href="https://github.com/guerrinflorian/casteria-mc/releases/download/installateur/Casteria-mac-intel.zip" rel="noopener" data-track="download-mac"><svg class="picto" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M12 16v4M8 20.5h8" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>Mac (Intel)</a>
+      <a class="bouton bouton-bois grand" href="https://github.com/guerrinflorian/casteria-mc/releases/tag/installateur" rel="noopener" data-track="download-linux"><svg class="picto" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M7 9l3.5 3L7 15M13 15.5h4" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Linux</a>
+    </div>
+    <p class="note apparait" style="text-align:center;margin:8px 0 0">Un souci pour installer ? <a href="./#aide">Les réponses pour Windows, Mac et Linux</a>.</p>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="dedans">
+    <div class="col">
+      <img src="assets/logo/casteria-logo-300.webp" alt="Casteria" width="70" height="70" loading="lazy">
+      <nav aria-label="Le pied de page"><a href="./">Accueil</a><a href="commencer.html">Par où commencer</a><a href="evenements.html">Les événements</a><a href="pirates.html">La mer et les pirates</a><a href="donjons.html">Les donjons</a><a href="casino.html">Le casino</a><a href="./#combat">Le combat</a><a href="classement.html">Classement</a><a href="boutique.html">Boutique</a><a href="vote.html">Voter</a><a href="reglement.html">Le règlement</a><a href="./#telecharger">Télécharger</a><a href="serveur-minecraft-ile.html">Serveur Minecraft d'île</a><a href="serveur-minecraft-modde.html">Serveur moddé</a><a href="launcher-minecraft-modde.html">Launcher moddé</a><a href="serveur-minecraft-rpg.html">Serveur RPG</a><a href="serveur-minecraft-boss.html">Boss et donjons</a><a href="mentions-legales.html">Mentions légales</a><a href="confidentialite.html">Confidentialité</a><a href="conditions.html">Conditions</a></nav>
+    </div>
+    <small>Casteria est un serveur Minecraft indépendant, créé par des joueurs. Il n'est ni affilié à Mojang ni à Microsoft, ni approuvé par eux. Minecraft est une marque de Mojang Studios.</small>
+  </div>
+</footer>
+<script src="js/site.js" defer></script>
+</body>
+</html>

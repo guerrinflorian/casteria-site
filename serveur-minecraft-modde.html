@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Serveur Minecraft moddé gratuit 1.21.1 | Casteria</title>
+<meta name="description" content="Casteria, serveur Minecraft moddé gratuit en 1.21.1 : des armes, des machines et des bêtes faites maison, des boss, la mer. Télécharge le launcher !">
+<meta name="theme-color" content="#1B1028">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:site_name" content="Casteria">
+<meta property="og:title" content="Casteria : un serveur Minecraft moddé gratuit, sans rien installer">
+<meta property="og:description" content="Des armes, des machines, des bêtes et des boss créés pour le serveur, et un launcher qui installe tous les mods à ta place.">
+<meta property="og:url" content="https://casteria.fr/serveur-minecraft-modde.html">
+<link rel="canonical" href="https://casteria.fr/serveur-minecraft-modde.html">
+<meta property="og:image" content="https://casteria.fr/assets/images/casteria-decollage-partage.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Casteria : une fusée décolle de nuit de l'île du palais, vers un trou noir ; le logo de Casteria">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/logo/favicon-32.png">
+<link rel="icon" type="image/png" sizes="256x256" href="assets/logo/icone-256.png">
+<link rel="apple-touch-icon" href="assets/logo/icone-apple-180.png">
+<link rel="preload" href="assets/polices/lilita_one.ttf" as="font" type="font/ttf" crossorigin>
+<link rel="preload" href="assets/polices/fredoka.ttf" as="font" type="font/ttf" crossorigin>
+<link rel="preload" as="image" type="image/webp" media="(max-aspect-ratio: 2/3)" imagesrcset="assets/images/casteria-grand-voyage-portrait-720.webp 720w, assets/images/casteria-grand-voyage-portrait-1080.webp 1080w" imagesizes="100vw" fetchpriority="high">
+<link rel="preload" as="image" type="image/webp" media="(min-aspect-ratio: 2001/3000)" imagesrcset="assets/images/casteria-grand-voyage-1280.webp 1280w, assets/images/casteria-grand-voyage-1920.webp 1920w" imagesizes="100vw" fetchpriority="high">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/scene.css">
+<link rel="stylesheet" href="css/objets.css">
+<!-- LES DONNÉES POUR GOOGLE : le fil d'Ariane, la FAQ de la page (mot pour mot), et le jeu, la même entité que sur l'accueil.
+     TODO (la tête) : porter le même « @id » (https://casteria.fr/#jeu) et le même « operatingSystem » sur le VideoGame de
+     index.html, pour que Google lise une seule entité. -->
+<script type="application/ld+json">
+{ "@context": "https://schema.org", "@graph": [
+  { "@type": "BreadcrumbList", "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Casteria", "item": "https://casteria.fr/" },
+    { "@type": "ListItem", "position": 2, "name": "Serveur Minecraft moddé", "item": "https://casteria.fr/serveur-minecraft-modde.html" } ] },
+  { "@type": "FAQPage", "mainEntity": [
+    { "@type": "Question", "name": "Faut-il installer les mods soi-même ?", "acceptedAnswer": { "@type": "Answer", "text": "Non. Le launcher installe le jeu, NeoForge et tous les mods de Casteria, puis les met à jour tout seul : aucun fichier à déplacer, aucune version à régler." } },
+    { "@type": "Question", "name": "Ce serveur Minecraft moddé est-il vraiment gratuit ?", "acceptedAnswer": { "@type": "Answer", "text": "Oui. Tout le jeu se joue sans payer ; la boutique vend des crédits, que tu peux aussi gagner avec les missions du jour, tes votes et les quêtes de Ludovic." } },
+    { "@type": "Question", "name": "Faut-il acheter Minecraft ?", "acceptedAnswer": { "@type": "Answer", "text": "Non : le crack est accepté. Ton pseudo suffit, et si tu as acheté Minecraft, tu joues pareil, avec le même launcher." } },
+    { "@type": "Question", "name": "Puis-je ajouter mes propres mods ?", "acceptedAnswer": { "@type": "Answer", "text": "Non : Casteria se joue seulement avec les siens, et le launcher retire tout seul un mod en trop. Les shaders, eux, s'allument d'un clic dans Réglages." } },
+    { "@type": "Question", "name": "Quelle version de Minecraft faut-il ?", "acceptedAnswer": { "@type": "Answer", "text": "Minecraft Java 1.21.1, avec NeoForge 21.1. Tu n'as rien à installer toi-même : le launcher s'en charge." } },
+    { "@type": "Question", "name": "Ça marche sur Mac et sur Linux ?", "acceptedAnswer": { "@type": "Answer", "text": "Oui : le launcher existe pour Windows, pour Mac (puce Apple ou Intel) et pour Linux, avec son aide pour chacun." } } ] },
+  { "@type": "VideoGame", "@id": "https://casteria.fr/#jeu", "name": "Casteria", "inLanguage": "fr", "url": "https://casteria.fr/",
+    "image": "https://casteria.fr/assets/images/casteria-decollage-partage.jpg",
+    "description": "Serveur Minecraft français moddé : une île sur la mer par joueur, une économie en jetons, des boss et leurs panoplies, deux donjons à faire en groupe, un casino à minerais, des navires et des pirates, une planète sous un trou noir.",
+    "gamePlatform": ["PC", "Mac", "Linux"], "operatingSystem": "Windows, macOS, Linux", "applicationCategory": "Game", "genre": ["Serveur Minecraft", "Île", "Économie", "Aventure"],
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
+    "gameServer": { "@type": "GameServer", "name": "Casteria", "game": { "@type": "VideoGame", "name": "Minecraft Java Edition 1.21.1" } } }
+] }
+</script>
+</head>
+<body>
+<div class="progres" aria-hidden="true"></div>
+<header class="barre verre posee">
+  <a class="marque" href="./" aria-label="Casteria, l'accueil"><img src="assets/logo/casteria-logo-300.webp" alt="Logo de Casteria" width="46" height="46"><span>Casteria</span></a>
+  <nav aria-label="Le menu">
+    <a href="./#voyage">Le jeu</a>
+    <a href="commencer.html">Par où commencer</a>
+    <a href="evenements.html">Événements</a>
+    <a class="classement" href="classement.html" aria-label="Classement"><img class="pixel" src="assets/icones/classement.png" alt="" width="20" height="20">Classement</a>
+    <a class="voter" href="vote.html">Voter</a>
+    <a class="boutique" href="boutique.html"><img class="pixel" src="assets/icones/credit.png" alt="" width="20" height="20">Boutique</a>
+    <a class="bouton bouton-or petit" href="./#telecharger">Jouer</a>
+  </nav>
+</header>
+
+<main>
+<!-- LA PAGE « SERVEUR MINECRAFT MODDÉ » (29/10/2026, pour Google et les annonces Google Ads). Chaque fait est lu dans le jeu
+     (/aide : aide.js ; niveaux.js), sur les pages du site, dans le launcher (CasteriaLauncher : src/reglages.js,
+     package.json, page_github/page_installateur.md, LISEZMOI.md) ou dans la FAQ du Discord (outils/discord/forum.js). Le haut
+     en cinéma : le grand voyage (la Frégate, le phare, le Kraken et la fusée vers le trou noir ; sa version portrait sur un
+     téléphone). -->
+<section class="heros vitrine-tete plein-cadre page-cinema" id="haut">
+  <div class="fond plein-cadre">
+    <div class="plan">
+      <picture>
+        <source media="(max-aspect-ratio: 2/3)" type="image/webp" srcset="assets/images/casteria-grand-voyage-portrait-720.webp 720w, assets/images/casteria-grand-voyage-portrait-1080.webp 1080w" sizes="100vw">
+        <source media="(max-aspect-ratio: 2/3)" srcset="assets/images/casteria-grand-voyage-portrait-1080.jpg 1080w" sizes="100vw">
+        <source type="image/webp" srcset="assets/images/casteria-grand-voyage-1280.webp 1280w, assets/images/casteria-grand-voyage-1920.webp 1920w" sizes="100vw">
+        <img src="assets/images/casteria-grand-voyage-1920.jpg" alt="La Frégate violette sur une vague, un phare, le Kraken qui surgit de la mer et une fusée qui file vers le trou noir" width="1920" height="1072" fetchpriority="high" decoding="async">
+      </picture>
+    </div>
+  </div>
+  <div class="cinema-texte">
+    <div class="cinema-titre">
+    <p class="sur-ligne">Minecraft 1.21.1 <i aria-hidden="true">&#183;</i> NeoForge</p>
+    <h1>Serveur Minecraft moddé gratuit, <span class="or">sans rien installer à la main</span></h1>
+    </div>
+    <div class="cinema-geste">
+    <p class="cinema-accroche">Sur Casteria, les armes, les machines, tes bêtes et les boss ont été créés pour le serveur. Et tu n'as aucun mod à chercher : le launcher installe le jeu, NeoForge et tous les mods à ta place.</p>
+    <div class="gestes">
+      <a class="bouton bouton-orange grand" href="#telecharger"><span class="triangle" aria-hidden="true"></span>Jouer gratuitement</a>
+      <a class="bouton bouton-discord grand" href="/discord" aria-label="Rejoindre le Discord de Casteria" data-track="discord"><svg class="logo-discord" viewBox="0 0 127.14 96.36" aria-hidden="true" focusable="false"><path fill="currentColor" d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/></svg><span class="mot">Discord</span></a>
+      <a class="lien-doux" href="#fait-maison">Les mods maison <span class="chevron" aria-hidden="true"></span></a>
+    </div>
+    <p class="crack-accepte"><span class="coche" aria-hidden="true"></span>Crack accepté : joue sans acheter Minecraft</p>
+    <p class="preuves">Gratuit <i aria-hidden="true">&#183;</i> Windows, Mac et Linux <i aria-hidden="true">&#183;</i> en français</p>
+    </div>
+  </div>
+</section>
+
+<!-- UN SERVEUR MODDÉ FAIT MAISON : les objets du serveur, chacun en volume (les rendus de assets/objets, ceux de l'accueil),
+     trois par famille ; leurs mots lus dans le jeu (index.html, « Tout est fait pour Casteria » ; aide.js : les machines, le
+     comptoir, les enclos ; niveaux.js). Sur un téléphone, chaque famille se replie (js/objets.js). -->
+<section class="pan pan-parchemin objets" id="fait-maison" aria-labelledby="fait-maison-titre">
+  <div class="dedans">
+    <div class="tete apparait">
+      <span class="sur-titre encre">Fait maison</span>
+      <h2 id="fait-maison-titre">Un serveur moddé fait maison</h2>
+      <p>Ici, le contenu du jeu a été fait pour le serveur : les boss, la mer et ses navires, les familiers, les montures, les bêtes, les machines et jusqu'aux écrans ont été dessinés et codés pour Casteria. En voici trois familles d'objets.</p>
+    </div>
+    <div class="familles">
+      <details class="famille" open>
+        <summary><h3>Les armes et le combat</h3><span class="compte">3 objets</span></summary>
+        <div class="grille-objets">
+          <article class="objet apparait"><img src="assets/objets/objet_katana.webp" alt="Le katana en castérium : une lame courbe, une garde dorée et une poignée violette" width="240" height="240" loading="lazy"><div><h4>Katana en castérium</h4><p>Clic droit : tu fonces de 6 blocs, en frappant chaque monstre sur ta route.</p></div></article>
+          <article class="objet apparait"><img src="assets/objets/objet_hachette.webp" alt="La hachette de lancer, sa tête de métal sombre sur un manche de bois" width="240" height="240" loading="lazy"><div><h4>Hachette de lancer</h4><p>Elle part, frappe et revient dans ta main ; Tranchant la renforce aussi au lancer.</p></div></article>
+          <article class="objet apparait"><img src="assets/objets/objet_sabre_oni.webp" alt="Le Sabre de l'Oni et sa lame rouge" width="240" height="240" loading="lazy"><div><h4>Sabre de l'Oni</h4><p>Une arme de boss : trois coups en 4 secondes sur une même créature la font exploser.</p></div></article>
+        </div>
+        <p class="esquif-objet">Chaque arme a son combo : tiens le clic, elle enchaîne ses coups. Les grandes se tiennent à deux mains ; une épée te laisse ton bouclier.</p>
+      </details>
+      <details class="famille" open>
+        <summary><h3>Ta ferme et tes bêtes</h3><span class="compte">3 objets</span></summary>
+        <div class="grille-objets">
+          <article class="objet apparait"><img src="assets/objets/objet_houe.webp" alt="Une houe de récolte, en diamant" width="240" height="240" loading="lazy"><div><h4>Houe de récolte</h4><p>Un clic droit sur une plante mûre : elle la récolte et la replante.</p></div></article>
+          <article class="objet apparait"><img src="assets/objets/objet_semoir.webp" alt="Le semoir : une trémie de pierre pleine de graines, sur un socle de bois" width="240" height="240" loading="lazy"><div><h4>Semoir</h4><p>Il plante et récolte tout seul ; un coffre collé reçoit la récolte.</p></div></article>
+          <article class="objet apparait"><img src="assets/objets/objet_oeuf.webp" alt="Un œuf mystère, la variante mythique, toute rose" width="240" height="240" loading="lazy"><div><h4>Œuf mystère</h4><p>Dans un incubateur, il éclot en une bête commune, rare... ou mythique, qui entre dans ton bestiaire.</p></div></article>
+        </div>
+        <p class="esquif-objet">Quatre enclos par île, et deux gains par enclos : les objets de tes bêtes dans son coffre, les jetons de sa grange.</p>
+      </details>
+      <details class="famille" open>
+        <summary><h3>Les machines de ton île</h3><span class="compte">3 objets</span></summary>
+        <div class="grille-objets">
+          <article class="objet apparait"><img src="assets/objets/objet_cailloux.webp" alt="Le Casse-cailloux, la première machine de ton île, en pierre" width="240" height="240" loading="lazy"><div><h4>Casse-cailloux</h4><p>Ta première machine : la pierre de l'île, sans fin. Deux t'attendent à l'arrivée.</p></div></article>
+          <article class="objet apparait"><img src="assets/objets/objet_fonderie.webp" alt="La Fonderie d'or : un creuset de pierre noire cerclé d'or, son métal en fusion" width="240" height="240" loading="lazy"><div><h4>Fonderie d'or</h4><p>Elle fond l'or brut au charbon : charbon en main, un clic droit fait le plein.</p></div></article>
+          <article class="objet apparait"><img src="assets/objets/objet_comptoir.webp" alt="Le comptoir du marchand et son auvent rayé" width="240" height="240" loading="lazy"><div><h4>Comptoir du marchand</h4><p>Il vend au marché ce que contient son coffre, toutes les 5 minutes, même quand tu es absent.</p></div></article>
+        </div>
+        <p class="esquif-objet">Les machines s'achètent en jetons au <code>/catalogue</code>, chacune à son niveau, jusqu'à celles du castérium.</p>
+      </details>
+    </div>
+    <p class="esquif-objet apparait">Et ce n'est qu'un début : des familiers te suivent partout, des montures t'emmènent au sol, dans les airs ou dans l'eau, et cinq navires se pilotent pour de bon, de la Chaloupe au Vaisseau amiral.</p>
+  </div>
+</section>
+
+<!-- UNE SURVIE MODDÉE AVEC UNE VRAIE PROGRESSION : aide.js, « Les niveaux » (tout rapporte de l'expérience ; chaque niveau ouvre
+     un outil, un palier, un bonus ou un boss), « Le castérium » (du Réacteur à la Forge de Casteria, plus fort que la
+     Netherite), « Les quêtes du Chroniqueur » (130 quêtes, 10 chapitres) ; les niveaux : index.html, le voyage, et aide.js,
+     « Le pont et ton île 2 » (35). Jamais un nombre juste avant le mot « boss » (le vérificateur du site). -->
+<section class="pan pan-vert" id="progression" aria-labelledby="progression-titre">
+  <div class="dedans deux-colonnes">
+    <div class="texte apparait">
+      <span class="sur-titre">Du niveau 1 au niveau 70</span>
+      <h2 id="progression-titre">Une survie moddée avec une vraie progression</h2>
+      <p>Ici, ta survie suit une route. Tout rapporte de l'expérience, tes ventes, tes récoltes, tes quêtes, les jeux, les donjons et les boss, et chaque niveau ouvre quelque chose : un outil, une machine, un bonus ou un boss. Huit rangs s'affichent devant ton nom, de Naufragé à Légende.</p>
+      <ol class="trois-gestes">
+        <li><b><span class="cache">Niveau </span>3</b> Ton premier combat, le Roi Champignon</li>
+        <li><b><span class="cache">Niveau </span>15</b> Ton premier navire, la Chaloupe</li>
+        <li><b><span class="cache">Niveau </span>16</b> Le Temple Creux, ton premier donjon</li>
+        <li><b><span class="cache">Niveau </span>35</b> Le pont vers ton île 2</li>
+        <li><b><span class="cache">Niveau </span>60</b> L'Esquif, cap sur la planète</li>
+      </ol>
+      <p>Au sommet, le castérium, un métal que le marché ne vend pas : il se forge du Réacteur à la Forge de Casteria et donne un équipement plus fort que la Netherite. Ludovic, lui, tient 130 quêtes en 10 chapitres (<code>/qp</code>). Tout le chemin est sur <a href="serveur-minecraft-rpg.html">la page de la progression façon RPG</a>.</p>
+    </div>
+    <figure class="tableau apparait">
+      <img src="assets/images/casteria-victoire-boss-3d-roi-champignon.jpg" alt="Le Roi Champignon vaincu vole en morceaux, une colonne de lumière fait jaillir des jetons et une couronne dorée brille au-dessus du joueur" width="1280" height="720" loading="lazy">
+      <figcaption>Ta victoire se voit : le boss éclate, les jetons pleuvent, une couronne se pose sur toi.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- LE LAUNCHER INSTALLE LES MODS POUR TOI : CasteriaLauncher/LISEZMOI.md (Minecraft, NeoForge et le Java de Mojang, une fois),
+     page_github/page_installateur.md (il ne touche jamais au dossier Minecraft habituel ; il se met à jour tout seul),
+     index.html (« Un mod en trop » : il retire ce qui est en trop ; seulement par son launcher). Les liens figés de la release
+     « installateur » (ceux de index.html), chacun avec son data-track. -->
+<section class="clair telecharge" id="telecharger">
+  <div class="dedans">
+    <div class="tete apparait">
+      <span class="ruban">Aucun mod à chercher</span>
+      <h2>Le launcher installe les mods pour toi</h2>
+      <p>Pas de pack à télécharger, pas de version à régler, pas de dossier mods à remplir : le launcher de Casteria s'en charge.</p>
+    </div>
+    <div class="launcher">
+      <div class="cadre-bois apparait de-gauche"><img src="assets/images/launcher-casteria-2010.jpg" alt="Le launcher de Casteria : le bouton JOUER, les nouvelles de la dernière mise à jour et ses réglages" width="1100" height="700" loading="lazy"></div>
+      <div class="apparait de-droite">
+        <ul class="atouts">
+          <li><b>Tout s'installe d'un coup.</b> Minecraft 1.21.1, NeoForge, le Java qu'il faut et les mods du serveur, la première fois, en quelques minutes.</li>
+          <li><b>Tout reste à jour.</b> À chaque nouveauté du serveur, il met ton jeu à niveau tout seul.</li>
+          <li><b>Ton Minecraft reste intact.</b> Il range tout dans son propre dossier, jamais dans ton .minecraft.</li>
+          <li><b>Rien en trop.</b> Casteria se joue seulement par son launcher : un mod ajouté à la main est retiré tout seul.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="plateformes quai apparait">
+      <img class="quai-g" src="assets/volume/yeti.png" alt="" width="520" height="520" loading="lazy"><img class="quai-d" src="assets/volume/kraken.png" alt="" width="520" height="520" loading="lazy">
+      <a class="bouton bouton-vert grand" href="https://github.com/guerrinflorian/casteria-mc/releases/download/installateur/Casteria-Installation.exe" rel="noopener" data-track="download-windows"><svg class="picto" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M12 4v16M3 12h18" fill="none" stroke="currentColor" stroke-width="2.6"/></svg>Windows</a>
+      <a class="bouton bouton-or grand" href="https://github.com/guerrinflorian/casteria-mc/releases/download/installateur/Casteria-mac-apple-silicon.zip" rel="noopener" data-track="download-mac"><svg class="picto" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M12 16v4M8 20.5h8" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>Mac (puce Apple)</a>
+      <a class="bouton bouton-or grand" href="https://github.com/guerrinflorian/casteria-mc/releases/download/installateur/Casteria-mac-intel.zip" rel="noopener" data-track="download-mac"><svg class="picto" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M12 16v4M8 20.5h8" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>Mac (Intel)</a>
+      <a class="bouton bouton-bois grand" href="https://github.com/guerrinflorian/casteria-mc/releases/tag/installateur" rel="noopener" data-track="download-linux"><svg class="picto" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M7 9l3.5 3L7 15M13 15.5h4" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Linux</a>
+    </div>
+    <p class="apparait">Chaque étape, système par système, et les réponses aux soucis d'installation : <a href="launcher-minecraft-modde.html">le launcher Minecraft moddé de Casteria</a>. Les mêmes fichiers sont aussi sur <a href="./#telecharger">la page de téléchargement de l'accueil</a>.</p>
+  </div>
+</section>
+
+<!-- LA CONFIGURATION REQUISE : seulement ce qui est écrit. Windows 64 bits (CasteriaLauncher/package.json, build.win : l'arch x64
+     seule) ; macOS 13 et la puce Apple ou Intel (index.html, l'aide Mac ; page_installateur.md) ; les Linux (index.html, l'aide
+     Linux ; src/reglages.js, glibc 2.39 ; les fichiers x86_64) ; la mémoire (src/reglages.js, memoireConseillee et
+     verifierMemoire : 2, 3 ou 4 Go, de 2 à 16 Go, 2 Go laissés au système) ; les shaders (electron/fenetre/index.html : « une
+     bonne carte graphique » ; src/reglages.js : coupés par défaut) ; la première préparation (index.html, l'aide Windows).
+     TODO (le propriétaire) : le processeur, la carte graphique et la mémoire minimum, l'espace disque et la version minimale
+     de Windows ne sont écrits nulle part (ni le launcher, ni le site, ni le Discord) : à ajouter ici quand ils seront connus. -->
+<section class="pan pan-nuit" id="configuration" aria-labelledby="configuration-titre">
+  <div class="dedans">
+    <div class="tete apparait">
+      <h2 id="configuration-titre">Configuration requise</h2>
+      <p>Ce qu'il faut pour jouer à ce serveur moddé, tel que le launcher le demande.</p>
+    </div>
+    <div class="astuces">
+      <article class="carte apparait"><h3>Sur Windows</h3><p>Un PC sous Windows 64 bits. Le launcher s'installe tout seul, sans rien te demander.</p></article>
+      <article class="carte apparait"><h3>Sur Mac</h3><p>macOS 13 ou plus récent, avec une puce Apple (M1, M2, M3...) ou un processeur Intel : chacun a son fichier.</p></article>
+      <article class="carte apparait"><h3>Sur Linux</h3><p>Un PC 64 bits sous Ubuntu 24.04, Linux Mint 22, Debian 13, Fedora 40, Arch ou Manjaro, ou plus récent. Sur un Linux plus ancien, le jeu ne peut pas démarrer.</p></article>
+      <article class="carte apparait"><h3>La mémoire</h3><p>Le launcher la règle selon ton ordinateur : 2 Go pour le jeu, 3 Go dès 8 Go de mémoire, 4 Go dès 12 Go. Dans Réglages, tu choisis de 2 à 16 Go, en laissant toujours 2 Go à ton système.</p></article>
+      <article class="carte apparait"><h3>La carte graphique</h3><p>Les shaders, coupés au départ, rendent la lumière, l'eau et le ciel magnifiques, mais demandent une bonne carte graphique : sans eux, le jeu est plus léger.</p></article>
+      <article class="carte apparait"><h3>La connexion</h3><p>Il en faut une pour jouer. La première fois, le launcher télécharge le jeu : compte quelques minutes, selon ta connexion.</p></article>
+    </div>
+  </div>
+</section>
+
+<!-- LA FAQ : les mêmes questions et réponses, mot pour mot, dans le bloc FAQPage du JSON-LD (en tête de page) -->
+<section class="clair" id="faq" aria-labelledby="faq-titre">
+  <div class="dedans">
+    <div class="tete apparait">
+      <h2 id="faq-titre">FAQ du serveur moddé</h2>
+      <p>Les questions qu'on nous pose avant d'installer.</p>
+    </div>
+    <div class="astuces notes">
+      <article class="carte apparait"><h3>Faut-il installer les mods soi-même&#160;?</h3><p>Non. Le launcher installe le jeu, NeoForge et tous les mods de Casteria, puis les met à jour tout seul : aucun fichier à déplacer, aucune version à régler.</p></article>
+      <article class="carte apparait"><h3>Ce serveur Minecraft moddé est-il vraiment gratuit&#160;?</h3><p>Oui. Tout le jeu se joue sans payer ; la boutique vend des crédits, que tu peux aussi gagner avec les missions du jour, tes votes et les quêtes de Ludovic.</p></article>
+      <article class="carte apparait"><h3>Faut-il acheter Minecraft&#160;?</h3><p>Non : le crack est accepté. Ton pseudo suffit, et si tu as acheté Minecraft, tu joues pareil, avec le même launcher.</p></article>
+      <article class="carte apparait"><h3>Puis-je ajouter mes propres mods&#160;?</h3><p>Non : Casteria se joue seulement avec les siens, et le launcher retire tout seul un mod en trop. Les shaders, eux, s'allument d'un clic dans Réglages.</p></article>
+      <article class="carte apparait"><h3>Quelle version de Minecraft faut-il&#160;?</h3><p>Minecraft Java 1.21.1, avec NeoForge 21.1. Tu n'as rien à installer toi-même : le launcher s'en charge.</p></article>
+      <article class="carte apparait"><h3>Ça marche sur Mac et sur Linux&#160;?</h3><p>Oui : le launcher existe pour Windows, pour Mac (puce Apple ou Intel) et pour Linux, avec son aide pour chacun.</p></article>
+    </div>
+  </div>
+</section>
+
+<!-- LE BAS DE PAGE : « Jouer gratuitement » une seconde fois, le Discord, et la page de l'île -->
+<section class="final" id="final" aria-labelledby="final-titre">
+  <div class="final-fond" aria-hidden="true"><div class="pointeur"><img src="assets/images/casteria-planete-trou-noir-comete.jpg" alt="" width="2048" height="1152" loading="lazy"></div></div>
+  <div class="etincelles" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  <div class="dedans deux-colonnes">
+    <div class="texte apparait">
+      <span class="sur-titre">Ton aventure moddée</span>
+      <h2 id="final-titre">Prêt à jouer&#160;?</h2>
+      <p>Un clic sur JOUER : le launcher prépare le jeu et ses mods, puis t'emmène au palais.</p>
+      <div class="gestes" style="display:flex;flex-wrap:wrap;align-items:center;gap:12px"><a class="bouton bouton-orange grand" href="#telecharger"><span class="triangle" aria-hidden="true"></span>Jouer gratuitement</a> <a class="bouton bouton-discord" href="/discord" aria-label="Rejoindre le Discord de Casteria" data-track="discord"><svg class="logo-discord" viewBox="0 0 127.14 96.36" aria-hidden="true" focusable="false"><path fill="currentColor" d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/></svg><span class="mot">Discord</span></a> <a class="bouton-verre" href="serveur-minecraft-ile.html">Ton île sur la mer <span class="fleche" aria-hidden="true">&#8250;</span></a></div>
+    </div>
+    <div class="final-sprite" aria-hidden="true"><div class="pointeur"><img class="flotte f-sol" src="assets/volume/fregate.webp" alt="" width="855" height="1027" loading="lazy"></div></div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="dedans">
+    <div class="col">
+      <img src="assets/logo/casteria-logo-300.webp" alt="Casteria" width="70" height="70" loading="lazy">
+      <nav aria-label="Le pied de page"><a href="./">Accueil</a><a href="commencer.html">Par où commencer</a><a href="evenements.html">Les événements</a><a href="pirates.html">La mer et les pirates</a><a href="donjons.html">Les donjons</a><a href="casino.html">Le casino</a><a href="./#combat">Le combat</a><a href="classement.html">Classement</a><a href="boutique.html">Boutique</a><a href="vote.html">Voter</a><a href="reglement.html">Le règlement</a><a href="./#telecharger">Télécharger</a><a href="serveur-minecraft-ile.html">Serveur Minecraft d'île</a><a href="serveur-minecraft-modde.html">Serveur moddé</a><a href="launcher-minecraft-modde.html">Launcher moddé</a><a href="serveur-minecraft-rpg.html">Serveur RPG</a><a href="serveur-minecraft-boss.html">Boss et donjons</a><a href="mentions-legales.html">Mentions légales</a><a href="confidentialite.html">Confidentialité</a><a href="conditions.html">Conditions</a></nav>
+    </div>
+    <small>Casteria est un serveur Minecraft indépendant, créé par des joueurs. Il n'est ni affilié à Mojang ni à Microsoft, ni approuvé par eux. Minecraft est une marque de Mojang Studios.</small>
+  </div>
+</footer>
+<script src="js/site.js" defer></script>
+<script src="js/objets.js" defer></script>
+</body>
+</html>
