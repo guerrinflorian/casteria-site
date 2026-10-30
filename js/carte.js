@@ -1016,7 +1016,7 @@
     for (var k = 0; k < pirates.length; k++) {
       var n = pirates[k], en = ecranM(n.x, n.z)
       if (en[0] < -40 || en[0] > L + 40 || en[1] < -40 || en[1] > H + 40) continue
-      if (!navireVu(en[0], en[1], n.cap || 0, String(n.type || ''), true, true)) navire(en[0], en[1], n.cap || 0, true, String(n.nom || n.type || 'pirate'), true)
+      if (!navireVu(en[0], en[1], n.cap || 0, String(n.coque || n.type || ''), true, true)) navire(en[0], en[1], n.cap || 0, true, String(n.nom || n.type || 'pirate'), true)
       // son nom cède la place à celui d'un joueur (un combat : les deux navires sont côte à côte)
       g.font = '600 11px Fredoka, system-ui, sans-serif'
       var np = String(n.nom || 'Pirate'), wp = g.measureText(np).width, yp = en[1] + Math.max(14, 8 * M.s), rp = [en[0] - wp / 2 - 4, yp - 1, en[0] + wp / 2 + 4, yp + 15]
@@ -1024,13 +1024,15 @@
     }
   }
   // les événements en mer (une cargaison, un trésor...) : un cercle qui pulse, son nom ({ sorte, nom, x, z })
+  // (2c, la 156) une cargaison à la couleur de sa rareté (les couleurs du jeu : ciMER.cargaisons.couleurs) ; un autre événement : le cyan
+  var RARETES = { commune: '158,158,158', peu_commune: '85,200,85', rare: '74,144,226', epique: '166,76,224', legendaire: '242,193,46' }
   function evenementsEnMer() {
     for (var k = 0; k < evenements.length; k++) {
-      var v = evenements[k], en = ecranM(v.x, v.z), r = 10 + (calme ? 0 : Math.sin(t * 3 + k) * 3)
+      var v = evenements[k], en = ecranM(v.x, v.z), r = 10 + (calme ? 0 : Math.sin(t * 3 + k) * 3), rgb = RARETES[v.rarete] || '126,232,255'
       if (en[0] < -40 || en[0] > L + 40 || en[1] < -40 || en[1] > H + 40) continue
-      g.strokeStyle = 'rgba(126,232,255,.9)'; g.lineWidth = 2
+      g.strokeStyle = 'rgba(' + rgb + ',.95)'; g.lineWidth = 2
       g.beginPath(); g.arc(en[0], en[1], r, 0, Math.PI * 2); g.stroke()
-      g.fillStyle = 'rgba(126,232,255,.25)'; g.fill()
+      g.fillStyle = 'rgba(' + rgb + ',.28)'; g.fill()
       // son nom, s'il ne couvre pas celui d'un lieu
       g.font = '600 12px Fredoka, system-ui, sans-serif'
       var nv = String(v.nom || 'Un événement'), wv = g.measureText(nv).width, xv = Math.max(wv / 2 + 6, Math.min(L - wv / 2 - 6, en[0])), rv = [xv - wv / 2 - 4, en[1] + 13, xv + wv / 2 + 4, en[1] + 30]
