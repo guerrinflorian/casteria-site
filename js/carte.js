@@ -637,11 +637,13 @@
   }
   function lireMer(c) {
     var zs = c.zones || [], ligne = c.ligne || MER_DEFAUT.ligne, rayon = Number(c.rayon) || MER_DEFAUT.rayon
-    var anneaux = [], rade = null, fosse = null, k
+    var anneaux = [], rade = null, fosse = null, secteurs = [], k
     for (k = 0; k < zs.length; k++) {
       var z = zs[k]
       if (z.id === 'rade') rade = Object.assign({}, z, { a: Number(z.a) > 0 ? Number(z.a) : MER_DEFAUT.rade })
-      else if (z.id === 'fosse' || z.secteur) fosse = z
+      else if (z.id === 'fosse') fosse = z
+      // (2c) une autre zone en secteur (le Gouffre aux Flibustiers de la 156, a8) : à part, jamais à la place de la Fosse
+      else if (z.secteur) secteurs.push(z)
       else if (Number(z.rang) > 0) anneaux.push(z)
     }
     anneaux.sort(function (p, q) { return p.de - q.de })
@@ -651,7 +653,7 @@
     var lieux = (c.lieux || []).slice(), atlas = (c.atlas || []).filter(function (a) { return isFinite(a.x) && isFinite(a.z) })
     var parZone = {}
     ;(c.atlas || []).concat(lieux.filter(function (l) { return l.sorte === 'phare' })).forEach(function (a) { if (a.zone) parZone[a.zone] = (parZone[a.zone] || 0) + 1 })
-    mer = { ligne: ligne, rayon: rayon, anneaux: anneaux, rade: rade, fosse: fosse, port: c.port || null, lieux: lieux, atlas: atlas, parZone: parZone }
+    mer = { ligne: ligne, rayon: rayon, anneaux: anneaux, rade: rade, fosse: fosse, secteurs: secteurs, port: c.port || null, lieux: lieux, atlas: atlas, parZone: parZone }
   }
 
   // ---------- le dessin ----------
