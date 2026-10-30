@@ -193,7 +193,8 @@
     if (!at.children.length) at.appendChild(el('li', 'rien', 'Aucun achat pour l\'instant.'))
     var ac = $('compte-achats-credits'); vider(ac)
     ;(pv.depenses_credits || []).slice(0, 12).forEach(function (x) {
-      var li = el('li'); li.appendChild(el('span', 'quand', A.date(x.quand))); li.appendChild(el('span', 'quoi', String(x.article)))
+      // (dc, 30/10) une correction de l'équipe n'est pas un achat : elle le dit
+      var li = el('li'); li.appendChild(el('span', 'quand', A.date(x.quand))); li.appendChild(el('span', 'quoi', (x.par_equipe ? 'Retiré par l\'équipe : ' : '') + String(x.article)))
       li.appendChild(el('b', '', A.nombre(x.credits) + NBSP + 'crédits')); ac.appendChild(li)
     })
     if (!ac.children.length) ac.appendChild(el('li', 'rien', 'Aucune dépense en crédits pour l\'instant.'))

@@ -329,7 +329,7 @@
     function bloc(titreBloc, large) { var c = el('div', 'a-carte' + (large ? ' large' : '')); c.appendChild(el('h3', '', titreBloc)); return c }
     function lignes(c, paires) { var ul = el('ul', 'fiche-grille'); paires.forEach(function (p) { var li = el('li'); li.appendChild(el('span', '', p[0])); li.appendChild(el('b', '', p[1])); ul.appendChild(li) }); c.appendChild(ul) }
     var b1 = bloc('Le compte'); g.appendChild(b1)
-    lignes(b1, [['Identifiant (uuid)', texte(ad.uuid)], ['Inscrit', ad.inscrit ? A.date(ad.inscrit) : 'inconnu'], ['Où', ad.lieu ? texte(ad.lieu) : 'hors ligne'], ['Temps de jeu', num(f.temps_de_jeu_min) === null ? VIDE : A.nombre(Math.floor(f.temps_de_jeu_min / 60)) + NBSP + 'h']])
+    lignes(b1, [['Identifiant (uuid)', texte(ad.uuid)], ['Inscrit', ad.inscrit ? A.date(ad.inscrit) : (ad.inscrit_avant ? 'avant le ' + A.date(ad.inscrit_avant) : 'inconnu')], ['Où', ad.lieu ? texte(ad.lieu) : 'hors ligne'], ['Temps de jeu', num(f.temps_de_jeu_min) === null ? VIDE : A.nombre(Math.floor(f.temps_de_jeu_min / 60)) + NBSP + 'h']])
     var b2 = bloc('L\'argent'), ag = ad.argent || {}; g.appendChild(b2)
     // (5c, 30/10) la fortune et le patrimoine (le classement du jeu), puis les hausses de jetons par jour (relevées chaque nuit)
     lignes(b2, [['Jetons', nb(pv.jetons)], ['Fortune', nb(ag.fortune)], ['Patrimoine', nb(ag.patrimoine)], ['Crédits', nb(pv.credits)],
@@ -343,7 +343,7 @@
     if (!ula.children.length) ula.appendChild(el('li', 'rien', 'Aucun achat.'))
     achats.appendChild(ula)
     var dep = bloc('Les dépenses en crédits'), uld = el('ul', 'a-liste'); g.appendChild(dep)
-    liste(pv.depenses_credits).slice(0, 10).forEach(function (x) { var li = el('li'); li.appendChild(el('span', 'quand', A.date(x.quand))); li.appendChild(el('span', '', texte(x.article))); li.appendChild(el('span', 'prix', nb(x.credits) + NBSP + 'crédits')); uld.appendChild(li) })
+    liste(pv.depenses_credits).slice(0, 10).forEach(function (x) { var li = el('li'); li.appendChild(el('span', 'quand', A.date(x.quand))); li.appendChild(el('span', '', (x.par_equipe ? 'Retiré par l\'équipe : ' : '') + texte(x.article))); li.appendChild(el('span', 'prix', nb(x.credits) + NBSP + 'crédits')); uld.appendChild(li) })
     if (!uld.children.length) uld.appendChild(el('li', 'rien', 'Aucune dépense.'))
     dep.appendChild(uld)
     boite.appendChild(g)
