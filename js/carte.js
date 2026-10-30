@@ -668,8 +668,23 @@
     for (var k = 0; k < mer.anneaux.length; k++) if (d >= mer.anneaux[k].de && d < mer.anneaux[k].a) return mer.anneaux[k]
     return mer.anneaux.length ? mer.anneaux[mer.anneaux.length - 1] : null
   }
+  // (2c, 30/10 ; la tête : « Le Sillage de la Damnation » était sur la carte) LES NOMS TUS : un nom venu des données qui nomme ce
+  // qu'on ne nomme jamais (un boss secret) se dit par un nom neutre. La liste est SPOILERS d'outils/verifier.js, mot pour mot :
+  // verifier.js le vérifie, et joue nomPublic sur chacun de ses noms
+  var NOMS_TUS = ['Abyssarque', 'Dragon Ancien', 'salle du trône', 'Cœur Creux', 'Coeur Creux', 'Sphinx d\'Or', 'Sphinx d’Or',
+    'Dévoreur', 'devoreur', 'Mécha Titan', 'Mecha Titan', 'mecha_titan', 'IA Néon', 'Archimage', 'Chevalier Noir',
+    'Capitaine Fantôme', 'Minotaure', 'Djinn des Sables', 'djinn_sables', 'Colosse des Profondeurs', 'Dernier Amiral',
+    'Gaspard-des-Brumes', 'La Damnation']
+  var NEUTRES = { epave: 'Une épave sans nom', ile: 'Une île sans nom', ruine: 'Des ruines sans nom', phare: 'Un phare sans nom', repaire: 'Un repaire sans nom', recif: 'Un récif sans nom' }
+  function nomPublic(nom, neutre) {
+    var n = String(nom == null ? '' : nom), b = n.toLowerCase()
+    for (var k = 0; k < NOMS_TUS.length; k++) if (b.indexOf(NOMS_TUS[k].toLowerCase()) >= 0) return neutre
+    return n
+  }
+  function lieuPublic(a) { return Object.assign({}, a, { nom: nomPublic(a.nom, NEUTRES[a.genre || a.sorte] || 'Un lieu sans nom') }) }
+  function zonePublique(z) { return Object.assign({}, z, { nom: nomPublic(z.nom, 'Une zone de la mer'), guide: nomPublic(z.guide, '') }) }
   function lireMer(c) {
-    var zs = c.zones || [], ligne = c.ligne || MER_DEFAUT.ligne, rayon = Number(c.rayon) || MER_DEFAUT.rayon
+    var zs = (c.zones || []).map(zonePublique), ligne = c.ligne || MER_DEFAUT.ligne, rayon = Number(c.rayon) || MER_DEFAUT.rayon
     var anneaux = [], rade = null, fosse = null, secteurs = [], k
     for (k = 0; k < zs.length; k++) {
       var z = zs[k]
@@ -683,7 +698,7 @@
     if (!rade) rade = { id: 'rade', nom: 'La Rade', niveau: 0, de: 0, a: MER_DEFAUT.rade }
     if (!fosse) fosse = MER_DEFAUT.fosse
     if (!fosse.terrain) fosse.terrain = MER_DEFAUT.fosse.terrain
-    var lieux = (c.lieux || []).slice(), atlas = (c.atlas || []).filter(function (a) { return isFinite(a.x) && isFinite(a.z) })
+    var lieux = (c.lieux || []).map(lieuPublic), atlas = (c.atlas || []).filter(function (a) { return isFinite(a.x) && isFinite(a.z) }).map(lieuPublic)
     var parZone = {}
     ;(c.atlas || []).concat(lieux.filter(function (l) { return l.sorte === 'phare' })).forEach(function (a) { if (a.zone) parZone[a.zone] = (parZone[a.zone] || 0) + 1 })
     mer = { ligne: ligne, rayon: rayon, anneaux: anneaux, rade: rade, fosse: fosse, secteurs: secteurs, port: c.port || null, lieux: lieux, atlas: atlas, parZone: parZone }
@@ -1144,8 +1159,9 @@
       }
       for (var p in navires) if (!vus[p]) delete navires[p]
       // (2c) ce qui vit en mer, quand le jeu le publie : les pirates et les événements (sinon : rien)
-      pirates = Array.isArray(r.corps.pirates) ? r.corps.pirates.filter(function (n) { return isFinite(n.x) && isFinite(n.z) }) : []
-      evenements = Array.isArray(r.corps.evenements) ? r.corps.evenements.filter(function (n) { return isFinite(n.x) && isFinite(n.z) }) : []
+      // (2c) leurs noms tus comme ceux des lieux (un pirate de la fin de partie ne se nomme jamais)
+      pirates = Array.isArray(r.corps.pirates) ? r.corps.pirates.filter(function (n) { return isFinite(n.x) && isFinite(n.z) }).map(function (n) { return Object.assign({}, n, { nom: nomPublic(n.nom, 'Un navire pirate') }) }) : []
+      evenements = Array.isArray(r.corps.evenements) ? r.corps.evenements.filter(function (n) { return isFinite(n.x) && isFinite(n.z) }).map(function (n) { return Object.assign({}, n, { nom: nomPublic(n.nom, 'Un événement en mer') }) }) : []
       relevePrec = releveDernier || tl - 10000; releveDernier = tl
       legendeVivante()
       sale = true

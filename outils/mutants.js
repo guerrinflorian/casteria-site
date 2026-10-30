@@ -295,7 +295,12 @@ const MUTANTS = [
   ['la plaque vide visible au depart', 'css/style.css', s => s.replace('.en-ligne[hidden] { display: none; }\n', '')],
   ['le pouls qui ne se calme pas', 'css/style.css', s => s.replace('@media (prefers-reduced-motion: reduce) { .en-ligne::before { animation: none; } }', '')],
   ['la place des joueurs en ligne visible au depart', 'index.html', s => s.replace('<p class="en-ligne" data-en-ligne hidden></p>', '<p class="en-ligne" data-en-ligne></p>')],
-  ['l\'identifiant du gist dans un autre script', 'js/carrousel.js', s => s + '\n// 4337783e1d14963774decfe06f2709da\n']
+  ['l\'identifiant du gist dans un autre script', 'js/carrousel.js', s => s + '\n// 4337783e1d14963774decfe06f2709da\n'],
+  // (2c, 30/10/2026) les noms venus des données (la carte de la mer) : jamais un nom de SPOILERS
+  ['le filtre des noms tus qui laisse tout passer', 'js/carte.js', s => s.replace('if (b.indexOf(NOMS_TUS[k].toLowerCase()) >= 0) return neutre', '')],
+  ['La Damnation retiree des noms tus', 'js/carte.js', s => s.replace(", 'La Damnation']", ']')],
+  ['les noms de l\'Atlas sans le filtre', 'js/carte.js', s => s.replace('isFinite(a.z) }).map(lieuPublic)', 'isFinite(a.z) })')],
+  ['les noms des pirates sans le filtre', 'js/carte.js', s => s.replace(".map(function (n) { return Object.assign({}, n, { nom: nomPublic(n.nom, 'Un navire pirate') }) })", '')]
 ]
 
 // MUTANTS_SEULS=<un morceau du nom> : seulement ceux-là (pour rejouer un mutant récrit)

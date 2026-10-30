@@ -779,6 +779,37 @@ console.log('vote.html, css/vote.css (les sites de vote)')
 verifierVote(faute)
 console.log('js/site.js (le bandeau de la fermeture, les joueurs en ligne)')
 verifierOuvertureEtEnLigne(faute)
+// (2c, 30/10/2026 ; la tête : « Le Sillage de la Damnation » était sur la carte en ligne, un nom venu des DONNÉES, que la règle des
+// SPOILERS ne voyait pas) LES NOMS QUE L'API REND : la carte (js/carte.js) dit par un nom neutre tout nom de l'Atlas, des lieux, des
+// zones, des pirates et des événements qui nomme ce qu'on ne nomme jamais. Ici : sa liste NOMS_TUS est SPOILERS mot pour mot, et son
+// nomPublic, joué sur chaque nom de SPOILERS (dans une phrase, en capitales), le tait. « --en-ligne » : en plus, les noms que l'API
+// rend EN CE MOMENT (/api/carte?zone=mer et /api/navires de casteria.fr) passés au même filtre.
+console.log('js/carte.js (les noms venus des données : jamais un nom de SPOILERS)')
+verifierNomsDesDonnees(faute)
+function verifierNomsDesDonnees(faute) {
+  const c = fs.readFileSync(path.join(RACINE, 'js', 'carte.js'), 'utf8')
+  const ml = /var NOMS_TUS = \[([\s\S]*?)\]\n/.exec(c), mf = /function nomPublic\(nom, neutre\) \{[\s\S]*?\n {2}\}\n/.exec(c)
+  if (!ml || !mf) { faute('js/carte.js : la liste NOMS_TUS ou la fonction nomPublic absente (les noms des données ne sont plus filtrés)'); return }
+  let tus = null, nomPublic = null
+  try { tus = Function('return [' + ml[1] + ']')(); nomPublic = Function('NOMS_TUS', mf[0] + '\nreturn nomPublic')(tus) } catch (e) { faute('js/carte.js : NOMS_TUS ou nomPublic illisible : ' + e.message); return }
+  for (const s of SPOILERS) if (!tus.includes(s)) faute('js/carte.js : NOMS_TUS n\'a pas « ' + s + ' » (elle doit être SPOILERS mot pour mot)')
+  // chaque nom venu des données passe par le filtre : les zones, les lieux, l'Atlas, les pirates, les événements
+  const appels = [['les zones', '(c.zones || []).map(zonePublique)'], ['les lieux', '(c.lieux || []).map(lieuPublic)'], ['l\'Atlas', 'isFinite(a.z) }).map(lieuPublic)'],
+    ['les pirates', "nom: nomPublic(n.nom, 'Un navire pirate')"], ['les événements', "nom: nomPublic(n.nom, 'Un événement en mer')"]]
+  for (const [quoi, a] of appels) if (!c.includes(a)) faute('js/carte.js : le filtre des noms tus n\'est plus appelé pour ' + quoi + ' (« ' + a + ' » absent)')
+  const tu = (n) => SPOILERS.some(s => String(n).toLowerCase().includes(s.toLowerCase()))
+  const noms = []
+  for (const s of SPOILERS) noms.push('Le Sillage de ' + s, s.toUpperCase() + ' en mer')
+  if (process.argv.includes('--en-ligne')) {
+    const lu = require('child_process').spawnSync(process.execPath, ['-e', "Promise.all(['https://casteria.fr/api/carte?zone=mer', 'https://casteria.fr/api/navires'].map(u => fetch(u).then(r => r.json()))).then(([m, n]) => { const l = []; for (const a of (m.atlas || []).concat(m.lieux || [])) l.push(a.nom); for (const z of m.zones || []) l.push(z.nom, z.guide); for (const p of (n.pirates || []).concat(n.evenements || [])) l.push(p.nom); console.log(JSON.stringify(l.filter(x => x))) }).catch(e => { console.log('[]'); console.error(e.message) })"], { encoding: 'utf8', timeout: 20000 })
+    let enLigne = []
+    try { enLigne = JSON.parse(lu.stdout || '[]') } catch (e) { enLigne = [] }
+    if (!enLigne.length) faute('--en-ligne : l\'API n\'a rendu aucun nom (injoignable ?)')
+    console.log('  ' + enLigne.length + ' noms lus sur l\'API en ligne, dont ' + enLigne.filter(tu).length + ' à taire')
+    noms.push(...enLigne)
+  }
+  for (const n of noms) { const r = nomPublic(n, 'NEUTRE'); if (tu(r)) faute('js/carte.js : nomPublic laisse passer « ' + n + ' »') }
+}
 console.log('le site pèse ' + (total / 1048576).toFixed(1) + ' Mo')
 console.log(fautes ? fautes + ' faute(s)' : 'tout est bon')
 process.exit(fautes ? 1 : 0)
