@@ -237,5 +237,6 @@
     boite.appendChild(barre); boite.appendChild(leg)
   }
 
-  window.CasteriaGraphe = { courbe: courbe, colonnes: colonnes, barres: barres, entonnoir: entonnoir, empile: empile, compact: compact, jour: jour }
+  // (ag, 30/10) svg : un élément SVG, pour les jauges de la vue « Infra » de js/admin.js (l'espace de noms reste ici, seul)
+  window.CasteriaGraphe = { courbe: courbe, colonnes: colonnes, barres: barres, entonnoir: entonnoir, empile: empile, compact: compact, jour: jour, svg: svg }
 })()

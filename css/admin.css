@@ -278,3 +278,95 @@ html.photo .a-etat::before { animation: none; }
 .a-eco-deux { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 28px; margin-top: 8px; }
 .a-eco-deux h3 { margin: 0 0 4px; font-size: 15px; color: var(--or-clair, #FFD75E); }
 @media (max-width: 760px) { .a-eco-deux { grid-template-columns: minmax(0, 1fr); } }
+
+/* ---------- (ag, 30/10 ; le propriétaire : « l'état de tout ») L'INFRA : le bandeau d'ensemble (tout va bien, ou les alertes),
+   les serveurs de jeu en cartes arrondies, le VPS et ses jauges dessinées (des demi-cercles), la base, la 3D des îles. Le vert,
+   l'orange et le rouge disent l'état ; jamais une barre de couleur à gauche : un bord égal tout autour, une pastille ronde. ---------- */
+.admin-vue { --i-vert: #46D27A; --i-orange: #FF9B4A; --i-rouge: #FF5A4E; --i-gris: #8E7CA8; }
+.i-section { margin: 22px 0 0; }
+.i-section > h2, .i-deux .i-panneau > h2, .i-deux .i-tete h2 { margin: 0 0 12px; font-size: clamp(22px, 2.4vw, 28px); color: var(--titre-creme, #FFF6DC); }
+.i-bandeau { padding: 16px 20px 16px; border-radius: var(--r-panneau, 22px); border: 2px solid rgba(255, 255, 255, .12); background: linear-gradient(180deg, #2D2247, #241A3A); box-shadow: 0 14px 30px rgba(0, 0, 0, .35); }
+.i-bandeau.i-vert { border-color: rgba(70, 210, 122, .55); background: linear-gradient(180deg, rgba(46, 120, 78, .45), rgba(36, 26, 58, .95) 70%); }
+.i-bandeau.i-orange { border-color: rgba(255, 155, 74, .6); background: linear-gradient(180deg, rgba(150, 82, 30, .45), rgba(36, 26, 58, .95) 70%); }
+.i-bandeau.i-rouge { border-color: rgba(255, 90, 78, .7); background: linear-gradient(180deg, rgba(150, 36, 30, .55), rgba(36, 26, 58, .95) 75%); }
+.i-bandeau-tete { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 16px; }
+.i-bandeau h2 { margin: 0; font-size: clamp(26px, 3vw, 34px); color: #fff; }
+.i-releve { font-size: 13px; font-weight: 600; color: #CDB8E6; }
+.i-aide { margin: 8px 0 0; font-size: 14px; line-height: 1.45; color: #E7DCF7; }
+.i-alertes { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 8px; }
+.i-alerte { display: grid; grid-template-columns: 14px minmax(0, 1fr); gap: 2px 10px; align-items: baseline; padding: 10px 14px; border-radius: 14px; background: rgba(10, 6, 16, .4); border: 1px solid rgba(255, 255, 255, .1); }
+.i-alerte > i { width: 12px; height: 12px; border-radius: 50%; align-self: center; }
+.i-alerte.i-rouge > i { background: var(--i-rouge); box-shadow: 0 0 10px rgba(255, 90, 78, .7); }
+.i-alerte.i-orange > i { background: var(--i-orange); box-shadow: 0 0 8px rgba(255, 155, 74, .55); }
+.i-alerte.i-rouge { border-color: rgba(255, 90, 78, .5); }
+.i-alerte.i-orange { border-color: rgba(255, 155, 74, .45); }
+.i-alerte .i-texte { font-weight: 700; font-size: 15px; color: #fff; overflow-wrap: anywhere; }
+.i-alerte .i-sous { grid-column: 2; }
+.i-sous { display: block; font-size: 12.5px; font-weight: 600; color: #A994C4; overflow-wrap: anywhere; }
+/* les serveurs de jeu : une carte arrondie chacun */
+.i-serveurs { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 14px; }
+.i-serveur, .i-panneau { min-width: 0; padding: 14px 16px 12px; border-radius: var(--r-carte, 20px); border: 1px solid rgba(255, 207, 90, .28); background: linear-gradient(180deg, #2D2247, #241A3A); box-shadow: 0 12px 26px rgba(0, 0, 0, .35); }
+.i-serveur.hors { border-color: rgba(255, 255, 255, .14); background: linear-gradient(180deg, #2A2238, #211A30); }
+.i-tete { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 10px; margin-bottom: 6px; }
+.i-tete h3 { margin: 0; font-size: 22px; color: var(--titre-creme, #FFF6DC); text-shadow: 0 3px 0 #3A1F12; }
+.i-pastille { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px 4px; border-radius: 999px; font-size: 13px; font-weight: 700; line-height: 1.3; color: #fff; background: rgba(255, 255, 255, .08); border: 1px solid rgba(255, 255, 255, .14); }
+.i-pastille > i { width: 9px; height: 9px; flex: none; border-radius: 50%; background: var(--i-gris); }
+.i-pastille.i-vert { border-color: rgba(70, 210, 122, .5); background: rgba(70, 210, 122, .14); }
+.i-pastille.i-vert > i { background: var(--i-vert); box-shadow: 0 0 8px rgba(70, 210, 122, .7); }
+.i-pastille.i-orange { border-color: rgba(255, 155, 74, .55); background: rgba(255, 155, 74, .14); }
+.i-pastille.i-orange > i { background: var(--i-orange); }
+.i-pastille.i-rouge { border-color: rgba(255, 90, 78, .6); background: rgba(255, 90, 78, .16); }
+.i-pastille.i-rouge > i { background: var(--i-rouge); }
+.i-pastille.i-gris { color: #CDB8E6; }
+.i-ligne { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0 12px; align-items: baseline; padding: 7px 0; border-top: 1px solid rgba(255, 255, 255, .07); }
+.i-ligne:first-of-type, .i-tete + .i-ligne { border-top: 0; }
+.i-nom { font-size: 13.5px; font-weight: 600; color: #CDB8E6; }
+.i-ligne > b { font-family: "Fredoka", sans-serif; font-size: 16px; font-weight: 700; color: #fff; text-align: right; overflow-wrap: anywhere; }
+.i-ligne > b.vide { font-size: 14px; font-weight: 600; color: #A994C4; }
+.i-ligne > .i-pastille { justify-self: end; }
+.i-ligne > .i-sous { grid-column: 1 / -1; }
+.i-ligne > b.i-tps { font-family: var(--police-titre, "Chewy"), sans-serif; font-weight: 400; font-size: 30px; line-height: 1; }
+b.i-tps.i-vert { color: var(--i-vert); }
+b.i-tps.i-rouge { color: var(--i-rouge); }
+b.i-tps.i-gris { color: #B7A7CF; }
+/* le tas : une barre arrondie, le plus bas plein, le plus haut plus clair */
+.i-tas { position: relative; grid-column: 1 / -1; height: 12px; margin-top: 6px; border-radius: 999px; background: rgba(10, 6, 16, .55); box-shadow: inset 0 1px 2px rgba(0, 0, 0, .5); overflow: hidden; }
+.i-tas i { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 999px; }
+.i-tas-haut { background: rgba(255, 255, 255, .2); }
+.i-tas-bas.i-vert { background: linear-gradient(180deg, #7BE59C, var(--i-vert)); }
+.i-tas-bas.i-orange { background: linear-gradient(180deg, #FFC08A, var(--i-orange)); }
+.i-source { margin: 8px 0 0; font-size: 12px; font-weight: 600; color: #A994C4; overflow-wrap: anywhere; }
+.i-source + .i-source { margin-top: 2px; }
+.i-source.a-alerte { color: #FFB46B; }
+/* le VPS : les jauges dessinées, puis ses lignes et ses conteneurs */
+.i-jauges { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin: 4px 0 8px; }
+.i-jauge { margin: 0; padding: 10px 10px 12px; border-radius: 18px; background: rgba(10, 6, 16, .32); border: 1px solid rgba(255, 255, 255, .08); text-align: center; }
+.i-jauge svg { display: block; width: 100%; max-width: 190px; height: auto; margin: 0 auto; }
+.i-jauge .i-piste { fill: none; stroke: rgba(255, 255, 255, .1); stroke-width: 12; stroke-linecap: round; }
+.i-jauge .i-plein { fill: none; stroke-width: 12; stroke-linecap: round; }
+.i-jauge .i-plein.i-vert { stroke: var(--i-vert); }
+.i-jauge .i-plein.i-orange { stroke: var(--i-orange); }
+.i-jauge .i-plein.i-rouge { stroke: var(--i-rouge); }
+.i-jauge .i-cran { stroke: #FFE3B0; stroke-width: 2.5; stroke-linecap: round; }
+.i-jauge .i-pct { font-family: "Fredoka", sans-serif; font-size: 21px; font-weight: 700; fill: #fff; }
+.i-jauge .i-pct.vide { fill: #A994C4; }
+.i-jauge figcaption b { display: block; margin-top: 2px; font-size: 15px; color: var(--titre-creme, #FFF6DC); }
+.i-jauge figcaption span { display: block; font-size: 12.5px; font-weight: 600; color: #CDB8E6; }
+.i-jauge figcaption span.vide { color: #A994C4; }
+.i-lignes { margin: 6px 0 4px; }
+.i-panneau h3 { margin: 14px 0 8px; font-size: 19px; color: var(--titre-creme, #FFF6DC); }
+.i-vieux { margin: 0 0 10px; padding: 8px 12px; border-radius: 12px; font-size: 14px; font-weight: 700; color: #FFD9B8; background: rgba(255, 155, 74, .14); border: 1px solid rgba(255, 155, 74, .45); }
+.i-conteneurs { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 8px; }
+.i-conteneurs li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 10px; align-items: center; padding: 9px 12px; border-radius: 14px; background: rgba(10, 6, 16, .32); border: 1px solid rgba(255, 255, 255, .08); }
+.i-conteneurs b { font-size: 15px; color: #fff; overflow-wrap: anywhere; }
+.i-conteneurs .i-sous { grid-column: 1 / -1; }
+.i-deux { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 22px; }
+.i-deux .i-tete h2 { margin: 0; }
+@media (max-width: 760px) {
+  .i-deux { grid-template-columns: minmax(0, 1fr); }
+  .i-serveurs { grid-template-columns: minmax(0, 1fr); }
+  .i-bandeau { padding: 14px 14px; }
+  .i-serveur, .i-panneau { padding: 12px 12px 10px; }
+  .i-jauges { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .i-jauge { padding: 8px 6px 10px; }
+}

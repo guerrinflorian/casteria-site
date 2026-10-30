@@ -27,11 +27,13 @@
     consultations: ['Ce qu\'ils regardent', 'Les pages du site, les packs, les articles de la boutique du jeu.'],
     jeu: ['Ce qu\'ils font en jeu', 'Les joueurs actifs, les nouveaux, le monde en ligne, les activités, le temps passé.'],
     joueurs: ['Un joueur', 'Sa fiche complète : son compte, son argent, ses achats, tout son casier, son île.'],
-    tchat: ['Le tchat en direct', 'Le tchat de tout le réseau, une seule liste, ligne par ligne dès qu\'elle est écrite.']
+    tchat: ['Le tchat en direct', 'Le tchat de tout le réseau, une seule liste, ligne par ligne dès qu\'elle est écrite.'],
+    // (ag, 30/10 ; le propriétaire : « l'état de tout ») les serveurs, le VPS, la base, la 3D des îles, et leurs alertes
+    infra: ['L\'infra', 'Chaque serveur de jeu, le VPS du site, la base et la 3D des îles : leur état, sa source et son heure.']
   }
   var VIDE = 'pas encore de données'
   // (dc, 30/10) les vues de l'instant : sans le choix de la période
-  var SANS_PERIODE = { maintenant: 1, moderation: 1, economie: 1 }
+  var SANS_PERIODE = { maintenant: 1, moderation: 1, economie: 1, infra: 1 }
   var etat = { vue: 'tableau', jours: 30, pas: 'jour', numero: 0, tchat: null }
 
   // ---------- qui est là ----------
@@ -73,6 +75,7 @@
   }
   function montrer() {
     if (etat.tchat) { etat.tchat.fermer(); etat.tchat = null }
+    if (etat.minuteur) { clearTimeout(etat.minuteur); etat.minuteur = null }
     var n = ++etat.numero, v = VUES[etat.vue]
     titre.textContent = v[0]; sous.textContent = v[1]
     Array.prototype.forEach.call(nav.querySelectorAll('a'), function (a) { if (a.dataset.vue === etat.vue) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current') })
@@ -82,14 +85,14 @@
     var fin = function () { if (n === etat.numero) vue.classList.remove('charge') }
     if (etat.vue === 'joueurs') { vider(vue); vueJoueurs(); fin(); return }
     if (etat.vue === 'tchat') { vider(vue); vueTchat(); fin(); return }
-    var quoi = { maintenant: 'maintenant', moderation: 'moderation', economie: 'economie', tableau: 'tableau', ventes: 'ventes', tunnels: 'entonnoir', consultations: 'consultations', jeu: 'activites' }[etat.vue]
+    var quoi = { infra: 'infra', maintenant: 'maintenant', moderation: 'moderation', economie: 'economie', tableau: 'tableau', ventes: 'ventes', tunnels: 'entonnoir', consultations: 'consultations', jeu: 'activites' }[etat.vue]
     A.admin(quoi, { jours: etat.jours, pas: etat.pas }).then(function (r) {
       if (n !== etat.numero) return
       fin()
       if (r.statut === 401 && r.corps && r.corps.erreur === 'reconnexion') return reconnexion()
       if (r.statut !== 200 || !r.corps || typeof r.corps !== 'object') { vider(vue); vue.appendChild(el('p', 'a-panne', r.statut === 403 ? 'L\'API refuse : cette page est réservée à l\'équipe.' : 'Les chiffres ne se lisent pas pour l\'instant. Réessaie dans un instant.')); return }
       vider(vue)
-      ;({ maintenant: vueMaintenant, moderation: vueModeration, economie: vueEconomie, tableau: vueTableau, ventes: vueVentes, tunnels: vueTunnels, consultations: vueConsultations, jeu: vueJeu })[etat.vue](r.corps)
+      ;({ infra: vueInfra, maintenant: vueMaintenant, moderation: vueModeration, economie: vueEconomie, tableau: vueTableau, ventes: vueVentes, tunnels: vueTunnels, consultations: vueConsultations, jeu: vueJeu })[etat.vue](r.corps)
     })
   }
 
@@ -270,6 +273,193 @@
     var tp = d.temps || {}, moyen = num(tp.moyen_par_joueur_min)
     var b4 = carte('Le temps passé', moyen === null ? VIDE : 'Chaque joueur actif passe en moyenne ' + A.nombre(moyen) + NBSP + 'min par jour en jeu. Où :', d, tp.source || 'jeu', false, g2)
     G.empile(b4, { parts: liste(tp.par_lieu).filter(nomme).map(function (p) { return { nom: texte(p.nom), part: num(p.part) } }) })
+  }
+
+  // ---------- (ag, 30/10 ; le propriétaire : « l'état de tout ») L'INFRA : chaque serveur de jeu, le VPS, la base, la 3D des
+  // îles. Les seuils et les alertes viennent de l'API (GET /api/admin/infra, src/infra.js) : la page ne fait que les montrer ;
+  // chaque chiffre dit sa source et son heure ; une valeur absente : « pas encore de données », jamais 0. Relue toutes les
+  // 30 s tant que la vue est ouverte et l'onglet visible (sans le voile du chargement : la page ne clignote pas). ----------
+  var ETATS_SERVEUR = { en_ligne: ['En ligne', 'vert'], pouls_perdu: ['Sans pouls', 'orange'], arrete: ['Arrêté', 'rouge'], en_defaut: ['En défaut', 'rouge'], ne_repond_pas: ['Ne répond pas', 'rouge'], inconnu: [VIDE, 'gris'] }
+  var ETATS_CONTENEUR = { running: ['En marche', 'vert'], restarting: ['Redémarre', 'orange'], paused: ['En pause', 'orange'], exited: ['Arrêté', 'rouge'], dead: ['Arrêté', 'rouge'], created: ['Jamais lancé', 'rouge'], absent: ['Absent', 'rouge'] }
+  var INFRA_RELIRE_MS = 30000
+  function dec(x, n) { return num(x) === null ? VIDE : String(Math.round(x * Math.pow(10, n)) / Math.pow(10, n)).replace('.', ',') }
+  function go(o) { if (num(o) === null) return VIDE; var g = o / 1073741824; return (g >= 10 ? A.nombre(Math.round(g)) : dec(g, 1)) + NBSP + 'Go' }
+  function mo(m) { return num(m) === null ? VIDE : (m >= 1024 ? dec(m / 1024, 1) + NBSP + 'Go' : A.nombre(m) + NBSP + 'Mo') }
+  function deux(n) { return (n < 10 ? '0' : '') + n }
+  function dureeInfra(s) {
+    if (num(s) === null) return VIDE
+    var m = Math.floor(s / 60), h = Math.floor(m / 60), j = Math.floor(h / 24)
+    if (s < 60) return s + NBSP + 's'
+    if (m < 60) return m + NBSP + 'min'
+    if (h < 24) return h + NBSP + 'h' + NBSP + deux(m % 60)
+    return j + NBSP + (j > 1 ? 'jours' : 'jour') + ' ' + (h % 24) + NBSP + 'h'
+  }
+  // la couleur d'un pourcentage : rouge au-dessus du seuil, orange au-dessus de l'alerte, vert sinon ; gris : inconnu
+  function teinte(p, rouge, orange) { return num(p) === null ? 'gris' : p > rouge ? 'rouge' : p > orange ? 'orange' : 'vert' }
+  function pastille(mot, couleur) { var s = el('span', 'i-pastille i-' + couleur); s.appendChild(el('i')); s.appendChild(document.createTextNode(mot)); return s }
+  function ligne(boite, nom, valeur, sous) {
+    var d = el('div', 'i-ligne'), v = typeof valeur === 'string' ? el('b', valeur === VIDE ? 'vide' : '', valeur) : valeur
+    d.appendChild(el('span', 'i-nom', nom)); d.appendChild(v)
+    if (sous) d.appendChild(el('span', 'i-sous', sous))
+    boite.appendChild(d)
+    return d
+  }
+  function de(lu) { var t = quand(lu); return t ? (t.indexOf('du ') === 0 ? t : 'de ' + t) : '' }
+  function pied(boite, src, lu, vieux) { var t = de(lu); boite.appendChild(el('p', 'i-source' + (vieux ? ' a-alerte' : ''), texte(src || '') + (t ? ' · donnée ' + t : '') + (vieux ? ' (ancienne)' : ''))) }
+  // un élément SVG : celui de js/graphe.js (l'espace de noms n'est écrit que là)
+  function svg(nom, attrs) { var o = {}; for (var k in attrs) o[k] = String(attrs[k]); return G.svg(nom, o) }
+  // un point du demi-cercle (0 : à gauche, 1 : à droite, par le haut), au rayon r
+  function point(a, r) { return [(60 - r * Math.cos(Math.PI * a)).toFixed(2), (60 - r * Math.sin(Math.PI * a)).toFixed(2)] }
+  function arc(a0, a1) { var x = point(a0, 48), y = point(a1, 48); return 'M ' + x[0] + ' ' + x[1] + ' A 48 48 0 0 1 ' + y[0] + ' ' + y[1] }
+  // LA JAUGE DESSINÉE (disque, mémoire, charge) : un demi-cercle, la part pleine à la couleur de son état, le cran du seuil,
+  // le pourcentage au milieu ; dessous son nom et ce qu'elle mesure
+  function jauge(nom, pct, rouge, orange, sous) {
+    var f = el('figure', 'i-jauge'), p = num(pct), c = teinte(p, rouge, orange)
+    var s = svg('svg', { viewBox: [0, 0, 120, 72].join(' '), role: 'img', 'aria-label': nom + ' : ' + (p === null ? VIDE : dec(p, 1) + ' %') })
+    s.appendChild(svg('path', { d: arc(0, 1), 'class': 'i-piste' }))
+    if (p !== null && p > 0) s.appendChild(svg('path', { d: arc(0, Math.min(1, p / 100)), 'class': 'i-plein i-' + c }))
+    var a = Math.min(1, rouge / 100), x = point(a, 38), y = point(a, 58)
+    s.appendChild(svg('line', { x1: x[0], y1: x[1], x2: y[0], y2: y[1], 'class': 'i-cran' }))
+    var t = svg('text', { x: 60, y: 58, 'text-anchor': 'middle', 'class': 'i-pct' + (p === null ? ' vide' : '') })
+    t.textContent = p === null ? '?' : dec(p, 0) + ' %'
+    s.appendChild(t); f.appendChild(s)
+    var fc = el('figcaption'); fc.appendChild(el('b', '', nom)); fc.appendChild(el('span', p === null ? 'vide' : '', p === null ? VIDE : sous)); f.appendChild(fc)
+    return f
+  }
+  // le tas d'un serveur de jeu : une barre arrondie, le plus bas de la minute plein, jusqu'au plus haut plus clair
+  function barreTas(m, seuil) {
+    var d = el('div', 'i-tas'), haut = el('i', 'i-tas-haut'), bas = el('i', 'i-tas-bas i-' + (m.bas_pct >= seuil ? 'orange' : 'vert'))
+    haut.style.width = Math.max(0, Math.min(100, num(m.haut_pct) === null ? m.bas_pct : m.haut_pct)) + '%'
+    bas.style.width = Math.max(0, Math.min(100, m.bas_pct)) + '%'
+    d.appendChild(haut); d.appendChild(bas)
+    return d
+  }
+  function carteServeur(sv, S) {
+    var c = el('article', 'i-serveur'), e = ETATS_SERVEUR[sv.etat] || [texte(sv.etat), 'gris'], t = el('div', 'i-tete')
+    // sans pouls depuis plus que le seuil : rouge, comme son alerte
+    if (sv.etat === 'pouls_perdu' && num(sv.pouls_age_s) !== null && sv.pouls_age_s > S.absent_s) e = [e[0], 'rouge']
+    t.appendChild(el('h3', '', texte(sv.nom))); t.appendChild(pastille(e[0], e[1])); c.appendChild(t)
+    if (sv.cle === 'proxy') {
+      var j = sv.joueurs
+      if (sv.etat === 'ne_repond_pas') ligne(c, 'Ne répond plus', num(sv.ko_s) === null ? VIDE : 'depuis ' + dureeInfra(sv.ko_s), sv.dernier_ok ? 'dernière réponse ' + de(sv.dernier_ok) : '')
+      ligne(c, 'Joueurs', j && num(j.n) !== null ? A.nombre(j.n) + (num(j.max) !== null ? ' sur ' + A.nombre(j.max) : '') : VIDE)
+      ligne(c, 'Temps de réponse', num(sv.latence_ms) === null ? VIDE : A.nombre(sv.latence_ms) + NBSP + 'ms')
+      if (sv.motd) ligne(c, 'Ce que lit le joueur', texte(sv.motd))
+      ligne(c, 'Processeur, mémoire', VIDE, 'le proxy ne les publie pas')
+      pied(c, sv.source, sv.lu)
+      return c
+    }
+    var tp = sv.tps, hors = sv.etat !== 'en_ligne'
+    if (hors) c.classList.add('hors')
+    if (tp) {
+      var bt = el('b', 'i-tps i-' + (tp.vieux || hors ? 'gris' : tp.minute < S.tps_min ? 'rouge' : 'vert'), dec(tp.minute, 1))
+      ligne(c, 'TPS, la dernière minute', bt, num(tp.moyenne_15_min) === null ? '' : 'moyenne sur ' + tp.minutes_comptees + NBSP + 'min : ' + dec(tp.moyenne_15_min, 1))
+      ligne(c, 'Un tick', num(tp.tick_ms) === null ? VIDE : dec(tp.tick_ms, 1) + NBSP + 'ms', num(tp.pire_tick_ms) === null ? '' : 'au pire ' + dec(tp.pire_tick_ms, 1) + NBSP + 'ms')
+    } else ligne(c, 'TPS', VIDE)
+    var m = sv.memoire
+    if (m) {
+      var mt = num(m.max_mo) === null ? dec(m.bas_pct, 0) + NBSP + '%' + (num(m.haut_pct) !== null ? ' à ' + dec(m.haut_pct, 0) + NBSP + '%' : '') : mo(m.bas_mo) + (num(m.haut_mo) !== null ? ' à ' + mo(m.haut_mo) : '') + ' sur ' + mo(m.max_mo)
+      ligne(c, 'Mémoire', mt, 'le tas de Java, au plus bas puis au plus haut de la minute').appendChild(barreTas(m, S.memoire_jeu_pct))
+    } else ligne(c, 'Mémoire', VIDE)
+    ligne(c, 'Joueurs', sv.joueurs && num(sv.joueurs.n) !== null ? A.nombre(sv.joueurs.n) : VIDE)
+    var pc = sv.processeur
+    ligne(c, 'Processeur', pc && num(pc.pct) !== null ? pc.pct + NBSP + '%' : VIDE, pc ? 'la charge du processus Java, moyenne de la minute' : 'le jeu ne le publie pas encore')
+    if (!hors) ligne(c, 'En marche depuis', dureeInfra(sv.depuis_s))
+    else ligne(c, 'Dernier pouls', sv.pouls_lu ? quand(sv.pouls_lu) : VIDE, num(sv.pouls_age_s) === null ? '' : 'il y a ' + dureeInfra(sv.pouls_age_s))
+    pied(c, 'Le pouls : res_serveur, toutes les 5' + NBSP + 's', sv.pouls_lu)
+    if (tp) pied(c, 'Les mesures : tps:' + texte(sv.cle) + ', chaque minute', tp.lu, tp.vieux)
+    return c
+  }
+  function vueInfra(d) {
+    var S = d.seuils || {}, al = liste(d.alertes)
+    vider(vue)
+    // L'ÉTAT D'ENSEMBLE : tout va bien, ou les alertes (les rouges d'abord : l'API les range)
+    var b = el('div', 'i-bandeau i-' + (!al.length ? 'vert' : al.some(function (a) { return a.niveau === 'rouge' }) ? 'rouge' : 'orange')), bt = el('div', 'i-bandeau-tete')
+    bt.appendChild(el('h2', '', !al.length ? 'Tout va bien' : pluriel(al.length, 'alerte')))
+    bt.appendChild(el('span', 'i-releve', 'Relevé ' + de(d.lu) + ' · relu toutes les 30' + NBSP + 's'))
+    b.appendChild(bt)
+    if (!al.length) b.appendChild(el('p', 'i-aide', 'Aucun seuil franchi. Les seuils : un disque à plus de ' + S.disque_pct + NBSP + '%, moins de ' + S.tps_min + ' TPS, un serveur absent plus de ' + Math.round(S.absent_s / 60) + NBSP + 'min, un certificat à moins de ' + S.certificat_jours + ' jours.'))
+    else {
+      var ul = el('ul', 'i-alertes')
+      al.forEach(function (a) {
+        var li = el('li', 'i-alerte i-' + (a.niveau === 'rouge' ? 'rouge' : 'orange'))
+        li.appendChild(el('i')); li.appendChild(el('span', 'i-texte', texte(a.texte)))
+        if (a.source) li.appendChild(el('span', 'i-sous', texte(a.source)))
+        ul.appendChild(li)
+      })
+      b.appendChild(ul)
+    }
+    vue.appendChild(b)
+    // LES SERVEURS DE JEU
+    var gs = el('div', 'i-section'), gg = el('div', 'i-serveurs')
+    gs.appendChild(el('h2', '', 'Les serveurs de jeu'))
+    liste(d.serveurs).forEach(function (sv) { gg.appendChild(carteServeur(sv, S)) })
+    gs.appendChild(gg); vue.appendChild(gs)
+    // LE VPS
+    var V = d.vps || {}, vs = el('div', 'i-section'), vc = el('article', 'i-panneau')
+    vs.appendChild(el('h2', '', 'Le VPS du site'))
+    if (V.etat !== 'ok' && V.etat !== 'vieux') {
+      vc.appendChild(el('p', 'g-vide', V.etat === 'illisible' ? 'Le relevé du VPS ne se lit pas.' : VIDE))
+      vc.appendChild(el('p', 'i-aide', 'Le relevé du VPS (infra_releve.sh) s\'écrit chaque minute ; tant qu\'il n\'arrive pas, rien ne s\'affiche ici.'))
+    } else {
+      var vieux = V.etat === 'vieux'
+      if (vieux) vc.appendChild(el('p', 'i-vieux', 'Le relevé date de ' + dureeInfra(V.age_s) + ' : ces chiffres sont anciens.'))
+      var js = el('div', 'i-jauges')
+      liste(V.disques).forEach(function (x) {
+        var tout = num(x.utilise_o) !== null && num(x.libre_o) !== null ? x.utilise_o + x.libre_o : null
+        js.appendChild(jauge('Disque ' + texte(x.point), x.pct, S.disque_pct, S.disque_pct - 15, go(x.utilise_o) + ' sur ' + go(tout) + (x.monte_sur && x.monte_sur !== x.point ? ' (le disque de ' + texte(x.monte_sur) + ')' : '')))
+      })
+      var vm = V.memoire, ch = V.charge
+      js.appendChild(jauge('Mémoire', vm ? vm.pct : null, S.memoire_vps_pct, S.memoire_vps_pct - 15, vm ? go(vm.utilise_o) + ' sur ' + go(vm.total_o) : ''))
+      js.appendChild(jauge('Processeur', ch ? ch.pct : null, 100, 75, ch ? 'charge ' + dec(ch.m1, 2) + ' sur ' + (num(ch.coeurs) === null ? '?' : ch.coeurs) + ' cœurs' : ''))
+      vc.appendChild(js)
+      var li2 = el('div', 'i-lignes'), ce = V.certificat, si = V.site
+      ligne(li2, 'En marche depuis', dureeInfra(V.uptime_s))
+      ligne(li2, 'Certificat HTTPS', ce ? pastille('jusqu\'au ' + A.date(ce.fin) + ', ' + pluriel(ce.jours, 'jour'), ce.jours < S.certificat_jours ? 'rouge' : ce.jours < S.certificat_jours * 2 ? 'orange' : 'vert') : VIDE, ce && ce.lu ? 'lu ' + de(ce.lu) : '')
+      ligne(li2, 'Dernière mise à jour du site', si && si.heure ? quand(si.heure) : VIDE, si && si.commit ? 'commit ' + texte(si.commit) : '')
+      vc.appendChild(li2)
+      vc.appendChild(el('h3', '', 'Les conteneurs'))
+      if (V.conteneurs) {
+        var uc = el('ul', 'i-conteneurs')
+        liste(V.conteneurs).forEach(function (x) {
+          var ec = ETATS_CONTENEUR[x.etat] || [texte(x.etat || VIDE), 'orange'], l = el('li'), bouts = []
+          l.appendChild(el('b', '', texte(x.nom))); l.appendChild(pastille(ec[0], x.etat === 'running' && x.sante && x.sante !== 'healthy' ? 'orange' : ec[1]))
+          if (x.etat === 'running' && x.depuis) bouts.push('depuis le ' + A.date(x.depuis, true))
+          if (x.sante) bouts.push(x.sante === 'healthy' ? 'en bonne santé' : 'santé : ' + texte(x.sante))
+          if (num(x.redemarrages)) bouts.push(pluriel(x.redemarrages, 'redémarrage'))
+          if (bouts.length) l.appendChild(el('span', 'i-sous', bouts.join(' · ')))
+          uc.appendChild(l)
+        })
+        vc.appendChild(uc)
+      } else vc.appendChild(el('p', 'g-vide', 'Docker ne répond pas au relevé.'))
+      pied(vc, V.source, V.lu, vieux)
+    }
+    vs.appendChild(vc); vue.appendChild(vs)
+    // LA BASE ET LA 3D DES ÎLES
+    var bs = el('div', 'i-deux'), B = d.base || {}, I = d.iles3d || {}, cb = el('article', 'i-panneau'), t1 = el('div', 'i-tete'), ci = el('article', 'i-panneau'), sg = B.sauvegarde
+    t1.appendChild(el('h2', '', 'La base du jeu')); t1.appendChild(pastille(B.etat === 'repond' ? 'Répond' : 'Ne répond pas', B.etat === 'repond' ? 'vert' : 'rouge')); cb.appendChild(t1)
+    if (B.etat === 'repond') ligne(cb, 'Temps de réponse', num(B.latence_ms) === null ? VIDE : B.latence_ms < 1 ? 'moins de 1' + NBSP + 'ms' : A.nombre(B.latence_ms) + NBSP + 'ms')
+    ligne(cb, 'La copie de la nuit', sg ? quand(sg.quand) : VIDE, sg ? [num(sg.lignes) === null ? '' : A.nombre(sg.lignes) + ' lignes', num(sg.octets) === null ? '' : go(sg.octets) + ' compressés'].filter(Boolean).join(' · ') : 'le jeu ne la publie pas encore')
+    ligne(cb, 'Sa taille', VIDE, 'le jeu ne la publie pas encore')
+    pied(cb, B.source, B.lu)
+    ci.appendChild(el('h2', '', 'La 3D des îles'))
+    ligne(ci, 'Le dernier rendu du copieur', I.rendu ? quand(I.rendu) : VIDE)
+    ligne(ci, 'Le fichier le plus récent', I.dernier_fichier ? quand(I.dernier_fichier) : VIDE)
+    pied(ci, I.source)
+    bs.appendChild(cb); bs.appendChild(ci); vue.appendChild(bs)
+    relireInfra(etat.numero)
+  }
+  // la relecture : dans 30 s, si la vue est toujours celle-ci ; l'onglet caché, elle attend son retour (aucune demande pour rien)
+  function relireInfra(n) {
+    etat.minuteur = setTimeout(function () {
+      if (n !== etat.numero || etat.vue !== 'infra') return
+      if (document.hidden) { relireInfra(n); return }
+      A.admin('infra').then(function (r) {
+        if (n !== etat.numero || etat.vue !== 'infra') return
+        if (r.statut === 200 && r.corps && typeof r.corps === 'object') vueInfra(r.corps)
+        else relireInfra(n)
+      })
+    }, INFRA_RELIRE_MS)
   }
 
   // ---------- un joueur : la recherche, puis sa fiche complète ----------

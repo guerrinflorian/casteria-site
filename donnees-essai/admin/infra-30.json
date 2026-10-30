@@ -1,0 +1,279 @@
+{
+ "essai": true,
+ "lu": "2026-10-30T10:50:50.215Z",
+ "seuils": {
+  "disque_pct": 85,
+  "tps_min": 18,
+  "absent_s": 120,
+  "pouls_perdu_s": 30,
+  "certificat_jours": 15,
+  "releve_vieux_s": 180,
+  "mesure_vieille_s": 180,
+  "memoire_jeu_pct": 90,
+  "memoire_vps_pct": 90,
+  "iles3d_vieux_h": 24
+ },
+ "serveurs": [
+  {
+   "cle": "proxy",
+   "nom": "Le proxy",
+   "source": "un ping Minecraft de son adresse, depuis le VPS (30 s au plus)",
+   "lu": "2026-10-30T10:50:50.215Z",
+   "etat": "en_ligne",
+   "latence_ms": 38,
+   "joueurs": {
+    "n": 74,
+    "max": 190,
+    "lu": "2026-10-30T10:50:50.215Z"
+   },
+   "motd": "Casteria ouvre bientôt",
+   "version": "Velocity 3.4"
+  },
+  {
+   "cle": "spawn",
+   "nom": "Le palais",
+   "source": "la base du jeu : le pouls de casteria-base (res_serveur, toutes les 5 s)",
+   "etat": "en_ligne",
+   "pouls_lu": "2026-10-30T10:50:47.205Z",
+   "pouls_age_s": 3,
+   "demarre": "2026-10-29T21:20:50.205Z",
+   "depuis_s": 48600,
+   "tps": {
+    "minute": 20,
+    "moyenne_15_min": 19.9,
+    "minutes_comptees": 15,
+    "tick_ms": 11.8,
+    "pire_tick_ms": 38.4,
+    "minute_de": "2026-10-30T10:49:00.000Z",
+    "lu": "2026-10-30T10:50:29.205Z",
+    "age_s": 21,
+    "vieux": false,
+    "source": "la vitrine « tps:spawn » (reseau_tps.js, chaque minute)"
+   },
+   "memoire": {
+    "bas_pct": 38,
+    "haut_pct": 61,
+    "max_mo": 9420,
+    "bas_mo": 3580,
+    "haut_mo": 5746,
+    "lu": "2026-10-30T10:50:29.205Z",
+    "vieux": false,
+    "source": "le tas de Java (casteria-moteur 1.0.25, via la vitrine « tps:spawn » (reseau_tps.js, chaque minute))"
+   },
+   "joueurs": {
+    "n": 23,
+    "lu": "2026-10-30T10:50:29.205Z",
+    "vieux": false,
+    "source": "le plus de joueurs de la dernière minute (la vitrine « tps:spawn » (reseau_tps.js, chaque minute))"
+   },
+   "processeur": null
+  },
+  {
+   "cle": "iles",
+   "nom": "Les îles",
+   "source": "la base du jeu : le pouls de casteria-base (res_serveur, toutes les 5 s)",
+   "etat": "en_ligne",
+   "pouls_lu": "2026-10-30T10:50:48.205Z",
+   "pouls_age_s": 2,
+   "demarre": "2026-10-30T01:38:50.205Z",
+   "depuis_s": 33120,
+   "tps": {
+    "minute": 19.9,
+    "moyenne_15_min": 19.8,
+    "minutes_comptees": 15,
+    "tick_ms": 24.6,
+    "pire_tick_ms": 71.2,
+    "minute_de": "2026-10-30T10:49:00.000Z",
+    "lu": "2026-10-30T10:50:29.205Z",
+    "age_s": 21,
+    "vieux": false,
+    "source": "la vitrine « tps:iles » (reseau_tps.js, chaque minute)"
+   },
+   "memoire": {
+    "bas_pct": 47,
+    "haut_pct": 72,
+    "max_mo": 9216,
+    "bas_mo": 4332,
+    "haut_mo": 6636,
+    "lu": "2026-10-30T10:50:29.205Z",
+    "vieux": false,
+    "source": "le tas de Java (casteria-moteur 1.0.25, via la vitrine « tps:iles » (reseau_tps.js, chaque minute))"
+   },
+   "joueurs": {
+    "n": 41,
+    "lu": "2026-10-30T10:50:29.205Z",
+    "vieux": false,
+    "source": "le plus de joueurs de la dernière minute (la vitrine « tps:iles » (reseau_tps.js, chaque minute))"
+   },
+   "processeur": null
+  },
+  {
+   "cle": "boss",
+   "nom": "Les boss",
+   "source": "la base du jeu : le pouls de casteria-base (res_serveur, toutes les 5 s)",
+   "etat": "en_ligne",
+   "pouls_lu": "2026-10-30T10:50:46.205Z",
+   "pouls_age_s": 4,
+   "demarre": "2026-10-30T01:38:50.205Z",
+   "depuis_s": 33120,
+   "tps": {
+    "minute": 20,
+    "moyenne_15_min": 19.9,
+    "minutes_comptees": 15,
+    "tick_ms": 6.2,
+    "pire_tick_ms": 19.5,
+    "minute_de": "2026-10-30T10:49:00.000Z",
+    "lu": "2026-10-30T10:50:29.205Z",
+    "age_s": 21,
+    "vieux": false,
+    "source": "la vitrine « tps:boss » (reseau_tps.js, chaque minute)"
+   },
+   "memoire": {
+    "bas_pct": 41,
+    "haut_pct": 66,
+    "max_mo": 4096,
+    "bas_mo": 1679,
+    "haut_mo": 2703,
+    "lu": "2026-10-30T10:50:29.205Z",
+    "vieux": false,
+    "source": "le tas de Java (casteria-moteur 1.0.25, via la vitrine « tps:boss » (reseau_tps.js, chaque minute))"
+   },
+   "joueurs": {
+    "n": 6,
+    "lu": "2026-10-30T10:50:29.205Z",
+    "vieux": false,
+    "source": "le plus de joueurs de la dernière minute (la vitrine « tps:boss » (reseau_tps.js, chaque minute))"
+   },
+   "processeur": null
+  },
+  {
+   "cle": "planete",
+   "nom": "La planète",
+   "source": "la base du jeu : le pouls de casteria-base (res_serveur, toutes les 5 s)",
+   "etat": "en_ligne",
+   "pouls_lu": "2026-10-30T10:50:49.205Z",
+   "pouls_age_s": 1,
+   "demarre": "2026-10-29T21:20:50.205Z",
+   "depuis_s": 48600,
+   "tps": {
+    "minute": 20,
+    "moyenne_15_min": 19.9,
+    "minutes_comptees": 15,
+    "tick_ms": 9.1,
+    "pire_tick_ms": 27.3,
+    "minute_de": "2026-10-30T10:49:00.000Z",
+    "lu": "2026-10-30T10:50:29.205Z",
+    "age_s": 21,
+    "vieux": false,
+    "source": "la vitrine « tps:planete » (reseau_tps.js, chaque minute)"
+   },
+   "memoire": {
+    "bas_pct": 29,
+    "haut_pct": 44,
+    "max_mo": 6020,
+    "bas_mo": 1746,
+    "haut_mo": 2649,
+    "lu": "2026-10-30T10:50:29.205Z",
+    "vieux": false,
+    "source": "le tas de Java (casteria-moteur 1.0.25, via la vitrine « tps:planete » (reseau_tps.js, chaque minute))"
+   },
+   "joueurs": {
+    "n": 4,
+    "lu": "2026-10-30T10:50:29.205Z",
+    "vieux": false,
+    "source": "le plus de joueurs de la dernière minute (la vitrine « tps:planete » (reseau_tps.js, chaque minute))"
+   },
+   "processeur": null
+  }
+ ],
+ "base": {
+  "etat": "repond",
+  "latence_ms": 0,
+  "lu": "2026-10-30T10:50:50.215Z",
+  "source": "la base du jeu (une lecture à chaque demande)",
+  "taille": null,
+  "taille_source": "le jeu ne la publie pas encore",
+  "sauvegarde": null
+ },
+ "vps": {
+  "etat": "ok",
+  "lu": "2026-10-30T10:50:33.205Z",
+  "age_s": 17,
+  "source": "le relevé du VPS (infra_releve.sh, chaque minute)",
+  "disques": [
+   {
+    "point": "/",
+    "monte_sur": "/",
+    "total_o": 77843914752,
+    "utilise_o": 23736320000,
+    "libre_o": 50872320000,
+    "pct": 31.8
+   },
+   {
+    "point": "/srv",
+    "monte_sur": "/",
+    "total_o": 77843914752,
+    "utilise_o": 23736320000,
+    "libre_o": 50872320000,
+    "pct": 31.8
+   }
+  ],
+  "memoire": {
+   "total_o": 8191234048,
+   "dispo_o": 5048320000,
+   "utilise_o": 3142914048,
+   "pct": 38.4
+  },
+  "charge": {
+   "m1": 0.46,
+   "m5": 0.39,
+   "m15": 0.33,
+   "coeurs": 4,
+   "pct": 12
+  },
+  "uptime_s": 9781200,
+  "demarre": "2026-07-09T05:50:33.205Z",
+  "conteneurs": [
+   {
+    "nom": "casteria-api",
+    "etat": "running",
+    "sante": "healthy",
+    "depuis": "2026-10-30T07:38:50.205Z",
+    "redemarrages": 0
+   },
+   {
+    "nom": "casteria-relais",
+    "etat": "running",
+    "sante": null,
+    "depuis": "2026-10-29T13:50:50.205Z",
+    "redemarrages": 0
+   },
+   {
+    "nom": "casteria-site",
+    "etat": "running",
+    "sante": "healthy",
+    "depuis": "2026-10-29T13:50:50.205Z",
+    "redemarrages": 1
+   }
+  ],
+  "docker": "ok",
+  "certificat": {
+   "fin": "2027-01-27T07:41:12.000Z",
+   "jours": 88,
+   "lu": "2026-10-30T10:27:50.205Z",
+   "source": "openssl s_client sur 127.0.0.1:443 (casteria.fr)"
+  },
+  "site": {
+   "heure": "2026-10-30T10:44:50.205Z",
+   "commit": "7947375",
+   "source": "la dernière ligne « EN LIGNE » de journal/mises-a-jour.log"
+  },
+  "iles3d_dernier_fichier": "2026-10-30T10:09:50.205Z"
+ },
+ "iles3d": {
+  "rendu": "2026-10-30T10:12:50.205Z",
+  "dernier_fichier": "2026-10-30T10:09:50.205Z",
+  "source": "etat.json du copieur (rendu) ; le fichier le plus récent sous /srv/casteria/iles3d (le relevé du VPS)"
+ },
+ "alertes": []
+}
