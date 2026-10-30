@@ -267,3 +267,21 @@ html.photo .pack.meilleur::before, html.photo .packs-etat::before { animation: n
 }
 html.photo .embleme { animation: none; }
 @media (prefers-reduced-motion: reduce) { .embleme { animation: none; } }
+
+/* ---------- (dc, le 30/10/2026 ; le propriétaire : « il faut juste être connecté pour payer ») l'achat CONNECTÉ : pour qui on
+   achète (sa tête, son pseudo), ou « Connecte-toi pour acheter » ; plus de champ ni de case ---------- */
+.achat-attente { margin: 6px 0 0; text-align: center; color: #CDB8E6; font-weight: 600; }
+.achat-qui, .achat-connexion { margin: 4px 0 0; padding: 16px 18px; border-radius: 18px; background: rgba(255, 255, 255, .05); box-shadow: inset 0 0 0 1px rgba(255, 207, 90, .3); text-align: center; }
+.achat-qui[hidden], .achat-connexion[hidden], .achat-attente[hidden] { display: none; }
+.achat-pour { display: flex; align-items: center; justify-content: center; gap: 12px; margin: 0; font-size: 20px; color: #fff; }
+.achat-pour b { color: var(--or-k, #FFCF5A); font-family: var(--police-bouton, "Lilita One", sans-serif); font-weight: 400; font-size: 24px; letter-spacing: .3px; overflow-wrap: anywhere; }
+.achat-tete { flex: 0 0 auto; width: 44px; height: 44px; border-radius: 10px; overflow: hidden; background: #2A1740; box-shadow: 0 0 0 2px rgba(255, 255, 255, .16); }
+.achat-tete canvas { display: block; width: 100%; height: 100%; }
+.achat-note { margin: 10px 0 0; font-size: 14.5px; color: #CDB8E6; }
+.achat-note a { color: var(--or-k, #FFCF5A); font-weight: 700; }
+.achat-connexion-titre { margin: 0 0 6px; font-family: var(--police-titre, "Chewy", sans-serif); font-size: 26px; color: var(--titre-creme, #FFF6DC); }
+.achat-connexion p { margin: 0 0 8px; color: #F1E6FF; }
+.achat-connexion .tebex-actions { margin: 12px 0 4px; }
+.achat .tebex-actions .bouton[hidden] { display: none !important; }
+.achat { border: 1px solid rgba(255, 207, 90, .5); border-radius: var(--r-panneau, 22px); box-shadow: var(--ombre-douce, 0 14px 30px rgba(0, 0, 0, .35)); }
+.achat-note a { white-space: nowrap; }

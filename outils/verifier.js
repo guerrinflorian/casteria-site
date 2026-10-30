@@ -66,11 +66,14 @@ function verifierBoutique(faute) {
   if (sorties.length !== 1 || !/location\.assign\(lien\)/.test(sorties[0]) || !js.includes('\\.tebex\\.io\\/')) faute('js/boutique.js : la seule sortie du site doit être la page de paiement de Tebex, vérifiée (« .tebex.io »)')
   if (!/\[A-Za-z0-9_\]\{3,16\}/.test(js)) faute('js/boutique.js : la règle du pseudo du serveur (3 à 16 lettres sans accent, chiffres, tiret du bas) manque')
   if (/Tebex\.checkout/.test(js) && !/if \(incruste\(panier, pseudo\)\) \{[^\n]*return \}[\s\S]{0,300}?window\.location\.assign\(lien\)/.test(js)) faute('js/boutique.js : le paiement par-dessus la page doit garder la redirection vers Tebex en secours, juste après')
-  // la page : la mise en garde sur le pseudo, la case qui oblige à relire, le bouton gris au départ
+  // la page (30/10/2026, le propriétaire : « il faut juste être connecté pour payer ») : ON ACHÈTE CONNECTÉ ; pour qui on
+  // achète, « Connecte-toi pour acheter » et son bouton vers la connexion (qui ramène à la boutique), le bouton gris au
+  // départ ; plus aucun champ de pseudo ni case à cocher
   const page = lire('boutique.html'), merci = lire('merci.html')
   if (c.jeton) {
-    for (const [quoi, motif] of [['la mise en garde « Une erreur de pseudo n\'est pas remboursée »', /Une erreur de pseudo n'est pas remboursée/], ['la case « je l\'ai vérifié »', /<input type="checkbox" id="pseudo-sur">/], ['le bouton « Payer » gris au départ', /id="achat-payer" disabled/], ['le champ du pseudo', /<input id="pseudo"/]]) if (!motif.test(page)) faute('boutique.html : ' + quoi + ' manque')
-    if (!/Une erreur de pseudo n'est pas remboursée/.test(merci)) faute('merci.html : la phrase sur le remboursement manque')
+    for (const [quoi, motif] of [['« Tu achètes pour » et le pseudo de la session', /Tu achètes pour <b id="achat-pseudo"><\/b>/], ['« Connecte-toi pour acheter »', /<p class="achat-connexion-titre">Connecte-toi pour acheter<\/p>/], ['le bouton vers la connexion, qui ramène à la boutique', /<a class="bouton bouton-or grand" href="connexion\.html\?retour=boutique\.html" id="achat-connecter">/], ['le bouton « Payer » gris au départ', /id="achat-payer" disabled/]]) if (!motif.test(page)) faute('boutique.html : ' + quoi + ' manque')
+    if (/<input id="pseudo"|id="pseudo-sur"/.test(page)) faute('boutique.html : un champ de pseudo ou la case « C\'est bien mon pseudo » est revenu (on achète connecté)')
+    if (!/Les crédits partent sur le compte qui était connecté au moment de payer\./.test(merci)) faute('merci.html : la phrase sur le compte crédité manque')
   }
   // (20/10/2026, le propriétaire : « je trouve la boutique affreuse [...] avec les couleurs et tout ») la boutique redessinée
   // dans la nuit et l'or du site : sa feuille css/boutique.css, chargée par la page ; plus de tableau de parchemin
@@ -211,11 +214,13 @@ function verifierClassement(faute) {
   //   page ne lit un compte de boss d'un joueur (« vaincus », « heroiques ») : ses victoires seulement
   if (!code.includes('var HORS_SITE = { boss_vaincus: 1, boss_heroiques: 1 }') || !code.includes('!HORS_SITE[c.id]')) faute('js/classement.js : les classements dont le texte dit un nombre de boss (boss_vaincus, boss_heroiques) ne se montrent jamais (HORS_SITE)')
   for (const f of ['js/classement.js', 'js/compte.js', 'js/admin.js']) if (/\.boss\.(vaincus|heroiques)\b/.test(codeDe(lire(f) || ''))) faute(f + ' : un compte de boss d\'un joueur (boss.vaincus, boss.heroiques) : jamais un nombre de boss, ses victoires seulement')
-  // - la boutique remplit le pseudo de qui est connecté (/api/moi, par CasteriaApi), et ne coche JAMAIS « C'est bien mon pseudo »
+  // - (30/10/2026) la boutique achète pour le pseudo de la SESSION (/api/moi, par CasteriaApi) et pour lui seul : le
+  //   panier de Tebex reçoit pseudoConnecte, jamais un texte écrit dans la page ; pas connecté, pas de paiement
   {
     const b = codeDe(lire('js/boutique.js') || ''), h = lire('boutique.html') || ''
-    if (!b.includes('window.CasteriaApi.moi().then(') || !b.includes('pseudoConnecte || sessionStorage')) faute('js/boutique.js : le pseudo de qui est connecté remplit le champ tout seul (CasteriaApi.moi)')
-    if (/\bsur\.checked\s*=\s*(true|!0|1)\b/.test(b) || /\.checked\s*=\s*true/.test(b)) faute('js/boutique.js : la case « C\'est bien mon pseudo » ne se coche jamais par la page')
+    if (!b.includes('window.CasteriaApi.moi().then(')) faute('js/boutique.js : le pseudo vient de la session du site (CasteriaApi.moi)')
+    if (!b.includes('var pseudo = pseudoConnecte') || !b.includes("compte !== 'connecte'")) faute('js/boutique.js : le panier part pour le pseudo de la session seulement, et jamais sans session')
+    if (/getElementById\('pseudo'\)|\.checked\s*=/.test(b)) faute('js/boutique.js : un champ de pseudo ou une case à cocher est revenu (on achète connecté)')
     const ia = h.indexOf('<script src="js/api.js" defer></script>'), ib = h.indexOf('<script src="js/boutique.js" defer></script>')
     if (ia < 0 || ib < 0 || ia > ib) faute('boutique.html : js/api.js se charge avant js/boutique.js (le pseudo de qui est connecté)')
   }

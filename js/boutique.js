@@ -1,6 +1,6 @@
 // LA BOUTIQUE : les packs de crédits, lus EN DIRECT chez Tebex à chaque visite (l'API publique « Headless »), puis
-// l'achat : le pseudo du joueur, relu et confirmé, un panier créé chez Tebex, et le joueur envoyé sur la page de
-// paiement de Tebex. AUCUN paiement ni aucune donnée de carte ne passe par ce site.
+// l'achat : CONNECTÉ, pour le pseudo de la session du site (/api/moi), un panier créé chez Tebex, et le joueur envoyé sur
+// la page de paiement de Tebex. AUCUN paiement ni aucune donnée de carte ne passe par ce site.
 // Le seul réglage : le jeton PUBLIC de la boutique, dans js/boutique.config.js.
 (function () {
   'use strict'
@@ -37,20 +37,24 @@
   function prix(p) {
     try { return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: p.currency || 'EUR' }).format(p.total_price) } catch (e) { return String(p.total_price).replace('.', ',') + ' ' + (p.currency || '') }
   }
-  var champ = document.getElementById('pseudo'), lettres = document.getElementById('pseudo-lettres'), relire = document.getElementById('relire')
-  var sur = document.getElementById('pseudo-sur'), payer = document.getElementById('achat-payer'), retour = document.getElementById('achat-retour')
-  var erreurPseudo = document.getElementById('pseudo-erreur'), erreurAchat = document.getElementById('achat-erreur'), titrePack = document.getElementById('achat-pack')
+  var payer = document.getElementById('achat-payer'), retour = document.getElementById('achat-retour')
+  var erreurAchat = document.getElementById('achat-erreur'), titrePack = document.getElementById('achat-pack')
+  var attente = document.getElementById('achat-attente'), qui = document.getElementById('achat-qui'), connexion = document.getElementById('achat-connexion')
   var merciAchat = document.getElementById('achat-merci')
-  var choisi = null, enCours = false, dernier = ''
-  // (29/10/2026, la tête) LE PSEUDO DE QUI EST CONNECTÉ remplit le champ tout seul (GET /api/moi, par CasteriaApi de
-  // js/api.js, la même origine) ; la case « C'est bien mon pseudo » reste à cocher : la page ne la coche jamais
-  var pseudoConnecte = ''
-  if (window.CasteriaApi && typeof window.CasteriaApi.moi === 'function') {
+  var choisi = null, enCours = false
+  // (30/10/2026, le propriétaire : « il faut juste être connecté pour payer ») ON ACHÈTE CONNECTÉ : le pseudo est celui de
+  // la session du site (GET /api/moi, par CasteriaApi de js/api.js, la même origine), jamais écrit à la main. compte :
+  // 'attente' (la réponse n'est pas là), 'connecte', 'non' (pas de session), 'panne' (l'API ne répond pas)
+  var pseudoConnecte = '', peauConnecte = '', compte = 'attente'
+  // le pack choisi avant de partir se connecter : retrouvé au retour (le même onglet)
+  var CLE_PACK = 'casteria_boutique_pack'
+  function lireCompte() {
+    if (!window.CasteriaApi || typeof window.CasteriaApi.moi !== 'function') { compte = 'panne'; montrerCompte(); return }
     window.CasteriaApi.moi().then(function (r) {
       var p = r && r.statut === 200 && r.corps ? String(r.corps.pseudo || '') : ''
-      if (!PSEUDO.test(p)) return
-      pseudoConnecte = p
-      if (!form.hidden && !champ.value) { champ.value = p; relu() }
+      if (PSEUDO.test(p)) { pseudoConnecte = p; peauConnecte = String(r.corps.peau || ''); compte = 'connecte' }
+      else compte = r && r.statut === 401 ? 'non' : 'panne'
+      montrerCompte()
     })
   }
 
@@ -123,66 +127,69 @@
         var base = taux(packs[0]), meilleur = null
         packs.forEach(function (p) { if (taux(p) > base && (!meilleur || taux(p) > taux(meilleur))) meilleur = p })
         packsEl.classList.toggle('peu', packs.length < 5)
+        var cartes = []
         packs.forEach(function (p) {
-          packsEl.appendChild(carte(p, p === meilleur ? 'meilleur' : '', base > 0 && taux(p) > base ? Math.round((taux(p) / base - 1) * 100) : 0))
+          var art = carte(p, p === meilleur ? 'meilleur' : '', base > 0 && taux(p) > base ? Math.round((taux(p) / base - 1) * 100) : 0)
+          cartes.push(art); packsEl.appendChild(art)
         })
+        reprendrePack(packs, cartes)
       })
       .catch(function () { clearTimeout(minuteur); panne() })
   }
 
-  // ---------- le pseudo : écrit, relu lettre par lettre, confirmé ----------
-  function choisir(p, art) {
+  // ---------- le pack choisi, puis le compte : connecté, on paie ; sinon, on se connecte d'abord ----------
+  function choisir(p, art, sansDefiler) {
     choisi = p
     Array.prototype.forEach.call(packsEl.querySelectorAll('.pack'), function (x) { x.classList.toggle('choisi', x === art) })
     titrePack.textContent = 'Le pack ' + nom(p) + ' : ' + prix(p) + (p.sales_tax > 0 ? ', TVA comprise' : '')
     payer.textContent = 'Payer ' + prix(p)
     form.hidden = false
     erreurAchat.hidden = true
-    try { if (!champ.value) champ.value = pseudoConnecte || sessionStorage.getItem('casteria_pseudo') || '' } catch (e) {}
-    relu()
-    try { form.scrollIntoView({ behavior: 'smooth', block: 'center' }) } catch (e) { form.scrollIntoView() }
-    try { champ.focus({ preventScroll: true }) } catch (e) { champ.focus() }
+    try { sessionStorage.setItem(CLE_PACK, String(p.id)) } catch (e) {}
+    montrerCompte()
+    if (!sansDefiler) { try { form.scrollIntoView({ behavior: 'smooth', block: 'center' }) } catch (e) { form.scrollIntoView() } }
   }
-  function relu() {
-    var v = champ.value, bon = PSEUDO.test(v)
-    // le pseudo a changé : la case se décoche, il faut le relire
-    if (v !== dernier) { sur.checked = false; dernier = v }
-    lettres.textContent = ''
-    for (var k = 0; k < v.length; k++) {
-      var ch = v.charAt(k), classe = /[A-Z]/.test(ch) ? 'maj' : (/[0-9]/.test(ch) ? 'chiffre' : (/[a-z_]/.test(ch) ? '' : 'faux'))
-      lettres.appendChild(el('span', classe, ch === ' ' ? String.fromCharCode(160) : ch))
+  function montrerCompte() {
+    var oui = compte === 'connecte'
+    attente.hidden = compte !== 'attente'
+    qui.hidden = !oui
+    connexion.hidden = compte !== 'non'
+    payer.hidden = !oui
+    if (oui && !document.getElementById('achat-pseudo').textContent) {
+      document.getElementById('achat-pseudo').textContent = pseudoConnecte
+      if (window.Tete) window.Tete.poser(document.getElementById('achat-tete'), peauConnecte || '/api/peau/' + pseudoConnecte)
     }
-    relire.hidden = !v
-    if (v && !bon) {
-      erreurPseudo.textContent = /\s/.test(v) ? 'Aucune espace dans un pseudo, ni avant ni après.' : (v.length < 3 ? 'Un pseudo fait au moins 3 caractères.' : 'Un pseudo fait de 3 à 16 caractères : des lettres sans accent, des chiffres et le tiret du bas _.')
-      erreurPseudo.hidden = false
-    } else erreurPseudo.hidden = true
-    sur.disabled = !bon
-    payer.disabled = !(bon && sur.checked && choisi && !enCours)
+    if (compte === 'panne' && !form.hidden) { erreurAchat.textContent = 'Ton compte ne répond pas pour l\'instant : réessaie dans une minute.'; erreurAchat.hidden = false }
+    payer.disabled = !(oui && choisi && !enCours)
   }
-  champ.addEventListener('input', relu)
-  sur.addEventListener('change', relu)
   retour.addEventListener('click', function () {
     form.hidden = true; choisi = null
+    try { sessionStorage.removeItem(CLE_PACK) } catch (e) {}
     Array.prototype.forEach.call(packsEl.querySelectorAll('.pack'), function (x) { x.classList.remove('choisi') })
     try { packsEl.scrollIntoView({ behavior: 'smooth', block: 'center' }) } catch (e) {}
   })
+  // revenu de la connexion : le pack d'avant, choisi de nouveau
+  function reprendrePack(packs, cartes) {
+    var id = ''
+    try { id = sessionStorage.getItem(CLE_PACK) || '' } catch (e) {}
+    for (var k = 0; id && k < packs.length; k++) if (String(packs[k].id) === id) { choisir(packs[k], cartes[k]); return }
+  }
 
   // ---------- le panier chez Tebex, puis sa page de paiement ----------
   function envoyer(adresse, corps) {
     return fetch(adresse, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(corps) })
       .then(function (r) { return r.json().catch(function () { return null }).then(function (j) { if (!r.ok || !j || !j.data) throw new Error('refus'); return j.data }) })
   }
-  function echec(texte) { enCours = false; erreurAchat.textContent = texte; erreurAchat.hidden = false; payer.textContent = 'Payer ' + prix(choisi); relu() }
+  function echec(texte) { enCours = false; erreurAchat.textContent = texte; erreurAchat.hidden = false; payer.textContent = 'Payer ' + prix(choisi); montrerCompte() }
   // (le propriétaire, 20/10/2026 : le panneau de Tebex par-dessus la page ouvrait le paiement dans un AUTRE onglet, où
   // Tebex rouvrait ensuite la page « Merci » : le site en double) LE PAIEMENT SE FAIT DANS CET ONGLET : la page de
   // paiement de Tebex, puis le retour sur « Merci » (complete_url) ou sur la boutique (cancel_url), au même endroit.
   form.addEventListener('submit', function (ev) {
     ev.preventDefault()
-    var pseudo = champ.value
-    if (enCours || !choisi || !PSEUDO.test(pseudo) || !sur.checked) return relu()
+    // le pseudo de la session, jamais un pseudo écrit à la main
+    var pseudo = pseudoConnecte
+    if (enCours || !choisi || compte !== 'connecte' || !PSEUDO.test(pseudo)) return montrerCompte()
     enCours = true; erreurAchat.hidden = true; merciAchat.hidden = true; payer.disabled = true; payer.textContent = 'On prépare ton panier...'
-    try { sessionStorage.setItem('casteria_pseudo', pseudo) } catch (e) {}
     // les deux pages de retour : « Merci » après le paiement, la boutique si le joueur renonce
     var canon = document.querySelector('link[rel="canonical"]')
     var origine = location.protocol === 'https:' ? location.origin : (canon ? new URL(canon.href).origin : location.origin)
@@ -201,10 +208,11 @@
         lien += (lien.indexOf('?') < 0 ? '?' : '&') + 'locale=fr_FR'
         window.location.assign(lien)
       })
-      .catch(function () { echec('Le panier n\'a pas pu se créer. Vérifie ton pseudo, puis réessaie dans un instant.') })
+      .catch(function () { echec('Le panier n\'a pas pu se créer. Réessaie dans un instant.') })
   })
   // revenu de la page de paiement par « Précédent » : le bouton se réveille
-  window.addEventListener('pageshow', function () { if (enCours) { enCours = false; if (choisi) payer.textContent = 'Payer ' + prix(choisi); relu() } })
+  window.addEventListener('pageshow', function () { if (enCours) { enCours = false; if (choisi) payer.textContent = 'Payer ' + prix(choisi); montrerCompte() } })
 
+  lireCompte()
   charger()
 })()

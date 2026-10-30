@@ -96,7 +96,7 @@
       <h2>Choisis ton pack</h2>
       <ol class="pas-achat">
         <li><b>1</b><span>Choisis ton pack</span></li>
-        <li><b>2</b><span>Écris ton pseudo exact</span></li>
+        <li><b>2</b><span>Connecte-toi</span></li>
         <li><b>3</b><span>Paie chez Tebex</span></li>
       </ol>
     </div>
@@ -113,19 +113,19 @@
 
       <form class="achat" id="achat" hidden novalidate>
         <h3 class="achat-pack" id="achat-pack">Ton pack</h3>
-        <div class="alerte" role="note">
-          <p><b>Écris ton pseudo EXACT, celui du jeu, lettre pour lettre.</b> Une seule lettre de travers, et les crédits partent sur un autre pseudo.</p>
-          <p>Les crédits partent sur ce pseudo. <b>Une erreur de pseudo n'est pas remboursée.</b> (<a href="conditions.html">les conditions</a>)</p>
+        <!-- (le propriétaire, 30/10 : « il faut juste être connecté pour payer ») ON ACHÈTE CONNECTÉ : le pseudo vient de la
+             session du site (GET /api/moi), plus aucun champ ni case ; pas connecté, « Connecte-toi pour acheter » mène à la
+             connexion, qui ramène ici sur le même pack (js/boutique.js) -->
+        <p class="achat-attente" id="achat-attente">On vérifie ta connexion...</p>
+        <div class="achat-qui" id="achat-qui" hidden>
+          <p class="achat-pour"><span class="achat-tete" id="achat-tete" aria-hidden="true"></span><span>Tu achètes pour <b id="achat-pseudo"></b></span></p>
+          <p class="achat-note">Les crédits arrivent sur ce compte, celui avec lequel tu es connecté. Pas toi ? <a href="connexion.html?retour=boutique.html" id="achat-autre">Change de compte</a></p>
         </div>
-        <label class="achat-champ" for="pseudo">Ton pseudo en jeu
-          <input id="pseudo" name="pseudo" type="text" maxlength="16" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="Ton pseudo exact">
-        </label>
-        <p class="achat-erreur" id="pseudo-erreur" role="alert" hidden></p>
-        <div class="relire" id="relire" hidden>
-          <p class="relire-titre">Relis-le, lettre par lettre :</p>
-          <p class="lettres" id="pseudo-lettres" aria-live="polite"></p>
-          <p class="relire-legende"><span class="leg"><span class="cle maj">A</span> une MAJUSCULE</span> <span class="leg"><span class="cle">a</span> une minuscule</span> <span class="leg"><span class="cle chiffre">0</span> un chiffre</span></p>
-          <label class="relire-case"><input type="checkbox" id="pseudo-sur"> C'est bien mon pseudo, je l'ai vérifié</label>
+        <div class="achat-connexion" id="achat-connexion" hidden>
+          <p class="achat-connexion-titre">Connecte-toi pour acheter</p>
+          <p>Avec ton pseudo et ton mot de passe du jeu : tes crédits partent sur ton compte, sans rien à taper ici. Tu reviens ensuite sur ce pack.</p>
+          <p class="tebex-actions"><a class="bouton bouton-or grand" href="connexion.html?retour=boutique.html" id="achat-connecter">Me connecter</a></p>
+          <p class="achat-note">Pas encore de compte ? Il se crée en jeu, à ta première connexion, avec <code>/register</code>.</p>
         </div>
         <p class="achat-erreur" id="achat-erreur" role="alert" hidden></p>
         <p class="achat-merci" id="achat-merci" role="status" hidden></p>
@@ -308,6 +308,7 @@
 <script src="js/site.js" defer></script>
 <script src="js/boutique.config.js" defer></script>
 <script src="js/api.js" defer></script>
+<script src="js/tete.js" defer></script>
 <script src="js/boutique.js" defer></script>
 <script src="js/ancres.js" defer></script>
 </body>
