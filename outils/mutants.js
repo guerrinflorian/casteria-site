@@ -325,6 +325,9 @@ const MUTANTS = [
   ['un nom sous les boutons du zoom', 'js/carte.js', s => s.replace('    if (chevauche([px - w / 2 - 4, py - 1, px + w / 2 + 4, py + f + 3], [zoneBoutons])) return\n', '')],
   ['les noms de la mer sans la zone des boutons', 'js/carte.js', s => s.replace('prisesLieux = [zoneBoutons]', 'prisesLieux = []')],
   ['le nom du palais sous les boutons', 'js/carte.js', s => s.replace('    if (chevauche([x - w / 2 - 6, y - 2, x + w / 2 + 6, y + 18], [zoneBoutons])) return\n', '')],
+  ["la reconnexion de l'équipe sans equipe=1", 'js/admin.js', s => s.replace("'connexion.html?retour=admin.html&equipe=1'", "'connexion.html?retour=admin.html'")],
+  ["equipe=1 jamais lu", 'js/connexion.js', s => s.replace("get('equipe') === '1'", "get('equipe') === 'jamais'")],
+  ["avec equipe=1, le formulaire caché quand même", 'js/connexion.js', s => s.replace('      mdp.focus()\n      return\n    }\n', '      mdp.focus()\n    }\n')],
   ['les noms des pirates sans le filtre', 'js/carte.js', s => s.replace(".map(function (n) { return Object.assign({}, n, { nom: nomPublic(n.nom, 'Un navire pirate') }) })", '')]
 ]
 

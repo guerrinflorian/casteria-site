@@ -11,6 +11,9 @@
   if (!A || !form || !pseudo || !mdp || !erreur || !envoyer) return
   var el = A.el, vider = A.vider
   var retour = A.retourSur(new URLSearchParams(location.search).get('retour'))
+  // (la tête, 30/10) ?equipe=1 (le bouton « Se reconnecter » de l'espace de l'équipe, sa session de 12 heures finie) : même
+  // connecté au site, le formulaire reste, pour redemander le mot de passe
+  var equipe = new URLSearchParams(location.search).get('equipe') === '1'
   var enCours = false, attenteFin = 0, minuteur = 0
   var PHRASES = {
     requete: 'Écris ton pseudo et ton mot de passe.',
@@ -100,6 +103,14 @@
   // déjà connecté : la page le dit, et propose le compte ou la déconnexion
   A.moi().then(function (r) {
     if (r.statut !== 200 || !r.corps || !r.corps.pseudo) return
+    if (equipe) {
+      // le formulaire gardé, le pseudo déjà écrit, une phrase courte ; la réussite renvoie à l'espace de l'équipe (?retour=)
+      pseudo.value = String(r.corps.pseudo)
+      var consigne = form.querySelector('.consigne'), rappel = el('p', 'rappel-equipe', 'L\'espace de l\'équipe redemande ton mot de passe toutes les 12 heures.')
+      if (consigne) consigne.parentNode.insertBefore(rappel, consigne.nextSibling); else form.insertBefore(rappel, form.firstChild)
+      mdp.focus()
+      return
+    }
     var zone = el('div', 'deja-connecte'), h = el('h2', '', 'Tu es connecté')
     zone.appendChild(h)
     zone.appendChild(el('p', '', 'En tant que ' + String(r.corps.pseudo) + '.'))

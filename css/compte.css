@@ -21,6 +21,8 @@
 .panneau-connexion { padding: 26px 26px 24px; }
 .deja-connecte { position: relative; padding: 26px 26px 24px; color: #F4EAFF; background: linear-gradient(180deg, rgba(42, 23, 64, .96), rgba(27, 16, 40, .98)); border: 3px solid var(--or); box-shadow: 0 0 0 3px #120a1c, 0 26px 60px rgba(0, 0, 0, .55); }
 .panneau-connexion[hidden] { display: none; }
+/* (la tête, 30/10) la session de l'équipe finie : la phrase au-dessus du formulaire gardé (connexion.html?equipe=1) */
+.rappel-equipe { margin: 0 0 16px; padding: 10px 14px; font-size: 15px; font-weight: 700; color: #5A3410; background: #FFE6A8; border: 2px solid #E0B25A; border-radius: 14px; }
 .panneau-connexion h2, .deja-connecte h2 { font-size: 30px; color: var(--or-clair); margin: 0 0 8px; }
 .panneau-connexion .consigne { margin: 0 0 16px; font-size: 16px; color: #E7D8F7; }
 .panneau-connexion code, .zone-compte code { color: var(--or-clair); }

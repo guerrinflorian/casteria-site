@@ -45,7 +45,9 @@
   }
   function reconnexion() {
     menu.hidden = true; filtres.hidden = true
-    refus('Pour l\'espace de l\'équipe, reconnecte-toi : la session de l\'équipe dure 12 heures.', 'connexion.html?retour=admin.html', 'Se reconnecter')
+    // (la tête, 30/10 : le propriétaire tournait en rond) &equipe=1 : la page de connexion redemande le mot de passe même si la
+    // session du site (30 jours) est encore ouverte
+    refus('Pour l\'espace de l\'équipe, reconnecte-toi : la session de l\'équipe dure 12 heures.', 'connexion.html?retour=admin.html&equipe=1', 'Se reconnecter')
   }
   A.moi().then(function (r) {
     if (r.statut === 401) return refus('Connecte-toi d\'abord : cette page est réservée à l\'équipe.', 'connexion.html?retour=admin.html', 'Se connecter')

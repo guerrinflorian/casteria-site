@@ -859,6 +859,17 @@ console.log('js/carte.js (aucun nom sous les boutons du zoom)')
     ['le nom du palais se tait dessus', 'if (chevauche([x - w / 2 - 6, y - 2, x + w / 2 + 6, y + 18], [zoneBoutons])) return']]
   for (const [quoi, t] of exige) if (!c.includes(t)) faute('js/carte.js : un nom peut passer sous les boutons du zoom (' + quoi + ' : « ' + t.slice(0, 60) + ' » absent)')
 }
+// LA RECONNEXION DE L'ÉQUIPE (la tête, 30/10 : le propriétaire tournait en rond, « reconnecte-toi » puis « Tu es connecté ») : le bouton
+// de l'espace de l'équipe mène à connexion.html?equipe=1 ; avec equipe=1, une session du site ouverte garde le FORMULAIRE (le pseudo écrit,
+// la phrase des 12 heures) au lieu de « Tu es connecté » ; sans equipe=1, rien ne change
+console.log("js/admin.js et js/connexion.js (la reconnexion de l'équipe)")
+{
+  const ad = fs.readFileSync(path.join(RACINE, 'js', 'admin.js'), 'utf8'), cx = fs.readFileSync(path.join(RACINE, 'js', 'connexion.js'), 'utf8')
+  if (!ad.includes("'connexion.html?retour=admin.html&equipe=1', 'Se reconnecter')")) faute("js/admin.js : « Se reconnecter » doit mener à connexion.html?retour=admin.html&equipe=1 (sinon la page dit « Tu es connecté » et le mot de passe n'est jamais redemandé)")
+  const exige = ["var equipe = new URLSearchParams(location.search).get('equipe') === '1'", 'if (equipe) {', 'pseudo.value = String(r.corps.pseudo)', "L\\'espace de l\\'équipe redemande ton mot de passe toutes les 12 heures.", '      mdp.focus()\n      return\n    }\n    var zone = el(']
+  for (const t of exige) if (!cx.includes(t)) faute("js/connexion.js : la reconnexion de l'équipe, « " + t.slice(0, 60) + ' » absent')
+  if (cx.indexOf('if (equipe) {') < 0 || cx.indexOf('if (equipe) {') > cx.indexOf('form.hidden = true')) faute("js/connexion.js : avec equipe=1, le formulaire doit rester (le cas de l'équipe AVANT « form.hidden = true »)")
+}
 console.log('js/carte.js (les noms venus des données : jamais un nom de SPOILERS)')
 verifierNomsDesDonnees(faute)
 function verifierNomsDesDonnees(faute) {
