@@ -25,7 +25,9 @@
   // une date « 2026-10-29 » : « 29 oct. »
   function jour(d) { var p = String(d).split('-'); return p.length === 3 ? Number(p[2]) + NBSP + mois[Number(p[1]) - 1] : String(d) }
   // un axe propre : 0, puis des pas ronds (1, 2 ou 5 fois une puissance de 10)
-  function pas(max, n) { var brut = max / Math.max(1, n), p = Math.pow(10, Math.floor(Math.log(brut) / Math.LN10)), k = brut / p; return (k <= 1 ? 1 : k <= 2 ? 2 : k <= 5 ? 5 : 10) * p }
+  // (dc, 30/10 : « 1, 1, 0 » sur l axe des joueurs actifs) des nombres entiers (des joueurs, des centimes) : un pas d au moins 1,
+  // jamais deux graduations qui disent le meme nombre
+  function pas(max, n) { var brut = max / Math.max(1, n), p = Math.pow(10, Math.floor(Math.log(brut) / Math.LN10)), k = brut / p; return Math.max(1, (k <= 1 ? 1 : k <= 2 ? 2 : k <= 5 ? 5 : 10) * p) }
   function compact(v) { var a = Math.abs(v); if (a >= 1e6) return (v / 1e6).toFixed(a >= 1e7 ? 0 : 1).replace('.', ',').replace(',0', '') + NBSP + 'M'; if (a >= 1e3) return (v / 1e3).toFixed(a >= 1e4 ? 0 : 1).replace('.', ',').replace(',0', '') + NBSP + 'k'; return String(Math.round(v)) }
   function vide(boite, t) { boite.appendChild(el('p', 'g-vide', t || VIDE)) }
 

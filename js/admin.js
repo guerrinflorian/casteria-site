@@ -329,14 +329,17 @@
     function bloc(titreBloc, large) { var c = el('div', 'a-carte' + (large ? ' large' : '')); c.appendChild(el('h3', '', titreBloc)); return c }
     function lignes(c, paires) { var ul = el('ul', 'fiche-grille'); paires.forEach(function (p) { var li = el('li'); li.appendChild(el('span', '', p[0])); li.appendChild(el('b', '', p[1])); ul.appendChild(li) }); c.appendChild(ul) }
     var b1 = bloc('Le compte'); g.appendChild(b1)
+    // (dc, 30/10) sa place au classement général : celle de son dernier passage (general), sinon celle du classement publié
+    // (le thème « general » de sa fiche, comme sa page publique) : jamais « pas classé » pour un joueur qui y est
+    var tg = liste(f.themes).filter(function (t) { return t && t.cle === 'general' && num(t.rang) }) [0] || null
     lignes(b1, [['Identifiant (uuid)', texte(ad.uuid)], ['Inscrit', ad.inscrit ? A.date(ad.inscrit) : (ad.inscrit_avant ? 'avant le ' + A.date(ad.inscrit_avant) : 'inconnu')], ['Où', ad.lieu ? texte(ad.lieu) : 'hors ligne'], ['Temps de jeu', num(f.temps_de_jeu_min) === null ? VIDE : A.nombre(Math.floor(f.temps_de_jeu_min / 60)) + NBSP + 'h']])
     var b2 = bloc('L\'argent'), ag = ad.argent || {}; g.appendChild(b2)
     // (5c, 30/10) la fortune et le patrimoine (le classement du jeu), puis les hausses de jetons par jour (relevées chaque nuit)
     lignes(b2, [['Jetons', nb(pv.jetons)], ['Fortune', nb(ag.fortune)], ['Patrimoine', nb(ag.patrimoine)], ['Crédits', nb(pv.credits)],
-      ['Classement général', f.general && f.general.rang ? A.rang(f.general.rang) + ' (' + A.nombre(f.general.points) + ' points)' : (f.hors_classement ? 'hors classement' : 'pas classé')]])
+      ['Classement général', f.general && f.general.rang ? A.rang(f.general.rang) + ' (' + A.nombre(f.general.points) + ' points)' : (tg ? A.rang(tg.rang) + ' (' + texte(tg.texte) + ')' : (f.hors_classement ? 'hors classement' : 'pas classé'))]])
     hausses(b2, ag)
     var ile = bloc('L\'île'), ilef = f.ile || {}, ilea = ad.ile || {}; g.appendChild(ile)
-    lignes(ile, [['Nom', texte(ilef.nom)], ['Case', ilea.i !== undefined ? ilea.i + ', ' + ilea.j : ''], ['Beauté', nb(ilef.beaute) + ' points · ' + pluriel(num(ilef.etoiles) || 0, 'étoile')]])
+    lignes(ile, [['Nom', texte(ilef.nom)], ['Case', num(ilea.i) !== null ? ilea.i + ', ' + ilea.j : (num(ilef.i) !== null ? ilef.i + ', ' + ilef.j : 'pas encore de données')], ['Beauté', nb(ilef.beaute) + ' points · ' + (num(ilef.etoiles) === null ? 'pas encore d\'étoile' : String(Math.round(num(ilef.etoiles) * 10) / 10).replace('.', ',') + NBSP + (num(ilef.etoiles) >= 2 ? 'étoiles' : 'étoile'))]])
     if (liste(ilea.membres).length) ile.appendChild(el('p', 'a-aide', 'Ses membres : ' + liste(ilea.membres).map(function (m) { return texte(m.pseudo) }).join(', ')))
     var achats = bloc('Les achats (Tebex)'), ula = el('ul', 'a-liste'); g.appendChild(achats)
     liste(pv.achats).forEach(function (x) { var li = el('li'); li.appendChild(el('span', 'quand', A.date(x.quand))); li.appendChild(el('span', '', texte(x.produit))); li.appendChild(el('span', 'prix', x.etat === 'rembourse' ? 'remboursé' : euros(x.prix_centimes))); ula.appendChild(li) })
