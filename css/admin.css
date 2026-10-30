@@ -241,3 +241,16 @@ html.photo .a-etat::before { animation: none; }
   .a-carte .a-liste.a-sessions li { grid-template-columns: minmax(0, 1fr) auto; gap: 2px 10px; }
   .a-carte .a-liste.a-sessions li .quand { grid-column: 1 / -1; }
 }
+
+/* (dc, 30/10) un pseudo cliquable dans les listes de l'équipe : il ouvre sa fiche */
+.a-lien-joueur { font: inherit; font-weight: 700; color: var(--or-k, #FFCF5A); background: none; border: 0; padding: 0; cursor: pointer; text-align: left; text-decoration: underline; text-underline-offset: 2px; }
+.a-lien-joueur:hover, .a-lien-joueur:focus-visible { color: #fff; }
+
+/* (dc, 30/10) les listes « En ce moment », « La modération », « L'économie » : le pseudo et son chiffre, puis le détail, puis
+   l'heure ; à toutes les largeurs (jamais deux textes l'un sur l'autre) */
+.a-carte .a-liste.a-liste-k li { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "qui combien" "quoi quoi" "quand quand"; gap: 2px 12px; align-items: baseline; }
+.a-liste-k .k-qui { grid-area: qui; justify-self: start; }
+.a-liste-k .k-combien { grid-area: combien; font-weight: 700; color: var(--or-clair, #FFD75E); white-space: nowrap; text-align: right; }
+.a-liste-k .k-quoi { grid-area: quoi; color: #F1E6FF; overflow-wrap: anywhere; }
+.a-liste-k .k-quand { grid-area: quand; font-size: 12.5px; color: #A994C4; }
+@media (max-width: 760px) { .a-carte .a-liste.a-liste-k li { grid-template-columns: minmax(0, 1fr) auto; } .a-liste-k li > b { grid-column: auto; } }

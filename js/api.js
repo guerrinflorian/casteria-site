@@ -12,7 +12,7 @@
   var PSEUDO = /^[A-Za-z0-9_]{3,16}$/
   // les huit thèmes de /top (la 154 du jeu : le Commerce fondu dans la Fortune, le thème Îles ; leaderboard.js, FAMILLES)
   var THEMES = ['general', 'ile', 'iles', 'casino', 'boss', 'mer', 'quetes', 'jeux']
-  var ADMIN = { tableau: 1, ventes: 1, entonnoir: 1, consultations: 1, activites: 1 }
+  var ADMIN = { tableau: 1, ventes: 1, entonnoir: 1, consultations: 1, activites: 1, maintenant: 1, moderation: 1, economie: 1 }
   var NBSP = String.fromCharCode(160), TIRET_INSECABLE = String.fromCharCode(0x2011)
 
   // ---------- une demande : { statut, corps } ; jamais une exception vers la page ----------

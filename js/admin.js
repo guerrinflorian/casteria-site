@@ -18,6 +18,10 @@
   var el = A.el, vider = A.vider, NBSP = String.fromCharCode(160)
   var VUES = {
     tableau: ['Le tableau de bord', 'Les chiffres de la période, face à la période d\'avant.'],
+    // (dc, 30/10 ; le propriétaire : « exploitable et complet en données ») gérer le serveur, maintenant
+    maintenant: ['En ce moment', 'Qui est en ligne et où, les comptes créés aujourd\'hui, les dernières ventes.'],
+    moderation: ['La modération', 'Les sanctions qui courent encore et leur fin, les signalements à traiter.'],
+    economie: ['L\'économie', 'Les plus riches, et les jetons qui montent le plus vite sur 7 jours.'],
     ventes: ['Les ventes', 'La boutique du site (Tebex) et les crédits dépensés dans la boutique du jeu.'],
     tunnels: ['Les tunnels', 'D\'une visite du site à un premier achat, et de la boutique vue au paiement.'],
     consultations: ['Ce qu\'ils regardent', 'Les pages du site, les packs, les articles de la boutique du jeu.'],
@@ -26,6 +30,8 @@
     tchat: ['Le tchat en direct', 'Le tchat de tout le réseau, une seule liste, ligne par ligne dès qu\'elle est écrite.']
   }
   var VIDE = 'pas encore de données'
+  // (dc, 30/10) les vues de l'instant : sans le choix de la période
+  var SANS_PERIODE = { maintenant: 1, moderation: 1, economie: 1 }
   var etat = { vue: 'tableau', jours: 30, pas: 'jour', numero: 0, tchat: null }
 
   // ---------- qui est là ----------
@@ -70,20 +76,20 @@
     var n = ++etat.numero, v = VUES[etat.vue]
     titre.textContent = v[0]; sous.textContent = v[1]
     Array.prototype.forEach.call(nav.querySelectorAll('a'), function (a) { if (a.dataset.vue === etat.vue) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current') })
-    filtres.hidden = etat.vue === 'joueurs' || etat.vue === 'tchat'
+    filtres.hidden = etat.vue === 'joueurs' || etat.vue === 'tchat' || SANS_PERIODE[etat.vue]
     $('filtre-pas').hidden = etat.vue !== 'ventes' && etat.vue !== 'jeu'
     vue.classList.add('charge')
     var fin = function () { if (n === etat.numero) vue.classList.remove('charge') }
     if (etat.vue === 'joueurs') { vider(vue); vueJoueurs(); fin(); return }
     if (etat.vue === 'tchat') { vider(vue); vueTchat(); fin(); return }
-    var quoi = { tableau: 'tableau', ventes: 'ventes', tunnels: 'entonnoir', consultations: 'consultations', jeu: 'activites' }[etat.vue]
+    var quoi = { maintenant: 'maintenant', moderation: 'moderation', economie: 'economie', tableau: 'tableau', ventes: 'ventes', tunnels: 'entonnoir', consultations: 'consultations', jeu: 'activites' }[etat.vue]
     A.admin(quoi, { jours: etat.jours, pas: etat.pas }).then(function (r) {
       if (n !== etat.numero) return
       fin()
       if (r.statut === 401 && r.corps && r.corps.erreur === 'reconnexion') return reconnexion()
       if (r.statut !== 200 || !r.corps || typeof r.corps !== 'object') { vider(vue); vue.appendChild(el('p', 'a-panne', r.statut === 403 ? 'L\'API refuse : cette page est réservée à l\'équipe.' : 'Les chiffres ne se lisent pas pour l\'instant. Réessaie dans un instant.')); return }
       vider(vue)
-      ;({ tableau: vueTableau, ventes: vueVentes, tunnels: vueTunnels, consultations: vueConsultations, jeu: vueJeu })[etat.vue](r.corps)
+      ;({ maintenant: vueMaintenant, moderation: vueModeration, economie: vueEconomie, tableau: vueTableau, ventes: vueVentes, tunnels: vueTunnels, consultations: vueConsultations, jeu: vueJeu })[etat.vue](r.corps)
     })
   }
 
@@ -263,6 +269,58 @@
   }
 
   // ---------- un joueur : la recherche, puis sa fiche complète ----------
+  // ---------- (dc, 30/10) gérer le serveur, maintenant : chaque bloc avec sa source et son heure ; une donnée absente : « pas
+  // encore de données », jamais 0 ni une liste vide qui aurait l'air vraie ----------
+  // un pseudo cliquable : sa fiche dans « Un joueur »
+  function lienJoueur(p) {
+    var b = el('button', 'a-lien-joueur', texte(p)); b.type = 'button'
+    b.addEventListener('click', function () { etat.ouvrir = String(p); if (location.hash === '#joueurs') montrer(); else location.hash = '#joueurs' })
+    return b
+  }
+  // une liste de lignes : [quand, qui, quoi, combien] ; vide : sa phrase
+  function lignesListe(boite, l, rien) {
+    // vide : rien de plus (la phrase sous le titre le dit déjà)
+    if (!l.length) { void rien; return }
+    // une ligne : le pseudo et son chiffre en haut, le détail dessous, l'heure en petit (lisible à 390 comme à 1280)
+    var ul = el('ul', 'a-liste a-liste-k')
+    l.forEach(function (x) {
+      var li = el('li'), noms = ['k-quand', 'k-qui', 'k-quoi', 'k-combien']
+      x.forEach(function (c, i) { var e = typeof c === 'string' ? el('span', '', c) : c; e.classList.add(noms[i]); if (typeof c !== 'string' || c) li.appendChild(e) })
+      ul.appendChild(li)
+    })
+    boite.appendChild(ul)
+  }
+  function valeurDe(b) { return b && typeof b === 'object' ? b.valeur : null }
+  function vueMaintenant(d) {
+    var g = grille()
+    var en = valeurDe(d.en_ligne), b1 = carte('Qui est en ligne', en ? (en.total ? pluriel(en.total, 'joueur') + ' en ce moment.' : 'Personne en ce moment.') : VIDE, d, 'jeu', false, g)
+    if (en) {
+      if (en.par_lieu && en.par_lieu.length) b1.appendChild(el('p', 'a-aide', liste(en.par_lieu).map(function (x) { return texte(x.nom) + ' : ' + A.nombre(x.n) }).join(' · ')))
+      lignesListe(b1, liste(en.joueurs).map(function (j) { return [el('span', 'quand', j.depuis ? 'vu ' + quand(j.depuis) : ''), lienJoueur(j.pseudo), texte(j.lieu || 'ailleurs'), ''] }), 'Personne sur le réseau.')
+    }
+    var nv = valeurDe(d.nouveaux_aujourdhui), b2 = carte('Les comptes créés aujourd\'hui', nv ? (nv.valeur ? pluriel(nv.valeur, 'compte neuf', 'comptes neufs') + ' (/register).' : 'Aucun compte neuf aujourd\'hui.') : VIDE, d, 'jeu', false, g)
+    if (nv) lignesListe(b2, liste(nv.joueurs).map(function (j) { return [el('span', 'quand', quand(j.quand)), lienJoueur(j.pseudo), '', ''] }), 'Personne encore aujourd\'hui.')
+    var vt = valeurDe(d.dernieres_ventes), b3 = carte('Les dernières ventes (Tebex)', vt ? (vt.length ? '' : 'Aucune vente pour l\'instant.') : (source(d, 'tebex').absente ? '' : VIDE), d, 'tebex', true)
+    if (vt) lignesListe(b3, vt.map(function (v) { return [el('span', 'quand', A.date(v.quand)), v.pseudo ? lienJoueur(v.pseudo) : '', texte(v.produit || 'un pack') + (v.etat === 'rembourse' ? ' (remboursé)' : (v.etat === 'litige' ? ' (litige)' : '')), num(v.prix_centimes) === null ? '' : euros(v.prix_centimes)] }), 'Aucune vente pour l\'instant.')
+  }
+  function vueModeration(d) {
+    var g = grille()
+    var sc = valeurDe(d.sanctions_en_cours), b1 = carte('Les sanctions en cours', sc ? (sc.length ? pluriel(sc.length, 'sanction') + ' en cours.' : 'Aucune sanction en cours.') : VIDE, d, 'jeu', false, g)
+    if (sc) lignesListe(b1, sc.map(function (s) { return [el('span', 'quand', A.date(s.debut)), lienJoueur(s.pseudo), texte(s.type_nom || s.type) + (s.raison ? ' : ' + texte(s.raison) : '') + (s.par ? ' (par ' + texte(s.par) + ')' : ''), s.definitive ? 'définitif' : 'fin ' + quand(s.fin)] }), 'Personne n\'est sanctionné en ce moment.')
+    var sg = valeurDe(d.signalements_ouverts), b2 = carte('Les signalements à traiter', sg ? (sg.length ? pluriel(sg.length, 'signalement ouvert', 'signalements ouverts') + '.' : 'Aucun signalement ouvert.') : VIDE, d, 'jeu', false, g)
+    if (sg) lignesListe(b2, sg.map(function (s) { return [el('span', 'quand', quand(s.dernier)), lienJoueur(s.contre), texte(s.motif || '') + (s.message ? ' : « ' + texte(s.message) + ' »' : ''), num(s.signaleurs) === null ? '' : pluriel(s.signaleurs, 'signaleur')] }), 'Rien à traiter.')
+  }
+  function vueEconomie(d) {
+    var g = grille()
+    var pr = valeurDe(d.plus_riches), b1 = carte('Les plus riches', pr && !pr.length ? 'Personne encore.' : pr ? 'Leur fortune (ce qu\'ils possèdent, au prix du jeu) et leurs jetons, à leur dernier passage.' : VIDE, d, 'jeu', false, g)
+    if (pr) lignesListe(b1, pr.map(function (x) { return [el('span', 'quand', x.lu ? quand(x.lu) : ''), lienJoueur(x.pseudo), A.nombre(x.fortune) + NBSP + 'de fortune', num(x.jetons) === null ? '' : A.nombre(x.jetons) + NBSP + 'jetons'] }), 'Personne encore.')
+    var h = d.hausses_jetons_7_jours || {}, hv = h.valeur
+    var b2 = carte('Les jetons qui montent le plus vite', hv || source(d, 'jeu').absente ? 'Les hausses de jetons des 7 derniers jours, relevées chaque nuit (une baisse n\'est pas relevée) ; une hausse énorme d\'un coup mérite un regard.' + (hv && !hv.length ? ' Aucune hausse sur ces 7 jours.' : '') : VIDE, d, 'jeu', false, g)
+    if (hv) lignesListe(b2, hv.map(function (x) { return [el('span', 'quand', '7 jours'), lienJoueur(x.pseudo), '+' + A.nombre(x.jetons) + NBSP + 'jetons', ''] }), 'Aucune hausse relevée sur 7 jours.')
+    var b3 = carte('Les jetons créés et détruits', 'Le jeu ne publie pas encore le journal de ses jetons : ce bloc arrivera avec lui.', null, null, true)
+    void b3
+  }
+
   function vueJoueurs() {
     var boite = el('div', 'a-cherche'), lab = el('label', 'lu', 'Chercher un joueur'), champ = el('input'), suggestions = el('ul', 'a-suggestions'), fiche = el('div', 'a-fiche')
     champ.type = 'search'; champ.id = 'admin-cherche'; champ.placeholder = 'Le début d\'un pseudo'; champ.autocomplete = 'off'; champ.spellcheck = false; champ.maxLength = 16
@@ -293,6 +351,8 @@
         ficheAdmin(fiche, r.corps)
       })
     }
+    // (dc, 30/10) venu d'un pseudo cliqué ailleurs dans l'espace : sa fiche, tout de suite
+    if (etat.ouvrir) { var p = etat.ouvrir; etat.ouvrir = null; ouvrir(p); return }
     champ.focus()
   }
   // une durée : « 30 min », « 2 h », « 2 h 30 », « 14 jours »
