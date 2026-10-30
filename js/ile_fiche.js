@@ -156,12 +156,62 @@
     }).catch(function () { /* sans liste : la partie reste cachee */ })
   }
 
+  // ---- SON ÉCURIE (37, le 30/10 ; la vue : ecurie.json, au droit de l'île) : ses montures et les familiers de son jardin, par
+  // leur nom du jeu (casinomontures Chiffres, casinocompagnons Catalogue) et leur stade (2 et 3 : une bête évoluée). Un familier
+  // gagné contre un boss que le site ne nomme jamais reste un « Familier secret » (son id n'est pas dans la table)
+  var MONTURES = { scarabee_or: 'Scarabée d\'or', loup_orage: 'Loup d\'orage', raie_nuages: 'Raie des nuages', hippocampe_royal: 'Hippocampe royal',
+    destrier_casterium: 'Destrier de castérium', wyverne_royale: 'Wyverne royale', griffon_or: 'Griffon d\'or', cerf_celeste: 'Cerf céleste',
+    renard_roux: 'Renard roux', cauchemar: 'Cauchemar', griffon_glaces: 'Griffon des glaces', lion_souverain: 'Lion ailé de castérium' }
+  var FAMILIERS = { dragon: 'Bébé dragon', chat: 'Chat ailé', mouton: 'Mouton nuage', luciole: 'Luciole', corbeau: 'Corbeau caïd', de: 'Dé porte-bonheur',
+    jeton: 'Jeton parrain', crane: 'Crâne à casquette', panda: 'Petit panda', licorne: 'Licorne rose', lionceau: 'Lionceau royal', robot: 'Petit robot',
+    dragon_casterium: 'Dragon de castérium', chouette: 'Chouette flocon', phenix: 'Phénix d\'or', baleine: 'Baleine des étoiles', renard: 'Renard aux trois queues',
+    poussin: 'Poussin des nuages', meduse: 'Méduse de lune', cochon_volant: 'Cochon volant', petit_yeti: 'Bébé Yéti', petit_pagure: 'Bébé Pagure',
+    canari_mine: 'Canari de mine', golem_geode: 'Golem de géode', perroquet_corsaire: 'Perroquet corsaire', petit_veilleur: 'Petit Veilleur',
+    souris_moissons: 'Souris des moissons', petit_epouvantail: 'Petit épouvantail', chat_chanceux: 'Chat porte-bonheur', carpe_or: 'Carpe d\'or' }
+  // une liste de l'écurie : les bêtes les plus évoluées d'abord, puis par nom ; rend leur nombre
+  function listeEcurie(ul, l, noms, secret) {
+    A.vider(ul)
+    var e = []
+    for (var k = 0; k < l.length; k++) {
+      var b = l[k] || {}
+      if (!/^[a-z0-9_]{1,40}$/.test(String(b.id))) continue
+      e.push({ nom: noms[b.id] || secret, stade: b.stade === 2 || b.stade === 3 ? b.stade : 1 })
+    }
+    e.sort(function (a, b) { return b.stade - a.stade || (a.nom < b.nom ? -1 : a.nom > b.nom ? 1 : 0) })
+    for (k = 0; k < e.length; k++) {
+      var li = A.el('li', 'bete' + (e[k].stade > 1 ? ' stade-' + e[k].stade : ''))
+      li.appendChild(A.el('span', 'bete-nom', e[k].nom))
+      if (e[k].stade > 1) li.appendChild(A.el('span', 'bete-stade', 'Stade ' + e[k].stade))
+      ul.appendChild(li)
+      if (e[k].stade > 1) evoluees++
+    }
+    return e.length
+  }
+  var evoluees = 0
+  function ecurie(f) {
+    if (!f || !f.peut_voir || !f.vue || !window.fetch) return
+    fetch(f.vue + 'ecurie.json', { credentials: 'same-origin', headers: { Accept: 'application/json' } }).then(function (r) { return r.ok ? r.json() : null }).then(function (o) {
+      var m = o && o.montures && Array.isArray(o.montures.betes) ? o.montures.betes : []
+      var fa = o && o.familiers && Array.isArray(o.familiers.betes) ? o.familiers.betes : []
+      var nM = listeEcurie($('ecurie-montures'), m, MONTURES, 'Monture'), nF = listeEcurie($('ecurie-familiers'), fa, FAMILIERS, 'Familier secret')
+      if (!nM && !nF) return
+      $('ecurie-montures-titre').hidden = !nM
+      $('ecurie-familiers-titre').hidden = !nF
+      var t = []
+      if (nM) t.push(pluriel(nM, 'monture', 'montures') + ' dans son écurie')
+      if (nF) t.push(pluriel(nF, 'familier', 'familiers') + ' dans son jardin')
+      $('ecurie-note').textContent = t.join(' et ') + ' : ' + (nM + nF > 1 ? 'tous se promènent' : 'il se promène') + ' dans la vue, comme en jeu.' + (evoluees ? ' Au-dessus d\'une bête évoluée, ses étoiles : deux au stade 2, trois au stade 3.' : '')
+      $('ecurie').hidden = false
+    }).catch(function () { /* sans liste : la partie reste cachee */ })
+  }
+
   window.IleFiche = {
     remplir: function (o) {
       var a = mesures(o.fiche), b = habitants(o.fiche, o.x)
       $('fiche').hidden = !(a || b)
       minicarte(o.i, o.j, o.x)
       betes(o.fiche)
+      ecurie(o.fiche)
     }
   }
 })()
