@@ -3,7 +3,9 @@
 const fs = require('fs'), path = require('path')
 const RACINE = path.join(__dirname, '..'), PAGES = ['index.html', 'commencer.html', 'pirates.html', 'casino.html', 'donjons.html', 'evenements.html', 'classement.html', 'boutique.html', 'reglement.html', 'vote.html', 'discord.html', 'rejoindre.html', 'mentions-legales.html', 'confidentialite.html', 'conditions.html', 'merci.html', '404.html', 'serveur-minecraft-ile.html', 'serveur-minecraft-modde.html', 'launcher-minecraft-modde.html', 'serveur-minecraft-rpg.html', 'serveur-minecraft-boss.html', 'connexion.html', 'compte.html', 'admin.html',
   // (29/10/2026, 67) la carte vivante, le fil des exploits, le profil public et son image de partage
-  'carte.html', 'exploits.html', 'joueur.html', 'partage.html', 'ile.html']
+  'carte.html', 'exploits.html', 'joueur.html', 'partage.html', 'ile.html',
+  // (37, le 30/10/2026) les nouveautés de chaque mise en ligne (b5_assembleur/nouveautes.js)
+  'nouveautes.html']
 // LES FICHIERS LOURDS PERMIS (aucun depuis le 13/10/2026 : la bande-annonce de l'accueil a été retirée sur la demande du
 // propriétaire) : un fichier de plus de 5 Mo n'entre ici qu'avec son plafond en Mo, et la vidéo qui le cite porte
 // « data-clic » (chargée au clic du visiteur), jamais « data-auto »

@@ -406,3 +406,22 @@ html body footer .pied-legal { display: flex; flex-wrap: wrap; column-gap: 18px;
 html body footer .pied-legal a { display: inline-flex; align-items: center; min-height: 44px; margin: 0; }
 /* (5c, l audit) le badge « Ouverture bientôt » du classement ne flotte plus seul à droite : il prend sa ligne, sous les boutons */
 html body .vitrine-tete.banniere .banniere-texte .en-ligne { flex-basis: 100%; width: max-content; max-width: 100%; margin-top: 0; }
+
+/* (37, le 30/10/2026) LA PASTILLE D'ÉTAT DU SERVEUR (js/site.js, barreEtat) : une pilule de verre et son point ; fermé, le point d'or
+   (« Ouvre bientôt ») ; ouvert, le point vert qui bat. Dans la barre à partir de 1360 px (la place manque en dessous), en haut du
+   tiroir au téléphone */
+.barre-etat { display: inline-flex; align-items: center; gap: 7px; min-height: 30px; padding: 3px 12px 3px 10px; margin-left: 10px; border-radius: 999px; white-space: nowrap;
+  font: 700 13px "Fredoka", sans-serif; color: #EAFBEF; background: rgba(10, 20, 14, .45); border: 1px solid rgba(70, 210, 122, .45); }
+.barre-etat[hidden] { display: none; }
+.barre-etat i { width: 9px; height: 9px; border-radius: 50%; background: var(--vert-k); box-shadow: 0 0 0 0 rgba(70, 210, 122, .7); animation: etat-pouls 1.8s ease-out infinite; }
+.barre-etat b { color: #9BF0B8; }
+.barre-etat.ferme { color: #FFF1C9; background: rgba(40, 26, 8, .45); border-color: rgba(255, 207, 90, .5); }
+.barre-etat.ferme i { background: var(--or-k); animation: none; box-shadow: 0 0 6px rgba(255, 207, 90, .6); }
+@keyframes etat-pouls { 70% { box-shadow: 0 0 0 7px rgba(70, 210, 122, 0); } 100% { box-shadow: 0 0 0 0 rgba(70, 210, 122, 0); } }
+@media (prefers-reduced-motion: reduce) { .barre-etat i { animation: none; } }
+/* (la barre est plafonnée à 1 240 px : jamais la place dans sa ligne) dans la barre : un petit onglet qui pend sous elle, à gauche ; au téléphone, dans le tiroir seul */
+.barre > .barre-etat { position: absolute; left: 18px; top: calc(100% + 6px); margin: 0; min-height: 26px; padding: 2px 11px 2px 9px; font-size: 12px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); background: rgba(22, 15, 38, .82); }
+@media (max-width: 960px) { .barre > .barre-etat { display: none; } }
+.menu-tiroir .tiroir-etat { align-self: flex-start; margin: -2px 0 10px; }
+/* (5c, l audit) « après /login . » : le fond arrondi de <code> écartait le point ; dans la consigne, la commande en or seul */
+#connexion .consigne code { padding: 0; background: none; font-weight: 700; }

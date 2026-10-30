@@ -10,7 +10,10 @@
   // disparaît. Les mots qui disent la fermeture ne vivent QUE dans bandeauOuverture : partout ailleurs, ils restent
   // interdits (outils/verifier.js, MOTS_INTERDITS). Écrit en texte (textContent), jamais comme du code de page.
   var OUVERT = false
+  // le mot de la pastille d'état fermée (barreEtat) : écrit seulement ici, dans le bandeau (les mots de la fermeture n'ont pas d'autre place)
+  var TEXTE_FERME = ''
   function bandeauOuverture() {
+    TEXTE_FERME = 'Ouvre bientôt'
     var b = document.createElement('div'), t = document.createElement('p'), a = document.createElement('a')
     b.className = 'ouverture'
     b.setAttribute('role', 'note')
@@ -66,15 +69,46 @@
       e.hidden = false
     })
   }
+  // les pastilles d'état (barreEtat) jugent la lecture comme le badge : un entier, lu il y a 15 minutes au plus
+  function majEtats(d) {
+    var n = d ? d.en_ligne : null, lu = d ? Date.parse(String(d.en_ligne_lu || d.lu || '')) : NaN
+    var bon = typeof n === 'number' && n === Math.floor(n) && n >= 0 && !isNaN(lu) && Date.now() - lu <= EN_LIGNE_VIEUX_MS
+    etats.forEach(function (e) { ecrireEtat(e, bon ? n : null) })
+  }
+  // (37, le 30/10/2026 ; la tête : « l'état du serveur dans la barre du haut ») LA PASTILLE D'ÉTAT : fermé, « Ouvre bientôt », son point
+  // d'or, jamais un nombre de joueurs (les comptes de test) ; ouvert, « 12 en ligne » (un point vert qui bat), « En ligne » à 0,
+  // et rien quand la lecture manque ou date de plus de 15 minutes. Dans la barre (sur un grand écran) et en haut du tiroir.
+  var etats = []
+  function ecrireEtat(e, n) {
+    e.textContent = ''
+    var point = document.createElement('i'); point.setAttribute('aria-hidden', 'true'); e.appendChild(point)
+    if (!OUVERT) { if (!TEXTE_FERME) { e.hidden = true; return } e.classList.add('ferme'); e.appendChild(document.createTextNode(TEXTE_FERME)); e.hidden = false; return }
+    e.classList.remove('ferme')
+    if (n === null || n === undefined) { e.hidden = true; return }
+    if (n === 0) e.appendChild(document.createTextNode('En ligne'))
+    else { var b = document.createElement('b'); b.textContent = n.toLocaleString('fr-FR').split(' ').join(' '); e.appendChild(b); e.appendChild(document.createTextNode(' en ligne')) }
+    e.hidden = false
+  }
+  function barreEtat() {
+    var barre = document.querySelector('.barre'), marque = barre ? barre.querySelector('.marque') : null
+    if (!barre || !marque || barre.querySelector('.barre-etat')) return
+    var e = document.createElement('span'); e.className = 'barre-etat'; e.hidden = true; e.setAttribute('role', 'status')
+    marque.parentNode.insertBefore(e, marque.nextSibling)
+    etats.push(e)
+    ecrireEtat(e, enLigneDernier ? enLigneDernier.en_ligne : null)
+  }
   var enLigneDernier = null
   function lireEnLigne() {
     if (document.hidden) return
     fetch(SOURCE_EN_LIGNE, { credentials: 'omit', cache: 'no-store' })
       .then(function (r) { return r.ok ? r.json() : null })
-      .then(function (d) { enLigneDernier = d; montrerEnLigne(d) })
+      .then(function (d) { enLigneDernier = d; montrerEnLigne(d); majEtats(d) })
       // le réseau coupé : la dernière lecture, jugée à l'heure qu'il est (elle s'efface après ses 15 minutes)
-      .catch(function () { montrerEnLigne(enLigneDernier) })
+      .catch(function () { montrerEnLigne(enLigneDernier); majEtats(enLigneDernier) })
   }
+  barreEtat()
+  // (une page sans badge, mais avec la pastille de la barre : la même lecture, ouvert seulement)
+  if (OUVERT && !enLigne.length && etats.length && SOURCE_EN_LIGNE && window.fetch) { lireEnLigne(); setInterval(lireEnLigne, EN_LIGNE_RELIRE_MS) }
   // fermé : le badge garde l'ouverture que le bandeau y a écrite (aucune lecture du nombre de joueurs)
   if (OUVERT && enLigne.length && SOURCE_EN_LIGNE && window.fetch) {
     lireEnLigne()
@@ -180,6 +214,7 @@
     ligne('classement.html', 'Classement', 'coupe')
     ligne('carte.html', 'La carte', 'carte', '', 'NOUVEAU')
     ligne('exploits.html', 'Les exploits', 'medaille')
+    ligne('nouveautes.html', 'Les nouveautés', 'etoiles')
     ligne('vote.html', 'Voter', 'eclair')
     if (connecte()) ligne('compte.html', 'Mon compte', 'moi'); else ligne('connexion.html', 'Connexion', 'moi')
     ligne('boutique.html', 'Boutique', 'boutique', 't-boutique')
@@ -188,7 +223,11 @@
     j.className = 'bouton bouton-orange grand'; j.href = racine + ici + '#telecharger'; j.appendChild(ic('jouer', true)); j.appendChild(document.createTextNode('Jouer gratuitement'))
     d.className = 'bouton bouton-discord grand'; d.href = racine + 'discord.html'; d.appendChild(ic('discord')); d.appendChild(document.createTextNode('Rejoindre le Discord'))
     bas.appendChild(j); bas.appendChild(d)
-    tiroir.appendChild(haut); tiroir.appendChild(liste); tiroir.appendChild(bas)
+    tiroir.appendChild(haut)
+    // la pastille d'état, en haut du tiroir (le téléphone n'a pas la place de la montrer dans la barre)
+    var etatT = document.createElement('span'); etatT.className = 'barre-etat tiroir-etat'; etatT.hidden = true; tiroir.appendChild(etatT)
+    etats.push(etatT); ecrireEtat(etatT, enLigneDernier ? enLigneDernier.en_ligne : null)
+    tiroir.appendChild(liste); tiroir.appendChild(bas)
     barre.insertBefore(bouton, nav)
     document.body.appendChild(voile); document.body.appendChild(tiroir)
     function ouvrir(oui) {
