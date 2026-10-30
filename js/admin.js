@@ -416,7 +416,7 @@
       vc.appendChild(js)
       var li2 = el('div', 'i-lignes'), ce = V.certificat, si = V.site
       ligne(li2, 'En marche depuis', dureeInfra(V.uptime_s))
-      ligne(li2, 'Certificat HTTPS', ce ? pastille('jusqu\'au ' + A.date(ce.fin) + ', ' + pluriel(ce.jours, 'jour'), ce.jours < S.certificat_jours ? 'rouge' : ce.jours < S.certificat_jours * 2 ? 'orange' : 'vert') : VIDE, ce && ce.lu ? 'lu ' + de(ce.lu) : '')
+      ligne(li2, 'Certificat HTTPS', ce ? pastille('jusqu\'au ' + A.date(ce.fin) + ', ' + pluriel(ce.jours, 'jour'), ce.jours < S.certificat_jours ? 'rouge' : ce.jours < S.certificat_jours * 2 ? 'orange' : 'vert') : VIDE, ce && ce.lu ? 'lu ' + de(ce.lu) : V.certificat_raison ? 'la lecture a échoué : ' + texte(V.certificat_raison) : '')
       ligne(li2, 'Dernière mise à jour du site', si && si.heure ? quand(si.heure) : VIDE, si && si.commit ? 'commit ' + texte(si.commit) : '')
       vc.appendChild(li2)
       vc.appendChild(el('h3', '', 'Les conteneurs'))
