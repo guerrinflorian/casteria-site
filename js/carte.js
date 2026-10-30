@@ -488,7 +488,7 @@
   var mer = null       // { ligne, rayon, anneaux (rangés par a), rade, fosse, port, lieux, atlas, parZone }
   var pirates = [], evenements = []
   var ZONES_TEINTES = { rade: '#3C9BCB', hauts_fonds: '#2373AA', large: '#164F7E', mer_noire: '#0D3157', abysses: '#061A33' }
-  var GENRES = { phare: 'Phare', ile: 'Île sauvage', epave: 'Épave', ruine: 'Ruine', port: 'Port', repaire: 'Repaire de pirates', recif: 'Récif' }
+  var GENRES = { phare: 'Phare', ile: 'Île sauvage', epave: 'Épave', ruine: 'Ruine', port: 'Port', repaire: 'Repaire de pirates', recif: 'Récif', ile_boss: 'Île de boss' }
 
   // ---------- LA MER VUE DU CIEL (2c, 30/10 ; le propriétaire : « vraiment vue du dessus, magnifique, comme les îles ») ----------
   // assets/mer/decor.json : CHAQUE lieu posé par le jeu (le vrai Decor.java de casteria-mer, joué hors du jeu : 433 lieux, les 40 de
@@ -499,7 +499,13 @@
   // (2c, la tête : « à l'ouverture, les lieux de l'Atlas sont des miettes ») un lieu de l'Atlas n'est jamais plus petit que LIEU_MIN
   // pixels à l'écran : son image agrandie telle quelle (sa forme de près ne change pas ; au-delà, sa vraie taille)
   var LIEU_MIN = 26
-  var decor = null      // { gab: [{ px, py, w, h, c }], lieux: [[g, x, z, rot]], palais: { x, z, l, h }, nav: { echelle, n }, img: {}, loin }
+  // (37, la 157 ; le propriétaire : « pas de différence » avec la Carte marine du jeu) LE TERRAIN DES ZONES DE COMBAT (la Fosse, le
+  // Gouffre : un 1 en 6e place d'un lieu de decor.json) se cache aux vues larges, comme le jeu à ses deux crans les plus larges
+  // (EcranCarteMarine.dessinerLieux : il y ferait un amas) ; il revient quand le petit côté de la vue couvre moins de COMBAT_VUE
+  // blocs (le jeu : 4 827 blocs à son cran 1, caché, et 2 240 à son cran 2, montré ; leur moyenne)
+  var COMBAT_VUE = 3290
+  function combatCache() { return Math.min(L, H) / M.s > COMBAT_VUE }
+  var decor = null     // { gab: [{ px, py, w, h, c }], lieux: [[g, x, z, rot]], palais: { x, z, l, h }, nav: { echelle, n }, img: {}, loin }
   function chargerDecor() {
     if (decor) return
     decor = { pret: false, img: {} }
@@ -508,6 +514,10 @@
       decor.gab = j.gabarits.map(function (g) { return { px: g[1], py: g[2], w: g[3], h: g[4], c: g[5] } })
       decor.lieux = j.lieux; decor.palais = j.palais; decor.nav = j.navires
       decor.atlas = null
+      // (37, la 157) LES ÎLES DES BOSS DE MER de la Carte marine du jeu (l'île des Marées, du Pagure, Tortue) : leur image vue du
+      // ciel (assets/mer/ile_<id>.png, celle du jeu, un pixel par bloc) posée à leur boîte ; une image qui manque ne se dessine pas
+      decor.iles = (j.iles || []).filter(function (il) { return /^[a-z]{1,16}$/.test(String(il.id)) && isFinite(il.x) && isFinite(il.z) && il.w > 0 && il.h > 0 })
+      decor.iles.forEach(function (il) { il.img = new Image(); il.img.onload = function () { sale = true }; il.img.src = 'assets/mer/ile_' + il.id + '.png' })
       fin()
     }).catch(function () { decor = null })
     ;['gabarits', 'palais', 'navires'].forEach(function (k) {
@@ -533,7 +543,8 @@
     var c = cv.getContext('2d')
     c.imageSmoothingEnabled = true
     c.setTransform(1 / DECOR_LOIN, 0, 0, 1 / DECOR_LOIN, R / DECOR_LOIN, R / DECOR_LOIN)
-    for (var k = 0; k < decor.lieux.length; k++) poserLieu(c, decor.lieux[k])
+    // (37) sans le terrain des zones de combat : il se pose à part, seulement quand il se montre (combatCache)
+    for (var k = 0; k < decor.lieux.length; k++) if (decor.lieux[k][5] !== 1) poserLieu(c, decor.lieux[k])
     var P = decor.palais
     c.drawImage(decor.img.palais, P.x, P.z, P.l, P.h)
     decor.loin = cv; decor.R = R
@@ -571,25 +582,38 @@
       var o = ecranM(-decor.R, -decor.R)
       g.imageSmoothingEnabled = true
       g.drawImage(decor.loin, o[0], o[1], 2 * decor.R * M.s, 2 * decor.R * M.s)
+      // (37) l'image de loin n'a ni le terrain des zones de combat (il se montre, ou non : combatCache) ni les îles des boss
+      poserDansLaVue(true)
       g.imageSmoothingEnabled = false
       atlasLisible()
       return
     }
     // (2c, la tête : « de près c'est flou ») le pixel NET dès un pixel par bloc ; en dessous, lissé (une image réduite ne scintille pas)
     g.imageSmoothingEnabled = M.s < 1
-    var w0 = monde(-60, -60), w1 = monde(L + 60, H + 60)
+    poserDansLaVue(false)
+    g.imageSmoothingEnabled = false
+    atlasLisible()
+  }
+  // (37, la 157) LES LIEUX DU DÉCOR DANS LA VUE, au monde : tous (deLoin faux), ou seulement ceux d'un terrain de combat (deLoin
+  // vrai : les autres sont dans l'image de loin) ; le terrain de combat jamais quand il se cache ; puis les îles des boss ; puis
+  // (de près) le palais
+  function poserDansLaVue(deLoin) {
+    var w0 = monde(-60, -60), w1 = monde(L + 60, H + 60), cache = combatCache(), k, l, il, P = decor.palais
     g.save()
     g.setTransform(dpr * M.s, 0, 0, dpr * M.s, dpr * (L / 2 - M.cx * M.s), dpr * (H / 2 - M.cy * M.s))
-    for (var k = 0; k < decor.lieux.length; k++) {
-      var l = decor.lieux[k]
+    for (k = 0; k < decor.lieux.length; k++) {
+      l = decor.lieux[k]
+      if (l[5] === 1 ? cache : deLoin) continue
       if (l[1] < w0[0] - 40 || l[1] > w1[0] + 40 || l[2] < w0[1] - 40 || l[2] > w1[1] + 40) continue
       poserLieu(g, l)
     }
-    var P = decor.palais
-    if (P.x < w1[0] && P.x + P.l > w0[0] && P.z < w1[1] && P.z + P.h > w0[1]) g.drawImage(decor.img.palais, P.x, P.z, P.l, P.h)
+    for (k = 0; k < decor.iles.length; k++) {
+      il = decor.iles[k]
+      if (!il.img.complete || !il.img.naturalWidth || il.x > w1[0] || il.x + il.w < w0[0] || il.z > w1[1] || il.z + il.h < w0[1]) continue
+      g.drawImage(il.img, il.x, il.z, il.w, il.h)
+    }
+    if (!deLoin && P.x < w1[0] && P.x + P.l > w0[0] && P.z < w1[1] && P.z + P.h > w0[1]) g.drawImage(decor.img.palais, P.x, P.z, P.l, P.h)
     g.restore()
-    g.imageSmoothingEnabled = false
-    atlasLisible()
   }
   // L'EAU DE PRÈS : une texture d'eau dessinée ici (aucune image du jeu), un pixel par bloc, qui coule lentement vers le sud-est
   var eauTuile = null
@@ -850,6 +874,8 @@
     var pts = [], k, j, e, l, n
     for (k = 0; k < mer.atlas.length; k++) pts.push({ l: mer.atlas[k], genre: mer.atlas[k].genre })
     for (k = 0; k < mer.lieux.length; k++) if (mer.lieux[k].sorte !== 'port') pts.push({ l: mer.lieux[k], genre: mer.lieux[k].sorte })
+    // (37, la 157) les îles des boss de mer, comme sur la Carte marine du jeu : leur marque au milieu de leur boîte, leur nom dessous
+    if (decor && decor.pret) for (k = 0; k < decor.iles.length; k++) pts.push({ l: lieuIleBoss(decor.iles[k]), genre: 'ile_boss' })
     var port = mer.port ? ecranM(mer.port.x, mer.port.z) : null, nomPalais = rectNomPalais()
     for (k = 0; k < pts.length; k++) { e = ecranM(pts[k].l.x, pts[k].l.z); pts[k].x = e[0]; pts[k].y = e[1] }
     vus = []; prisesLieux = [zoneBoutons]
@@ -893,11 +919,21 @@
       l = v.membres[0]
       if (!noms && !(l.genre === 'phare' && M.s >= 0.1)) continue
       var w = g.measureText(l.l.nom).width, dy = pres ? dm : 12
+      // (37) une île de boss : son nom sous son image entière, comme la Carte marine du jeu
+      if (l.genre === 'ile_boss' && l.l.demiH) dy = Math.max(dy, l.l.demiH * M.s + 6)
       var rn = [v.x - w / 2 - 4, v.y + dy - 1, v.x + w / 2 + 4, v.y + dy + 16]
       if (rn[0] < 4 || rn[2] > L - 4 || rn[3] > H - 4 || chevauche(rn, nomsPris) || chevaucheSauf(rn, marques, v.r)) continue
       nomsPris.push(rn); prisesLieux.push(rn)
       etiquette(l.l.nom, v.x, v.y + dy, 12, l.genre === 'phare' ? '#FFE9A8' : '#F4EAFF')
     }
+  }
+  // une île de boss en lieu de la carte (gardé : la fiche choisie le reconnaît) ; son nom passe le filtre des noms tus
+  function lieuIleBoss(il) {
+    if (!il.lieu) {
+      var cx = il.x + il.w / 2, cz = il.z + il.h / 2, z = zoneEn(cx, cz)
+      il.lieu = { id: 'ile_' + il.id, nom: nomPublic(String(il.nom), NEUTRES.ile), genre: 'ile_boss', x: cx, z: cz, zone: z ? z.id : '', niveau: Number(il.niveau) || 0, demiH: il.h / 2 }
+    }
+    return il.lieu
   }
   function chevaucheSauf(r, l, sauf) { for (var k = 0; k < l.length; k++) if (l[k] !== sauf && r[0] < l[k][2] && r[2] > l[k][0] && r[1] < l[k][3] && r[3] > l[k][1]) return true; return false }
   function pastille(px, py, n, choisi) {
@@ -1175,6 +1211,8 @@
       var genre = l.sorte === 'port' ? 'port' : (l.sorte === 'phare' ? 'phare' : l.genre)
       ficheCorps.innerHTML = '<h2>' + echapper(l.nom) + '</h2><p class="hote">' + echapper(GENRES[genre] || 'Un lieu') + (l.zone ? ' · ' + echapper(nomZone(l.zone)) : '') + '</p>' +
         (genre === 'port' ? '<p>Le quai du palais : c\'est d\'ici que partent les navires. La Borne du port appelle le tien.</p>'
+          // (37, la 157) une île de boss : ce que la Carte marine du jeu en dit (son niveau ; on accoste à son quai)
+          : genre === 'ile_boss' ? '<p>Une île de boss en mer : accoste à son quai pour l\'affronter.' + (l.niveau ? ' Niveau conseillé : ' + l.niveau + '.' : '') + '</p>'
           : '<p>Un lieu de l\'Atlas : passe tout près en navire pour le découvrir. Le premier du serveur à le trouver voit son nom gravé.</p>')
       fiche.hidden = false
       return

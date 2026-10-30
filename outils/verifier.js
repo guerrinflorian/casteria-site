@@ -887,6 +887,36 @@ console.log('js/classement.js (la bulle du bouton de l\'île : jamais coupée, j
   if (!z || !zf || Number(z) <= Number(zf)) faute('css/classement.css : la bulle (.cl-bulle) doit être un calque fixe AU-DESSUS de la fiche du survol (.cl-survol)')
   if (!css.includes('.cl-apercu.bulle-js[data-bulle]:hover::before, .cl-apercu.bulle-js[data-bulle]:focus::before { content: none; }')) faute('css/classement.css : la vieille bulle (::before) revient à côté du calque fixe : deux bulles')
 }
+// (37, la 157 ; le propriétaire : « la carte de la mer du site et la carte de la mer du jeu [...] faut en être sûr, pas de
+// différence ») LA MER DU SITE = LA CARTE MARINE DU JEU : le décor de casteria-mer 1.0.57 (804 lieux, le terrain du Gouffre compris),
+// le terrain des zones de combat caché aux vues larges comme le jeu, et les trois îles des boss de mer à leur boîte, avec leur image
+console.log('js/carte.js et assets/mer (la mer du site, celle de la Carte marine du jeu)')
+{
+  const c = fs.readFileSync(path.join(RACINE, 'js', 'carte.js'), 'utf8')
+  const exige = [['le seuil du terrain de combat', 'function combatCache() { return Math.min(L, H) / M.s > COMBAT_VUE }'],
+    ['l\'image de loin sans le terrain de combat', 'if (decor.lieux[k][5] !== 1) poserLieu(c, decor.lieux[k])'],
+    ['le terrain de combat caché aux vues larges', 'if (l[5] === 1 ? cache : deLoin) continue'],
+    ['les îles des boss dessinées', 'g.drawImage(il.img, il.x, il.z, il.w, il.h)'],
+    ['les îles des boss en lieux de la carte', "pts.push({ l: lieuIleBoss(decor.iles[k]), genre: 'ile_boss' })"],
+    ['le nom d\'une île de boss filtré', 'nom: nomPublic(String(il.nom), NEUTRES.ile)']]
+  for (const [quoi, t] of exige) if (!c.includes(t)) faute('js/carte.js : la mer du site n\'est plus celle du jeu (' + quoi + ' : « ' + t.slice(0, 60) + ' » absent)')
+  let d = null
+  try { d = JSON.parse(fs.readFileSync(path.join(RACINE, 'assets', 'mer', 'decor.json'), 'utf8')) } catch (e) { faute('assets/mer/decor.json illisible : ' + e.message) }
+  if (d) {
+    if (!Array.isArray(d.lieux) || d.lieux.length < 804) faute('assets/mer/decor.json : ' + (d.lieux || []).length + ' lieux, le jeu en pose 804 (casteria-mer 1.0.57 : la grille, la Fosse, le Gouffre)')
+    if ((d.lieux || []).filter(l => l[5] === 1).length < 415) faute('assets/mer/decor.json : le terrain des zones de combat (la Fosse et le Gouffre : 415 lieux) n\'est plus marqué')
+    const iles = Array.isArray(d.iles) ? d.iles : []
+    for (const id of ['marees', 'pagure', 'tortue']) {
+      const il = iles.find(x => x.id === id)
+      if (!il) { faute('assets/mer/decor.json : l\'île de boss « ' + id + ' » de la Carte marine manque'); continue }
+      const f = path.join(RACINE, 'assets', 'mer', 'ile_' + id + '.png')
+      if (!fs.existsSync(f)) { faute('assets/mer/ile_' + id + '.png manque'); continue }
+      const b = fs.readFileSync(f)
+      if (b.readUInt32BE(16) !== il.w || b.readUInt32BE(20) !== il.h) faute('assets/mer/ile_' + id + '.png : ' + b.readUInt32BE(16) + ' x ' + b.readUInt32BE(20) + ', sa boîte : ' + il.w + ' x ' + il.h)
+      for (const n of SPOILERS) if (String(il.nom).toLowerCase().includes(n.toLowerCase())) faute('assets/mer/decor.json : le nom de l\'île « ' + id + ' » cite « ' + n + ' »')
+    }
+  }
+}
 console.log('js/carte.js (les noms venus des données : jamais un nom de SPOILERS)')
 verifierNomsDesDonnees(faute)
 function verifierNomsDesDonnees(faute) {

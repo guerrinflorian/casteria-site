@@ -334,6 +334,12 @@ const MUTANTS = [
   ['la bulle du bouton de l\'île hors de l\'écran', 'js/classement.js', s => s.replace('x = Math.max(8, Math.min(window.innerWidth - w - 8, r.left + r.width / 2 - w / 2))', 'x = r.left + r.width / 2 - w / 2')],
   ['la bulle du bouton de l\'île sous la fiche', 'css/classement.css', s => s.replace('.cl-bulle { position: fixed; z-index: 72;', '.cl-bulle { position: fixed; z-index: 60;')],
   ['deux bulles sur le bouton de l\'île', 'css/classement.css', s => s.replace('.cl-apercu.bulle-js[data-bulle]:hover::before, .cl-apercu.bulle-js[data-bulle]:focus::before { content: none; }\n', '')],
+  ['l\'image de loin avec le terrain de combat', 'js/carte.js', s => s.replace('if (decor.lieux[k][5] !== 1) poserLieu(c, decor.lieux[k])', 'poserLieu(c, decor.lieux[k])')],
+  ['le terrain de combat montré aux vues larges', 'js/carte.js', s => s.replace('if (l[5] === 1 ? cache : deLoin) continue', 'if (deLoin && l[5] !== 1) continue')],
+  ['le seuil du terrain de combat change', 'js/carte.js', s => s.replace('function combatCache() { return Math.min(L, H) / M.s > COMBAT_VUE }', 'function combatCache() { return false }')],
+  ['les îles des boss sans leur image', 'js/carte.js', s => s.replace('g.drawImage(il.img, il.x, il.z, il.w, il.h)', '')],
+  ['les îles des boss hors des lieux de la carte', 'js/carte.js', s => s.replace("pts.push({ l: lieuIleBoss(decor.iles[k]), genre: 'ile_boss' })", '0')],
+  ['le nom d\'une île de boss sans le filtre', 'js/carte.js', s => s.replace('nom: nomPublic(String(il.nom), NEUTRES.ile)', 'nom: String(il.nom)')],
   ['les noms des pirates sans le filtre', 'js/carte.js', s => s.replace(".map(function (n) { return Object.assign({}, n, { nom: nomPublic(n.nom, 'Un navire pirate') }) })", '')]
 ]
 
