@@ -91,6 +91,9 @@
   function num(x) { return typeof x === 'number' && isFinite(x) ? x : null }
   function chiffre(o) { return o && typeof o === 'object' ? o : { valeur: num(o) } }
   function liste(x) { return Array.isArray(x) ? x : [] }
+  // (dc, 30/10 ; la tête : « aucune clé brute ne doit jamais s'afficher ») une ligne sans son nom en mots du joueur ne
+  // s'affiche pas (jamais « _t » ni une clé du jeu à la place)
+  function nomme(x) { return !!(x && typeof x.nom === 'string' && x.nom.trim() && x.nom.charAt(0) !== '_') }
   // un texte des données : ses nombres et ses mots composés ne se coupent jamais (CasteriaApi.texte)
   function texte(x) { return x === undefined || x === null ? '' : A.texte(x) }
   var euros = function (c) { return num(c) === null ? VIDE : A.euros(c) }
@@ -253,10 +256,10 @@
     G.colonnes(carte('Les nouveaux joueurs, ' + mot, 'Les comptes créés en jeu (/register).', d, sc('nouveaux', 'jeu'), false, g), { titre: 'Les nouveaux joueurs ' + mot, nom: 'Nouveaux joueurs', couleur: 'vert', points: points(c.nouveaux), format: nb })
     G.courbe(carte('Le monde en ligne : la moyenne et le pic', 'Relevé chaque minute sur tout le réseau.', d, sc('en_ligne_pic', 'jeu'), true), { titre: 'Les joueurs en ligne', series: [{ nom: 'Le pic', couleur: 'or', points: points(c.en_ligne_pic) }, { nom: 'La moyenne', couleur: 'mer', points: points(c.en_ligne_moyen) }], format: nb })
     var g2 = grille()
-    G.barres(carte('Ce qu\'ils font le plus', 'Les joueurs qui ont avancé dans chaque activité sur la période, et de combien en tout.', d, 'jeu', false, g2), { couleur: 'vert', titres: ['Activité', 'Joueurs'], lignes: liste(d.activites).map(function (a) { return { nom: texte(a.nom || a.cle), valeur: num(a.joueurs), texte: num(a.joueurs) === null ? VIDE : pluriel(a.joueurs, 'joueur'), sous: num(a.volume) === null ? '' : A.nombre(a.volume) + (a.unite ? ' ' + texte(a.unite) : '') } }) })
+    G.barres(carte('Ce qu\'ils font le plus', 'Les joueurs qui ont avancé dans chaque activité sur la période, et de combien en tout.', d, 'jeu', false, g2), { couleur: 'vert', titres: ['Activité', 'Joueurs'], lignes: liste(d.activites).filter(nomme).map(function (a) { return { nom: texte(a.nom), valeur: num(a.joueurs), texte: num(a.joueurs) === null ? VIDE : pluriel(a.joueurs, 'joueur'), sous: num(a.volume) === null ? '' : A.nombre(a.volume) + (a.unite ? ' ' + texte(a.unite) : '') } }) })
     var tp = d.temps || {}, moyen = num(tp.moyen_par_joueur_min)
     var b4 = carte('Le temps passé', moyen === null ? VIDE : 'Chaque joueur actif passe en moyenne ' + A.nombre(moyen) + NBSP + 'min par jour en jeu. Où :', d, tp.source || 'jeu', false, g2)
-    G.empile(b4, { parts: liste(tp.par_lieu).map(function (p) { return { nom: texte(p.nom || p.cle), part: num(p.part) } }) })
+    G.empile(b4, { parts: liste(tp.par_lieu).filter(nomme).map(function (p) { return { nom: texte(p.nom), part: num(p.part) } }) })
   }
 
   // ---------- un joueur : la recherche, puis sa fiche complète ----------
