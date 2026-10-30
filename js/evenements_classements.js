@@ -82,7 +82,8 @@
   function rayon() {
     var s = $('rayon'), F = donnees.rayon && donnees.rayon.fiche
     if (!s || !rayonAllume()) return
-    $('rayon-regle').textContent = 'Une houe, un rayon de ' + F.portee + NBSP + 'blocs : un clic droit tire. Le premier adversaire traversé est touché : un point pour toi, et il réapparaît ailleurs, protégé ' +
+    // (la 157b ; le proprietaire : « virtuellement infini à l'échelle de la carte ») le rayon traverse les joueurs, jamais les murs
+    $('rayon-regle').textContent = 'Une houe, un rayon qui traverse les joueurs, jamais les murs, sur toute la carte : un clic droit tire. Chaque adversaire qu\'il traverse est touché : un point chacun (Doublé, Triplé, Quadruplé, Hécatombe ! d\'un seul tir), et il réapparaît ailleurs, protégé ' +
       dixiemes(F.protegeDixiemes) + '. Un tir toutes les ' + dixiemes(F.rechargeDixiemes) + ', ' + duree(F.dureeS) + ' de partie : le plus de points gagne ; à égalité, le moins de morts ; sans un point, ni place ni victoire. Aucun dégât, rien à perdre.'
     var ol = $('rayon-heures'), maintenant = minuteParis(), min = (F.minutes || []).slice().sort(function (a, b) { return a - b }), prochaine = -1
     A.vider(ol)
