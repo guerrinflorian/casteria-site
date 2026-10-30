@@ -227,3 +227,27 @@
 @keyframes flotte { 50% { transform: translateY(-6px); } }
 @media (max-width: 430px) { .belle.avec-image { grid-template-columns: minmax(0, 1fr) 110px; } .belle-image { width: 110px; height: 110px; } }
 @media (prefers-reduced-motion: reduce) { .belle-image { animation: none; } }
+
+/* ---------- (a8, 30/10) LE PARTAGE : la carte que Discord montre (dans un cadre crème à lèvre), le lien à copier, les boutons ---------- */
+.partage-grille { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: 40px; align-items: center; }
+.partage-apercu { margin: 0; padding: 10px; border-radius: 26px; background: linear-gradient(180deg, var(--creme), var(--creme-2));
+  box-shadow: 0 7px 0 var(--or-k-fonce), 0 22px 40px rgba(0, 0, 0, .4); transform: rotate(-1.2deg); }
+.partage-apercu img { display: block; width: 100%; height: auto; aspect-ratio: 1200 / 630; border-radius: 18px; background: var(--carte); }
+.partage-apercu figcaption { margin: 10px 6px 2px; font: 600 15px "Fredoka", sans-serif; color: #7A5536; text-align: center; }
+.partage-texte p { font-size: 18px; color: #E8DAFF; margin: 0 0 20px; }
+.partage-lien { display: flex; gap: 10px; }
+.partage-lien input { flex: 1 1 auto; min-width: 0; min-height: 48px; font: 600 16px "Fredoka", sans-serif; padding: 0 16px; border-radius: var(--r-champ);
+  color: #3B2615; background: #FFFAF0; border: 3px solid #D9B373; outline: none; text-overflow: ellipsis; }
+.partage-lien input:focus { border-color: var(--or-k-fonce); box-shadow: 0 0 0 4px rgba(243, 169, 58, .38); }
+.partage-lien .bouton { flex: 0 0 auto; white-space: nowrap; min-height: 48px; }
+.partage-gestes { display: flex; flex-wrap: wrap; gap: 14px; margin: 18px 0 0 !important; }
+.partage-gestes .bouton[hidden] { display: none; }
+.profil-partage .copie[hidden] { display: none; }
+@media (max-width: 900px) {
+  .partage-grille { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+  .partage-apercu { transform: none; }
+}
+@media (max-width: 430px) {
+  .partage-gestes .bouton { flex: 1 1 100%; justify-content: center; }
+  .partage-texte p { font-size: 17px; }
+}

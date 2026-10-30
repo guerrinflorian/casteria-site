@@ -68,7 +68,6 @@
         <button type="button" class="bouton bouton-or" id="partager"><svg class="ic" aria-hidden="true"><use href="#i-etoiles"/></svg>Partager ce profil</button>
         <a class="bouton bouton-sombre" id="vers-ile" href="carte.html" hidden><svg class="ic" aria-hidden="true"><use href="#i-carte"/></svg>Voir son île</a>
       </p>
-      <p class="copie" id="copie" role="status" hidden></p>
     </div>
     <aside class="face-a-face panneau-nuit" id="face-a-face" hidden aria-live="polite"></aside>
   </div>
@@ -139,6 +138,31 @@
     <div class="dedans">
       <div class="bloc-titre-ligne"><h2 class="bloc-titre">Ses derniers exploits</h2><a class="lien-or" href="exploits.html">Tous les exploits du serveur</a></div>
       <ol class="fil" id="fil"></ol>
+    </div>
+  </section>
+
+  <!-- (a8, 30/10 ; le propriétaire : « refais un peu plus beau la partie de partage du profil ») LE PARTAGE : la carte telle que
+       Discord et les réseaux la montrent (l'image de l'API), le lien à copier, Partager (le téléphone), Télécharger l'image -->
+  <section class="profil-bloc teinte-or profil-partage" id="bloc-partage" hidden>
+    <div class="dedans partage-grille">
+      <figure class="partage-apercu">
+        <img id="partage-image" width="1200" height="630" alt="" loading="lazy" decoding="async">
+        <figcaption>Ce que voient tes amis sur Discord</figcaption>
+      </figure>
+      <div class="partage-texte">
+        <h2 class="bloc-titre" id="partage-titre">Partage ce profil</h2>
+        <p id="partage-phrase">Colle le lien sur Discord ou ailleurs : sa carte s'affiche toute seule, avec son niveau, son île et ses victoires.</p>
+        <div class="partage-lien">
+          <label class="cache" for="partage-adresse">Le lien du profil</label>
+          <input id="partage-adresse" type="text" readonly spellcheck="false">
+          <button type="button" class="bouton bouton-or petit" id="partage-copier"><svg class="ic" aria-hidden="true" viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15V6.5A2.5 2.5 0 0 1 7.5 4H15"/></svg>Copier</button>
+        </div>
+        <p class="gestes partage-gestes">
+          <button type="button" class="bouton bouton-orange" id="partage-natif" hidden><svg class="ic" aria-hidden="true"><use href="#i-etoiles"/></svg>Partager</button>
+          <a class="bouton bouton-sombre" id="partage-telecharger" href="#" download><svg class="ic" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 4v11M7 10.5l5 5 5-5M5 20h14"/></svg>Télécharger l'image</a>
+        </p>
+        <p class="copie" id="partage-dit" role="status" aria-live="polite" hidden></p>
+      </div>
     </div>
   </section>
 

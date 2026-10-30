@@ -212,13 +212,44 @@
       montrerBloc('appel')
     }
 
-    // partager : le partage du téléphone, sinon le lien copié
+    partage(j, moi)
+  }
+
+  // (a8, 30/10 ; le propriétaire : « refais un peu plus beau la partie de partage du profil ») LE PARTAGE : la carte que
+  // Discord montre (l'image de l'API : /api/joueur/<pseudo>/image.png), le lien à copier, Partager (le téléphone, s'il sait),
+  // Télécharger l'image ; « Partager ce profil » du haut y mène
+  function partage(j, moi) {
+    var p = j.pseudo, url = location.origin + '/joueur/' + encodeURIComponent(p), image = 'api/joueur/' + encodeURIComponent(p) + '/image.png'
+    var lui = moi && String(moi.pseudo).toLowerCase() === String(p).toLowerCase()
+    var titre = (j.partage && j.partage.titre) || p + ' sur Casteria'
+    $('partage-titre').textContent = lui ? 'Partage ton profil' : 'Partage le profil de ' + p
+    $('partage-phrase').textContent = lui
+      ? 'Colle ton lien sur Discord ou ailleurs : ta carte s\'affiche toute seule, avec ton niveau, ton île et tes victoires.'
+      : 'Colle le lien sur Discord ou ailleurs : sa carte s\'affiche toute seule, avec son niveau, son île et ses victoires.'
+    var img = $('partage-image')
+    img.alt = 'La carte de ' + p + ' sur Casteria'
+    img.src = image
+    $('partage-adresse').value = url.replace(/^https?:\/\//, '')
+    var t = $('partage-telecharger')
+    t.href = image
+    t.setAttribute('download', 'casteria-' + p + '.png')
+    var dit = function (texte) { var d = $('partage-dit'); d.textContent = texte; d.hidden = false }
+    $('partage-copier').addEventListener('click', function () {
+      var champ = $('partage-adresse')
+      if (navigator.clipboard) navigator.clipboard.writeText(url).then(function () { dit('Lien copié : colle-le sur Discord, ta carte suivra.') }, function () { champ.select(); dit('Sélectionne le lien et copie-le.') })
+      else { champ.select(); dit('Sélectionne le lien et copie-le.') }
+    })
+    $('partage-adresse').addEventListener('focus', function () { this.select() })
+    if (navigator.share) {
+      var n = $('partage-natif')
+      n.hidden = false
+      n.addEventListener('click', function () { navigator.share({ title: titre, text: j.partage ? j.partage.description : '', url: url }).catch(function () {}) })
+    }
+    montrerBloc('partage')
     $('partager').addEventListener('click', function () {
-      var url = location.origin + '/joueur/' + encodeURIComponent(p), titre = (j.partage && j.partage.titre) || p + ' sur Casteria'
-      var fait = function (t) { $('copie').textContent = t; $('copie').hidden = false }
-      if (navigator.share) { navigator.share({ title: titre, text: j.partage ? j.partage.description : '', url: url }).catch(function () {}); return }
-      if (navigator.clipboard) navigator.clipboard.writeText(url).then(function () { fait('Lien copié : colle-le où tu veux.') }, function () { fait(url) })
-      else fait(url)
+      var b = $('bloc-partage')
+      b.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'center' })
+      setTimeout(function () { $('partage-copier').focus({ preventScroll: true }) }, 450)
     })
   }
 
