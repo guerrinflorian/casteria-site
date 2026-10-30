@@ -824,6 +824,18 @@ verifierOuvertureEtEnLigne(faute)
 // zones, des pirates et des événements qui nomme ce qu'on ne nomme jamais. Ici : sa liste NOMS_TUS est SPOILERS mot pour mot, et son
 // nomPublic, joué sur chaque nom de SPOILERS (dans une phrase, en capitales), le tait. « --en-ligne » : en plus, les noms que l'API
 // rend EN CE MOMENT (/api/carte?zone=mer et /api/navires de casteria.fr) passés au même filtre.
+// (2c, la 156 ; la tête : « Pirate » et « Événement en cours » seulement s'il y en a ; le marchand « une proie, pas un pirate »)
+// LA LÉGENDE DU VIVANT (carte.html, #legende-mer) : chaque ligne cachée au départ, montrée par legendeVivante seulement quand le
+// relevé en porte un ; « Pirate » ne compte jamais un navire marchand, qui a sa ligne à lui
+console.log('carte.html et js/carte.js (la légende du vivant)')
+{
+  const h = fs.readFileSync(path.join(RACINE, 'carte.html'), 'utf8'), c = fs.readFileSync(path.join(RACINE, 'js', 'carte.js'), 'utf8')
+  for (const cl of ['si-navires', 'si-pirates', 'si-marchands', 'si-evenements']) {
+    if (!new RegExp('<li class="' + cl + '" hidden>').test(h)) faute('carte.html : la ligne de légende « ' + cl + ' » doit être cachée au départ (hidden)')
+    if (!c.includes("bascule('#legende-mer ." + cl + "'")) faute('js/carte.js : legendeVivante ne montre ni ne cache « ' + cl + ' »')
+  }
+  if (!c.includes("bascule('#legende-mer .si-pirates', pirates.some(function (x) { return String(x.type) !== 'marchand' }))")) faute('js/carte.js : « Pirate » compte aussi les navires marchands (une proie, pas un pirate)')
+}
 console.log('js/carte.js (les noms venus des données : jamais un nom de SPOILERS)')
 verifierNomsDesDonnees(faute)
 function verifierNomsDesDonnees(faute) {

@@ -623,7 +623,7 @@
     g.translate(px, py)
     g.rotate((cap - 180) * Math.PI / 180 + tangue)
     if (combat || pirate) {
-      g.fillStyle = pirate ? 'rgba(232,96,76,.28)' : 'rgba(232,96,76,' + (0.2 + (calme ? 0 : Math.sin(t * 5) * 0.1)).toFixed(2) + ')'
+      g.fillStyle = pirate === 'marchand' ? 'rgba(242,193,46,.3)' : pirate ? 'rgba(232,96,76,.28)' : 'rgba(232,96,76,' + (0.2 + (calme ? 0 : Math.sin(t * 5) * 0.1)).toFixed(2) + ')'
       g.beginPath(); g.ellipse(0, 0, d[2] * k * 0.75 + 4, d[3] * k * 0.6 + 4, 0, 0, Math.PI * 2); g.fill()
     }
     g.imageSmoothingEnabled = k * decor.nav.echelle < 1
@@ -1038,7 +1038,8 @@
     for (var k = 0; k < pirates.length; k++) {
       var n = pirates[k], en = ecranM(n.x, n.z)
       if (en[0] < -40 || en[0] > L + 40 || en[1] < -40 || en[1] > H + 40) continue
-      if (!navireVu(en[0], en[1], n.cap || 0, String(n.coque || n.type || ''), true, true)) navire(en[0], en[1], n.cap || 0, true, String(n.nom || n.type || 'pirate'), true)
+      var proie = String(n.type) === 'marchand'
+      if (!navireVu(en[0], en[1], n.cap || 0, String(n.coque || n.type || ''), !proie, proie ? 'marchand' : true)) navire(en[0], en[1], n.cap || 0, !proie, String(n.nom || n.type || 'pirate'), !proie)
     }
   }
   function nomsDesPirates() {
@@ -1048,7 +1049,7 @@
       // son nom cède la place à celui d'un joueur (un combat : les deux navires sont côte à côte)
       g.font = '600 11px Fredoka, system-ui, sans-serif'
       var np = String(n.nom || 'Pirate'), wp = g.measureText(np).width, yp = en[1] + Math.max(14, 8 * M.s), rp = [en[0] - wp / 2 - 4, yp - 1, en[0] + wp / 2 + 4, yp + 15]
-      if (M.s >= 0.09 && !chevauche(rp, prisesLieux)) { prisesLieux.push(rp); etiquette(np, en[0], yp, 11, '#FFB4A8') }
+      if (M.s >= 0.09 && !chevauche(rp, prisesLieux)) { prisesLieux.push(rp); etiquette(np, en[0], yp, 11, String(n.type) === 'marchand' ? '#FFD27A' : '#FFB4A8') }
     }
   }
   // les événements en mer (une cargaison, un trésor...) : un cercle qui pulse, son nom ({ sorte, nom, x, z })
@@ -1161,7 +1162,9 @@
     for (var p in navires) n++
     var bascule = function (sel, oui) { var e = document.querySelector(sel); if (e) e.hidden = !oui }
     bascule('#legende-mer .si-navires', n > 0)
-    bascule('#legende-mer .si-pirates', pirates.length > 0)
+    // (2c, la 156) un navire marchand est une proie : sa ligne à lui ; « Pirate » ne le compte pas
+    bascule('#legende-mer .si-pirates', pirates.some(function (x) { return String(x.type) !== 'marchand' }))
+    bascule('#legende-mer .si-marchands', pirates.some(function (x) { return String(x.type) === 'marchand' }))
     bascule('#legende-mer .si-evenements', evenements.length > 0)
   }
   function legendeMer() {

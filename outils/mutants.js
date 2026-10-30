@@ -315,6 +315,10 @@ const MUTANTS = [
   ['le filtre des noms tus qui laisse tout passer', 'js/carte.js', s => s.replace('if (b.indexOf(NOMS_TUS[k].toLowerCase()) >= 0) return neutre', '')],
   ['La Damnation retiree des noms tus', 'js/carte.js', s => s.replace(", 'La Damnation']", ']')],
   ['les noms de l\'Atlas sans le filtre', 'js/carte.js', s => s.replace('isFinite(a.z) }).map(lieuPublic)', 'isFinite(a.z) })')],
+  // (2c, la 156) la légende du vivant : cachée au départ ; le marchand jamais compté comme pirate
+  ['la legende des marchands visible au depart', 'carte.html', s => s.replace('<li class="si-marchands" hidden>', '<li class="si-marchands">')],
+  ['le marchand compte comme pirate', 'js/carte.js', s => s.replace("pirates.some(function (x) { return String(x.type) !== 'marchand' })", 'pirates.length > 0')],
+  ['la legende des evenements jamais basculee', 'js/carte.js', s => s.replace("bascule('#legende-mer .si-evenements', evenements.length > 0)", '')],
   ['les noms des pirates sans le filtre', 'js/carte.js', s => s.replace(".map(function (n) { return Object.assign({}, n, { nom: nomPublic(n.nom, 'Un navire pirate') }) })", '')]
 ]
 
