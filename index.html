@@ -116,6 +116,26 @@
   </div>
 </section>
 
+<!-- ============ LE TRAILER (37, le 30/10/2026 ; le propriétaire : « pour hyper les gens ») : le trailer en paysage, sa musique
+     sans licence ; les fichiers sont sur le VPS (/media/, jamais dans ce dépôt : trop lourds), son affiche ici. Rien ne se
+     charge avant le clic (preload none, la source choisie par js/trailer.js : le WebM si le navigateur le lit, sinon le MP4,
+     en 720p sur un petit écran) ; le son coupé au départ, un bouton pour le mettre ============ -->
+<section class="pan pan-nuit trailer-bande" id="trailer" aria-labelledby="trailer-titre">
+  <div class="dedans">
+    <div class="trailer-tete monte">
+      <span class="sur-titre">Le trailer</span>
+      <h2 id="trailer-titre">Casteria, en vidéo</h2>
+      <p>Les îles, les bêtes, les boss, la mer et le casino : tout Casteria en une minute et demie.</p>
+    </div>
+    <div class="trailer-cadre monte" id="trailer-cadre">
+      <video class="trailer-video" id="trailer-video" preload="none" muted playsinline poster="assets/images/trailer_affiche.webp" data-src="/media/trailer_1080.mp4" data-src-petit="/media/trailer_720.mp4" data-src-webm="/media/trailer_1080.webm" aria-label="Le trailer de Casteria"></video>
+      <button type="button" class="trailer-lecture" id="trailer-lecture" aria-label="Lancer le trailer"><svg aria-hidden="true" focusable="false"><use href="#i-jouer"/></svg></button>
+      <button type="button" class="trailer-son" id="trailer-son" aria-pressed="false" hidden><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path class="haut-parleur" d="M4 9h4l5-4v14l-5-4H4z"/><path class="ondes" d="M16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11"/><path class="coupe" d="M16 9l6 6M22 9l-6 6"/></svg><span>Activer le son</span></button>
+      <p class="trailer-panne" id="trailer-panne" hidden>Le trailer ne se charge pas pour l'instant. Réessaie dans un moment.</p>
+    </div>
+  </div>
+</section>
+
 
 <div class="frise frise-etoiles" aria-hidden="true"></div>
 
@@ -482,6 +502,7 @@
 <script src="js/scene.js" defer></script>
 <script src="js/ile.js" defer></script>
 <script src="js/accueil.js" defer></script>
+<script src="js/trailer.js" defer></script>
 <script src="js/ancres.js" defer></script>
 </body>
 </html>

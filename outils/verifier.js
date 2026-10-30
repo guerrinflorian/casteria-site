@@ -11,6 +11,9 @@ const RACINE = path.join(__dirname, '..'), PAGES = ['index.html', 'commencer.htm
 // « data-clic » (chargée au clic du visiteur), jamais « data-auto »
 // (27/10/2026) le trailer en 1080p : cite par AUCUNE page (le lien du Discord et de la publicite), 32 Mo au plus
 const LOURDS_PERMIS = { 'assets/videos/casteria-trailer.mp4': 32 }
+// (37, le 30/10/2026) LES FICHIERS DU VPS : le trailer de l'accueil (1080p et 720p en MP4, 1080p en WebM), posés par la tête
+// dans /media/ du VPS, jamais dans ce dépôt ; cités par la seule vidéo du trailer (index.html, #trailer-video)
+const SUR_LE_VPS = ['/media/trailer_1080.mp4', '/media/trailer_720.mp4', '/media/trailer_1080.webm']
 // les pages qui restent hors de Google et hors du plan du site : la 404, et « Merci » (la page de retour après un achat)
 // (29/10/2026, le prototype du compte) la connexion, le compte du joueur et l'espace de l'équipe : hors de Google aussi
 // (29/10/2026, 67) le profil (joueur.html, le modele que le VPS remplit pour chaque joueur) et le patron de son image de partage
@@ -553,6 +556,9 @@ for (const page of PAGES) {
     if (page === 'vote.html' && SITES_VOTE.has(c)) continue
     if (/^(https?:)?\/\//.test(c)) { if (!c.startsWith(LIENS_FIGES)) faute('un lien vers ailleurs que la release du launcher : ' + c); continue }
     if (/^(mailto:|data:)/.test(c)) continue
+    // (37, le 30/10/2026) le trailer de l'accueil : ses fichiers sont posés sur le VPS (/media/, trop lourds pour ce dépôt),
+    // cités SEULEMENT par la vidéo du trailer de l'accueil, et seulement ceux-là
+    if (page === 'index.html' && SUR_LE_VPS.includes(c)) continue
     if (!existe(c)) faute('un fichier cité n\'existe pas : ' + c)
   }
   // aucun mot qui dise que le serveur n'est pas ouvert (le propriétaire, 05/10 : le site parle d'un serveur où l'on joue)

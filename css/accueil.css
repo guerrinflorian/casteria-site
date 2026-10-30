@@ -334,3 +334,40 @@ button.ilot:hover, button.ilot:focus-visible, button.ilot.choisi { animation-pla
 @media (max-width: 1000px) { .illu-esquif, .illu-cerf { position: static; width: 120px; margin: 0 auto 6px; } }
 @media (max-width: 600px) { .illu-phenix { left: auto; right: 4%; top: 12%; width: 92px; } .illu-pre { height: 120px; } .illu-mouton { width: 108px; } .illu-kitsune { width: 104px; } .illu-gardien { width: 150px; } }
 @media (prefers-reduced-motion: reduce) { .illu-phenix, .illu-kitsune, .illu-gardien, .illu-esquif, .illu-cerf { animation: none; } }
+
+/* (37, le 30/10/2026) LE TRAILER : une grande video aux coins ronds du kit, son affiche, le bouton lecture rond et orange a
+   levre au milieu, le bouton son en haut a droite (une fois lance) ; rien ne bouge sous « reduire les animations » */
+.trailer-bande { padding: 84px 0 92px; }
+.trailer-tete { max-width: 760px; margin: 0 auto 30px; text-align: center; }
+.trailer-tete p { font-size: 18px; margin: 10px 0 0; }
+.trailer-cadre { position: relative; max-width: 1100px; margin: 0 auto; aspect-ratio: 16 / 9; border-radius: 24px; overflow: hidden; background: #120A1E;
+  box-shadow: 0 0 0 1px rgba(255, 207, 90, .35), 0 10px 0 rgba(0, 0, 0, .28), 0 26px 60px rgba(0, 0, 0, .45); }
+.trailer-video { display: block; width: 100%; height: 100%; object-fit: cover; background: #120A1E; }
+.trailer-cadre.joue .trailer-video { object-fit: contain; }
+.trailer-lecture { position: absolute; left: 50%; top: 50%; width: 104px; height: 104px; margin: -52px 0 0 -52px; padding: 0; border: 0; border-radius: 50%; cursor: pointer;
+  display: grid; place-items: center; color: #fff; background: linear-gradient(180deg, #FFA35C, var(--orange, #F57C2A) 45%, var(--orange-2, #E8641B));
+  box-shadow: 0 7px 0 var(--orange-fonce, #A8430E), 0 16px 34px rgba(236, 106, 31, .45), inset 0 1px 0 rgba(255, 255, 255, .4), 0 0 0 8px rgba(255, 255, 255, .14);
+  transition: transform .18s ease, box-shadow .18s ease; }
+.trailer-lecture svg { width: 46px; height: 46px; margin-left: 6px; fill: currentColor; filter: drop-shadow(0 2px 0 rgba(120, 40, 0, .35)); }
+.trailer-lecture:hover, .trailer-lecture:focus-visible { transform: translateY(-3px) scale(1.04); box-shadow: 0 10px 0 var(--orange-fonce, #A8430E), 0 20px 40px rgba(236, 106, 31, .55), inset 0 1px 0 rgba(255, 255, 255, .4), 0 0 0 10px rgba(255, 255, 255, .2); }
+.trailer-lecture:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--orange-fonce, #A8430E), 0 8px 18px rgba(236, 106, 31, .4), inset 0 1px 0 rgba(255, 255, 255, .4); }
+.trailer-lecture[hidden], .trailer-son[hidden] { display: none; }
+.trailer-son { position: absolute; right: 14px; top: 14px; display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 6px 16px 6px 12px; border: 0; border-radius: 999px; cursor: pointer;
+  font: 700 15px "Fredoka", sans-serif; color: #FFF1DC; background: rgba(18, 10, 30, .72); box-shadow: 0 0 0 1px rgba(255, 207, 90, .45), 0 4px 0 rgba(0, 0, 0, .3); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+.trailer-son svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.trailer-son .haut-parleur { fill: currentColor; }
+.trailer-son .coupe { display: none; }
+.trailer-son.muet { color: #FFD75E; }
+.trailer-son.muet .ondes { display: none; }
+.trailer-son.muet .coupe { display: inline; }
+.trailer-son:hover, .trailer-son:focus-visible { background: rgba(18, 10, 30, .88); }
+.trailer-panne { position: absolute; left: 50%; bottom: 18px; transform: translateX(-50%); margin: 0; max-width: calc(100% - 32px); padding: 8px 14px; border-radius: 12px; text-align: center;
+  font-size: 15px; font-weight: 700; color: #FFF1DC; background: rgba(18, 10, 30, .8); }
+@media (max-width: 600px) {
+  .trailer-bande { padding: 60px 0 66px; }
+  .trailer-cadre { border-radius: 18px; }
+  .trailer-lecture { width: 76px; height: 76px; margin: -38px 0 0 -38px; }
+  .trailer-lecture svg { width: 34px; height: 34px; margin-left: 4px; }
+  .trailer-son { right: 10px; top: 10px; min-height: 40px; padding: 5px 12px 5px 10px; font-size: 14px; }
+}
+@media (prefers-reduced-motion: reduce) { .trailer-lecture { transition: none; } }
