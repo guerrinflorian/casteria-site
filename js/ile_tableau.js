@@ -84,8 +84,8 @@
     var p = x.photo
     if (!p) {
       corps.appendChild(el('p', 'ile-vide', x.cle === 'moi'
-        ? 'Bientôt : tes machines et tes enclos apparaîtront ici après ta prochaine récolte en jeu.'
-        : 'Bientôt : cette île apparaîtra ici après sa prochaine récolte en jeu.'))
+        ? 'Bientôt : tes machines et tes enclos apparaîtront ici dès que tu en poses ou en récoltes un en jeu.'
+        : 'Bientôt : cette île apparaîtra ici dès que son hôte y pose ou récolte une machine ou un enclos.'))
       return
     }
     var lu = Date.parse(p.lu), M = motsDe(x.cle === 'moi')
