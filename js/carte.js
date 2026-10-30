@@ -615,16 +615,27 @@
   // un navire VU DU DESSUS : son image (navires.png ; la proue vers +z, le cap 180), tournée de (cap - 180) degrés, à sa vraie taille
   // de près, jamais moins de NAV_MIN pixels de long ; son SILLAGE : les places où il était (un relevé toutes les 400 ms)
   var NAV_MIN = 26
-  function navireVu(px, py, cap, coque, combat, pirate) {
+  // l'image d'une coque et son échelle à l'écran ({ d, k }), ou null ; le rayon de son navire à l'écran (le plus loin de son centre)
+  function imageNavire(coque, pirate) {
     var d = decor && decor.pret && decor.nav ? (decor.nav.n[coque] || decor.nav.n[pirate ? 'corsaire' : 'sloop']) : null
+    return d ? { d: d, k: Math.max(M.s / decor.nav.echelle, NAV_MIN / d[3]) } : null
+  }
+  function rayonNavire(coque, pirate) {
+    var im = imageNavire(coque, pirate)
+    return im ? Math.max(im.d[4], im.d[2] - im.d[4], im.d[5], im.d[3] - im.d[5]) * im.k : 0
+  }
+  function navireVu(px, py, cap, coque, combat, pirate) {
+    var im = imageNavire(coque, pirate), d = im ? im.d : null
     if (!d) return false
-    var k = Math.max(M.s / decor.nav.echelle, NAV_MIN / d[3]), tangue = calme ? 0 : Math.sin(t * 1.6 + px * 0.01) * 0.03
+    var k = im.k, tangue = calme ? 0 : Math.sin(t * 1.6 + px * 0.01) * 0.03
     g.save()
     g.translate(px, py)
     g.rotate((cap - 180) * Math.PI / 180 + tangue)
     if (combat || pirate) {
-      g.fillStyle = pirate === 'marchand' ? 'rgba(242,193,46,.3)' : pirate ? 'rgba(232,96,76,.28)' : 'rgba(232,96,76,' + (0.2 + (calme ? 0 : Math.sin(t * 5) * 0.1)).toFixed(2) + ')'
-      g.beginPath(); g.ellipse(0, 0, d[2] * k * 0.75 + 4, d[3] * k * 0.6 + 4, 0, 0, Math.PI * 2); g.fill()
+      g.beginPath(); g.ellipse(0, 0, d[2] * k * 0.75 + 4, d[3] * k * 0.6 + 4, 0, 0, Math.PI * 2)
+      // le marchand, une proie : un anneau doré (un voile ambre virait au vert sur l'eau bleue)
+      if (pirate === 'marchand') { g.strokeStyle = 'rgba(242,193,46,.95)'; g.lineWidth = 2; g.stroke() }
+      else { g.fillStyle = pirate ? 'rgba(232,96,76,.28)' : 'rgba(232,96,76,' + (0.2 + (calme ? 0 : Math.sin(t * 5) * 0.1)).toFixed(2) + ')'; g.fill() }
     }
     g.imageSmoothingEnabled = k * decor.nav.echelle < 1
     g.drawImage(decor.img.navires, d[0], d[1], d[2], d[3], -d[4] * k, -d[5] * k, d[2] * k, d[3] * k)
@@ -1025,7 +1036,7 @@
       sillage(n)
       if (!navireVu(en[0], en[1], n.cap, n.coque, n.en_combat, false)) navire(en[0], en[1], n.cap, n.en_combat, n.pseudo, false)
       g.font = '600 12px Fredoka, system-ui, sans-serif'
-      var wn = g.measureText(n.pseudo).width, yn = en[1] + Math.max(14, 8 * M.s)
+      var wn = g.measureText(n.pseudo).width, yn = en[1] + Math.max(14, rayonNavire(n.coque, false) + 3)
       var rj = [en[0] - wn / 2 - 4, yn - 1, en[0] + wn / 2 + 4, yn + 16]
       if (!chevauche(rj, prisesLieux)) { prisesLieux.push(rj); etiquette(n.pseudo, en[0], yn, 12, '#FFD75E') }
       // sa marque après son nom : le nom d'un événement ne s'écrit pas sur lui
@@ -1048,7 +1059,7 @@
       if (en[0] < -40 || en[0] > L + 40 || en[1] < -40 || en[1] > H + 40) continue
       // son nom cède la place à celui d'un joueur (un combat : les deux navires sont côte à côte)
       g.font = '600 11px Fredoka, system-ui, sans-serif'
-      var np = String(n.nom || 'Pirate'), wp = g.measureText(np).width, yp = en[1] + Math.max(14, 8 * M.s), rp = [en[0] - wp / 2 - 4, yp - 1, en[0] + wp / 2 + 4, yp + 15]
+      var np = String(n.nom || 'Pirate'), wp = g.measureText(np).width, yp = en[1] + Math.max(14, rayonNavire(String(n.coque || n.type || ''), true) + 3), rp = [en[0] - wp / 2 - 4, yp - 1, en[0] + wp / 2 + 4, yp + 15]
       if (M.s >= 0.09 && !chevauche(rp, prisesLieux)) { prisesLieux.push(rp); etiquette(np, en[0], yp, 11, String(n.type) === 'marchand' ? '#FFD27A' : '#FFB4A8') }
     }
   }
