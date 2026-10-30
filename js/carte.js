@@ -591,29 +591,85 @@
       g.fillStyle = gr
       g.beginPath(); g.moveTo(e[0], e[1]); g.arc(e[0], e[1], lg, an - ouv, an + ouv); g.closePath(); g.fill()
     }
-    // les lieux de l'Atlas, puis les phares et le port (au-dessus)
-    g.textAlign = 'center'; g.textBaseline = 'top'
-    g.font = '600 12px Fredoka, system-ui, sans-serif'
-    var noms = M.s >= 0.14
-    for (k = 0; k < mer.atlas.length; k++) {
-      l = mer.atlas[k]; e = ecranM(l.x, l.z)
-      if (e[0] < -40 || e[0] > L + 40 || e[1] < -40 || e[1] > H + 40) continue
-      icone(l.genre, e[0], e[1], choisieMer === l)
-      if (noms) etiquette(l.nom, e[0], e[1] + 12, 12, '#F4EAFF')
-    }
-    g.font = '600 13px Fredoka, system-ui, sans-serif'
-    for (k = 0; k < mer.lieux.length; k++) {
-      l = mer.lieux[k]; e = ecranM(l.x, l.z)
-      if (l.sorte === 'port' || e[0] < -80 || e[0] > L + 80 || e[1] < -40 || e[1] > H + 40) continue
-      icone(l.sorte, e[0], e[1], choisieMer === l)
-      if (M.s >= 0.1) etiquette(l.nom, e[0], e[1] + 12, 13, '#FFE9A8')
-    }
-    // les événements, les pirates, les navires des joueurs : au-dessus de tout
+    lieuxEnMer()
+    // les événements, les pirates, les navires des joueurs, puis le port (toujours au-dessus, son nom entier)
     evenementsEnMer()
     piratesEnMer()
     naviresEnMer()
-    // les noms des zones par-dessus : on les lit toujours
+    portEnMer()
+    // les noms des zones par-dessus, aux places libres (jamais sur une icône ni un nom)
     nomsDesZones()
+  }
+  // (2c, 30/10 08:2x ; la tête : « le centre est illisible ») LES LIEUX REGROUPÉS : deux icônes qui se toucheraient à l'écran (moins de
+  // ECART px) forment une PASTILLE avec leur nombre, à leur milieu ; un toucher sur elle zoome sur ses lieux. Un lieu seul : son
+  // icône, et son nom de près. Les places prises (les icônes, les noms, les pastilles, le port) servent aux plaques des zones.
+  var ECART = 26, vus = [], prisesLieux = []
+  function lieuxEnMer() {
+    var pts = [], k, j, e, l, n
+    for (k = 0; k < mer.atlas.length; k++) pts.push({ l: mer.atlas[k], genre: mer.atlas[k].genre })
+    for (k = 0; k < mer.lieux.length; k++) if (mer.lieux[k].sorte !== 'port') pts.push({ l: mer.lieux[k], genre: mer.lieux[k].sorte })
+    var port = mer.port ? ecranM(mer.port.x, mer.port.z) : null, nomPalais = rectNomPalais()
+    for (k = 0; k < pts.length; k++) { e = ecranM(pts[k].l.x, pts[k].l.z); pts[k].x = e[0]; pts[k].y = e[1] }
+    vus = []; prisesLieux = []
+    // le groupe : chaque lieu prend ses voisins proches (d'abord les phares : ils donnent leur nom au groupe s'ils sont seuls)
+    var pris = {}
+    for (k = 0; k < pts.length; k++) {
+      if (pris[k]) continue
+      var g0 = [k]
+      pris[k] = 1
+      for (j = k + 1; j < pts.length; j++) if (!pris[j] && Math.abs(pts[j].x - pts[k].x) < ECART && Math.abs(pts[j].y - pts[k].y) < ECART) { g0.push(j); pris[j] = 1 }
+      var cx = 0, cy = 0
+      for (j = 0; j < g0.length; j++) { cx += pts[g0[j]].x; cy += pts[g0[j]].y }
+      cx /= g0.length; cy /= g0.length
+      // un lieu collé au port : avec le port, jamais dessous (le port garde sa place)
+      if (port && Math.abs(cx - port[0]) < ECART && Math.abs(cy - port[1]) < ECART) { cy = port[1] - ECART - 4 }
+      if (cx > nomPalais[0] - 13 && cx < nomPalais[2] + 13 && cy > nomPalais[1] - 13 && cy < nomPalais[3] + 13) cy = nomPalais[3] + 15
+      vus.push({ membres: g0.map(function (i) { return pts[i] }), x: cx, y: cy })
+    }
+    g.textAlign = 'center'; g.textBaseline = 'top'
+    var noms = M.s >= 0.14
+    for (k = 0; k < vus.length; k++) {
+      var v = vus[k]
+      if (v.x < -40 || v.x > L + 40 || v.y < -40 || v.y > H + 40) continue
+      prisesLieux.push([v.x - 13, v.y - 13, v.x + 13, v.y + 13])
+      if (v.membres.length > 1) { pastille(v.x, v.y, v.membres.length, v.membres.some(function (m) { return m.l === choisieMer })); continue }
+      l = v.membres[0]
+      icone(l.genre, v.x, v.y, choisieMer === l.l)
+      if (noms || (l.genre === 'phare' && M.s >= 0.1)) {
+        g.font = '600 12px Fredoka, system-ui, sans-serif'
+        var w = g.measureText(l.l.nom).width
+        prisesLieux.push([v.x - w / 2 - 4, v.y + 11, v.x + w / 2 + 4, v.y + 28])
+        etiquette(l.l.nom, v.x, v.y + 12, 12, l.genre === 'phare' ? '#FFE9A8' : '#F4EAFF')
+      }
+    }
+  }
+  function pastille(px, py, n, choisi) {
+    g.fillStyle = choisi ? 'rgba(255,215,94,.95)' : 'rgba(14,8,24,.82)'
+    g.beginPath(); g.arc(px, py, 12, 0, Math.PI * 2); g.fill()
+    g.strokeStyle = '#FFD75E'; g.lineWidth = 2; g.stroke()
+    g.fillStyle = choisi ? '#3B2508' : '#FFF6DC'
+    g.font = '700 13px Fredoka, system-ui, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle'
+    g.fillText(String(n), px, py + 1)
+    g.textBaseline = 'top'
+  }
+  // la place du nom du palais (sous lui, ou sous le port s'il est plus bas)
+  function rectNomPalais() {
+    var b = mer.ligne, a = ecranM(b.xMin, b.zMin), c = ecranM(b.xMax, b.zMax), P = mer.port, pt = P ? ecranM(P.x, P.z) : ecranM(196, -3)
+    g.font = '700 13px Fredoka, system-ui, sans-serif'
+    var y = Math.max(c[1], pt[1] + 12) + 4, x = (a[0] + c[0]) / 2, w = g.measureText('Le palais et son port').width
+    return [x - w / 2 - 6, y - 2, x + w / 2 + 6, y + 18]
+  }
+  // LE PORT : son icône au-dessus de tout, et son nom entier sous le palais (sa place comptée pour les plaques)
+  function portEnMer() {
+    var b = mer.ligne, a = ecranM(b.xMin, b.zMin), c = ecranM(b.xMax, b.zMax), P = mer.port, pt = P ? ecranM(P.x, P.z) : ecranM(196, -3)
+    icone('port', pt[0], pt[1], choisieMer && choisieMer.sorte === 'port')
+    g.textAlign = 'center'; g.textBaseline = 'top'
+    g.font = '700 13px Fredoka, system-ui, sans-serif'
+    var y = Math.max(c[1], pt[1] + 12) + 4, x = (a[0] + c[0]) / 2, t = 'Le palais et son port', w = g.measureText(t).width
+    prisesLieux.push([pt[0] - 13, pt[1] - 13, pt[0] + 13, pt[1] + 13], [x - w / 2 - 6, y - 2, x + w / 2 + 6, y + 18])
+    // le fond du nom : plus opaque, il passe devant ce qui est dessous
+    g.fillStyle = 'rgba(14,8,24,.92)'; g.fillRect(Math.round(x - w / 2 - 6), Math.round(y - 2), Math.round(w + 12), 20)
+    g.fillStyle = '#FFD75E'; g.fillText(t, x, y + 1)
   }
   // LE PALAIS DE HAUT : la terre de la boîte, ses murs, la place ; le port et ses quais (de près) ; son nom
   function palais() {
@@ -630,49 +686,52 @@
       g.fillStyle = '#8C5A2E'
       for (var k = 0; k < (P.quais || []).length; k++) { var q = ecranM(P.quais[k].x - 6, P.quais[k].z - 2); g.fillRect(q[0], q[1], Math.max(3, 12 * M.s), Math.max(2, 4 * M.s)) }
     }
-    var pt = P ? ecranM(P.x, P.z) : ecranM(196, -3)
-    icone('port', pt[0], pt[1], choisieMer && choisieMer.sorte === 'port')
-    g.textAlign = 'center'; g.textBaseline = 'top'
-    g.font = '700 13px Fredoka, system-ui, sans-serif'
-    etiquette('Le palais et son port', (a[0] + c[0]) / 2, Math.max(c[1], pt[1] + 12) + 4, 13, '#FFD75E')
   }
   // LE NOM DE CHAQUE ZONE, sur sa bande, au nord du palais (et la Fosse sur son secteur) : le nom, le niveau, ses lieux
   // LE NOM DE CHAQUE ZONE, sur sa bande (le nom, le niveau, ses lieux) : chaque plaque cherche une place LIBRE autour du palais
   // (le nord, le sud, l'est, puis les diagonales), jamais sur une autre plaque ni hors de l'écran ; la Fosse : au milieu de son
   // secteur, d'abord. Une bande trop fine à ce zoom : pas de plaque (on zoome pour la lire).
-  var DIRECTIONS = [270, 90, 0, 315, 45, 135, 225]
+  var DIRECTIONS = [270, 90, 0, 180, 315, 45, 135, 225, 292, 248, 68, 112, 22, 338, 158, 202]
   function pointA(angle, d) {
     var b = mer.ligne, cx = (b.xMin + b.xMax) / 2, cz = (b.zMin + b.zMax) / 2, dx = Math.cos(angle * Math.PI / 180), dz = Math.sin(angle * Math.PI / 180), lo = 0, hi = mer.rayon * 2
     for (var k = 0; k < 40; k++) { var m = (lo + hi) / 2; if (distLigne(cx + dx * m, cz + dz * m) < d) lo = m; else hi = m }
     return [cx + dx * hi, cz + dz * hi]
   }
   function chevauche(r, l) { for (var k = 0; k < l.length; k++) if (r[0] < l[k][2] && r[2] > l[k][0] && r[1] < l[k][3] && r[3] > l[k][1]) return true; return false }
+  // une plaque tient-elle ici : dans la carte (8 px du bord), hors de ce qui est pris ?
+  function placeLibre(r, prises) { return r[0] >= 8 && r[1] >= 8 && r[2] <= L - 8 && r[3] <= H - 8 && !chevauche(r, prises) }
+  // poser une plaque au premier point libre d'une liste (deux lignes, sinon une) ; rend vrai si posée
+  function poserPlaque(points, nom, sous, rouge, prises) {
+    for (var une = 0; une < 2; une++) for (var k = 0; k < points.length; k++) {
+      var e = ecranM(points[k][0], points[k][1]), deux = !une
+      var r = mesurePlaque(e[0], e[1], nom, sous, deux)
+      if (!placeLibre(r, prises)) continue
+      prises.push(plaque(e[0], e[1], nom, sous, deux, rouge))
+      return true
+    }
+    return false
+  }
   function nomsDesZones() {
-    var prises = [], k, z, e, j
-    // les phares (leur icône et leur nom) et le nom du palais sont déjà pris : une plaque ne les couvre jamais
-    for (k = 0; k < mer.lieux.length; k++) if (mer.lieux[k].sorte === 'phare') { e = ecranM(mer.lieux[k].x, mer.lieux[k].z); prises.push([e[0] - 70, e[1] - 12, e[0] + 70, e[1] + (M.s >= 0.1 ? 30 : 12)]) }
-    // de près, les lieux de l'Atlas et leurs noms aussi
-    if (M.s >= 0.14) for (k = 0; k < mer.atlas.length; k++) { e = ecranM(mer.atlas[k].x, mer.atlas[k].z); prises.push([e[0] - 60, e[1] - 12, e[0] + 60, e[1] + 28]) }
-    var bp = mer.ligne, cp = ecranM((bp.xMin + bp.xMax) / 2, bp.zMax)
-    prises.push([cp[0] - 70, cp[1], cp[0] + 70, cp[1] + 24])
-    // la Fosse : au bout de son secteur, du côté du large (le centre est plein de lieux)
-    var f = mer.fosse, m = rayonA(f.cap, f.a * 0.92)
-    e = ecranM(m[0], m[1])
-    if ((f.a - f.de) * M.s >= 30) prises.push(plaque(e[0], e[1], f.nom, 'Combat entre joueurs · niveau ' + f.niveau, true, true))
+    var prises = prisesLieux.slice(), k, z, j
+    // la Fosse : le long de son secteur, du large vers le palais, au milieu puis sur ses bords
+    var f = mer.fosse, ptsF = []
+    if ((f.a - f.de) * M.s >= 30) {
+      ;[0.92, 0.8, 0.68, 0.56].forEach(function (q) { [0, -0.3, 0.3].forEach(function (c) { ptsF.push(rayonA(f.cap + c * f.largeur, f.de + (f.a - f.de) * q)) }) })
+      poserPlaque(ptsF, f.nom, 'Combat entre joueurs · niveau ' + f.niveau, true, prises)
+    }
     var l = [mer.rade].concat(mer.anneaux)
     for (k = 0; k < l.length; k++) {
       z = l[k]
       var de = z.id === 'rade' ? 0 : z.de, a = Math.min(z.a, mer.rayon), hb = (a - de) * M.s
       if (hb < 22) continue
-      for (j = 0; j < DIRECTIONS.length; j++) {
-        var p = pointA(DIRECTIONS[j], (de + a) / 2)
-        if (p[0] * p[0] + p[1] * p[1] > mer.rayon * mer.rayon * 0.96) continue
-        e = ecranM(p[0], p[1])
-        var r = mesurePlaque(e[0], e[1], z.nom, sousTitre(z), hb >= 44)
-        if (r[0] < 4 || r[1] < 4 || r[2] > L - 4 || r[3] > H - 4 || chevauche(r, prises)) continue
-        prises.push(plaque(e[0], e[1], z.nom, sousTitre(z), hb >= 44))
-        break
-      }
+      var pts = []
+      ;[0.5, 0.3, 0.7].forEach(function (q) {
+        for (j = 0; j < DIRECTIONS.length; j++) {
+          var p = pointA(DIRECTIONS[j], de + (a - de) * q)
+          if (p[0] * p[0] + p[1] * p[1] <= mer.rayon * mer.rayon * 0.96) pts.push(p)
+        }
+      })
+      poserPlaque(pts, z.nom, hb >= 44 ? sousTitre(z) : '', false, prises)
     }
   }
   function sousTitre(z) {
@@ -680,6 +739,7 @@
     return (z.niveau ? 'Niveau ' + z.niveau : 'Sans pirate') + (n ? ' · ' + n + ' lieu' + (n > 1 ? 'x' : '') + ' à découvrir' : '')
   }
   function mesurePlaque(px, py, nom, sous, deux) {
+    deux = deux && !!sous
     g.font = '400 16px "Lilita One", Fredoka, sans-serif'
     var w1 = g.measureText(nom).width
     g.font = '600 12px Fredoka, system-ui, sans-serif'
@@ -687,6 +747,7 @@
     return [px - w / 2, py - h / 2, px + w / 2, py + h / 2]
   }
   function plaque(px, py, nom, sous, deux, rouge) {
+    deux = deux && !!sous
     g.font = '400 16px "Lilita One", Fredoka, sans-serif'
     var w1 = g.measureText(nom).width
     g.font = '600 12px Fredoka, system-ui, sans-serif'
@@ -784,19 +845,28 @@
     if (!mer) return
     M.cx = 0; M.cy = 0
     // un écran en hauteur (le téléphone) : la mer remplit la hauteur (ses bords coupés), pas seulement la largeur
-    var cote = H > L * 1.3 ? H * 0.82 : Math.min(L, H)
-    M.s = Math.max(MER_MIN, Math.min(MER_MAX, cote / (mer.rayon * 2 * 1.04)))
+    var cote = H > L * 1.3 ? H * 0.82 : Math.min(L, H), vu = Math.min(mer.rayon, 2600)
+    M.s = Math.max(MER_MIN, Math.min(MER_MAX, cote / (vu * 2 * 1.04)))
   }
   // ---------- la fiche d'un lieu ou d'une zone (un clic) ----------
   var choisieMer = null
+  // ce qui est sous le doigt, comme on le voit : le port d'abord (il est au-dessus), puis une pastille (rend { groupe }), puis un lieu
   function lieuSousMer(mx, my) {
-    var best = null, bd = 16 * 16, l = mer.atlas.concat(mer.lieux), k
-    for (k = 0; k < l.length; k++) {
-      var e = ecranM(l[k].x, l[k].z), d = (e[0] - mx) * (e[0] - mx) + (e[1] - my) * (e[1] - my)
-      if (d < bd) { bd = d; best = l[k] }
+    if (mer.port) { var ep = ecranM(mer.port.x, mer.port.z); if (Math.abs(ep[0] - mx) <= 13 && Math.abs(ep[1] - my) <= 13) return { id: 'port', nom: 'Le port', sorte: 'port', x: mer.port.x, z: mer.port.z } }
+    for (var k = 0; k < vus.length; k++) {
+      var v = vus[k]
+      if (Math.abs(v.x - mx) > 14 || Math.abs(v.y - my) > 14) continue
+      return v.membres.length > 1 ? { groupe: v } : v.membres[0].l
     }
-    if (!best && mer.port) { var ep = ecranM(mer.port.x, mer.port.z); if ((ep[0] - mx) * (ep[0] - mx) + (ep[1] - my) * (ep[1] - my) < bd) best = { id: 'port', nom: 'Le port', sorte: 'port', x: mer.port.x, z: mer.port.z } }
-    return best
+    return null
+  }
+  // une pastille touchée : la carte zoome sur ses lieux (ils s'y séparent), doucement
+  function ouvrirGroupe(v) {
+    var x0 = 1e9, x1 = -1e9, z0 = 1e9, z1 = -1e9
+    v.membres.forEach(function (m) { x0 = Math.min(x0, m.l.x); x1 = Math.max(x1, m.l.x); z0 = Math.min(z0, m.l.z); z1 = Math.max(z1, m.l.z) })
+    M.cx = (x0 + x1) / 2; M.cy = (z0 + z1) / 2
+    M.s = Math.max(M.s * 2.2, Math.min(MER_MAX, Math.min((L - 160) / Math.max(60, x1 - x0), (H - 160) / Math.max(60, z1 - z0))))
+    sale = true
   }
   function nomZone(id) {
     if (id === 'rade') return mer.rade.nom
@@ -807,6 +877,7 @@
   function montrerMer(mx, my) {
     if (!mer) return
     var l = lieuSousMer(mx, my), w = monde(mx, my)
+    if (l && l.groupe) { fiche.hidden = true; choisieMer = null; ouvrirGroupe(l.groupe); return }
     choisieMer = l; sale = true
     if (l) {
       var genre = l.sorte === 'port' ? 'port' : (l.sorte === 'phare' ? 'phare' : l.genre)
@@ -823,6 +894,15 @@
       '<p>' + echapper(z.guide || (z.id === 'rade' ? 'Les eaux du port : ni pirate ni butin, on y prend la mer en sécurité.' : '')) + '</p>' +
       (n ? '<p class="hote">' + n + ' lieu' + (n > 1 ? 'x' : '') + ' de l\'Atlas à découvrir ici.</p>' : '')
     fiche.hidden = false
+  }
+  // (2c, 30/10) la légende de ce qui vit : une entrée n'existe que si la carte en montre au moins un, à l'instant
+  function legendeVivante() {
+    var n = 0
+    for (var p in navires) n++
+    var bascule = function (sel, oui) { var e = document.querySelector(sel); if (e) e.hidden = !oui }
+    bascule('#legende-mer .si-navires', n > 0)
+    bascule('#legende-mer .si-pirates', pirates.length > 0)
+    bascule('#legende-mer .si-evenements', evenements.length > 0)
   }
   function legendeMer() {
     var l = document.getElementById('legende-mer-zones')
@@ -852,6 +932,7 @@
       pirates = Array.isArray(r.corps.pirates) ? r.corps.pirates.filter(function (n) { return isFinite(n.x) && isFinite(n.z) }) : []
       evenements = Array.isArray(r.corps.evenements) ? r.corps.evenements.filter(function (n) { return isFinite(n.x) && isFinite(n.z) }) : []
       relevePrec = releveDernier || tl - 10000; releveDernier = tl
+      legendeVivante()
       sale = true
     })
   }
@@ -1059,7 +1140,7 @@
   }
   var bts = document.querySelectorAll('.onglet')
   for (var kb = 0; kb < bts.length; kb++) bts[kb].addEventListener('click', function () { choisirZone(this.dataset.zone) })
-  if (NAVIRES) { var si = document.querySelector('.si-navires'); if (si) si.hidden = false }
+  // (2c) la légende de ce qui vit : legendeVivante, à chaque relecture des navires
   // (af, 22:4x) LA LÉGENDE DES ÎLES DESSINÉE : chaque pastille devient une petite île comme sur la carte (son fanion, ses fleurs,
   // son ponton ; celle où l'on joue, sa lueur d'or)
   if (P.grande) [].forEach.call(document.querySelectorAll('#legende-iles .pastille'), function (el) {
