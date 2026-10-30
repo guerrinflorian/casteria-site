@@ -16,8 +16,8 @@
   var A = window.CasteriaApi, V = window.CasteriaVivant, P = window.IlePixel
   var vue = document.getElementById('carte-vue'), toile = document.getElementById('carte-canvas')
   if (!vue || !toile || !A || !V || !P || !window.Tete) return
-  // (2c, 30/10 08:3x ; « tout ou rien ») la mer est fermée tant qu'elle n'est pas parfaite : ni onglet, ni « #mer »
-  var MER_OUVERTE = false
+  // (2c, 30/10) la mer vue du ciel : l'onglet et « #mer » (false : ni l'un ni l'autre, son code jamais appelé)
+  var MER_OUVERTE = true
   var NAVIRES = true        // (2c, 30/10) les navires des joueurs, en direct (/api/navires répond, vide ou non)
   var PAVE = 16, VIE_PAVE = 120000, ATTENTE = 220
   var ZOOM_MIN = 2.5, ZOOM_MAX = 140, MER_MIN = 0.03, MER_MAX = 8, DEPART_S = 26
@@ -752,10 +752,10 @@
       g.beginPath(); g.moveTo(e[0], e[1]); g.arc(e[0], e[1], lg, an - ouv, an + ouv); g.closePath(); g.fill()
     }
     lieuxEnMer()
-    // les événements, les pirates, les navires des joueurs, puis le port (toujours au-dessus, son nom entier)
+    // les événements, les navires des joueurs (leur nom d'abord), les pirates, puis le port (toujours au-dessus, son nom entier)
     evenementsEnMer()
-    piratesEnMer()
     naviresEnMer()
+    piratesEnMer()
     portEnMer()
     // les noms des zones, discrets, le long de leur anneau (jamais sur un nom ni une icône)
     nomsLeLong()
@@ -944,7 +944,10 @@
       if (!n.tt || t - n.tt > 0.4) { n.tt = t; n.trace.push([x, z]); if (n.trace.length > 14) n.trace.shift() }
       sillage(n)
       if (!navireVu(en[0], en[1], n.cap, n.coque, n.en_combat, false)) navire(en[0], en[1], n.cap, n.en_combat, n.pseudo, false)
-      etiquette(n.pseudo, en[0], en[1] + Math.max(14, 8 * M.s), 12, '#FFD75E')
+      g.font = '600 12px Fredoka, system-ui, sans-serif'
+      var wn = g.measureText(n.pseudo).width, yn = en[1] + Math.max(14, 8 * M.s)
+      prisesLieux.push([en[0] - wn / 2 - 4, yn - 1, en[0] + wn / 2 + 4, yn + 16])
+      etiquette(n.pseudo, en[0], yn, 12, '#FFD75E')
     }
   }
   // les pirates : un navire rouge (le jeu les publiera ; API.md 2.7, la forme proposée : { type, nom, x, z, cap })
@@ -953,7 +956,10 @@
       var n = pirates[k], en = ecranM(n.x, n.z)
       if (en[0] < -40 || en[0] > L + 40 || en[1] < -40 || en[1] > H + 40) continue
       if (!navireVu(en[0], en[1], n.cap || 0, String(n.type || ''), true, true)) navire(en[0], en[1], n.cap || 0, true, String(n.nom || n.type || 'pirate'), true)
-      if (M.s >= 0.09) etiquette(String(n.nom || 'Pirate'), en[0], en[1] + Math.max(14, 8 * M.s), 11, '#FFB4A8')
+      // son nom cède la place à celui d'un joueur (un combat : les deux navires sont côte à côte)
+      g.font = '600 11px Fredoka, system-ui, sans-serif'
+      var np = String(n.nom || 'Pirate'), wp = g.measureText(np).width, yp = en[1] + Math.max(14, 8 * M.s), rp = [en[0] - wp / 2 - 4, yp - 1, en[0] + wp / 2 + 4, yp + 15]
+      if (M.s >= 0.09 && !chevauche(rp, prisesLieux)) { prisesLieux.push(rp); etiquette(np, en[0], yp, 11, '#FFB4A8') }
     }
   }
   // les événements en mer (une cargaison, un trésor...) : un cercle qui pulse, son nom ({ sorte, nom, x, z })
@@ -966,7 +972,7 @@
       g.fillStyle = 'rgba(126,232,255,.25)'; g.fill()
       // son nom, s'il ne couvre pas celui d'un lieu
       g.font = '600 12px Fredoka, system-ui, sans-serif'
-      var nv = String(v.nom || 'Un événement'), wv = g.measureText(nv).width, rv = [en[0] - wv / 2 - 4, en[1] + 13, en[0] + wv / 2 + 4, en[1] + 30]
+      var nv = String(v.nom || 'Un événement'), wv = g.measureText(nv).width, xv = Math.max(wv / 2 + 6, Math.min(L - wv / 2 - 6, en[0])), rv = [xv - wv / 2 - 4, en[1] + 13, xv + wv / 2 + 4, en[1] + 30]
       if (!chevauche(rv, prisesLieux)) { prisesLieux.push(rv); etiquette(nv, en[0], en[1] + 14, 12, '#BFF5FF') }
     }
   }
