@@ -653,8 +653,11 @@
   // le cap de (x, z) vu de (0, 0), comme le jeu (0 = +z, 90 = -x) ; l'écart entre deux caps dans [-180, 180]
   function capDe(x, z) { var c = Math.atan2(-x, z) * 180 / Math.PI; return c < 0 ? c + 360 : c }
   function ecart(a, b) { var d = (a - b) % 360; if (d > 180) d -= 360; else if (d < -180) d += 360; return d }
-  function dansFosse(x, z) {
-    var f = mer.fosse
+  function dansFosse(x, z) { return dansSecteur(mer.fosse, x, z) }
+  // dans la Fosse ou une autre zone en secteur : un nom d'anneau ne s'y écrit jamais (elles ont le leur)
+  function dansUnSecteur(x, z) { if (dansFosse(x, z)) return true; for (var k = 0; k < mer.secteurs.length; k++) if (dansSecteur(mer.secteurs[k], x, z)) return true; return false }
+  // (2c, la 156) dans une zone en secteur (la Fosse, le Gouffre aux Flibustiers) : entre ses deux distances à la ligne, dans sa largeur
+  function dansSecteur(f, x, z) {
     if (!f || x * x + z * z > mer.rayon * mer.rayon) return false
     var d = distLigne(x, z)
     return d >= f.de && d < f.a && Math.abs(ecart(capDe(x, z), f.cap)) <= f.largeur / 2
@@ -665,6 +668,7 @@
     var d = distLigne(x, z)
     if (d <= mer.rade.a) return mer.rade
     if (dansFosse(x, z)) return mer.fosse
+    for (var s = 0; s < mer.secteurs.length; s++) if (dansSecteur(mer.secteurs[s], x, z)) return mer.secteurs[s]
     for (var k = 0; k < mer.anneaux.length; k++) if (d >= mer.anneaux[k].de && d < mer.anneaux[k].a) return mer.anneaux[k]
     return mer.anneaux.length ? mer.anneaux[mer.anneaux.length - 1] : null
   }
@@ -777,6 +781,14 @@
     tracer(fosseForme.zone); g.fillStyle = 'rgba(214,64,52,' + (0.2 + pouls * 0.08).toFixed(3) + ')'; g.fill()
     g.strokeStyle = 'rgba(255,120,100,' + (0.55 + pouls * 0.4).toFixed(3) + ')'; g.lineWidth = 2 + pouls; if (g.setLineDash) g.setLineDash([6, 4]); g.stroke(); if (g.setLineDash) g.setLineDash([])
     if (fosseForme.terrain) { tracer(fosseForme.terrain); g.fillStyle = 'rgba(120,30,30,.35)'; g.fill() }
+    }
+    // (2c, la 156) les autres zones en secteur (le Gouffre aux Flibustiers) : violettes, leurs bords qui battent comme ceux de la Fosse
+    for (k = 0; k < mer.secteurs.length; k++) {
+      z = mer.secteurs[k]
+      if (!z.forme) { z.forme = secteur(z.de, z.a, z.cap, z.largeur); z.boite = boiteDe(z.forme) }
+      if (!croise(z.boite, ec)) continue
+      tracer(z.forme); g.fillStyle = 'rgba(126,72,214,' + (0.2 + pouls * 0.08).toFixed(3) + ')'; g.fill()
+      g.strokeStyle = 'rgba(196,160,255,' + (0.55 + pouls * 0.4).toFixed(3) + ')'; g.lineWidth = 2 + pouls; if (g.setLineDash) g.setLineDash([6, 4]); g.stroke(); if (g.setLineDash) g.setLineDash([])
     }
     // les frontières des zones
     g.strokeStyle = 'rgba(255,255,255,.28)'; g.lineWidth = 1.5
@@ -948,9 +960,9 @@
       for (var c = 0; c < cotes.length; c++) {
         var p = cotes[c]
         if (p[0] * p[0] + p[1] * p[1] > mer.rayon * mer.rayon * 0.97) continue
-        // jamais dans la Fosse (elle a son nom à elle) : le milieu et les deux bouts du nom
+        // jamais dans la Fosse ni le Gouffre (ils ont leur nom à eux) : le milieu et les deux bouts du nom
         var dw = w / 2 / M.s, bx = p[2] ? 0 : dw, bz = p[2] ? dw : 0
-        if (dansFosse(p[0], p[1]) || dansFosse(p[0] - bx, p[1] - bz) || dansFosse(p[0] + bx, p[1] + bz)) continue
+        if (dansUnSecteur(p[0], p[1]) || dansUnSecteur(p[0] - bx, p[1] - bz) || dansUnSecteur(p[0] + bx, p[1] + bz)) continue
         var e = ecranM(p[0], p[1]), r = p[2] ? [e[0] - ta / 2 - 2, e[1] - w / 2, e[0] + ta / 2 + 2, e[1] + w / 2] : [e[0] - w / 2, e[1] - ta / 2 - 2, e[0] + w / 2, e[1] + ta / 2 + 2]
         if (!placeLibre(r, prises)) continue
         ecrireLe(nom, e[0], e[1], p[2], ta, blanc)
@@ -958,10 +970,14 @@
         break
       }
     }
-    // la Fosse : sur l'axe de son secteur, au milieu, le texte dans le sens de lecture
-    var f = mer.fosse, hf = (f.a - f.de) * M.s
+    // la Fosse, puis chaque autre zone en secteur (le Gouffre) : sur l'axe de son secteur, au milieu, dans le sens de lecture
+    nomSecteur(mer.fosse, 'rgba(255,176,158,.8)', true, prises)
+    for (k = 0; k < mer.secteurs.length; k++) nomSecteur(mer.secteurs[k], 'rgba(214,190,255,.85)', mer.secteurs[k].pvp === true, prises)
+  }
+  function nomSecteur(f, couleur, pvp, prises) {
+    var hf = (f.a - f.de) * M.s
     if (hf < 90) return
-    var ta2 = Math.round(Math.max(11, Math.min(18, hf * 0.03))), txt = f.nom.toUpperCase() + '  ·  COMBAT ENTRE JOUEURS'
+    var ta2 = Math.round(Math.max(11, Math.min(18, hf * 0.03))), txt = f.nom.toUpperCase() + (pvp ? '  ·  COMBAT ENTRE JOUEURS' : '')
     if (largeurLe(txt, ta2) > hf * 0.85) txt = f.nom.toUpperCase()
     if (largeurLe(txt, ta2) > hf * 0.85) return
     var m = rayonA(f.cap, f.de + (f.a - f.de) * 0.5), em = ecranM(m[0], m[1])
@@ -971,7 +987,8 @@
     var wf = largeurLe(txt, ta2), ca = Math.abs(Math.cos(ang * Math.PI / 180)), sa = Math.abs(Math.sin(ang * Math.PI / 180))
     var bw = (wf * ca + ta2 * sa) / 2 + 2, bh = (wf * sa + ta2 * ca) / 2 + 2
     if (chevauche([em[0] - bw, em[1] - bh, em[0] + bw, em[1] + bh], prises)) return
-    ecrireLe(txt, em[0], em[1], ang, ta2, 'rgba(255,176,158,.8)')
+    prises.push([em[0] - bw, em[1] - bh, em[0] + bw, em[1] + bh])
+    ecrireLe(txt, em[0], em[1], ang, ta2, couleur)
   }
   var FORMES = {
     port: ['..XX..', '..XX..', 'XXXXXX', '..XX..', 'X.XX.X', '.XXXX.'],
@@ -1140,7 +1157,7 @@
     var l = document.getElementById('legende-mer-zones')
     if (!l || !mer) return
     l.textContent = ''
-    ;[mer.rade].concat(mer.anneaux).concat([mer.fosse]).forEach(function (z) {
+    ;[mer.rade].concat(mer.anneaux).concat([mer.fosse]).concat(mer.secteurs).forEach(function (z) {
       var li = document.createElement('li'), p = document.createElement('span')
       p.className = 'pastille zone-' + z.id
       li.appendChild(p)
