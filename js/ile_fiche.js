@@ -205,6 +205,35 @@
     }).catch(function () { /* sans liste : la partie reste cachee */ })
   }
 
+  // ---- SES NAVIRES AU PONTON (37, le 30/10 ; la vue : navires.json, au droit de l'île) : chaque navire amarré par le nom du
+  // jeu de sa coque (ai_mer_table.js, les navires du joueur), dans l'ordre de ses postes, et ses couleurs (la coque, les voiles :
+  // celles que la vue lui donne)
+  var COQUES = { chaloupe: 'Chaloupe', sloop: 'Sloop', fregate: 'Frégate', corsaire: 'Corsaire', vaisseau_amiral: 'Vaisseau amiral' }
+  function couleur(n) { return Number.isInteger(n) && n >= 0 && n <= 0xFFFFFF ? '#' + ('00000' + n.toString(16)).slice(-6) : null }
+  function navires(f) {
+    if (!f || !f.peut_voir || !f.vue || !window.fetch) return
+    fetch(f.vue + 'navires.json', { credentials: 'same-origin', headers: { Accept: 'application/json' } }).then(function (r) { return r.ok ? r.json() : null }).then(function (o) {
+      var l = o && Array.isArray(o.navires) ? o.navires.filter(function (n) { return n && COQUES[n.coque] }) : []
+      if (!l.length) return
+      l.sort(function (a, b) { return (Number(a.poste) || 0) - (Number(b.poste) || 0) })
+      var ul = $('navires-liste')
+      A.vider(ul)
+      for (var k = 0; k < l.length; k++) {
+        var li = A.el('li', 'bete navire')
+        var c = l[k].couleurs || {}, sw = A.el('span', 'navire-couleurs')
+        sw.setAttribute('aria-hidden', 'true')
+        var cq = couleur(c.coque), cv = couleur(c.voiles)
+        if (cq) { var a = A.el('span', 'navire-coque'); a.style.background = cq; sw.appendChild(a) }
+        if (cv) { var v = A.el('span', 'navire-voiles'); v.style.background = cv; sw.appendChild(v) }
+        if (sw.childNodes.length) li.appendChild(sw)
+        li.appendChild(A.el('span', 'bete-nom', COQUES[l[k].coque]))
+        ul.appendChild(li)
+      }
+      $('navires-note').textContent = (l.length > 1 ? pluriel(l.length, 'navire', 'navires') + ' amarrés à son ponton : ils sont dans la vue, à leur poste, à leurs couleurs.' : 'Un navire amarré à son ponton : il est dans la vue, à son poste, à ses couleurs.')
+      $('navires').hidden = false
+    }).catch(function () { /* sans liste : la partie reste cachee */ })
+  }
+
   window.IleFiche = {
     remplir: function (o) {
       var a = mesures(o.fiche), b = habitants(o.fiche, o.x)
@@ -212,6 +241,7 @@
       minicarte(o.i, o.j, o.x)
       betes(o.fiche)
       ecurie(o.fiche)
+      navires(o.fiche)
     }
   }
 })()
