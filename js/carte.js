@@ -814,9 +814,11 @@
       g.beginPath(); g.moveTo(e[0], e[1]); g.arc(e[0], e[1], lg, an - ouv, an + ouv); g.closePath(); g.fill()
     }
     lieuxEnMer()
-    // les navires des joueurs (leur nom d'abord), les pirates, les événements (leur nom se tait sur un navire), puis le port (toujours au-dessus)
-    naviresEnMer()
+    // les navires pirates, puis ceux des joueurs et leurs noms, puis les noms des pirates et les événements (un nom se tait sur un autre
+    // nom ou un navire), puis le port (toujours au-dessus)
     piratesEnMer()
+    naviresEnMer()
+    nomsDesPirates()
     evenementsEnMer()
     portEnMer()
     // les noms des zones, discrets, le long de leur anneau (jamais sur un nom ni une icône)
@@ -1031,11 +1033,18 @@
     }
   }
   // les pirates : un navire rouge (le jeu les publiera ; API.md 2.7, la forme proposée : { type, nom, x, z, cap })
+  // (2c, la 156) en deux temps : leurs NAVIRES d'abord (sous ceux des joueurs et sous tous les noms), leurs NOMS ensuite
   function piratesEnMer() {
     for (var k = 0; k < pirates.length; k++) {
       var n = pirates[k], en = ecranM(n.x, n.z)
       if (en[0] < -40 || en[0] > L + 40 || en[1] < -40 || en[1] > H + 40) continue
       if (!navireVu(en[0], en[1], n.cap || 0, String(n.coque || n.type || ''), true, true)) navire(en[0], en[1], n.cap || 0, true, String(n.nom || n.type || 'pirate'), true)
+    }
+  }
+  function nomsDesPirates() {
+    for (var k = 0; k < pirates.length; k++) {
+      var n = pirates[k], en = ecranM(n.x, n.z)
+      if (en[0] < -40 || en[0] > L + 40 || en[1] < -40 || en[1] > H + 40) continue
       // son nom cède la place à celui d'un joueur (un combat : les deux navires sont côte à côte)
       g.font = '600 11px Fredoka, system-ui, sans-serif'
       var np = String(n.nom || 'Pirate'), wp = g.measureText(np).width, yp = en[1] + Math.max(14, 8 * M.s), rp = [en[0] - wp / 2 - 4, yp - 1, en[0] + wp / 2 + 4, yp + 15]
