@@ -814,10 +814,10 @@
       g.beginPath(); g.moveTo(e[0], e[1]); g.arc(e[0], e[1], lg, an - ouv, an + ouv); g.closePath(); g.fill()
     }
     lieuxEnMer()
-    // les événements, les navires des joueurs (leur nom d'abord), les pirates, puis le port (toujours au-dessus, son nom entier)
-    evenementsEnMer()
+    // les navires des joueurs (leur nom d'abord), les pirates, les événements (leur nom se tait sur un navire), puis le port (toujours au-dessus)
     naviresEnMer()
     piratesEnMer()
+    evenementsEnMer()
     portEnMer()
     // les noms des zones, discrets, le long de leur anneau (jamais sur un nom ni une icône)
     nomsLeLong()
@@ -1022,6 +1022,7 @@
       if (!n.tt || t - n.tt > 0.4) { n.tt = t; n.trace.push([x, z]); if (n.trace.length > 14) n.trace.shift() }
       sillage(n)
       if (!navireVu(en[0], en[1], n.cap, n.coque, n.en_combat, false)) navire(en[0], en[1], n.cap, n.en_combat, n.pseudo, false)
+      prisesLieux.push([en[0] - 14, en[1] - 14, en[0] + 14, en[1] + 14])
       g.font = '600 12px Fredoka, system-ui, sans-serif'
       var wn = g.measureText(n.pseudo).width, yn = en[1] + Math.max(14, 8 * M.s)
       var rj = [en[0] - wn / 2 - 4, yn - 1, en[0] + wn / 2 + 4, yn + 16]
