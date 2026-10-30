@@ -425,3 +425,46 @@ html body .vitrine-tete.banniere .banniere-texte .en-ligne { flex-basis: 100%; w
 .menu-tiroir .tiroir-etat { align-self: flex-start; margin: -2px 0 10px; }
 /* (5c, l audit) « après /login . » : le fond arrondi de <code> écartait le point ; dans la consigne, la commande en or seul */
 #connexion .consigne code { padding: 0; background: none; font-weight: 700; }
+
+/* ---------- (le propriétaire, 30/10 à 07:3x : « enlève les endroits avec un border à gauche arrondi [...] ça fait trop IA ») PLUS AUCUNE
+   BARRE DE COULEUR À GAUCHE, sur tout le site : chaque carte ou ligne a un bord égal tout autour, arrondie ; la couleur passe dans une
+   pastille devant le titre, ou l'heure en pilule. « html body » passe devant les feuilles des pages (chargées après le kit) ---------- */
+/* les Événements : « Ensuite » (l'heure en pilule, une pastille violette devant le nom), le gain du prochain, les puces de la semaine */
+html body .ensuite li { gap: 4px; padding: 12px 14px; border: 1px solid var(--trait); border-left: 1px solid var(--trait); border-radius: 14px; background: rgba(36, 26, 58, .78); }
+html body .ensuite li time { justify-self: start; padding: 2px 10px; border-radius: 999px; font-size: 13px; color: #EBDDFF; background: rgba(155, 93, 229, .28); }
+html body .ensuite li b { display: flex; align-items: center; gap: 8px; }
+html body .ensuite li b::before { content: ""; flex: none; width: 9px; height: 9px; border-radius: 50%; background: var(--violet-trait); box-shadow: 0 0 8px rgba(201, 168, 255, .6); }
+html body .prochain-gain { border: 1px solid rgba(255, 207, 90, .35); border-left: 1px solid rgba(255, 207, 90, .35); border-radius: 16px; }
+html body .prochain-gain .gain-titre { display: flex; align-items: center; gap: 8px; }
+html body .prochain-gain .gain-titre::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: var(--or-k); box-shadow: 0 0 8px rgba(255, 207, 90, .6); }
+html body .puce { border: 1px solid rgba(255, 255, 255, .1); border-left: 1px solid rgba(255, 255, 255, .1); border-radius: 10px; }
+html body .puce time { display: flex; align-items: center; gap: 6px; }
+html body .puce time::before { content: ""; flex: none; width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+/* l'accueil : la fiche d'une île, les exploits qui défilent (leur couleur sur tout le bord, doux) */
+html body .fiche-ile { border: 1px solid rgba(255, 207, 90, .3); border-left: 1px solid rgba(255, 207, 90, .3); border-radius: 16px; }
+html body .exploit { border: 1px solid rgba(255, 207, 90, .35); border-left-width: 1px; border-radius: 16px; }
+html body .exploit-oeuf_mythique { border-color: rgba(255, 122, 217, .55); }
+html body .exploit-casino_gros_gain { border-color: rgba(91, 224, 122, .55); }
+html body .exploit-minijeu_victoire { border-color: rgba(108, 200, 255, .55); }
+html body .exploit-boss_heroique, html body .exploit-boss_heroique_record { border-color: rgba(255, 90, 60, .55); }
+/* la page des exploits : plus d'ombre intérieure à gauche ; la couleur de chaque sorte sur tout le bord */
+html body .exploit-fil[class] { box-shadow: none; border: 1px solid rgba(255, 207, 90, .3); border-radius: 16px; }
+html body .exploit-fil.s-boss_heroique[class], html body .exploit-fil.s-boss_heroique_record[class] { border-color: rgba(232, 96, 76, .6); }
+html body .exploit-fil.s-oeuf_mythique[class] { border-color: rgba(210, 156, 255, .6); }
+html body .exploit-fil.s-casino_gros_gain[class] { border-color: rgba(108, 192, 74, .6); }
+html body .exploit-fil.s-minijeu_victoire[class] { border-color: rgba(127, 195, 234, .6); }
+/* le classement : les dix premiers (un bord d'or égal), le fil des exploits de la colonne */
+html body .cl-bande-haut .cl-ligne { border: 1px solid rgba(255, 207, 90, .55); border-left-width: 1px; }
+html body .cl-fil-ligne { border-left: 0; border-radius: 10px; }
+/* le casino : la voix du croupier et la règle de la maison, en cartes avec leur guillemet d'or */
+html body .roulette-grille .voix-croupier { border-left: 0; padding: 12px 16px; border-radius: 14px; background: rgba(255, 255, 255, .06); border: 1px solid rgba(255, 207, 90, .3); }
+html body .maison-grille .texte p.maison-regle { border-left: 0; box-shadow: none; border: 1px solid rgba(255, 207, 90, .35); border-radius: 16px; }
+/* le vote, les alertes, les erreurs, l'espace de l'équipe */
+html body .vote-puces li { border-left: 0; border: 1px solid var(--trait); border-radius: 14px; }
+html body .alerte, html body .boutique-etal .alerte, html body .achat-merci, html body .erreur { border-left-width: 2px; border-width: 2px; border-radius: 14px; }
+html body .admin-menu nav a { border-left: 0; border-radius: 10px; }
+html body .a-histoire li { border-left: 0; }
+html body .a-histoire li.en-cours { border-radius: 10px; box-shadow: inset 0 0 0 1px rgba(224, 88, 75, .5); }
+/* le même esprit pour les barres d en haut : les cartes « Tes votes, en jeu » et les tuiles du compte, un bord égal tout autour */
+html body .savoir article { border: 1px solid rgba(255, 207, 90, .35); border-top-width: 1px; border-radius: 18px; }
+html body .compte-tuiles li { border-top: 1px solid var(--trait); }
