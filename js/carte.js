@@ -488,7 +488,10 @@
   // l'Atlas à leur bloc près), son gabarit et son quart de tour ; les images rendues de leurs blocs (gabarits.png, un pixel par bloc),
   // du palais et du port (palais.png, les régions du monde de spawn) et des navires vus du dessus (navires.png, leurs modèles).
   // De loin : une image de toute la mer faite UNE fois (DECOR_LOIN blocs par pixel) ; de près : les images à l'écran seulement.
-  var DECOR_LOIN = 6, DECOR_PRES = 0.25
+  var DECOR_LOIN = 6, DECOR_PRES = 0.12
+  // (2c, la tête : « à l'ouverture, les lieux de l'Atlas sont des miettes ») un lieu de l'Atlas n'est jamais plus petit que LIEU_MIN
+  // pixels à l'écran : son image agrandie telle quelle (sa forme de près ne change pas ; au-delà, sa vraie taille)
+  var LIEU_MIN = 26
   var decor = null      // { gab: [{ px, py, w, h, c }], lieux: [[g, x, z, rot]], palais: { x, z, l, h }, nav: { echelle, n }, img: {}, loin }
   function chargerDecor() {
     if (decor) return
@@ -497,6 +500,7 @@
     fetch('assets/mer/decor.json').then(function (r) { return r.json() }).then(function (j) {
       decor.gab = j.gabarits.map(function (g) { return { px: g[1], py: g[2], w: g[3], h: g[4], c: g[5] } })
       decor.lieux = j.lieux; decor.palais = j.palais; decor.nav = j.navires
+      decor.atlas = null
       fin()
     }).catch(function () { decor = null })
     ;['gabarits', 'palais', 'navires'].forEach(function (k) {
@@ -527,17 +531,45 @@
     c.drawImage(decor.img.palais, P.x, P.z, P.l, P.h)
     decor.loin = cv; decor.R = R
   }
+  // les lieux de l'Atlas parmi ceux du décor (la même place au bloc près), une fois
+  function lieuxAtlas() {
+    if (decor.atlas) return decor.atlas
+    var par = {}, k, l = []
+    for (k = 0; k < decor.lieux.length; k++) par[decor.lieux[k][1] + ',' + decor.lieux[k][2]] = k
+    for (k = 0; mer && k < mer.atlas.length; k++) { var i = par[mer.atlas[k].x + ',' + mer.atlas[k].z]; if (i !== undefined) l.push(i) }
+    decor.atlas = l
+    return l
+  }
+  function atlasLisible() {
+    var l = lieuxAtlas(), k
+    for (k = 0; k < l.length; k++) {
+      var d = decor.lieux[l[k]], gb = decor.gab[d[0]], vrai = gb.w * M.s
+      if (vrai >= LIEU_MIN) continue
+      var e = ecranM(d[1] + 0.5, d[2] + 0.5)
+      if (e[0] < -LIEU_MIN || e[0] > L + LIEU_MIN || e[1] < -LIEU_MIN || e[1] > H + LIEU_MIN) continue
+      var q = LIEU_MIN / gb.w
+      g.save()
+      g.translate(e[0], e[1])
+      if (d[3] & 3) g.rotate((d[3] & 3) * Math.PI / 2)
+      g.scale(q, q)
+      g.imageSmoothingEnabled = q < 1
+      g.drawImage(decor.img.gabarits, gb.px, gb.py, gb.w, gb.h, -gb.c - 0.5, -gb.c - 0.5, gb.w, gb.h)
+      g.restore()
+    }
+    g.imageSmoothingEnabled = false
+  }
   function dessinerDecor() {
     if (!decor || !decor.pret) return
-    if (M.s < DECOR_PRES) {
+    if (M.s < 0.25) {
       var o = ecranM(-decor.R, -decor.R)
       g.imageSmoothingEnabled = true
       g.drawImage(decor.loin, o[0], o[1], 2 * decor.R * M.s, 2 * decor.R * M.s)
       g.imageSmoothingEnabled = false
+      atlasLisible()
       return
     }
-    // de près : le pixel net dès 2 pixels par bloc ; en dessous, lissé (une image réduite ne scintille pas)
-    g.imageSmoothingEnabled = M.s < 2
+    // (2c, la tête : « de près c'est flou ») le pixel NET dès un pixel par bloc ; en dessous, lissé (une image réduite ne scintille pas)
+    g.imageSmoothingEnabled = M.s < 1
     var w0 = monde(-60, -60), w1 = monde(L + 60, H + 60)
     g.save()
     g.setTransform(dpr * M.s, 0, 0, dpr * M.s, dpr * (L / 2 - M.cx * M.s), dpr * (H / 2 - M.cy * M.s))
@@ -550,6 +582,7 @@
     if (P.x < w1[0] && P.x + P.l > w0[0] && P.z < w1[1] && P.z + P.h > w0[1]) g.drawImage(decor.img.palais, P.x, P.z, P.l, P.h)
     g.restore()
     g.imageSmoothingEnabled = false
+    atlasLisible()
   }
   // L'EAU DE PRÈS : une texture d'eau dessinée ici (aucune image du jeu), un pixel par bloc, qui coule lentement vers le sud-est
   var eauTuile = null
@@ -593,7 +626,7 @@
       g.fillStyle = pirate ? 'rgba(232,96,76,.28)' : 'rgba(232,96,76,' + (0.2 + (calme ? 0 : Math.sin(t * 5) * 0.1)).toFixed(2) + ')'
       g.beginPath(); g.ellipse(0, 0, d[2] * k * 0.75 + 4, d[3] * k * 0.6 + 4, 0, 0, Math.PI * 2); g.fill()
     }
-    g.imageSmoothingEnabled = k < 0.9
+    g.imageSmoothingEnabled = k * decor.nav.echelle < 1
     g.drawImage(decor.img.navires, d[0], d[1], d[2], d[3], -d[4] * k, -d[5] * k, d[2] * k, d[3] * k)
     g.imageSmoothingEnabled = false
     g.restore()
@@ -791,27 +824,35 @@
       vus.push({ membres: g0.map(function (i) { return pts[i] }), x: cx, y: cy })
     }
     g.textAlign = 'center'; g.textBaseline = 'top'
-    var noms = M.s >= 0.14, nomsPris = [nomPalais]
+    // (2c, la tête : « un nom ne touche jamais un autre nom ni une icône ») 1. LES MARQUES d'abord (icône, pastille, ou le lieu dessiné
+    // de près) : leurs places sont prises avant qu'un seul nom ne se pose ; 2. LES NOMS : un nom qui toucherait un autre nom, une
+    // autre marque ou le bord se tait (le survol et le toucher le donnent)
+    var noms = M.s >= 0.14, nomsPris = port ? [nomPalais, [port[0] - 13, port[1] - 13, port[0] + 13, port[1] + 13]] : [nomPalais], marques = [], dm = pres ? Math.max(12, LIEU_MIN / 2, 28 * M.s) : 13
     for (k = 0; k < vus.length; k++) {
       var v = vus[k]
-      if (v.x < -40 || v.x > L + 40 || v.y < -40 || v.y > H + 40) continue
-      prisesLieux.push([v.x - 13, v.y - 13, v.x + 13, v.y + 13])
+      v.vu = !(v.x < -40 || v.x > L + 40 || v.y < -40 || v.y > H + 40)
+      if (!v.vu) continue
+      v.r = [v.x - 13, v.y - 13, v.x + 13, v.y + 13]
+      marques.push(v.r); prisesLieux.push(v.r)
       if (v.membres.length > 1) { pastille(v.x, v.y, v.membres.length, v.membres.some(function (m) { return m.l === choisieMer })); continue }
       l = v.membres[0]
       if (!pres) icone(l.genre, v.x, v.y, choisieMer === l.l)
-      else if (choisieMer === l.l) { g.strokeStyle = '#FFD75E'; g.lineWidth = 2; g.beginPath(); g.arc(v.x, v.y, Math.max(14, 30 * M.s), 0, Math.PI * 2); g.stroke() }
-      if (noms || (l.genre === 'phare' && M.s >= 0.1)) {
-        g.font = '600 12px Fredoka, system-ui, sans-serif'
-        var w = g.measureText(l.l.nom).width, dy = pres ? Math.max(12, 30 * M.s) : 12
-        // (2c) un nom ne s'écrit que s'il tient entier dans le cadre sans toucher un autre nom (on zoome pour lire les autres)
-        var rn = [v.x - w / 2 - 4, v.y + dy - 1, v.x + w / 2 + 4, v.y + dy + 16]
-        if (rn[0] >= 4 && rn[2] <= L - 4 && rn[3] <= H - 4 && !chevauche(rn, nomsPris)) {
-          nomsPris.push(rn); prisesLieux.push(rn)
-          etiquette(l.l.nom, v.x, v.y + dy, 12, l.genre === 'phare' ? '#FFE9A8' : '#F4EAFF')
-        }
-      }
+      else if (choisieMer === l.l) { g.strokeStyle = '#FFD75E'; g.lineWidth = 2; g.beginPath(); g.arc(v.x, v.y, dm, 0, Math.PI * 2); g.stroke() }
+    }
+    g.font = '600 12px Fredoka, system-ui, sans-serif'
+    for (k = 0; k < vus.length; k++) {
+      v = vus[k]
+      if (!v.vu || v.membres.length > 1) continue
+      l = v.membres[0]
+      if (!noms && !(l.genre === 'phare' && M.s >= 0.1)) continue
+      var w = g.measureText(l.l.nom).width, dy = pres ? dm : 12
+      var rn = [v.x - w / 2 - 4, v.y + dy - 1, v.x + w / 2 + 4, v.y + dy + 16]
+      if (rn[0] < 4 || rn[2] > L - 4 || rn[3] > H - 4 || chevauche(rn, nomsPris) || chevaucheSauf(rn, marques, v.r)) continue
+      nomsPris.push(rn); prisesLieux.push(rn)
+      etiquette(l.l.nom, v.x, v.y + dy, 12, l.genre === 'phare' ? '#FFE9A8' : '#F4EAFF')
     }
   }
+  function chevaucheSauf(r, l, sauf) { for (var k = 0; k < l.length; k++) if (l[k] !== sauf && r[0] < l[k][2] && r[2] > l[k][0] && r[1] < l[k][3] && r[3] > l[k][1]) return true; return false }
   function pastille(px, py, n, choisi) {
     g.fillStyle = choisi ? 'rgba(255,215,94,.95)' : 'rgba(14,8,24,.82)'
     g.beginPath(); g.arc(px, py, 12, 0, Math.PI * 2); g.fill()
@@ -912,6 +953,9 @@
     var ang = Math.atan2(Math.cos(f.cap * Math.PI / 180), -Math.sin(f.cap * Math.PI / 180)) * 180 / Math.PI
     if (ang > 90 || ang < -90) ang += 180
     if (em[0] < -50 || em[0] > L + 50 || em[1] < -50 || em[1] > H + 50) return
+    var wf = largeurLe(txt, ta2), ca = Math.abs(Math.cos(ang * Math.PI / 180)), sa = Math.abs(Math.sin(ang * Math.PI / 180))
+    var bw = (wf * ca + ta2 * sa) / 2 + 2, bh = (wf * sa + ta2 * ca) / 2 + 2
+    if (chevauche([em[0] - bw, em[1] - bh, em[0] + bw, em[1] + bh], prises)) return
     ecrireLe(txt, em[0], em[1], ang, ta2, 'rgba(255,176,158,.8)')
   }
   var FORMES = {
@@ -948,8 +992,8 @@
       if (!navireVu(en[0], en[1], n.cap, n.coque, n.en_combat, false)) navire(en[0], en[1], n.cap, n.en_combat, n.pseudo, false)
       g.font = '600 12px Fredoka, system-ui, sans-serif'
       var wn = g.measureText(n.pseudo).width, yn = en[1] + Math.max(14, 8 * M.s)
-      prisesLieux.push([en[0] - wn / 2 - 4, yn - 1, en[0] + wn / 2 + 4, yn + 16])
-      etiquette(n.pseudo, en[0], yn, 12, '#FFD75E')
+      var rj = [en[0] - wn / 2 - 4, yn - 1, en[0] + wn / 2 + 4, yn + 16]
+      if (!chevauche(rj, prisesLieux)) { prisesLieux.push(rj); etiquette(n.pseudo, en[0], yn, 12, '#FFD75E') }
     }
   }
   // les pirates : un navire rouge (le jeu les publiera ; API.md 2.7, la forme proposée : { type, nom, x, z, cap })
@@ -1228,7 +1272,20 @@
   toile.addEventListener('pointerup', lacher)
   toile.addEventListener('pointercancel', lacher)
   toile.addEventListener('wheel', function (e) { e.preventDefault(); var p = pos(e); zoomer(Math.pow(1.0015, -e.deltaY), p[0], p[1]) }, { passive: false })
+  // (2c) LA MER AU SURVOL : le nom du lieu sous la souris (même celui qui s'est tu pour ne rien toucher), ou le nombre d'une pastille
+  var survoleMer = null
+  function survolerMer(p) {
+    var l = mer ? lieuSousMer(p[0], p[1]) : null, cle2 = l ? (l.groupe ? 'g' + l.groupe.x + ',' + l.groupe.y : l.nom) : null
+    toile.style.cursor = l ? 'pointer' : 'grab'
+    if (cle2 === survoleMer) return
+    survoleMer = cle2
+    if (!l) { bulle.hidden = true; return }
+    bulle.textContent = l.groupe ? l.groupe.membres.length + ' lieux : touche pour zoomer' : l.nom + (GENRES[l.sorte || l.genre] ? ' · ' + GENRES[l.sorte || l.genre] : '')
+    bulle.style.left = Math.round(p[0]) + 'px'; bulle.style.top = Math.round(p[1]) + 'px'
+    bulle.hidden = false
+  }
   function survoler(p) {
+    if (zone === 'mer') { survolerMer(p); return }
     var x = trouverSous(p[0], p[1]), lb = x ? null : libreSous(p[0], p[1])
     toile.style.cursor = x || lb ? 'pointer' : 'grab'
     var changeLibre = (lb ? lb.i + ',' + lb.j : '') !== (survolLibre ? survolLibre.i + ',' + survolLibre.j : '')
@@ -1241,7 +1298,7 @@
     bulle.style.left = Math.round(p[0]) + 'px'; bulle.style.top = Math.round(p[1]) + 'px'
     bulle.hidden = false
   }
-  toile.addEventListener('pointerleave', function () { bulle.hidden = true; survolee = null; if (survolLibre) { survolLibre = null; sale = true } })
+  toile.addEventListener('pointerleave', function () { bulle.hidden = true; survolee = null; survoleMer = null; if (survolLibre) { survolLibre = null; sale = true } })
   document.getElementById('zoom-plus').addEventListener('click', function () { zoomer(1.6) })
   document.getElementById('zoom-moins').addEventListener('click', function () { zoomer(1 / 1.6) })
   document.getElementById('zoom-centre').addEventListener('click', function () { finirIntro(); var v = vueDe(); if (zone === 'mer') cadrerMer(); else if (etendue) cadrerIles(); else { v.cx = 0; v.cy = 0; v.s = DEPART_S } sale = true; plusTard() })
