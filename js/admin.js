@@ -398,6 +398,8 @@
     gs.appendChild(el('h2', '', 'Les serveurs de jeu'))
     liste(d.serveurs).forEach(function (sv) { gg.appendChild(carteServeur(sv, S)) })
     gs.appendChild(gg); vue.appendChild(gs)
+    // (37, la 157) LES ÎLES
+    vue.appendChild(sectionIles(d.iles))
     // LE VPS
     var V = d.vps || {}, vs = el('div', 'i-section'), vc = el('article', 'i-panneau')
     vs.appendChild(el('h2', '', 'Le VPS du site'))
@@ -451,6 +453,65 @@
     pied(ci, I.source)
     bs.appendChild(cb); bs.appendChild(ci); vue.appendChild(bs)
     relireInfra(etat.numero)
+  }
+  // (37, la 157 ; le propriétaire : « les chiffres des îles, justes ») LES ÎLES : ce que le serveur des îles publie (la vitrine
+  // « iles:etat », iles_etat_site.js), tel que l'API le rend (d.iles) ; null : « pas encore de données »
+  // LA JAUGE DE LA RÉSERVE : les îles d'avance prêtes sur l'objectif de l'ouverture ; rouge sous l'alerte, orange sous le minimum
+  // (les seuils d'ab_iles_reserve_table.js, rendus par l'API), un cran à chacun
+  function jaugeReserve(I) {
+    var R = I.seuils || {}, n = num(I.pretes), haut = Math.max(1, num(R.ouverture) || 0, n || 0)
+    var c = n === null ? 'gris' : num(R.alerte) !== null && n < R.alerte ? 'rouge' : num(R.minimum) !== null && n < R.minimum ? 'orange' : 'vert'
+    var f = el('figure', 'i-jauge i-reserve')
+    var s = svg('svg', { viewBox: [0, 0, 120, 72].join(' '), role: 'img', 'aria-label': 'Îles d\'avance : ' + (n === null ? VIDE : A.nombre(n) + ' prêtes') })
+    s.appendChild(svg('path', { d: arc(0, 1), 'class': 'i-piste' }))
+    if (n !== null && n > 0) s.appendChild(svg('path', { d: arc(0, Math.min(1, n / haut)), 'class': 'i-plein i-' + c }))
+    ;[R.alerte, R.minimum].forEach(function (v) {
+      if (num(v) === null || v <= 0) return
+      var a = Math.min(1, v / haut), x = point(a, 38), y = point(a, 58)
+      s.appendChild(svg('line', { x1: x[0], y1: x[1], x2: y[0], y2: y[1], 'class': 'i-cran' }))
+    })
+    var t = svg('text', { x: 60, y: 58, 'text-anchor': 'middle', 'class': 'i-pct' + (n === null ? ' vide' : '') })
+    t.textContent = n === null ? '?' : A.nombre(n)
+    s.appendChild(t); f.appendChild(s)
+    var fc = el('figcaption'); fc.appendChild(el('b', '', 'Îles d\'avance prêtes'))
+    fc.appendChild(el('span', '', I.coupe ? 'la réserve est coupée' : 'minimum ' + (num(R.minimum) === null ? '?' : A.nombre(R.minimum)) + ' · alerte sous ' + (num(R.alerte) === null ? '?' : A.nombre(R.alerte)) + ' · ouverture ' + (num(R.ouverture) === null ? '?' : A.nombre(R.ouverture))))
+    f.appendChild(fc)
+    return f
+  }
+  // une liste de cases : « 3 » et dessous les premières (« 2,2 · 4,0 »)
+  function places(boite, nom, x, vide, aide, couleur) {
+    if (!x) { ligne(boite, nom, VIDE); return }
+    var v = x.n === 0 ? el('b', '', vide) : couleur ? pastille(A.nombre(x.n), couleur) : el('b', '', A.nombre(x.n))
+    var sous = x.n > 0 ? liste(x.cases).join(' · ') + (x.n > liste(x.cases).length ? ' · …' : '') + (aide ? ' (' + aide + ')' : '') : ''
+    ligne(boite, nom, v, sous)
+  }
+  function sectionIles(I) {
+    var sc = el('div', 'i-section'), p = el('article', 'i-panneau')
+    sc.appendChild(el('h2', '', 'Les îles et leur réserve'))
+    if (!I) {
+      p.appendChild(el('p', 'g-vide', VIDE))
+      p.appendChild(el('p', 'i-aide', 'Le serveur des îles publie son état chaque minute (iles_etat_site.js) ; tant qu\'il n\'arrive pas, rien ne s\'affiche ici.'))
+      sc.appendChild(p)
+      return sc
+    }
+    if (I.vieux) p.appendChild(el('p', 'i-vieux', 'L\'état des îles date de ' + dureeInfra(I.age_s) + ' : ces chiffres sont anciens.'))
+    var g = el('div', 'i-iles'), js = el('div', 'i-jauges'), li = el('div', 'i-lignes'), dp = I.derniere
+    js.appendChild(jaugeReserve(I))
+    g.appendChild(js)
+    ligne(li, 'Îles prises', num(I.prises) === null ? VIDE : A.nombre(I.prises), 'une île par joueur, chacune avec son hôte')
+    ligne(li, 'En pose', I.en_pose ? 'la case ' + I.en_pose : 'aucune', I.en_pose ? 'une île d\'avance se pose en ce moment' : '')
+    ligne(li, 'La demande de la console', num(I.demande) === null ? VIDE : I.demande > 0 ? 'jusqu\'à ' + A.nombre(I.demande) : 'aucune', 'ilesreserve remplir')
+    ligne(li, 'La prochaine île donnée', I.prochaine ? 'la case ' + I.prochaine : VIDE, I.prochaine ? 'au prochain joueur neuf' : '')
+    ligne(li, 'La dernière pose', dp ? quand(dp.quand) : 'aucune depuis le démarrage', dp && num(dp.duree_s) !== null ? 'en ' + dec(dp.duree_s, 1) + NBSP + 's' : '')
+    ligne(li, 'Joueurs qui attendent leur île', num(I.file) === null ? VIDE : A.nombre(I.file))
+    places(li, 'Places libres', I.libres, 'aucune', 'redonnées d\'abord')
+    places(li, 'Effacées, pas encore rendues', I.effacees, 'aucune', 'console : ileslibres rendre')
+    places(li, 'Places orphelines', I.orphelines, 'aucune', 'console : ileslibres', 'orange')
+    g.appendChild(li)
+    p.appendChild(g)
+    pied(p, I.source, I.lu, I.vieux)
+    sc.appendChild(p)
+    return sc
   }
   // la relecture : dans 30 s, si la vue est toujours celle-ci ; l'onglet caché, elle attend son retour (aucune demande pour rien)
   function relireInfra(n) {

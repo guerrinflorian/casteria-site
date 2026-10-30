@@ -364,6 +364,14 @@ b.i-tps.i-gris { color: #B7A7CF; }
 .i-conteneurs .i-sous { grid-column: 1 / -1; }
 .i-deux { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 22px; }
 .i-deux .i-tete h2 { margin: 0; }
+/* (37, la 157) les îles : la jauge de la réserve à gauche, leurs chiffres à droite ; au téléphone, l'un sous l'autre */
+.i-iles { display: grid; grid-template-columns: minmax(170px, 230px) minmax(0, 1fr); gap: 16px; align-items: start; }
+.i-iles .i-jauges { grid-template-columns: minmax(0, 1fr); margin: 0; }
+@media (max-width: 760px) {
+  .i-iles { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+  .i-iles .i-jauges { grid-template-columns: minmax(0, 1fr); }
+  .i-iles .i-reserve svg { max-width: 220px; }
+}
 @media (max-width: 760px) {
   .i-deux { grid-template-columns: minmax(0, 1fr); }
   .i-serveurs { grid-template-columns: minmax(0, 1fr); }

@@ -11,7 +11,8 @@
   "mesure_vieille_s": 180,
   "memoire_jeu_pct": 90,
   "memoire_vps_pct": 90,
-  "iles3d_vieux_h": 24
+  "iles3d_vieux_h": 24,
+  "iles_vieux_s": 1200
  },
  "serveurs": [
   {
@@ -274,6 +275,47 @@
   "rendu": "2026-10-30T10:12:50.205Z",
   "dernier_fichier": "2026-10-30T10:09:50.205Z",
   "source": "etat.json du copieur (rendu) ; le fichier le plus récent sous /srv/casteria/iles3d (le relevé du VPS)"
+ },
+ "iles": {
+  "lu": "2026-10-30T10:50:16.215Z",
+  "age_s": 34,
+  "vieux": false,
+  "source": "la vitrine « iles:etat » (iles_etat_site.js, le serveur des îles : chaque minute quand elle change, toutes les 15 min sinon)",
+  "prises": 312,
+  "pretes": 128,
+  "en_pose": "14,-9",
+  "demande": 0,
+  "seuils": {
+   "minimum": 75,
+   "alerte": 25,
+   "ouverture": 400
+  },
+  "coupe": false,
+  "prochaine": "12,-9",
+  "derniere": {
+   "quand": "2026-10-30T10:46:38.215Z",
+   "duree_s": 13.2
+  },
+  "libres": {
+   "n": 2,
+   "cases": [
+    "2,2",
+    "4,0"
+   ]
+  },
+  "effacees": {
+   "n": 1,
+   "cases": [
+    "1,1"
+   ]
+  },
+  "orphelines": {
+   "n": 0,
+   "cases": []
+  },
+  "file": 0,
+  "retenues": 0,
+  "rang": 431
  },
  "alertes": []
 }
