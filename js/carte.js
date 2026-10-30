@@ -20,7 +20,7 @@
   var MER_OUVERTE = false
   var NAVIRES = true        // (2c, 30/10) les navires des joueurs, en direct (/api/navires répond, vide ou non)
   var PAVE = 16, VIE_PAVE = 120000, ATTENTE = 220
-  var ZOOM_MIN = 2.5, ZOOM_MAX = 140, MER_MIN = 0.03, MER_MAX = 1.6, DEPART_S = 26
+  var ZOOM_MIN = 2.5, ZOOM_MAX = 140, MER_MIN = 0.03, MER_MAX = 8, DEPART_S = 26
   var COULEURS = P.COULEURS
   var g = toile.getContext('2d')
   var etat = document.getElementById('carte-etat'), note = document.getElementById('carte-note')
@@ -442,6 +442,8 @@
   }
   function etiquette(t2, px, py, f, couleur) {
     var w = g.measureText(t2).width
+    // (2c) jamais coupé au bord du cadre : le nom glisse vers l'intérieur
+    if (w + 12 < L) px = Math.max(w / 2 + 6, Math.min(L - w / 2 - 6, px))
     g.fillStyle = 'rgba(14, 8, 24, .72)'
     g.fillRect(Math.round(px - w / 2 - 4), Math.round(py - 1), Math.round(w + 8), f + 4)
     g.fillStyle = couleur
@@ -480,6 +482,134 @@
   var pirates = [], evenements = []
   var ZONES_TEINTES = { rade: '#3C9BCB', hauts_fonds: '#2373AA', large: '#164F7E', mer_noire: '#0D3157', abysses: '#061A33' }
   var GENRES = { phare: 'Phare', ile: 'Île sauvage', epave: 'Épave', ruine: 'Ruine', port: 'Port', repaire: 'Repaire de pirates', recif: 'Récif' }
+
+  // ---------- LA MER VUE DU CIEL (2c, 30/10 ; le propriétaire : « vraiment vue du dessus, magnifique, comme les îles ») ----------
+  // assets/mer/decor.json : CHAQUE lieu posé par le jeu (le vrai Decor.java de casteria-mer, joué hors du jeu : 433 lieux, les 40 de
+  // l'Atlas à leur bloc près), son gabarit et son quart de tour ; les images rendues de leurs blocs (gabarits.png, un pixel par bloc),
+  // du palais et du port (palais.png, les régions du monde de spawn) et des navires vus du dessus (navires.png, leurs modèles).
+  // De loin : une image de toute la mer faite UNE fois (DECOR_LOIN blocs par pixel) ; de près : les images à l'écran seulement.
+  var DECOR_LOIN = 6, DECOR_PRES = 0.25
+  var decor = null      // { gab: [{ px, py, w, h, c }], lieux: [[g, x, z, rot]], palais: { x, z, l, h }, nav: { echelle, n }, img: {}, loin }
+  function chargerDecor() {
+    if (decor) return
+    decor = { pret: false, img: {} }
+    var n = 0, fin = function () { if (++n === 4) { faireLoin(); decor.pret = true; sale = true } }
+    fetch('assets/mer/decor.json').then(function (r) { return r.json() }).then(function (j) {
+      decor.gab = j.gabarits.map(function (g) { return { px: g[1], py: g[2], w: g[3], h: g[4], c: g[5] } })
+      decor.lieux = j.lieux; decor.palais = j.palais; decor.nav = j.navires
+      fin()
+    }).catch(function () { decor = null })
+    ;['gabarits', 'palais', 'navires'].forEach(function (k) {
+      var im = new Image()
+      im.onload = fin
+      im.onerror = function () { decor = null }
+      im.src = 'assets/mer/' + k + '.png'
+      decor.img[k] = im
+    })
+  }
+  // un lieu à sa place : le centre de son bloc central en (0, 0), tourné de rot quarts de tour (StructureTemplate, autour du centre)
+  function poserLieu(c, l, s) {
+    var gb = decor.gab[l[0]]
+    c.save()
+    c.translate(l[1] + 0.5, l[2] + 0.5)
+    if (l[3] & 3) c.rotate((l[3] & 3) * Math.PI / 2)
+    c.drawImage(decor.img.gabarits, gb.px, gb.py, gb.w, gb.h, -gb.c - 0.5, -gb.c - 0.5, gb.w, gb.h)
+    c.restore()
+  }
+  function faireLoin() {
+    var R = mer ? mer.rayon : 5000, n = Math.ceil(2 * R / DECOR_LOIN), cv = document.createElement('canvas')
+    cv.width = n; cv.height = n
+    var c = cv.getContext('2d')
+    c.imageSmoothingEnabled = true
+    c.setTransform(1 / DECOR_LOIN, 0, 0, 1 / DECOR_LOIN, R / DECOR_LOIN, R / DECOR_LOIN)
+    for (var k = 0; k < decor.lieux.length; k++) poserLieu(c, decor.lieux[k])
+    var P = decor.palais
+    c.drawImage(decor.img.palais, P.x, P.z, P.l, P.h)
+    decor.loin = cv; decor.R = R
+  }
+  function dessinerDecor() {
+    if (!decor || !decor.pret) return
+    if (M.s < DECOR_PRES) {
+      var o = ecranM(-decor.R, -decor.R)
+      g.imageSmoothingEnabled = true
+      g.drawImage(decor.loin, o[0], o[1], 2 * decor.R * M.s, 2 * decor.R * M.s)
+      g.imageSmoothingEnabled = false
+      return
+    }
+    // de près : le pixel net dès 2 pixels par bloc ; en dessous, lissé (une image réduite ne scintille pas)
+    g.imageSmoothingEnabled = M.s < 2
+    var w0 = monde(-60, -60), w1 = monde(L + 60, H + 60)
+    g.save()
+    g.setTransform(dpr * M.s, 0, 0, dpr * M.s, dpr * (L / 2 - M.cx * M.s), dpr * (H / 2 - M.cy * M.s))
+    for (var k = 0; k < decor.lieux.length; k++) {
+      var l = decor.lieux[k]
+      if (l[1] < w0[0] - 40 || l[1] > w1[0] + 40 || l[2] < w0[1] - 40 || l[2] > w1[1] + 40) continue
+      poserLieu(g, l)
+    }
+    var P = decor.palais
+    if (P.x < w1[0] && P.x + P.l > w0[0] && P.z < w1[1] && P.z + P.h > w0[1]) g.drawImage(decor.img.palais, P.x, P.z, P.l, P.h)
+    g.restore()
+    g.imageSmoothingEnabled = false
+  }
+  // L'EAU DE PRÈS : une texture d'eau dessinée ici (aucune image du jeu), un pixel par bloc, qui coule lentement vers le sud-est
+  var eauTuile = null
+  function tuileEau() {
+    // 64 blocs de côté : de petits reflets épars (deux à quatre pixels en biais, comme l'eau du jeu vue d'en haut) et quelques
+    // creux plus sombres, posés au hasard (une graine fixe) : aucune forme qui se répète à l'œil
+    var cv = document.createElement('canvas'), n = 64
+    cv.width = n; cv.height = n
+    var c = cv.getContext('2d'), graine = 11
+    var hasard = function () { graine = (graine * 16807) % 2147483647; return graine / 2147483647 }
+    for (var k = 0; k < 150; k++) {
+      var x = Math.floor(hasard() * n), y = Math.floor(hasard() * n), lg = 2 + Math.floor(hasard() * 3), clair = hasard() < 0.72
+      c.fillStyle = clair ? 'rgba(225,244,255,' + (0.28 + hasard() * 0.3).toFixed(2) + ')' : 'rgba(0,20,60,.22)'
+      for (var j = 0; j < lg; j++) c.fillRect((x + j) % n, (y + (j >> 1)) % n, 1, 1)
+    }
+    return g.createPattern(cv, 'repeat')
+  }
+  function eauDePres() {
+    if (M.s < 1.2) return
+    if (!eauTuile) eauTuile = tuileEau()
+    var w0 = monde(0, 0), w1 = monde(L, H), d = calme ? 0 : (t * 0.6) % 64
+    g.save()
+    g.globalAlpha = Math.min(0.75, (M.s - 1.2) * 0.25 + 0.2)
+    g.setTransform(dpr * M.s, 0, 0, dpr * M.s, dpr * (L / 2 - M.cx * M.s), dpr * (H / 2 - M.cy * M.s))
+    g.translate(d, d)
+    g.fillStyle = eauTuile
+    g.fillRect(Math.floor(w0[0] - 66), Math.floor(w0[1] - 66), Math.ceil(w1[0] - w0[0]) + 132, Math.ceil(w1[1] - w0[1]) + 132)
+    g.restore()
+  }
+  // un navire VU DU DESSUS : son image (navires.png ; la proue vers +z, le cap 180), tournée de (cap - 180) degrés, à sa vraie taille
+  // de près, jamais moins de NAV_MIN pixels de long ; son SILLAGE : les places où il était (un relevé toutes les 400 ms)
+  var NAV_MIN = 26
+  function navireVu(px, py, cap, coque, combat, pirate) {
+    var d = decor && decor.pret && decor.nav ? (decor.nav.n[coque] || decor.nav.n[pirate ? 'corsaire' : 'sloop']) : null
+    if (!d) return false
+    var k = Math.max(M.s / decor.nav.echelle, NAV_MIN / d[3]), tangue = calme ? 0 : Math.sin(t * 1.6 + px * 0.01) * 0.03
+    g.save()
+    g.translate(px, py)
+    g.rotate((cap - 180) * Math.PI / 180 + tangue)
+    if (combat || pirate) {
+      g.fillStyle = pirate ? 'rgba(232,96,76,.28)' : 'rgba(232,96,76,' + (0.2 + (calme ? 0 : Math.sin(t * 5) * 0.1)).toFixed(2) + ')'
+      g.beginPath(); g.ellipse(0, 0, d[2] * k * 0.75 + 4, d[3] * k * 0.6 + 4, 0, 0, Math.PI * 2); g.fill()
+    }
+    g.imageSmoothingEnabled = k < 0.9
+    g.drawImage(decor.img.navires, d[0], d[1], d[2], d[3], -d[4] * k, -d[5] * k, d[2] * k, d[3] * k)
+    g.imageSmoothingEnabled = false
+    g.restore()
+    return true
+  }
+  function sillage(n) {
+    var tr = n.trace
+    if (!tr || tr.length < 2 || calme) return
+    g.lineCap = 'round'
+    for (var k = 1; k < tr.length; k++) {
+      var a = ecranM(tr[k - 1][0], tr[k - 1][1]), b = ecranM(tr[k][0], tr[k][1]), q = k / tr.length
+      g.strokeStyle = 'rgba(235,248,255,' + (q * 0.45).toFixed(2) + ')'
+      g.lineWidth = 1 + q * 3
+      g.beginPath(); g.moveTo(a[0], a[1]); g.lineTo(b[0], b[1]); g.stroke()
+    }
+  }
   function ecranM(x, z) { return [(x - M.cx) * M.s + L / 2, (z - M.cy) * M.s + H / 2] }
   function monde(mx, my) { return [M.cx + (mx - L / 2) / M.s, M.cy + (my - H / 2) / M.s] }
   // la distance à la ligne (Carte.distanceLigne : 0 dans la boîte)
@@ -552,36 +682,64 @@
     for (var k = 0; k < pts.length; k++) { var e = ecranM(pts[k][0], pts[k][1]); if (k) g.lineTo(e[0], e[1]); else g.moveTo(e[0], e[1]) }
     g.closePath()
   }
+  // l'écran dans le monde [x0, z0, x1, z1] ; la distance à la ligne la plus courte et la plus longue sur lui (elle est convexe : la
+  // plus longue est à un coin) ; de même la distance au centre de la mer
+  function ecranMonde() { var a = monde(0, 0), b = monde(L, H); return [a[0], a[1], b[0], b[1]] }
+  function bornesLigne(e) {
+    var b = mer.ligne, dx = Math.max(0, b.xMin - e[2], e[0] - b.xMax), dz = Math.max(0, b.zMin - e[3], e[1] - b.zMax)
+    return [Math.sqrt(dx * dx + dz * dz), Math.max(distLigne(e[0], e[1]), distLigne(e[2], e[1]), distLigne(e[0], e[3]), distLigne(e[2], e[3]))]
+  }
+  function bornesDisque(e) {
+    var dx = Math.max(0, e[0], -e[2]), dz = Math.max(0, e[1], -e[3]), fx = Math.max(Math.abs(e[0]), Math.abs(e[2])), fz = Math.max(Math.abs(e[1]), Math.abs(e[3]))
+    return [Math.sqrt(dx * dx + dz * dz), Math.sqrt(fx * fx + fz * fz)]
+  }
+  function remplirBande(bl, d, couleur) {
+    if (bl[0] >= d) return
+    g.fillStyle = couleur
+    if (bl[1] < d) g.fillRect(0, 0, L, H); else { bande(d); g.fill() }
+  }
+  function boiteDe(pts) { var b = [1e9, 1e9, -1e9, -1e9]; for (var k = 0; k < pts.length; k++) { b[0] = Math.min(b[0], pts[k][0]); b[1] = Math.min(b[1], pts[k][1]); b[2] = Math.max(b[2], pts[k][0]); b[3] = Math.max(b[3], pts[k][1]) } return b }
+  function croise(a, b) { return a[0] < b[2] && a[2] > b[0] && a[1] < b[3] && a[3] > b[1] }
   function dessinerMer() {
     var o = ecranM(0, 0)
     fondMer(500 * M.s, o[0], o[1])
     if (!mer) { houle(); return }
     var R = mer.rayon * M.s, k, z
+    // (2c) de près, une forme immense (un anneau, le disque, la Fosse) coûtait cher à tracer à chaque image : seule celle dont le bord
+    // croise l'écran se trace ; l'écran tout entier dedans : un simple rectangle ; tout entier dehors : rien
+    var ec = ecranMonde(), bl = bornesLigne(ec), bd = bornesDisque(ec)
     // hors du disque : la brume du bout du monde
-    g.fillStyle = 'rgba(4,10,20,.55)'; g.fillRect(0, 0, L, H)
+    if (bd[1] > mer.rayon) { g.fillStyle = 'rgba(4,10,20,.55)'; g.fillRect(0, 0, L, H) }
     g.save()
-    g.beginPath(); g.arc(o[0], o[1], R, 0, Math.PI * 2); g.clip()
+    if (bd[1] > mer.rayon) { g.beginPath(); g.arc(o[0], o[1], R, 0, Math.PI * 2); g.clip() }
     // les anneaux, du plus loin au plus proche
-    for (k = mer.anneaux.length - 1; k >= 0; k--) { z = mer.anneaux[k]; bande(z.a); g.fillStyle = ZONES_TEINTES[z.id] || '#134870'; g.fill() }
-    bande(mer.rade.a); g.fillStyle = ZONES_TEINTES.rade; g.fill()
+    for (k = mer.anneaux.length - 1; k >= 0; k--) { z = mer.anneaux[k]; remplirBande(bl, z.a, ZONES_TEINTES[z.id] || '#134870') }
+    remplirBande(bl, mer.rade.a, ZONES_TEINTES.rade)
+    eauDePres()
     houle()
     // la Fosse : son secteur rouge, ses récifs plus sombres
     if (!fosseForme) fosseForme = { zone: secteur(mer.fosse.de, mer.fosse.a, mer.fosse.cap, mer.fosse.largeur),
       terrain: mer.fosse.terrain ? secteur(mer.fosse.terrain.de, mer.fosse.terrain.a, mer.fosse.cap, mer.fosse.terrain.largeur) : null }
-    tracer(fosseForme.zone); g.fillStyle = 'rgba(214,64,52,.30)'; g.fill()
-    g.strokeStyle = 'rgba(255,120,100,.85)'; g.lineWidth = 2; if (g.setLineDash) g.setLineDash([6, 4]); g.stroke(); if (g.setLineDash) g.setLineDash([])
+    // (2c) ses bords battent doucement, comme une alerte qui respire
+    var pouls = calme ? 0.5 : 0.5 + Math.sin(t * 2.2) * 0.5
+    if (!fosseForme.boite) fosseForme.boite = boiteDe(fosseForme.zone)
+    if (croise(fosseForme.boite, ec)) {
+    tracer(fosseForme.zone); g.fillStyle = 'rgba(214,64,52,' + (0.2 + pouls * 0.08).toFixed(3) + ')'; g.fill()
+    g.strokeStyle = 'rgba(255,120,100,' + (0.55 + pouls * 0.4).toFixed(3) + ')'; g.lineWidth = 2 + pouls; if (g.setLineDash) g.setLineDash([6, 4]); g.stroke(); if (g.setLineDash) g.setLineDash([])
     if (fosseForme.terrain) { tracer(fosseForme.terrain); g.fillStyle = 'rgba(120,30,30,.35)'; g.fill() }
+    }
     // les frontières des zones
     g.strokeStyle = 'rgba(255,255,255,.28)'; g.lineWidth = 1.5
     if (g.setLineDash) g.setLineDash([5, 5])
-    for (k = 0; k < mer.anneaux.length; k++) { bande(mer.anneaux[k].a); g.stroke() }
-    bande(mer.rade.a); g.stroke()
+    for (k = 0; k < mer.anneaux.length; k++) if (bl[0] < mer.anneaux[k].a && bl[1] >= mer.anneaux[k].a) { bande(mer.anneaux[k].a); g.stroke() }
+    if (bl[0] < mer.rade.a && bl[1] >= mer.rade.a) { bande(mer.rade.a); g.stroke() }
     if (g.setLineDash) g.setLineDash([])
     g.restore()
     // le bord de la mer
     g.strokeStyle = 'rgba(255,215,94,.55)'; g.lineWidth = 2
-    g.beginPath(); g.arc(o[0], o[1], R, 0, Math.PI * 2); g.stroke()
-    palais()
+    if (bd[0] <= mer.rayon && bd[1] > mer.rayon) { g.beginPath(); g.arc(o[0], o[1], R, 0, Math.PI * 2); g.stroke() }
+    // (2c) le décor du jeu, vu du ciel : chaque île, épave, récif, ruine, repaire, phare, et le palais avec son port
+    if (decor && decor.pret) dessinerDecor(); else palais()
     // les phares balaient (la nuit, plus fort)
     var l, e
     if (!calme) for (k = 0; k < mer.lieux.length; k++) {
@@ -599,8 +757,8 @@
     piratesEnMer()
     naviresEnMer()
     portEnMer()
-    // les noms des zones par-dessus, aux places libres (jamais sur une icône ni un nom)
-    nomsDesZones()
+    // les noms des zones, discrets, le long de leur anneau (jamais sur un nom ni une icône)
+    nomsLeLong()
   }
   // (2c, 30/10 08:2x ; la tête : « le centre est illisible ») LES LIEUX REGROUPÉS : deux icônes qui se toucheraient à l'écran (moins de
   // ECART px) forment une PASTILLE avec leur nombre, à leur milieu ; un toucher sur elle zoome sur ses lieux. Un lieu seul : son
@@ -613,13 +771,15 @@
     var port = mer.port ? ecranM(mer.port.x, mer.port.z) : null, nomPalais = rectNomPalais()
     for (k = 0; k < pts.length; k++) { e = ecranM(pts[k].l.x, pts[k].l.z); pts[k].x = e[0]; pts[k].y = e[1] }
     vus = []; prisesLieux = []
+    // (2c) de près, le décor se voit : ni pastille ni icône, le nom seul sous le lieu (le lieu se touche toujours)
+    var pres = !!(decor && decor.pret && M.s >= DECOR_PRES)
     // le groupe : chaque lieu prend ses voisins proches (d'abord les phares : ils donnent leur nom au groupe s'ils sont seuls)
     var pris = {}
     for (k = 0; k < pts.length; k++) {
       if (pris[k]) continue
       var g0 = [k]
       pris[k] = 1
-      for (j = k + 1; j < pts.length; j++) if (!pris[j] && Math.abs(pts[j].x - pts[k].x) < ECART && Math.abs(pts[j].y - pts[k].y) < ECART) { g0.push(j); pris[j] = 1 }
+      if (!pres) for (j = k + 1; j < pts.length; j++) if (!pris[j] && Math.abs(pts[j].x - pts[k].x) < ECART && Math.abs(pts[j].y - pts[k].y) < ECART) { g0.push(j); pris[j] = 1 }
       var cx = 0, cy = 0
       for (j = 0; j < g0.length; j++) { cx += pts[g0[j]].x; cy += pts[g0[j]].y }
       cx /= g0.length; cy /= g0.length
@@ -629,19 +789,24 @@
       vus.push({ membres: g0.map(function (i) { return pts[i] }), x: cx, y: cy })
     }
     g.textAlign = 'center'; g.textBaseline = 'top'
-    var noms = M.s >= 0.14
+    var noms = M.s >= 0.14, nomsPris = [nomPalais]
     for (k = 0; k < vus.length; k++) {
       var v = vus[k]
       if (v.x < -40 || v.x > L + 40 || v.y < -40 || v.y > H + 40) continue
       prisesLieux.push([v.x - 13, v.y - 13, v.x + 13, v.y + 13])
       if (v.membres.length > 1) { pastille(v.x, v.y, v.membres.length, v.membres.some(function (m) { return m.l === choisieMer })); continue }
       l = v.membres[0]
-      icone(l.genre, v.x, v.y, choisieMer === l.l)
+      if (!pres) icone(l.genre, v.x, v.y, choisieMer === l.l)
+      else if (choisieMer === l.l) { g.strokeStyle = '#FFD75E'; g.lineWidth = 2; g.beginPath(); g.arc(v.x, v.y, Math.max(14, 30 * M.s), 0, Math.PI * 2); g.stroke() }
       if (noms || (l.genre === 'phare' && M.s >= 0.1)) {
         g.font = '600 12px Fredoka, system-ui, sans-serif'
-        var w = g.measureText(l.l.nom).width
-        prisesLieux.push([v.x - w / 2 - 4, v.y + 11, v.x + w / 2 + 4, v.y + 28])
-        etiquette(l.l.nom, v.x, v.y + 12, 12, l.genre === 'phare' ? '#FFE9A8' : '#F4EAFF')
+        var w = g.measureText(l.l.nom).width, dy = pres ? Math.max(12, 30 * M.s) : 12
+        // (2c) un nom ne s'écrit que s'il tient entier dans le cadre sans toucher un autre nom (on zoome pour lire les autres)
+        var rn = [v.x - w / 2 - 4, v.y + dy - 1, v.x + w / 2 + 4, v.y + dy + 16]
+        if (rn[0] >= 4 && rn[2] <= L - 4 && rn[3] <= H - 4 && !chevauche(rn, nomsPris)) {
+          nomsPris.push(rn); prisesLieux.push(rn)
+          etiquette(l.l.nom, v.x, v.y + dy, 12, l.genre === 'phare' ? '#FFE9A8' : '#F4EAFF')
+        }
       }
     }
   }
@@ -664,7 +829,8 @@
   // LE PORT : son icône au-dessus de tout, et son nom entier sous le palais (sa place comptée pour les plaques)
   function portEnMer() {
     var b = mer.ligne, a = ecranM(b.xMin, b.zMin), c = ecranM(b.xMax, b.zMax), P = mer.port, pt = P ? ecranM(P.x, P.z) : ecranM(196, -3)
-    icone('port', pt[0], pt[1], choisieMer && choisieMer.sorte === 'port')
+    // (2c) de près, le vrai port se voit : l'icône s'efface
+    if (M.s < 1.5 || !(decor && decor.pret)) icone('port', pt[0], pt[1], choisieMer && choisieMer.sorte === 'port')
     g.textAlign = 'center'; g.textBaseline = 'top'
     g.font = '700 13px Fredoka, system-ui, sans-serif'
     var y = Math.max(c[1], pt[1] + 12) + 4, x = (a[0] + c[0]) / 2, t = 'Le palais et son port', w = g.measureText(t).width
@@ -689,78 +855,62 @@
       for (var k = 0; k < (P.quais || []).length; k++) { var q = ecranM(P.quais[k].x - 6, P.quais[k].z - 2); g.fillRect(q[0], q[1], Math.max(3, 12 * M.s), Math.max(2, 4 * M.s)) }
     }
   }
-  // LE NOM DE CHAQUE ZONE, sur sa bande, au nord du palais (et la Fosse sur son secteur) : le nom, le niveau, ses lieux
-  // LE NOM DE CHAQUE ZONE, sur sa bande (le nom, le niveau, ses lieux) : chaque plaque cherche une place LIBRE autour du palais
-  // (le nord, le sud, l'est, puis les diagonales), jamais sur une autre plaque ni hors de l'écran ; la Fosse : au milieu de son
-  // secteur, d'abord. Une bande trop fine à ce zoom : pas de plaque (on zoome pour la lire).
-  var DIRECTIONS = [270, 90, 0, 180, 315, 45, 135, 225, 292, 248, 68, 112, 22, 338, 158, 202]
-  function pointA(angle, d) {
-    var b = mer.ligne, cx = (b.xMin + b.xMax) / 2, cz = (b.zMin + b.zMax) / 2, dx = Math.cos(angle * Math.PI / 180), dz = Math.sin(angle * Math.PI / 180), lo = 0, hi = mer.rayon * 2
-    for (var k = 0; k < 40; k++) { var m = (lo + hi) / 2; if (distLigne(cx + dx * m, cz + dz * m) < d) lo = m; else hi = m }
-    return [cx + dx * hi, cz + dz * hi]
-  }
-  function chevauche(r, l) { for (var k = 0; k < l.length; k++) if (r[0] < l[k][2] && r[2] > l[k][0] && r[1] < l[k][3] && r[3] > l[k][1]) return true; return false }
-  // une plaque tient-elle ici : dans la carte (8 px du bord), hors de ce qui est pris ?
+  // (2c, 30/10 ; la tête : « les noms des zones discrets le long des anneaux ») LE NOM DE CHAQUE ZONE ÉCRIT DANS SON ANNEAU, en
+  // capitales espacées, blanc à demi transparent : au nord du palais, sinon au sud, à l'ouest, à l'est (le premier côté où il tient
+  // à l'écran sans toucher un nom ni une icône) ; une bande trop fine à ce zoom : rien (on zoome pour le lire). La Fosse : le long
+  // de son secteur, du palais vers le large, en rouge.
   function placeLibre(r, prises) { return r[0] >= 8 && r[1] >= 8 && r[2] <= L - 8 && r[3] <= H - 8 && !chevauche(r, prises) }
-  // poser une plaque au premier point libre d'une liste (deux lignes, sinon une) ; rend vrai si posée
-  function poserPlaque(points, nom, sous, rouge, prises) {
-    for (var une = 0; une < 2; une++) for (var k = 0; k < points.length; k++) {
-      var e = ecranM(points[k][0], points[k][1]), deux = !une
-      var r = mesurePlaque(e[0], e[1], nom, sous, deux)
-      if (!placeLibre(r, prises)) continue
-      prises.push(plaque(e[0], e[1], nom, sous, deux, rouge))
-      return true
-    }
-    return false
+  function chevauche(r, l) { for (var k = 0; k < l.length; k++) if (r[0] < l[k][2] && r[2] > l[k][0] && r[1] < l[k][3] && r[3] > l[k][1]) return true; return false }
+  function ecrireLe(txt, px, py, angle, taille, couleur) {
+    g.save()
+    g.translate(px, py)
+    if (angle) g.rotate(angle * Math.PI / 180)
+    g.font = '400 ' + taille + 'px "Lilita One", Fredoka, sans-serif'
+    if ('letterSpacing' in g) g.letterSpacing = Math.round(taille * 0.16) + 'px'
+    g.textAlign = 'center'; g.textBaseline = 'middle'
+    g.fillStyle = 'rgba(2,12,28,.35)'; g.fillText(txt, 1, 1.5)
+    g.fillStyle = couleur; g.fillText(txt, 0, 0)
+    if ('letterSpacing' in g) g.letterSpacing = '0px'
+    g.restore()
   }
-  function nomsDesZones() {
-    var prises = prisesLieux.slice(), k, z, j
-    // la Fosse : le long de son secteur, du large vers le palais, au milieu puis sur ses bords
-    var f = mer.fosse, ptsF = []
-    if ((f.a - f.de) * M.s >= 30) {
-      ;[0.92, 0.8, 0.68, 0.56].forEach(function (q) { [0, -0.3, 0.3].forEach(function (c) { ptsF.push(rayonA(f.cap + c * f.largeur, f.de + (f.a - f.de) * q)) }) })
-      poserPlaque(ptsF, f.nom, 'Combat entre joueurs · niveau ' + f.niveau, true, prises)
-    }
+  function largeurLe(txt, taille) {
+    g.font = '400 ' + taille + 'px "Lilita One", Fredoka, sans-serif'
+    return g.measureText(txt).width + txt.length * Math.round(taille * 0.16)
+  }
+  function nomsLeLong() {
+    var b = mer.ligne, cx = (b.xMin + b.xMax) / 2, cz = (b.zMin + b.zMax) / 2, prises = prisesLieux.slice(), k
+    var blanc = amb.nuit ? 'rgba(220,232,255,.34)' : 'rgba(255,255,255,.42)'
     var l = [mer.rade].concat(mer.anneaux)
     for (k = 0; k < l.length; k++) {
-      z = l[k]
-      var de = z.id === 'rade' ? 0 : z.de, a = Math.min(z.a, mer.rayon), hb = (a - de) * M.s
-      if (hb < 22) continue
-      var pts = []
-      ;[0.5, 0.3, 0.7].forEach(function (q) {
-        for (j = 0; j < DIRECTIONS.length; j++) {
-          var p = pointA(DIRECTIONS[j], de + (a - de) * q)
-          if (p[0] * p[0] + p[1] * p[1] <= mer.rayon * mer.rayon * 0.96) pts.push(p)
-        }
-      })
-      poserPlaque(pts, z.nom, hb >= 44 ? sousTitre(z) : '', false, prises)
+      var z = l[k], de = z.id === 'rade' ? 0 : z.de, a = Math.min(z.a, mer.rayon), hb = (a - de) * M.s
+      if (hb < 16) continue
+      var dm = de + (a - de) / 2, ta = Math.round(Math.max(11, Math.min(22, hb * 0.22)))
+      var nom = z.nom.toUpperCase() + (z.niveau ? '  ·  NIVEAU ' + z.niveau : ''), w = largeurLe(nom, ta)
+      var cotes = [[cx, b.zMin - dm, 0], [cx, b.zMax + dm, 0], [b.xMin - dm, cz, -90], [b.xMax + dm, cz, 90]]
+      for (var c = 0; c < cotes.length; c++) {
+        var p = cotes[c]
+        if (p[0] * p[0] + p[1] * p[1] > mer.rayon * mer.rayon * 0.97) continue
+        // jamais dans la Fosse (elle a son nom à elle) : le milieu et les deux bouts du nom
+        var dw = w / 2 / M.s, bx = p[2] ? 0 : dw, bz = p[2] ? dw : 0
+        if (dansFosse(p[0], p[1]) || dansFosse(p[0] - bx, p[1] - bz) || dansFosse(p[0] + bx, p[1] + bz)) continue
+        var e = ecranM(p[0], p[1]), r = p[2] ? [e[0] - ta / 2 - 2, e[1] - w / 2, e[0] + ta / 2 + 2, e[1] + w / 2] : [e[0] - w / 2, e[1] - ta / 2 - 2, e[0] + w / 2, e[1] + ta / 2 + 2]
+        if (!placeLibre(r, prises)) continue
+        ecrireLe(nom, e[0], e[1], p[2], ta, blanc)
+        prises.push(r)
+        break
+      }
     }
-  }
-  function sousTitre(z) {
-    var n = mer.parZone[z.id] || 0
-    return (z.niveau ? 'Niveau ' + z.niveau : 'Sans pirate') + (n ? ' · ' + n + ' lieu' + (n > 1 ? 'x' : '') + ' à découvrir' : '')
-  }
-  function mesurePlaque(px, py, nom, sous, deux) {
-    deux = deux && !!sous
-    g.font = '400 16px "Lilita One", Fredoka, sans-serif'
-    var w1 = g.measureText(nom).width
-    g.font = '600 12px Fredoka, system-ui, sans-serif'
-    var w2 = deux ? g.measureText(sous).width : 0, w = Math.max(w1, w2) + 18, h = deux ? 40 : 24
-    return [px - w / 2, py - h / 2, px + w / 2, py + h / 2]
-  }
-  function plaque(px, py, nom, sous, deux, rouge) {
-    deux = deux && !!sous
-    g.font = '400 16px "Lilita One", Fredoka, sans-serif'
-    var w1 = g.measureText(nom).width
-    g.font = '600 12px Fredoka, system-ui, sans-serif'
-    var w2 = deux ? g.measureText(sous).width : 0, w = Math.max(w1, w2) + 18, h = deux ? 40 : 24
-    g.fillStyle = rouge ? 'rgba(70,14,14,.82)' : 'rgba(14,8,24,.72)'
-    g.beginPath(); if (g.roundRect) g.roundRect(px - w / 2, py - h / 2, w, h, 10); else g.rect(px - w / 2, py - h / 2, w, h); g.fill()
-    g.fillStyle = rouge ? '#FFB4A8' : '#FFF6DC'
-    g.font = '400 16px "Lilita One", Fredoka, sans-serif'
-    g.fillText(nom, px, py - (deux ? 8 : 0))
-    if (deux) { g.fillStyle = rouge ? '#FFD0C6' : '#CBB8E6'; g.font = '600 12px Fredoka, system-ui, sans-serif'; g.fillText(sous, px, py + 11) }
-    return [px - w / 2, py - h / 2, px + w / 2, py + h / 2]
+    // la Fosse : sur l'axe de son secteur, au milieu, le texte dans le sens de lecture
+    var f = mer.fosse, hf = (f.a - f.de) * M.s
+    if (hf < 90) return
+    var ta2 = Math.round(Math.max(11, Math.min(18, hf * 0.03))), txt = f.nom.toUpperCase() + '  ·  COMBAT ENTRE JOUEURS'
+    if (largeurLe(txt, ta2) > hf * 0.85) txt = f.nom.toUpperCase()
+    if (largeurLe(txt, ta2) > hf * 0.85) return
+    var m = rayonA(f.cap, f.de + (f.a - f.de) * 0.5), em = ecranM(m[0], m[1])
+    var ang = Math.atan2(Math.cos(f.cap * Math.PI / 180), -Math.sin(f.cap * Math.PI / 180)) * 180 / Math.PI
+    if (ang > 90 || ang < -90) ang += 180
+    if (em[0] < -50 || em[0] > L + 50 || em[1] < -50 || em[1] > H + 50) return
+    ecrireLe(txt, em[0], em[1], ang, ta2, 'rgba(255,176,158,.8)')
   }
   var FORMES = {
     port: ['..XX..', '..XX..', 'XXXXXX', '..XX..', 'X.XX.X', '.XXXX.'],
@@ -789,8 +939,12 @@
     for (var p in navires) {
       var n = navires[p], x = n.ax + (n.x - n.ax) * f, z = n.az + (n.z - n.az) * f, en = ecranM(x, z)
       if (en[0] < -40 || en[0] > L + 40 || en[1] < -40 || en[1] > H + 40) continue
-      navire(en[0], en[1], n.cap, n.en_combat, n.pseudo, false)
-      etiquette(n.pseudo, en[0], en[1] + 11, 12, '#FFD75E')
+      // le sillage : une place toutes les 400 ms (les 14 dernières), là où il glisse
+      if (!n.trace) n.trace = []
+      if (!n.tt || t - n.tt > 0.4) { n.tt = t; n.trace.push([x, z]); if (n.trace.length > 14) n.trace.shift() }
+      sillage(n)
+      if (!navireVu(en[0], en[1], n.cap, n.coque, n.en_combat, false)) navire(en[0], en[1], n.cap, n.en_combat, n.pseudo, false)
+      etiquette(n.pseudo, en[0], en[1] + Math.max(14, 8 * M.s), 12, '#FFD75E')
     }
   }
   // les pirates : un navire rouge (le jeu les publiera ; API.md 2.7, la forme proposée : { type, nom, x, z, cap })
@@ -798,8 +952,8 @@
     for (var k = 0; k < pirates.length; k++) {
       var n = pirates[k], en = ecranM(n.x, n.z)
       if (en[0] < -40 || en[0] > L + 40 || en[1] < -40 || en[1] > H + 40) continue
-      navire(en[0], en[1], n.cap || 0, true, String(n.nom || n.type || 'pirate'), true)
-      if (M.s >= 0.09) etiquette(String(n.nom || 'Pirate'), en[0], en[1] + 11, 11, '#FFB4A8')
+      if (!navireVu(en[0], en[1], n.cap || 0, String(n.type || ''), true, true)) navire(en[0], en[1], n.cap || 0, true, String(n.nom || n.type || 'pirate'), true)
+      if (M.s >= 0.09) etiquette(String(n.nom || 'Pirate'), en[0], en[1] + Math.max(14, 8 * M.s), 11, '#FFB4A8')
     }
   }
   // les événements en mer (une cargaison, un trésor...) : un cercle qui pulse, son nom ({ sorte, nom, x, z })
@@ -810,7 +964,10 @@
       g.strokeStyle = 'rgba(126,232,255,.9)'; g.lineWidth = 2
       g.beginPath(); g.arc(en[0], en[1], r, 0, Math.PI * 2); g.stroke()
       g.fillStyle = 'rgba(126,232,255,.25)'; g.fill()
-      etiquette(String(v.nom || 'Un événement'), en[0], en[1] + 14, 12, '#BFF5FF')
+      // son nom, s'il ne couvre pas celui d'un lieu
+      g.font = '600 12px Fredoka, system-ui, sans-serif'
+      var nv = String(v.nom || 'Un événement'), wv = g.measureText(nv).width, rv = [en[0] - wv / 2 - 4, en[1] + 13, en[0] + wv / 2 + 4, en[1] + 30]
+      if (!chevauche(rv, prisesLieux)) { prisesLieux.push(rv); etiquette(nv, en[0], en[1] + 14, 12, '#BFF5FF') }
     }
   }
   // un navire : sa coque qui tangue un peu, et son SILLAGE
@@ -838,16 +995,18 @@
       if (r.statut !== 200) { ecrire('La mer ne répond pas pour l\'instant.'); return }
       lireMer(r.corps)
       fosseForme = null
+      chargerDecor()
       legendeMer()
       cadrerMer(); ecrire(''); dire(); sale = true
     })
   }
-  // le cadre : toute la mer (le disque), le palais au milieu
+  // le cadre : le palais au milieu, jusqu'à 900 blocs (la Rade, les Hauts-Fonds, le seuil du Large et de la Fosse : le décor s'y
+  // voit déjà, vu du ciel) ; « - » montre le reste de la mer
   function cadrerMer() {
     if (!mer) return
     M.cx = 0; M.cy = 0
     // un écran en hauteur (le téléphone) : la mer remplit la hauteur (ses bords coupés), pas seulement la largeur
-    var cote = H > L * 1.3 ? H * 0.82 : Math.min(L, H), vu = Math.min(mer.rayon, 2600)
+    var cote = H > L * 1.3 ? H * 0.82 : Math.min(L, H), vu = Math.min(mer.rayon, 900)
     M.s = Math.max(MER_MIN, Math.min(MER_MAX, cote / (vu * 2 * 1.04)))
   }
   // ---------- la fiche d'un lieu ou d'une zone (un clic) ----------
@@ -857,7 +1016,9 @@
     if (mer.port) { var ep = ecranM(mer.port.x, mer.port.z); if (Math.abs(ep[0] - mx) <= 13 && Math.abs(ep[1] - my) <= 13) return { id: 'port', nom: 'Le port', sorte: 'port', x: mer.port.x, z: mer.port.z } }
     for (var k = 0; k < vus.length; k++) {
       var v = vus[k]
-      if (Math.abs(v.x - mx) > 14 || Math.abs(v.y - my) > 14) continue
+      // (2c) de près, le lieu se touche sur toute son image
+      var rr = decor && decor.pret && M.s >= DECOR_PRES ? Math.max(14, 28 * M.s) : 14
+      if (Math.abs(v.x - mx) > rr || Math.abs(v.y - my) > rr) continue
       return v.membres.length > 1 ? { groupe: v } : v.membres[0].l
     }
     return null
@@ -927,7 +1088,7 @@
         var n = l[k], avant = navires[n.pseudo], ax = n.x, az = n.z
         vus[n.pseudo] = 1
         if (avant) { var f = Math.min(1, (tl - releveDernier) / Math.max(1000, releveDernier - relevePrec || 10000)); ax = avant.ax + (avant.x - avant.ax) * f; az = avant.az + (avant.z - avant.az) * f }
-        navires[n.pseudo] = { pseudo: n.pseudo, x: n.x, z: n.z, ax: ax, az: az, cap: n.cap, en_combat: n.en_combat }
+        navires[n.pseudo] = { pseudo: n.pseudo, x: n.x, z: n.z, ax: ax, az: az, cap: n.cap, coque: String(n.coque || ''), en_combat: n.en_combat, trace: avant ? avant.trace : null, tt: avant ? avant.tt : 0 }
       }
       for (var p in navires) if (!vus[p]) delete navires[p]
       // (2c) ce qui vit en mer, quand le jeu le publie : les pirates et les événements (sinon : rien)
