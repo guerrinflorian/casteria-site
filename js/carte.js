@@ -34,6 +34,9 @@
   var zone = 'iles'
   var I = { cx: 0, cy: 0, s: mesure ? ZOOM_MIN : DEPART_S }, M = { cx: 0, cy: 0, s: 0.12 }
   var L = 0, H = 0, dpr = 1, sale = true, visible = true, t = 0
+  // (la tête, 30/10 : à 390, « Le palais et son port » passait sous le bouton +) LA ZONE DES BOUTONS + - et maison, à l'écran de la
+  // toile, 4 px autour : une place PRISE pour tous les noms (un nom qui la toucherait se tait) ; relue à chaque taille de la vue
+  var boutonsZoom = vue.querySelector('.carte-zoom'), zoneBoutons = [0, 0, 0, 0]
   var paves = {}, total = 0, etendue = null, choisie = null, libreChoisie = null, survolee = null, survolLibre = null, demande = null, enCours = false
   var lieux = null, navires = {}, relevePrec = 0, releveDernier = 0
   // (af, 23:2x, la mesure : une île unique neuve coûte 1 ms, 7,6 au téléphone lent) les dessins neufs (îles uniques, épingles) ne
@@ -63,6 +66,8 @@
     var r = vue.getBoundingClientRect()
     dpr = Math.min(2, window.devicePixelRatio || 1)
     L = Math.max(1, Math.round(r.width)); H = Math.max(1, Math.round(r.height))
+    var rb = boutonsZoom ? boutonsZoom.getBoundingClientRect() : null
+    zoneBoutons = rb && rb.width ? [rb.left - r.left - 4, rb.top - r.top - 4, rb.right - r.left + 4, rb.bottom - r.top + 4] : [0, 0, 0, 0]
     toile.width = Math.round(L * dpr); toile.height = Math.round(H * dpr)
     toile.style.width = L + 'px'; toile.style.height = H + 'px'
     sale = true; plusTard()
@@ -444,6 +449,8 @@
     var w = g.measureText(t2).width
     // (2c) jamais coupé au bord du cadre : le nom glisse vers l'intérieur
     if (w + 12 < L) px = Math.max(w / 2 + 6, Math.min(L - w / 2 - 6, px))
+    // jamais sous les boutons du zoom : le nom se tait (le survol et le toucher le donnent)
+    if (chevauche([px - w / 2 - 4, py - 1, px + w / 2 + 4, py + f + 3], [zoneBoutons])) return
     g.fillStyle = 'rgba(14, 8, 24, .72)'
     g.fillRect(Math.round(px - w / 2 - 4), Math.round(py - 1), Math.round(w + 8), f + 4)
     g.fillStyle = couleur
@@ -845,7 +852,7 @@
     for (k = 0; k < mer.lieux.length; k++) if (mer.lieux[k].sorte !== 'port') pts.push({ l: mer.lieux[k], genre: mer.lieux[k].sorte })
     var port = mer.port ? ecranM(mer.port.x, mer.port.z) : null, nomPalais = rectNomPalais()
     for (k = 0; k < pts.length; k++) { e = ecranM(pts[k].l.x, pts[k].l.z); pts[k].x = e[0]; pts[k].y = e[1] }
-    vus = []; prisesLieux = []
+    vus = []; prisesLieux = [zoneBoutons]
     // (2c) de près, le décor se voit : ni pastille ni icône, le nom seul sous le lieu (le lieu se touche toujours)
     var pres = !!(decor && decor.pret && M.s >= DECOR_PRES)
     // le groupe : chaque lieu prend ses voisins proches (d'abord les phares : ils donnent leur nom au groupe s'ils sont seuls)
@@ -867,7 +874,7 @@
     // (2c, la tête : « un nom ne touche jamais un autre nom ni une icône ») 1. LES MARQUES d'abord (icône, pastille, ou le lieu dessiné
     // de près) : leurs places sont prises avant qu'un seul nom ne se pose ; 2. LES NOMS : un nom qui toucherait un autre nom, une
     // autre marque ou le bord se tait (le survol et le toucher le donnent)
-    var noms = M.s >= 0.14, nomsPris = port ? [nomPalais, [port[0] - 13, port[1] - 13, port[0] + 13, port[1] + 13]] : [nomPalais], marques = [], dm = pres ? Math.max(12, LIEU_MIN / 2, 28 * M.s) : 13
+    var noms = M.s >= 0.14, nomsPris = port ? [zoneBoutons, nomPalais, [port[0] - 13, port[1] - 13, port[0] + 13, port[1] + 13]] : [zoneBoutons, nomPalais], marques = [], dm = pres ? Math.max(12, LIEU_MIN / 2, 28 * M.s) : 13
     for (k = 0; k < vus.length; k++) {
       var v = vus[k]
       v.vu = !(v.x < -40 || v.x > L + 40 || v.y < -40 || v.y > H + 40)
@@ -917,7 +924,10 @@
     g.textAlign = 'center'; g.textBaseline = 'top'
     g.font = '700 13px Fredoka, system-ui, sans-serif'
     var y = Math.max(c[1], pt[1] + 12) + 4, x = (a[0] + c[0]) / 2, t = 'Le palais et son port', w = g.measureText(t).width
-    prisesLieux.push([pt[0] - 13, pt[1] - 13, pt[0] + 13, pt[1] + 13], [x - w / 2 - 6, y - 2, x + w / 2 + 6, y + 18])
+    prisesLieux.push([pt[0] - 13, pt[1] - 13, pt[0] + 13, pt[1] + 13])
+    // sous les boutons du zoom, le nom du palais se tait (l'icône du port reste)
+    if (chevauche([x - w / 2 - 6, y - 2, x + w / 2 + 6, y + 18], [zoneBoutons])) return
+    prisesLieux.push([x - w / 2 - 6, y - 2, x + w / 2 + 6, y + 18])
     // le fond du nom : plus opaque, il passe devant ce qui est dessous
     g.fillStyle = 'rgba(14,8,24,.92)'; g.fillRect(Math.round(x - w / 2 - 6), Math.round(y - 2), Math.round(w + 12), 20)
     g.fillStyle = '#FFD75E'; g.fillText(t, x, y + 1)

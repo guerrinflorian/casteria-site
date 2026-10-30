@@ -322,6 +322,9 @@ const MUTANTS = [
   ["le nom d'un secteur a une seule place", 'js/carte.js', s => s.replace('var PLACES_AXE = [0.5, 0.36, 0.64, 0.24, 0.76]', 'var PLACES_AXE = [0.5]')],
   ["le nom d'un secteur hors de son secteur", 'js/carte.js', s => s.replace('if (d - demi < f.de || d + demi > f.a) continue', '')],
   ["le nom d'un secteur tu au premier lieu", 'js/carte.js', s => s.replace('if (chevauche(r, prises)) continue', 'if (chevauche(r, prises)) return')],
+  ['un nom sous les boutons du zoom', 'js/carte.js', s => s.replace('    if (chevauche([px - w / 2 - 4, py - 1, px + w / 2 + 4, py + f + 3], [zoneBoutons])) return\n', '')],
+  ['les noms de la mer sans la zone des boutons', 'js/carte.js', s => s.replace('prisesLieux = [zoneBoutons]', 'prisesLieux = []')],
+  ['le nom du palais sous les boutons', 'js/carte.js', s => s.replace('    if (chevauche([x - w / 2 - 6, y - 2, x + w / 2 + 6, y + 18], [zoneBoutons])) return\n', '')],
   ['les noms des pirates sans le filtre', 'js/carte.js', s => s.replace(".map(function (n) { return Object.assign({}, n, { nom: nomPublic(n.nom, 'Un navire pirate') }) })", '')]
 ]
 

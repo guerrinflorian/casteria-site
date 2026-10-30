@@ -846,6 +846,19 @@ console.log("js/carte.js (le nom d'une zone en secteur)")
   for (const t of ['for (k = 0; k < PLACES_AXE.length; k++)', 'if (d - demi < f.de || d + demi > f.a) continue', 'if (chevauche(r, prises)) continue'])
     if (!c.includes(t)) faute('js/carte.js : nomSecteur, « ' + t + " » absent (le nom d'une zone en secteur tu ou hors de son secteur)")
 }
+// LA ZONE DES BOUTONS + - et maison (la tête, 30/10 : à 390, « Le palais et son port » passait sous le +) : une place prise pour
+// tous les noms des deux cartes : etiquette se tait dessus, les noms de la mer la comptent, le nom du palais aussi
+console.log('js/carte.js (aucun nom sous les boutons du zoom)')
+{
+  const c = fs.readFileSync(path.join(RACINE, 'js', 'carte.js'), 'utf8')
+  const exige = [['la zone des boutons lue', "var boutonsZoom = vue.querySelector('.carte-zoom'), zoneBoutons = [0, 0, 0, 0]"],
+    ['la zone relue à chaque taille', 'zoneBoutons = rb && rb.width ? [rb.left - r.left - 4, rb.top - r.top - 4, rb.right - r.left + 4, rb.bottom - r.top + 4] : [0, 0, 0, 0]'],
+    ['etiquette se tait dessus', 'if (chevauche([px - w / 2 - 4, py - 1, px + w / 2 + 4, py + f + 3], [zoneBoutons])) return'],
+    ['les noms de la mer la comptent', 'prisesLieux = [zoneBoutons]'],
+    ['les noms des lieux la comptent', 'nomsPris = port ? [zoneBoutons, nomPalais'],
+    ['le nom du palais se tait dessus', 'if (chevauche([x - w / 2 - 6, y - 2, x + w / 2 + 6, y + 18], [zoneBoutons])) return']]
+  for (const [quoi, t] of exige) if (!c.includes(t)) faute('js/carte.js : un nom peut passer sous les boutons du zoom (' + quoi + ' : « ' + t.slice(0, 60) + ' » absent)')
+}
 console.log('js/carte.js (les noms venus des données : jamais un nom de SPOILERS)')
 verifierNomsDesDonnees(faute)
 function verifierNomsDesDonnees(faute) {
