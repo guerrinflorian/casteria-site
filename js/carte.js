@@ -16,6 +16,8 @@
   var A = window.CasteriaApi, V = window.CasteriaVivant, P = window.IlePixel
   var vue = document.getElementById('carte-vue'), toile = document.getElementById('carte-canvas')
   if (!vue || !toile || !A || !V || !P || !window.Tete) return
+  // (2c, 30/10 08:3x ; « tout ou rien ») la mer est fermée tant qu'elle n'est pas parfaite : ni onglet, ni « #mer »
+  var MER_OUVERTE = false
   var NAVIRES = true        // (2c, 30/10) les navires des joueurs, en direct (/api/navires répond, vide ou non)
   var PAVE = 16, VIE_PAVE = 120000, ATTENTE = 220
   var ZOOM_MIN = 2.5, ZOOM_MAX = 140, MER_MIN = 0.03, MER_MAX = 1.6, DEPART_S = 26
@@ -1191,7 +1193,7 @@
     // posée sous la barre par js/ancres.js (avant : scrollIntoView, la carte sous la barre)
     I.s = 60; I.cx = +m[1]; I.cy = +m[2] + sousLaFiche()
     V.carte('iles', { de: [+m[1], +m[2]], a: [+m[1], +m[2]] }).then(function (r) { if (r.statut === 200 && r.corps.iles && r.corps.iles[0]) montrer(r.corps.iles[0], false) })
-  } else if (location.hash === '#mer') { intro = { fini: true }; choisirZone('mer') }
+  } else if (location.hash === '#mer' && MER_OUVERTE) { intro = { fini: true }; choisirZone('mer') }
   lireExploits()
   requestAnimationFrame(boucle)
 

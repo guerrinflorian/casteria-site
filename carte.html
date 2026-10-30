@@ -82,9 +82,10 @@
 <section class="sombre fond-carte relief carte-section" id="carte" data-ancre-defaut>
   <div class="dedans">
     <div class="carte-outils" data-ancre-titre>
-      <div class="onglets" role="tablist" aria-label="La carte">
+      <!-- (2c, 30/10 08:3x ; le propriétaire : « tout ou rien ») LA MER est retirée tant qu'elle n'est pas parfaite (vue du ciel, en
+           direct) : le seul onglet des îles est caché ; le code de la mer reste dans js/carte.js, jamais appelé (MER_OUVERTE) -->
+      <div class="onglets" role="tablist" aria-label="La carte" hidden>
         <button type="button" role="tab" class="onglet" id="onglet-iles" aria-selected="true" aria-controls="carte-vue" data-zone="iles">Les îles</button>
-        <button type="button" role="tab" class="onglet" id="onglet-mer" aria-selected="false" aria-controls="carte-vue" data-zone="mer">La mer</button>
       </div>
       <form class="trouver" id="trouver" role="search">
         <label class="cache" for="trouver-pseudo">L'île d'un joueur</label>
