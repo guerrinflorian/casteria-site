@@ -235,7 +235,11 @@
       ;[p.pack_choisi, p.panier, p.paiement, p.paye].forEach(function (x) { r.appendChild(el('td', '', nb(x))) })
       r.appendChild(el('td', 'taux', num(p.pack_choisi) && num(p.paye) !== null ? A.pourcent(p.paye / p.pack_choisi) : '')); tb.appendChild(r)
     })
-    t.appendChild(tb); c3.appendChild(t); vue.appendChild(c3)
+    // (dc, 30/10) aucun pack choisi : une phrase, jamais un tableau vide qui a l'air d'une vraie donnée
+    if (tb.children.length) { t.appendChild(tb); c3.appendChild(t) }
+    else if (source(d, 'site').absente) c3.appendChild(el('p', 'g-vide', VIDE))
+    else { var s3 = ligneSource(d, 'site'); if (s3) c3.appendChild(s3); c3.appendChild(el('p', 'g-vide', 'Aucun pack choisi sur la période.')) }
+    vue.appendChild(c3)
     G.courbe(carte('Les comptes créés en jeu, jour par jour', 'Les comptes neufs (/register), vus par spawn.', d, (d.courbe && d.courbe.source) || 'jeu', true), { titre: 'Les comptes créés par jour', series: [{ nom: 'Comptes créés', couleur: 'vert', aire: true, points: points(d.courbe) }], format: nb })
   }
 
@@ -312,11 +316,31 @@
   }
   function vueEconomie(d) {
     var g = grille()
-    var pr = valeurDe(d.plus_riches), b1 = carte('Les plus riches', pr && !pr.length ? 'Personne encore.' : pr ? 'Leur fortune (ce qu\'ils possèdent, au prix du jeu) et leurs jetons, à leur dernier passage.' : VIDE, d, 'jeu', false, g)
-    if (pr) lignesListe(b1, pr.map(function (x) { return [el('span', 'quand', x.lu ? quand(x.lu) : ''), lienJoueur(x.pseudo), A.nombre(x.fortune) + NBSP + 'de fortune', num(x.jetons) === null ? '' : A.nombre(x.jetons) + NBSP + 'jetons'] }), 'Personne encore.')
-    var h = d.hausses_jetons_7_jours || {}, hv = h.valeur
-    var b2 = carte('Les jetons qui montent le plus vite', hv || source(d, 'jeu').absente ? 'Les hausses de jetons des 7 derniers jours, relevées chaque nuit (une baisse n\'est pas relevée) ; une hausse énorme d\'un coup mérite un regard.' + (hv && !hv.length ? ' Aucune hausse sur ces 7 jours.' : '') : VIDE, d, 'jeu', false, g)
-    if (hv) lignesListe(b2, hv.map(function (x) { return [el('span', 'quand', '7 jours'), lienJoueur(x.pseudo), '+' + A.nombre(x.jetons) + NBSP + 'jetons', ''] }), 'Aucune hausse relevée sur 7 jours.')
+    // (dc, 30/10 ; la tête : « un vrai tableau ») les plus riches : rang, tête et pseudo, fortune, jetons, le dernier passage
+    var pr = valeurDe(d.plus_riches), b1 = carte('Les plus riches', pr && !pr.length ? 'Personne encore.' : pr ? 'La fortune (ce qu\'ils possèdent, au prix du jeu) et les jetons, à leur dernier passage.' : VIDE, d, 'jeu', false, g)
+    if (pr && pr.length) {
+      var t = el('table', 'a-riches'), th = el('thead'), tr = el('tr'), tb = el('tbody')
+      ;[['', 'rg'], ['Joueur', ''], ['Fortune', 'n'], ['Jetons', 'n']].forEach(function (x) { var c = el('th', x[1], x[0]); c.setAttribute('scope', 'col'); tr.appendChild(c) })
+      th.appendChild(tr); t.appendChild(th)
+      pr.forEach(function (x, i) {
+        var r = el('tr'), q = el('td', 'qui-td'), qui = el('div', 'qui'), tete = el('span', 'tete-pixel'), nom = el('div')
+        if (P && P.tete) P.tete(tete, '/api/peau/' + x.pseudo, 24)
+        nom.appendChild(lienJoueur(x.pseudo)); if (x.lu) nom.appendChild(el('span', 'vu', 'vu ' + quand(x.lu)))
+        qui.appendChild(tete); qui.appendChild(nom); q.appendChild(qui)
+        r.appendChild(el('td', 'rg', String(i + 1))); r.appendChild(q)
+        r.appendChild(el('td', 'n fortune', A.nombre(x.fortune)))
+        r.appendChild(el('td', 'n jetons', num(x.jetons) === null ? '' : A.nombre(x.jetons) + NBSP + 'jetons'))
+        tb.appendChild(r)
+      })
+      t.appendChild(tb); b1.appendChild(t)
+    }
+    // les hausses : relevées chaque nuit par l'API ; avant le premier relevé, QUAND elles arrivent (jamais un cadre vide)
+    var h = d.hausses_jetons_7_jours || {}, hv = h.valeur, aide
+    if (hv) aide = 'Les hausses de jetons des 7 derniers jours, relevées chaque nuit (une baisse n\'est pas relevée) ; une hausse énorme d\'un coup mérite un regard.' + (!hv.length ? ' Aucune hausse sur ces 7 jours.' : '')
+    else if (h.depuis) aide = 'Le premier relevé est fait (' + quand(h.depuis) + ') ; les hausses arrivent après le prochain, la nuit suivante à 3 h 30.'
+    else aide = 'Le premier relevé se fait cette nuit, à 3 h 30 ; les hausses arrivent après le suivant, la nuit d\'après, puis sur 7 jours glissants.'
+    var b2 = carte('Les jetons qui montent le plus vite', aide, d, 'jeu', false, g)
+    if (hv) lignesListe(b2, hv.map(function (x) { return ['', lienJoueur(x.pseudo), '', '+' + A.nombre(x.jetons) + NBSP + 'jetons'] }), '')
     var b3 = carte('Les jetons créés et détruits', 'Le jeu ne publie pas encore le journal de ses jetons : ce bloc arrivera avec lui.', null, null, true)
     void b3
   }
@@ -559,7 +583,9 @@
     var cadre = el('div', 'a-tchat'), ol = el('ol', 'a-lignes'), neuves = el('button', 'a-neuves', 'Nouvelles lignes, en bas')
     ol.setAttribute('aria-label', 'Les lignes du tchat'); ol.setAttribute('aria-live', 'off')
     neuves.type = 'button'; neuves.hidden = true; neuves.addEventListener('click', enBas)
-    cadre.appendChild(ol); cadre.appendChild(neuves)
+    // (dc, 30/10) aucun message encore : une phrase, jamais un cadre vide ; elle part avec la première ligne
+    var attente = el('p', 'a-tchat-attente', 'Aucun message public pour l\'instant : chaque message écrit en jeu, sur tout le réseau, arrive ici dès qu\'il est tapé.')
+    cadre.appendChild(attente); cadre.appendChild(ol); cadre.appendChild(neuves)
     vue.appendChild(outils); vue.appendChild(cadre)
     var MAX = 400
     function visible(li) { return !filtre.mot || li.getAttribute('data-cherche').indexOf(filtre.mot) >= 0 }
@@ -571,6 +597,7 @@
       // chaque ligne une fois (une reprise après une coupure peut redonner une ligne déjà là)
       if (!l || ids[l.id]) return
       ids[l.id] = 1
+      if (attente.parentNode) attente.parentNode.removeChild(attente)
       var etaitAuFond = auFond(), li = el('li', l.filtre ? 'filtree' : '')
       li.setAttribute('data-cherche', (texte(l.pseudo) + ' ' + texte(l.texte) + (l.filtre ? ' ' + texte(l.original) : '')).toLowerCase())
       var t = el('time', '', A.heure(l.quand)); t.setAttribute('datetime', texte(l.quand))

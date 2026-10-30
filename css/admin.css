@@ -254,3 +254,22 @@ html.photo .a-etat::before { animation: none; }
 .a-liste-k .k-quoi { grid-area: quoi; color: #F1E6FF; overflow-wrap: anywhere; }
 .a-liste-k .k-quand { grid-area: quand; font-size: 12.5px; color: #A994C4; }
 @media (max-width: 760px) { .a-carte .a-liste.a-liste-k li { grid-template-columns: minmax(0, 1fr) auto; } .a-liste-k li > b { grid-column: auto; } }
+/* (dc, 30/10) le tchat sans message : la phrase d'attente */
+.a-tchat-attente { margin: 0; padding: 18px 16px; color: #A994C4; font-size: 15px; }
+/* (dc, 30/10 ; la tête : « un vrai tableau ») les plus riches : rang, tête et pseudo, fortune, jetons ; chiffres à droite ; une
+   ligne par joueur, deux lignes propres au téléphone */
+.a-riches { width: 100%; border-collapse: collapse; font-size: 14.5px; color: #F1E6FF; }
+.a-riches th { font-size: 12.5px; font-weight: 700; color: #A994C4; text-align: left; padding: 0 8px 6px; }
+.a-riches th.n, .a-riches td.n { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.a-riches td { padding: 7px 8px; border-top: 1px solid #3A2652; vertical-align: middle; }
+.a-riches .rg { width: 34px; font-weight: 700; color: var(--or-clair, #FFD75E); text-align: right; }
+.a-riches .qui { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.a-riches .qui .tete-pixel { width: 24px; height: 24px; border-radius: 6px; flex: none; }
+.a-riches .vu { display: block; font-size: 12px; color: #A994C4; font-weight: 400; }
+.a-riches td.fortune { font-weight: 700; color: #fff; }
+@media (max-width: 600px) {
+  .a-riches thead { display: none; }
+  .a-riches tr { display: grid; grid-template-columns: 30px minmax(0, 1fr) auto; grid-template-areas: "rg qui fortune" "rg qui jetons"; border-top: 1px solid #3A2652; padding: 6px 0; }
+  .a-riches td { border: 0; padding: 1px 6px; }
+  .a-riches .rg { grid-area: rg; } .a-riches td.qui-td { grid-area: qui; } .a-riches td.fortune { grid-area: fortune; } .a-riches td.jetons { grid-area: jetons; font-size: 13px; color: #CDB8E6; }
+}
