@@ -1022,11 +1022,12 @@
       if (!n.tt || t - n.tt > 0.4) { n.tt = t; n.trace.push([x, z]); if (n.trace.length > 14) n.trace.shift() }
       sillage(n)
       if (!navireVu(en[0], en[1], n.cap, n.coque, n.en_combat, false)) navire(en[0], en[1], n.cap, n.en_combat, n.pseudo, false)
-      prisesLieux.push([en[0] - 14, en[1] - 14, en[0] + 14, en[1] + 14])
       g.font = '600 12px Fredoka, system-ui, sans-serif'
       var wn = g.measureText(n.pseudo).width, yn = en[1] + Math.max(14, 8 * M.s)
       var rj = [en[0] - wn / 2 - 4, yn - 1, en[0] + wn / 2 + 4, yn + 16]
       if (!chevauche(rj, prisesLieux)) { prisesLieux.push(rj); etiquette(n.pseudo, en[0], yn, 12, '#FFD75E') }
+      // sa marque après son nom : le nom d'un événement ne s'écrit pas sur lui
+      prisesLieux.push([en[0] - 14, en[1] - 14, en[0] + 14, en[1] + 12])
     }
   }
   // les pirates : un navire rouge (le jeu les publiera ; API.md 2.7, la forme proposée : { type, nom, x, z, cap })
