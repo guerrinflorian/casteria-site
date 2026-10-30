@@ -649,6 +649,12 @@
   function chevauche(r, l) { for (var k = 0; k < l.length; k++) if (r[0] < l[k][2] && r[2] > l[k][0] && r[1] < l[k][3] && r[3] > l[k][1]) return true; return false }
   function nomsDesZones() {
     var prises = [], k, z, e, j
+    // les phares (leur icône et leur nom) et le nom du palais sont déjà pris : une plaque ne les couvre jamais
+    for (k = 0; k < mer.lieux.length; k++) if (mer.lieux[k].sorte === 'phare') { e = ecranM(mer.lieux[k].x, mer.lieux[k].z); prises.push([e[0] - 70, e[1] - 12, e[0] + 70, e[1] + (M.s >= 0.1 ? 30 : 12)]) }
+    // de près, les lieux de l'Atlas et leurs noms aussi
+    if (M.s >= 0.14) for (k = 0; k < mer.atlas.length; k++) { e = ecranM(mer.atlas[k].x, mer.atlas[k].z); prises.push([e[0] - 60, e[1] - 12, e[0] + 60, e[1] + 28]) }
+    var bp = mer.ligne, cp = ecranM((bp.xMin + bp.xMax) / 2, bp.zMax)
+    prises.push([cp[0] - 70, cp[1], cp[0] + 70, cp[1] + 24])
     // la Fosse : au bout de son secteur, du côté du large (le centre est plein de lieux)
     var f = mer.fosse, m = rayonA(f.cap, f.a * 0.92)
     e = ecranM(m[0], m[1])
