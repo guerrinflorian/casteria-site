@@ -253,3 +253,4 @@
 }
 /* (dc, 30/10, la tournée) une île sans étoile : la phrase, à la place des étoiles grises */
 .ile-etoiles .etoiles-aucune { font-size: 16px; font-weight: 600; color: #E3D3F5; }
+.ev-place .val { margin-top: 4px; }

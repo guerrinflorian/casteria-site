@@ -201,14 +201,61 @@
         <picture><source type="image/webp" srcset="assets/evenements/photo-neige.webp"><img class="photo-jeu" src="assets/evenements/photo-neige.jpg" alt="La Bataille de neige : un joueur des Bleus, une boule de neige en main, un Rouge au fond de l'arène de glace" width="960" height="540" loading="lazy"></picture>
         <p class="heure">21&#160;h</p>
         <h3>La Bataille de neige</h3>
-        <p>Deux équipes, une boule toutes les 3&#160;secondes. Un joueur touché est éliminé ; au bout de 5&#160;minutes, l'équipe qui garde le plus de joueurs gagne.</p>
+        <p>Deux équipes, une boule toutes les 3&#160;secondes. Un joueur touché est éliminé ; au bout de 5&#160;minutes, l'équipe qui garde le plus de joueurs gagne (sans une seule touche : match nul).</p>
         <p class="gains"><b>À gagner :</b> des jetons et de l'XP ; dès 4 joueurs, une Clé de Vote pour l'équipe gagnante (cinq au plus) et le meilleur tireur ; dès 6, des Clés de l'Aventurier ; dès 10, la Clé Royale au meilleur tireur.</p>
       </article>
     </div>
   </div>
 </section>
 
-<!-- PARTICIPER : la file, jamais une salle d'attente (ai_evt_cadre.js : fileS 300, emmenerS 10) -->
+<!-- LE RAYON ÉCLAIR (dc, la 157 ; le jeu d'a8, ai_evt_rayon.js) : CACHÉ tant que le jeu ne le dit pas allumé (la fiche « ev:rayon »
+     que le jeu publie, GET /api/evenements/rayon) ; chaque chiffre vient de cette fiche (js/evenements_classements.js), aucun
+     n'est écrit ici -->
+<section class="pan rayon" id="rayon" aria-labelledby="rayon-titre" hidden>
+  <div class="dedans">
+    <div class="tete apparait">
+      <span class="sur-titre">Toute la journée, toutes les 1 h 30</span>
+      <h2 id="rayon-titre">Le Rayon Éclair</h2>
+      <p id="rayon-regle"></p>
+    </div>
+    <div class="rayon-grille">
+      <div class="rayon-bloc rayon-heures-bloc">
+        <h3>Les parties du jour</h3>
+        <ol class="rayon-heures" id="rayon-heures" aria-label="Les heures des parties"></ol>
+        <p class="rayon-note">Aux heures de Paris ; en or, la prochaine. On s'inscrit en jeu par /participer, comme aux autres mini-jeux.</p>
+      </div>
+      <div class="rayon-bloc" id="rayon-cartes-bloc" hidden>
+        <h3>Les arènes</h3>
+        <ul class="rayon-cartes" id="rayon-cartes"></ul>
+      </div>
+      <div class="rayon-bloc" id="rayon-lots-bloc" hidden>
+        <h3>À gagner</h3>
+        <ul class="rayon-lots" id="rayon-lots"></ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LES MEILLEURS (dc, la 157 ; le propriétaire, 30/10 : « que les gens aient envie de battre ») : les classements des événements,
+     ceux de /top Événements (GET /api/evenements/<jeu>), un onglet par jeu, le podium à têtes, du 4e au 10e, ta place (GET
+     /api/moi/evenements) ; le K/D seulement à titre d'information (jamais un classement) ; js/evenements_classements.js -->
+<section class="pan evc" id="classements" aria-labelledby="evc-titre">
+  <div class="dedans">
+    <div class="tete apparait">
+      <span class="sur-titre">Depuis le début</span>
+      <h2 id="evc-titre">Les meilleurs des événements</h2>
+      <p>Chaque partie à 4 joueurs au moins compte ; jamais une démonstration. Les mêmes classements qu'en jeu, dans /top, onglet Événements.</p>
+    </div>
+    <div class="evc-panneau">
+      <div class="evc-onglets" id="evc-onglets" role="tablist" aria-label="Le jeu"></div>
+      <div class="evc-criteres" id="evc-criteres" role="tablist" aria-label="Le classement"></div>
+      <div class="evc-corps" id="evc-corps" aria-live="polite"><p class="evc-etat">Les classements arrivent…</p></div>
+      <p class="evc-toi" id="evc-toi" hidden></p>
+    </div>
+  </div>
+</section>
+
+<!-- PARTICIPER : la file, jamais une salle d'attente (ai_evt_cadre.js : fileS 150 depuis la 157, emmenerS 10) -->
 <section class="pan pan-parchemin participer" aria-labelledby="participer-titre">
   <div class="dedans">
     <div class="tete apparait">
@@ -216,7 +263,7 @@
       <h2 id="participer-titre">Inscris-toi, puis continue à jouer</h2>
     </div>
     <ol class="etapes-jeu">
-      <li class="apparait" style="--retard:.05s"><b>1</b><h3>/participer</h3><p>Dès 5 minutes avant le départ, de partout, même depuis ton île.</p></li>
+      <li class="apparait" style="--retard:.05s"><b>1</b><h3>/participer</h3><p>Dès 2 min 30 avant le départ, de partout, même depuis ton île.</p></li>
       <li class="apparait" style="--retard:.15s"><b>2</b><h3>Joue tranquille</h3><p>Ta place est gardée. /quitter pour sortir de la file ; pendant ce temps, ni boss, ni duel, ni fusée.</p></li>
       <li class="apparait" style="--retard:.25s"><b>3</b><h3>On vient te chercher</h3><p>10&#160;secondes avant le départ, tu es emmené. À la fin, tu reviens au palais ; un clic te ramène sur ton île.</p></li>
     </ol>
@@ -343,6 +390,8 @@
 <script src="js/carrousel.js" defer></script>
 <script src="js/site.js" defer></script>
 <script src="js/evenements.js" defer></script>
+<script src="js/api.js" defer></script>
+<script src="js/evenements_classements.js" defer></script>
 <script src="js/ancres.js" defer></script>
 </body>
 </html>

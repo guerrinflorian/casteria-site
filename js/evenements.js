@@ -8,7 +8,11 @@
 (function () {
   'use strict';
   var TOUS = [0, 1, 2, 3, 4, 5, 6], SEMAINE = [1, 2, 3, 4, 5], WEEKEND = [6, 0];
-  // duree : les minutes pendant lesquelles il est « en ce moment » (0 : un départ) ; participer : /participer 5 min avant
+  // duree : les minutes pendant lesquelles il est « en ce moment » (0 : un départ) ; participer : /participer s'ouvre OUVERTURE_S avant
+  // (dc, la 157 ; le propriétaire, 30/10) l'ouverture des inscriptions : celle du jeu (ai_evt_cadre.js, CI_JEU_REGLAGES.fileS) ;
+  // une seule place ici, le texte en est tiré (ouvertureTexte)
+  var OUVERTURE_S = 150;
+  function ouvertureTexte() { var m = Math.floor(OUVERTURE_S / 60), r = OUVERTURE_S % 60; return m === 0 ? OUVERTURE_S + ' s' : (r ? m + ' min ' + (r < 10 ? '0' : '') + r : m + (m > 1 ? ' minutes' : ' minute')); }
   var EVTS = [
     { id: 'eclair', nom: 'Le Défi Éclair', ancre: '#defi', creneaux: [{ jours: SEMAINE, min: 20 * 60 + 15 }, { jours: WEEKEND, min: 11 * 60 }, { jours: WEEKEND, min: 14 * 60 + 30 }, { jours: WEEKEND, min: 20 * 60 + 15 }],
       duree: 0, participer: true, phrase: 'Cinq jeux rapides tirés parmi quatorze, environ six minutes. Personne n\'est éliminé.',
@@ -162,11 +166,11 @@
     carte.classList.toggle('sans-jours', s < 86400);
     var etat = '';
     if (g.dans <= 0) etat = 'En ce moment, jusqu\'à ' + heure(g.min + g.e.duree);
-    else if (g.e.participer && g.dans <= 300) etat = 'Inscriptions ouvertes : tape /participer en jeu';
-    else if (g.e.participer) etat = '/participer s\'ouvre 5 minutes avant';
+    else if (g.e.participer && g.dans <= OUVERTURE_S) etat = 'Inscriptions ouvertes : tape /participer en jeu';
+    else if (g.e.participer) etat = '/participer s\'ouvre ' + ouvertureTexte() + ' avant';
     champs.etat.textContent = etat;
     carte.classList.toggle('en-cours', g.dans <= 0);
-    carte.classList.toggle('inscriptions', g.e.participer && g.dans > 0 && g.dans <= 300);
+    carte.classList.toggle('inscriptions', g.e.participer && g.dans > 0 && g.dans <= OUVERTURE_S);
   }
   dessiner();
   carte.classList.add('vivant');

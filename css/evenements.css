@@ -203,3 +203,80 @@
   .semaine .maintenant::after, .puce.le-prochain { animation: none !important; }
   .carte-jeu:hover { transform: none; }
 }
+
+/* ---------- LES MEILLEURS DES ÉVÉNEMENTS (dc, la 157 ; js/evenements_classements.js) : un panneau de nuit arrondi, un onglet
+   par jeu (des pastilles à lèvre), le podium à têtes sur ses socles or, argent et bronze, du 4e au 10e à droite, ta place
+   dessous ; le K/D en petit, jamais un classement ---------- */
+.evc { color: #F4EAFF; background: radial-gradient(50% 55% at 15% 25%, rgba(255, 215, 94, .14), transparent 70%), radial-gradient(45% 50% at 85% 80%, rgba(150, 210, 255, .12), transparent 70%), linear-gradient(180deg, #14202E, #1B0B2B); }
+.evc h2 { color: #FFF4D6; }
+.evc .tete p { color: #E9DDF7; }
+.evc-panneau { margin-top: 26px; padding: 22px 24px 20px; background: linear-gradient(180deg, rgba(42, 23, 64, .94), rgba(27, 16, 40, .97)); border: 3px solid rgba(255, 215, 94, .45); border-radius: var(--r-panneau, 22px); box-shadow: 0 6px 0 rgba(0, 0, 0, .35); }
+.evc-onglets, .evc-criteres { display: flex; flex-wrap: wrap; gap: 8px; }
+.evc-criteres { margin-top: 10px; }
+.evc-criteres[hidden] { display: none; }
+.evc-onglet, .evc-critere { cursor: pointer; padding: 8px 16px; font: 400 17px var(--police-titre, "Chewy"), sans-serif; letter-spacing: .3px; color: #FFF4D6; background: #2C1A42; border: 2px solid rgba(255, 215, 94, .35); border-radius: 999px; box-shadow: 0 3px 0 #120A1C; }
+.evc-critere { padding: 6px 13px; font-size: 15px; background: #22152F; }
+.evc-onglet:hover, .evc-critere:hover { border-color: var(--or-clair); }
+.evc-onglet.actif, .evc-critere.actif { color: #3A1F12; background: var(--or-clair); border-color: var(--or-clair); box-shadow: 0 3px 0 var(--or-fonce); }
+.evc-onglet:focus-visible, .evc-critere:focus-visible { outline: 3px solid #BFE6FF; outline-offset: 2px; }
+.evc-corps { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 22px; align-items: end; margin-top: 18px; min-height: 120px; }
+.evc-etat { grid-column: 1 / -1; margin: 10px 0; text-align: center; font-size: 17px; color: #E9DDF7; }
+.evc-podium { list-style: none; margin: 0; padding: 0 0 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; align-items: end; }
+.evc-marche { display: flex; flex-direction: column; align-items: stretch; min-width: 0; }
+.evc-joueur { display: flex; flex-direction: column; align-items: center; gap: 3px; padding-bottom: 8px; min-width: 0; text-align: center; }
+.evc-couronne { image-rendering: pixelated; margin-bottom: -4px; }
+.evc-joueur .tete-pixel { border-radius: 8px; box-shadow: 0 0 0 3px rgba(0, 0, 0, .45); image-rendering: pixelated; }
+.evc-pseudo { display: block; max-width: 100%; overflow: hidden; white-space: nowrap; font: 400 18px var(--police-titre, "Chewy"), sans-serif; color: #FFF4D6; text-decoration: none; }
+a.evc-pseudo:hover { color: var(--or-clair); text-decoration: underline; }
+.evc-valeur { font-weight: 700; font-size: 15px; color: var(--or-clair); white-space: nowrap; }
+.evc-kd { font-size: 13px; font-weight: 600; color: #BFE6FF; white-space: nowrap; }
+.evc-joueur .evc-kd, .evc-joueur .evc-valeur { white-space: normal; overflow-wrap: anywhere; }
+.evc-marque { display: inline-block; padding: 1px 8px; font: 700 12px "Fredoka", sans-serif; letter-spacing: .5px; text-transform: uppercase; color: #3A1F12; background: var(--or-clair); border-radius: 999px; }
+.evc-libre { font-size: 14px; color: #A994C4; }
+.evc-socle { display: flex; justify-content: center; align-items: flex-start; padding-top: 10px; border-radius: 14px 14px 0 0; box-shadow: inset 0 -4px 0 rgba(0, 0, 0, .25); }
+.evc-p1 .evc-socle { height: 92px; background: linear-gradient(180deg, #FFE17A, #D7A421); }
+.evc-p2 .evc-socle { height: 68px; background: linear-gradient(180deg, #E9EEF4, #A9B4C2); }
+.evc-p3 .evc-socle { height: 50px; background: linear-gradient(180deg, #F0B07A, #B86B34); }
+.evc-medaille { image-rendering: pixelated; }
+.evc-marche.toi .evc-pseudo { color: var(--or-clair); }
+.evc-liste { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; align-self: start; }
+.evc-ligne { display: grid; grid-template-columns: 38px 30px minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 6px 12px 6px 8px; background: rgba(0, 0, 0, .28); border: 2px solid rgba(255, 255, 255, .06); border-radius: 14px; }
+.evc-ligne.toi { border-color: var(--or-clair); background: rgba(215, 164, 33, .16); }
+.evc-ligne .tete-pixel { border-radius: 6px; }
+.evc-rang { font: 400 19px var(--police-titre, "Chewy"), sans-serif; color: var(--or-clair); text-align: right; }
+.evc-qui { display: flex; align-items: baseline; gap: 8px; min-width: 0; }
+.evc-qui .evc-pseudo { font-size: 16px; }
+.evc-toi { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; margin: 16px 0 0; padding: 10px 14px; font-size: 15.5px; color: #F4EAFF; background: rgba(0, 0, 0, .3); border-radius: 14px; }
+.evc-toi[hidden] { display: none; }
+.evc-toi b { font: 400 20px var(--police-titre, "Chewy"), sans-serif; color: var(--or-clair); }
+.evc-lien { color: var(--or-clair); font-weight: 700; }
+@media (max-width: 860px) {
+  .evc-panneau { padding: 16px 14px; }
+  .evc-corps { grid-template-columns: minmax(0, 1fr); align-items: start; }
+  .evc-onglet { padding: 7px 12px; font-size: 15px; }
+  .evc-pseudo { font-size: 16px; }
+  .evc-p1 .evc-socle { height: 70px; } .evc-p2 .evc-socle { height: 52px; } .evc-p3 .evc-socle { height: 38px; }
+}
+@media (max-width: 420px) { .evc-ligne { grid-template-columns: 30px 26px minmax(0, 1fr) auto; gap: 6px; } .evc-qui { flex-wrap: wrap; gap: 0 6px; } .evc-ligne .evc-valeur { font-size: 13px; } }
+
+/* LE RAYON ÉCLAIR (dc, la 157) : caché tant que le jeu ne le dit pas allumé ; le bleu de son rayon (couleurRayon 7FE6FF) et l'or de
+   son éclat (couleurTouche FFD25A), des traits d'éclair en biais dans le fond */
+.rayon { color: #EAFBFF; background: repeating-linear-gradient(-58deg, transparent 0 46px, rgba(127, 230, 255, .07) 46px 49px, transparent 49px 120px), radial-gradient(55% 60% at 80% 20%, rgba(127, 230, 255, .2), transparent 70%), linear-gradient(180deg, #0B1E2E, #101430); }
+.rayon[hidden] { display: none; }
+.rayon h2 { color: #FFF4D6; text-shadow: 0 0 18px rgba(127, 230, 255, .55); }
+.rayon .sur-titre { color: #7FE6FF; }
+.rayon .tete p { color: #D6F2FA; max-width: 760px; }
+.rayon-grille { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) minmax(0, 1fr); gap: 18px; margin-top: 26px; }
+.rayon-bloc { padding: 18px 20px; background: linear-gradient(180deg, rgba(16, 44, 66, .92), rgba(10, 24, 40, .96)); border: 3px solid rgba(127, 230, 255, .45); border-radius: var(--r-panneau, 22px); box-shadow: 0 6px 0 rgba(0, 0, 0, .35); }
+.rayon-bloc[hidden] { display: none; }
+.rayon-bloc h3 { margin: 0 0 12px; font-size: 22px; color: #FFD25A; }
+.rayon-heures { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+.rayon-heures li { padding: 5px 0; text-align: center; font: 700 15px "Fredoka", sans-serif; color: #EAFBFF; background: rgba(127, 230, 255, .1); border: 2px solid rgba(127, 230, 255, .22); border-radius: 10px; white-space: nowrap; }
+.rayon-heures li.passee { opacity: .45; }
+.rayon-heures li.prochaine { color: #241604; background: #FFD25A; border-color: #FFD25A; }
+.rayon-note { margin: 14px 0 0; font-size: 15px; line-height: 1.5; color: #BFE2EE; }
+.rayon-cartes, .rayon-lots { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.rayon-cartes li, .rayon-lots li { padding: 9px 12px; font-size: 15.5px; line-height: 1.4; background: rgba(0, 0, 0, .28); border-radius: 12px; }
+.rayon-cartes b, .rayon-lots b { display: block; font: 400 19px var(--police-titre, "Chewy"), sans-serif; color: #7FE6FF; }
+@media (max-width: 860px) { .rayon-grille { grid-template-columns: minmax(0, 1fr); } .rayon-heures { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media (max-width: 420px) { .rayon-heures li { font-size: 14px; } .rayon-bloc { padding: 14px; } }
