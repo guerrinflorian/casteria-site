@@ -43,7 +43,9 @@
     enLigne: function () { return demander('/api/en-ligne') },
     classement: function (theme, categorie, taille) { return demander('/api/classement' + requete({ theme: theme, categorie: categorie, taille: taille || '' })) },
     joueur: function (pseudo) { return PSEUDO.test(pseudo) ? demander('/api/joueur/' + pseudo) : refus(400, 'requete') },
-    moi: function () { return demander('/api/moi') },
+    // (5c, l'audit du 30/10 : un 401 rouge dans la console de chaque visiteur) sans l'indice de connexion (le cookie lisible que
+    // l'API pose à la connexion), personne n'est connecté : la même réponse qu'un 401, sans aller la demander
+    moi: function () { return /(?:^|;\s*)casteria_connecte=1(?:;|$)/.test(document.cookie || '') ? demander('/api/moi') : refus(401, 'non_connecte') },
     exploits: function (n) { return demander('/api/exploits' + requete({ n: Math.max(1, Math.min(50, Number(n) || 10)) })) },
     // (af, 29/10 : l'accueil) la carte vivante des iles (API.md 2.6)
     carte: function (zone) { return demander('/api/carte' + requete({ zone: zone === 'mer' ? 'mer' : 'iles' })) },

@@ -469,7 +469,8 @@ function verifierVote(faute) {
 function verifierDiscord(faute) {
   const s = lire('discord.html')
   if (!s) return faute('discord.html manque (casteria.fr/discord)')
-  if (!s.includes('<a class="bouton bouton-or grand" href="' + DISCORD + '">Rejoindre le Discord</a>')) faute('discord.html : le grand bouton « Rejoindre le Discord » vers ' + DISCORD + ' manque')
+  // (30/10/2026, le style neuf : le bouton du Discord prend son bleu, bouton-discord ; l'or reste permis)
+  if (!['or', 'discord'].some(c => s.includes('<a class="bouton bouton-' + c + ' grand" href="' + DISCORD + '">Rejoindre le Discord</a>'))) faute('discord.html : le grand bouton « Rejoindre le Discord » vers ' + DISCORD + ' manque')
   if (!s.includes('<meta http-equiv="refresh" content="1; url=' + DISCORD + '">')) faute('discord.html : le départ tout seul au bout d\'une seconde manque (<meta http-equiv="refresh" content="1; url=' + DISCORD + '">)')
   if (!s.includes("<script>setTimeout(function () { window.location.replace('" + DISCORD + "') }, 1000)</script>")) faute('discord.html : le départ par le script manque (location.replace, au bout d\'une seconde)')
   // aucune autre invitation, sur aucune page ni dans aucun script : les autres pages mènent à /discord
@@ -485,7 +486,7 @@ function verifierDiscord(faute) {
   const pub = lire('rejoindre.html')
   if (!pub) faute('rejoindre.html manque (casteria.fr/rejoindre, la page de la publicite)')
   else {
-    if (!pub.includes('<a class="bouton bouton-or grand" href="' + PUB + '">Rejoindre le Discord</a>')) faute('rejoindre.html : le grand bouton « Rejoindre le Discord » vers ' + PUB + ' manque')
+    if (!['or', 'discord'].some(c => pub.includes('<a class="bouton bouton-' + c + ' grand" href="' + PUB + '">Rejoindre le Discord</a>'))) faute('rejoindre.html : le grand bouton « Rejoindre le Discord » vers ' + PUB + ' manque')
     if (/http-equiv="refresh"|location.(?:replace|assign|href)/.test(pub)) faute('rejoindre.html : la page de la publicite ne part jamais toute seule (ni refresh ni script)')
   }
   if (!vj || !vj.rewrites.some(r => r && r.source === '/rejoindre' && r.destination === '/rejoindre.html')) faute('vercel.json : /rejoindre doit mener a rejoindre.html')

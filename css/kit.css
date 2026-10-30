@@ -238,7 +238,7 @@ html body .pack-image { border-radius: 14px; }
 html body .pack-marque { border-radius: 999px; }
 html body .offre { border-radius: 20px; overflow: hidden; }
 html body .rassure li, html body .gagner li, html body .grades-notes li { border-radius: 16px; }
-html body .grades-tableau { border-radius: 20px; overflow: hidden; }
+html body .grades-tableau { border-radius: 20px; overflow-x: auto; overflow-y: hidden; }
 html body .achat-champ input { border-radius: 14px; }
 html body .boutique-etal .alerte, html body .achat-merci, html body .ticket { border-radius: 16px; }
 
@@ -401,3 +401,8 @@ html body .defi-jeux [data-carrousel] > .vue.jeu, html body .casino-frise [data-
 html body a.marche-pseudo { text-decoration: none; color: #fff; }
 html body a.marche-pseudo:hover, html body a.marche-pseudo:focus-visible { color: var(--or-k); text-decoration: underline; text-underline-offset: 3px; outline: none; }
 .fiche-profil-ligne { margin: 14px 0 4px; }
+/* (5c, l audit) les liens légaux du pied : 44 px de haut pour le doigt */
+html body footer .pied-legal { display: flex; flex-wrap: wrap; column-gap: 18px; }
+html body footer .pied-legal a { display: inline-flex; align-items: center; min-height: 44px; margin: 0; }
+/* (5c, l audit) le badge « Ouverture bientôt » du classement ne flotte plus seul à droite : il prend sa ligne, sous les boutons */
+html body .vitrine-tete.banniere .banniere-texte .en-ligne { flex-basis: 100%; width: max-content; max-width: 100%; margin-top: 0; }

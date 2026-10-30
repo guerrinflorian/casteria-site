@@ -204,7 +204,7 @@ const MUTANTS = [
   ['un nombre coupable en deux lignes (une espace ordinaire)', 'casino.html', s => s.replace('de 800&#160;000 jetons', 'de 800 000 jetons')],
 
   // ---------- (19/10/2026) le Discord : casteria.fr/discord, son bouton, son départ tout seul, l'invitation écrite là seulement ----------
-  ['le bouton du Discord vers une autre invitation', 'discord.html', s => s.replace('<a class="bouton bouton-or grand" href="https://discord.gg/Xp325uTFe7">', '<a class="bouton bouton-or grand" href="https://discord.gg/autre">')],
+  ['le bouton du Discord vers une autre invitation', 'discord.html', s => s.replace('<a class="bouton bouton-discord grand" href="https://discord.gg/Xp325uTFe7">', '<a class="bouton bouton-discord grand" href="https://discord.gg/autre">')],
   ['la page du Discord sans son refresh', 'discord.html', s => s.replace('<meta http-equiv="refresh" content="1; url=https://discord.gg/Xp325uTFe7">\n', '')],
   ['la page du Discord sans le depart par le script', 'discord.html', s => s.replace(/<script>setTimeout[^\n]*<\/script>\n/, '')],
   ['l adresse de la page du Discord (canonical) en .html', 'discord.html', s => s.replace('<link rel="canonical" href="https://casteria.fr/discord">', '<link rel="canonical" href="https://casteria.fr/discord.html">')],
