@@ -108,7 +108,7 @@
   }
   barreEtat()
   // (une page sans badge, mais avec la pastille de la barre : la même lecture, ouvert seulement)
-  if (OUVERT && !enLigne.length && etats.length && SOURCE_EN_LIGNE && window.fetch) { lireEnLigne(); setInterval(lireEnLigne, EN_LIGNE_RELIRE_MS) }
+  if (OUVERT && !enLigne.length && etats.length && SOURCE_EN_LIGNE && window.fetch) { lireEnLigne(); setInterval(function () { lireEnLigne() }, EN_LIGNE_RELIRE_MS) }
   // fermé : le badge garde l'ouverture que le bandeau y a écrite (aucune lecture du nombre de joueurs)
   if (OUVERT && enLigne.length && SOURCE_EN_LIGNE && window.fetch) {
     lireEnLigne()
