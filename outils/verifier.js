@@ -91,8 +91,8 @@ function verifierBoutique(faute) {
 // inventés, et un bandeau qui le dit). Les autres scripts du compte ne parlent jamais au réseau eux-mêmes. Rien de reçu ne
 // s'écrit comme du code de page. (le 20/10/2026, gardé) La fonction api/classement.js de Vercel ne revient pas : l'API vit
 // sur le VPS et ne recompte rien (« le jeu calcule, l'API lit »).
-const SCRIPTS_COMPTE = ['js/api.js', 'js/classement.js', 'js/peau.js', 'js/connexion.js', 'js/compte.js', 'js/admin.js', 'js/graphe.js']
-const SANS_RESEAU = ['js/classement.js', 'js/peau.js', 'js/connexion.js', 'js/compte.js', 'js/admin.js', 'js/graphe.js']
+const SCRIPTS_COMPTE = ['js/api.js', 'js/vote_semaine.js', 'js/classement.js', 'js/peau.js', 'js/connexion.js', 'js/compte.js', 'js/admin.js', 'js/graphe.js']
+const SANS_RESEAU = ['js/vote_semaine.js', 'js/classement.js', 'js/peau.js', 'js/connexion.js', 'js/compte.js', 'js/admin.js', 'js/graphe.js']
 // la seule adresse complète permise dans ces scripts : l'espace de noms du SVG (js/graphe.js), qui n'est pas une adresse lue
 const ADRESSES_PERMISES = { 'js/graphe.js': ['http://www.w3.org/2000/svg'] }
 // (29/10/2026) les vrais pseudos connus (l'équipe, les vidéastes) : jamais dans les données d'essai
@@ -480,6 +480,40 @@ function verifierVote(faute) {
   if (!s.includes('<link rel="stylesheet" href="css/vote.css">')) faute('vote.html : sa feuille css/vote.css n\'est pas chargée')
   if (!/\.sites-vote:empty\s*\{[^}]*display:\s*none/.test(css) || !/\.sites-vote:not\(:empty\)\s*\+\s*\.sites-vides\s*\{[^}]*display:\s*none/.test(css)) faute('css/vote.css : la liste vide des sites se cache, et la phrase « tape /vote » ne se montre que pour une liste vide')
   // (29/10/2026, le style neuf validé par le propriétaire : tout arrondi) la règle « aucun arrondi » est retirée : css/vote.css
+  // (ag, le 30/10/2026 ; la 156) LE TROISIEME SITE, serveur-minecraft-vote.fr (le serveur 2899) : sa carte jumelle dans la liste,
+  // un vote toutes les 1 h 30, puis /vote et « J'ai voté » ; trois colonnes egales a 1280
+  {
+    const sm = sitesDeVote().liste || ''
+    if (!/<li class="site-smv"><a class="site-vote" href="https:\/\/serveur-minecraft-vote\.fr\/serveur\/2899\/casteria" target="_blank" rel="noopener">/.test(sm)) faute('vote.html : la carte de serveur-minecraft-vote.fr (<li class="site-smv">, https://serveur-minecraft-vote.fr/serveur/2899/casteria) dans la liste des sites')
+    else if (!/<li class="site-smv">(?:(?!<\/li>)[\s\S])*<span class="site-rythme">Un vote toutes les 1 h 30<\/span><span class="site-geste">[^<]*\/vote[^<]*J'ai voté[^<]*<\/span>/.test(sm)) faute('vote.html : la carte de serveur-minecraft-vote.fr dit un vote toutes les 1 h 30, puis /vote en jeu et « J\'ai voté »')
+  }
+  // (ag, le 30/10/2026 ; la 156) 5 CLES DE VOTE PAR JOUR (3 avant) : la page du vote et le compte (le plafond vient de l'API)
+  if (!/<b>5 Clés de Vote par jour au plus<\/b>/.test(nu) || /\b3 Clés de Vote par jour/.test(nu)) faute('vote.html : « 5 Clés de Vote par jour au plus » (le plafond de la 156 ; jamais 3)')
+  {
+    const c = lire('compte.html') || '', cj = codeDe(lire('js/compte_jeu.js') || '')
+    if (/Trois par jour/.test(c) || !/<span id="votes-max">5 par jour au plus\.<\/span>/.test(c)) faute('compte.html : le plafond des clés du jour dit « 5 par jour au plus » (<span id="votes-max">), jamais « Trois »')
+    if (!/\$\('votes-max'\)\.textContent = v\.cles_max \+ ' par jour au plus\.'/.test(cj)) faute('js/compte_jeu.js : le plafond des clés du jour vient de l\'API (cles_max)')
+  }
+  // (ag, le 30/10/2026 ; la 156, le proprietaire) LES VOTEURS DE LA SEMAINE : la section (#semaine) entre « Comment voter » et « Ce que
+  // tu gagnes », ses places (le compte a rebours, le classement, ta place), et ses scripts (js/api.js puis js/vote_semaine.js) ; le
+  // script ne parle qu'a CasteriaApi (verifierClassement : SCRIPTS_COMPTE et SANS_RESEAU), ne recopie JAMAIS un lot (ils viennent du
+  // jeu : le proprietaire les change en jeu), et sans donnees il dit une phrase (jamais un 0)
+  {
+    const i = nu.indexOf('<section class="sombre fond-ciel vote-semaine" id="semaine"'), g = nu.indexOf('id="voter"'), c = nu.indexOf('id="gains"')
+    if (i < 0) faute('vote.html : la section des voteurs de la semaine (<section class="sombre fond-ciel vote-semaine" id="semaine">) manque')
+    else if (!(g < i && i < c)) faute('vote.html : les voteurs de la semaine se placent entre « Comment voter » et « Ce que tu gagnes »')
+    for (const id of ['vs-corps', 'vs-chrono', 'vs-chrono-temps', 'vs-toi', 'vs-avant', 'vs-pied']) if (!nu.includes('id="' + id + '"')) faute('vote.html : la place « ' + id + ' » des voteurs de la semaine manque')
+    const a = nu.indexOf('<script src="js/api.js" defer></script>'), v = nu.indexOf('<script src="js/vote_semaine.js" defer></script>')
+    if (a < 0 || v < 0 || v < a) faute('vote.html : js/api.js puis js/vote_semaine.js se chargent (les voteurs de la semaine)')
+    const js = codeDe(lire('js/vote_semaine.js') || '')
+    if (!js) faute('js/vote_semaine.js manque')
+    else {
+      if (/Clés? du Trésor|Clés? Royales|Aventurier|crédits?, /.test(js)) faute('js/vote_semaine.js : un lot écrit à la main (les lots viennent du jeu, tels quels)')
+      if (!/A\.votesSemaine\(\)/.test(js) || !/A\.moiVoteSemaine/.test(js)) faute('js/vote_semaine.js : il lit CasteriaApi.votesSemaine et moiVoteSemaine')
+      if (!/donnees\.etat === 'absente'/.test(js) || !/tape ', '\/vote semaine'/.test(js)) faute('js/vote_semaine.js : sans données, la phrase « tape /vote semaine » (jamais un 0)')
+      if (!/Math\.floor\(\(finMs - Date\.now\(\)\) \/ 1000\)/.test(js)) faute('js/vote_semaine.js : le compte à rebours s\'arrondit vers le bas')
+    }
+  }
 }
 function verifierDiscord(faute) {
   const s = lire('discord.html')

@@ -9,14 +9,15 @@
    /vote » prend sa place */
 /* (37, le 30/10 ; le proprietaire : « un plus petit, l'autre plus gros, pas alignés ») DEUX CARTES JUMELLES : une grille de
    deux colonnes egales (une seule au telephone), chaque carte de toute la hauteur de sa rangee, le bouton tout en bas */
-.sites-vote { list-style: none; margin: 56px auto 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; max-width: 760px; }
+/* (ag, le 30/10 ; la 156) TROIS CARTES JUMELLES : trois colonnes egales a 1280, une seule sous 960 px */
+.sites-vote { list-style: none; margin: 56px auto 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; max-width: 1080px; }
 .sites-vote > li { display: flex; }
 .sites-vote:empty { display: none; }
 .sites-vote:not(:empty) + .sites-vides { display: none; }
 .site-vote { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; min-width: 0; padding: 22px 22px 24px; text-align: center; text-decoration: none;
   color: var(--encre); background: linear-gradient(180deg, #FFFBF2, #F7ECD6); border: 1px solid rgba(155, 112, 52, .28); border-radius: 20px;
   box-shadow: 0 6px 0 rgba(155, 112, 52, .25), 0 14px 26px rgba(58, 38, 20, .14); transition: transform .2s ease, box-shadow .2s ease; }
-.site-nom { font-family: var(--police-titre, "Lilita One", sans-serif); font-weight: 400; font-size: 26px; line-height: 1.1; color: var(--bois-fonce, #4A2B12); }
+.site-nom { font-family: var(--police-titre, "Lilita One", sans-serif); font-weight: 400; font-size: 24px; white-space: nowrap; line-height: 1.1; color: var(--bois-fonce, #4A2B12); }
 .site-rythme { font-size: 13px; font-weight: 800; letter-spacing: .3px; padding: 3px 12px; border-radius: 999px; color: #4A2B07; background: linear-gradient(180deg, #FFE08A, var(--or-k, #FFCF5A)); }
 .site-geste { margin-bottom: 10px; font-size: 16px; font-weight: 700; line-height: 1.35; white-space: nowrap; }
 .site-vote .site-bouton { margin-top: auto; align-self: stretch; justify-content: center; pointer-events: none; }
@@ -24,7 +25,8 @@
 /* la note sous les cartes (le second site reconnait le vote a la connexion) : cachee avec sa carte, et avec une liste vide */
 .vote-note { margin: 18px auto 0; max-width: 620px; text-align: center; font-size: 16px; font-weight: 600; line-height: 1.45; color: var(--encre); opacity: .85; }
 .sites-vote[data-serveursminecraft="eteint"] ~ .vote-note, .sites-vote:empty ~ .vote-note { display: none; }
-@media (max-width: 680px) { .sites-vote { grid-template-columns: minmax(0, 1fr); max-width: 440px; } .vote-note { font-size: 15px; } }
+@media (max-width: 960px) { .sites-vote { grid-template-columns: minmax(0, 1fr); max-width: 440px; } }
+@media (max-width: 680px) { .vote-note { font-size: 15px; } }
 .sites-vides { margin: 58px auto 0; max-width: 680px; padding: 16px 22px; text-align: center; font-size: 19px; font-weight: 600; line-height: 1.45; color: var(--encre);
   background: rgba(255, 248, 231, .7); border: 3px dashed var(--or); }
 .sites-vides code { color: var(--bois-fonce); font-weight: 700; }
@@ -84,4 +86,117 @@ html.photo .vote-caisse .cle, html.photo .champ-exemple b::after { animation: no
 /* (b5, le 29/10/2026) le second site de vote (serveursminecraft.org) reste cache tant que le drapeau de la liste vaut « eteint »
    (vote.html, data-serveursminecraft) ; (37, le 30/10) la carte qui reste, seule et au milieu */
 .sites-vote[data-serveursminecraft="eteint"] .site-sm { display: none; }
-.sites-vote[data-serveursminecraft="eteint"] { grid-template-columns: minmax(0, 1fr); max-width: 380px; }
+.sites-vote[data-serveursminecraft="eteint"] { grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: 760px; }
+@media (max-width: 960px) { .sites-vote[data-serveursminecraft="eteint"] { grid-template-columns: minmax(0, 1fr); max-width: 440px; } }
+
+/* ---------- (ag, le 30/10/2026 ; la 156) LES VOTEURS DE LA SEMAINE (vote.html #semaine, js/vote_semaine.js) : un panneau de nuit
+   arrondi sur le ciel du kit ; en haut le titre et le compte à rebours (une carte crème) ; dessous, le podium des trois premiers
+   (leurs têtes, la couronne du 1er, des socles d'or, d'argent et de bronze qui portent leur lot) à gauche, du 4e au 10e à droite,
+   chaque ligne avec son lot ; en bas, ta place et la semaine d'avant. Le tout tient sans défiler à 1280 x 800. ---------- */
+.vote-semaine { padding: 46px 0 50px; }
+.vs-cadre { padding: 24px 28px 20px; border-radius: 24px; border: 1px solid var(--trait); background: linear-gradient(180deg, rgba(45, 34, 71, .94), rgba(36, 26, 58, .96));
+  box-shadow: 0 18px 40px rgba(0, 0, 0, .45), inset 0 1px 0 rgba(255, 255, 255, .06); }
+.vs-entete { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 14px 26px; margin-bottom: 18px; }
+.vs-titre .sur-titre { margin-bottom: 4px; color: var(--or-k); }
+.vs-titre h2 { margin: 0; font-size: clamp(30px, 3.4vw, 42px); line-height: 1.05; color: var(--titre-creme); }
+.vs-sous { margin: 6px 0 0; font-size: 16px; font-weight: 600; color: #E6DAF7; }
+.vs-chrono { display: flex; flex-direction: column; align-items: center; margin: 0; padding: 10px 20px 11px; border-radius: 18px; text-align: center; color: var(--brun);
+  background: linear-gradient(180deg, #FFFBF2, var(--creme-2)); box-shadow: 0 5px 0 rgba(155, 112, 52, .55), 0 12px 24px rgba(0, 0, 0, .3); }
+.vs-chrono-mot { font-size: 12.5px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: #7A5122; }
+.vs-chrono-temps { font-family: var(--police-bouton); font-weight: 400; font-size: 27px; line-height: 1.15; white-space: nowrap; color: #4A2B07; }
+.vs-chrono[hidden], .vs-pied[hidden], .vs-toi[hidden], .vs-avant[hidden] { display: none; }
+.vs-corps { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 24px; align-items: stretch; }
+.vs-etat { grid-column: 1 / -1; margin: 0; padding: 34px 20px; text-align: center; font-size: 18px; font-weight: 600; line-height: 1.5; color: #F1E6FF;
+  border-radius: 18px; background: rgba(255, 255, 255, .04); border: 2px dashed rgba(255, 207, 90, .35); }
+.vs-etat code { color: var(--or-k); font-weight: 700; }
+.vs-etat .bouton { margin-top: 12px; }
+/* le podium : 2, 1, 3 ; le sol de pierre du kit sous les socles */
+.vs-podium { position: relative; list-style: none; margin: 0; padding: 34px 14px 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: end; gap: 0 10px;
+  border-radius: 20px; border: 1px solid var(--trait); overflow: hidden; background: radial-gradient(80% 60% at 50% 30%, rgba(255, 207, 90, .16), rgba(255, 207, 90, 0) 70%), rgba(255, 255, 255, .03); }
+.vs-podium::after { content: ""; grid-column: 1 / -1; height: 22px; margin: 0 -14px;
+  background: linear-gradient(180deg, var(--or-clair) 0 3px, var(--or) 3px 6px, var(--or-fonce) 6px 9px, rgba(0, 0, 0, .35) 9px 12px, transparent 12px),
+              linear-gradient(180deg, rgba(8, 4, 14, 0) 40%, rgba(8, 4, 14, .55)), url("../assets/motifs/pierres.svg") 0 0 / 48px 24px, #3B2A52; }
+.vs-marche { display: flex; flex-direction: column; align-items: center; min-width: 0; text-align: center; }
+.vs-joueur { position: relative; display: flex; flex-direction: column; align-items: center; gap: 3px; width: 100%; padding-bottom: 8px; }
+.vs-joueur .tete-pixel { width: 56px; height: 56px; border-radius: 10px; image-rendering: pixelated; background-repeat: no-repeat; box-shadow: 0 0 0 3px rgba(0, 0, 0, .45), 0 8px 16px rgba(0, 0, 0, .4); }
+.vs-p1 .vs-joueur .tete-pixel { width: 70px; height: 70px; box-shadow: 0 0 0 3px #B9741F, 0 0 22px rgba(255, 207, 90, .55), 0 8px 16px rgba(0, 0, 0, .4); }
+.vs-couronne { position: absolute; top: -27px; left: 50%; width: 38px; height: auto; margin-left: -19px; image-rendering: pixelated; filter: drop-shadow(0 3px 6px rgba(255, 200, 60, .55)); animation: flotte 4.5s ease-in-out infinite; }
+.vs-pseudo { display: block; max-width: 100%; margin-top: 4px; font-family: var(--police-bouton); font-size: 18px; line-height: 1.15; white-space: nowrap; color: #fff; text-decoration: none; }
+.vs-pseudo { overflow: hidden; flex: 0 1 auto; min-width: 0; }
+a.vs-pseudo:hover, a.vs-pseudo:focus-visible { color: var(--or-k); }
+.vs-votes { font-size: 14px; font-weight: 700; white-space: nowrap; color: var(--or-k); }
+.vs-vide { display: block; width: 56px; height: 56px; border-radius: 10px; border: 2px dashed rgba(255, 255, 255, .28); }
+.vs-libre { font-size: 15px; font-weight: 600; white-space: nowrap; color: #CDBDE4; }
+.vs-socle { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 4px; width: 100%; padding: 10px 6px 12px; border-radius: 16px 16px 0 0; box-shadow: inset 0 3px 0 rgba(255, 255, 255, .35); }
+.vs-p1 .vs-socle { min-height: 142px; background: linear-gradient(180deg, #F2CB4E, #D7A421); color: #3E2A06; }
+.vs-p2 .vs-socle { min-height: 118px; background: linear-gradient(180deg, #E2E5EA, #AEB3BD); color: #2A2E36; }
+.vs-p3 .vs-socle { min-height: 100px; background: linear-gradient(180deg, #E39A5E, #B9692F); color: #3A1D08; }
+.vs-socle .vs-medaille { width: 20px; height: 28px; image-rendering: pixelated; }
+/* un lot : une ligne par gain, son image du jeu, son nombre et son nom */
+.vs-lot { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.vs-lot li { display: inline-flex; align-items: center; gap: 5px; font-size: 13.5px; font-weight: 700; line-height: 1.2; white-space: nowrap; }
+.vs-lot img { width: 16px; height: 16px; flex: none; image-rendering: pixelated; }
+.vs-lots-podium { display: none; }
+/* du 4e au 10e */
+.vs-liste { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; align-content: start; }
+.vs-ligne { display: grid; grid-template-columns: 38px 32px minmax(0, 1fr) auto; align-items: center; gap: 10px; min-height: 44px; padding: 5px 12px; border-radius: 14px;
+  background: rgba(255, 255, 255, .05); border: 1px solid var(--trait); }
+.vs-ligne .vs-rang { font-family: var(--police-bouton); font-size: 18px; color: var(--or-k); white-space: nowrap; }
+.vs-ligne .tete-pixel, .vs-ligne .vs-vide { width: 32px; height: 32px; border-radius: 7px; image-rendering: pixelated; background-repeat: no-repeat; box-shadow: 0 0 0 2px rgba(0, 0, 0, .45); }
+.vs-ligne .vs-vide { box-shadow: none; }
+.vs-qui { display: flex; align-items: baseline; gap: 10px; min-width: 0; }
+.vs-ligne .vs-pseudo { margin: 0; font-size: 16.5px; }
+.vs-ligne .vs-votes { font-size: 13.5px; }
+.vs-ligne .vs-lot { flex-direction: row; flex-wrap: wrap; justify-content: flex-end; gap: 2px 12px; color: #F4ECFF; }
+.vs-ligne .vs-lot li { font-size: 13px; }
+.vs-ligne.libre { background: rgba(255, 255, 255, .025); border-style: dashed; }
+/* toi, dans les dix */
+.vs-ligne.toi { border: 1px solid var(--or-k); background: linear-gradient(90deg, rgba(255, 207, 90, .24), rgba(255, 207, 90, .06)); }
+.vs-marche.toi .vs-pseudo { color: var(--or-k); }
+.vs-marque { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: 11px; font-weight: 800; letter-spacing: .6px; text-transform: uppercase; white-space: nowrap; color: #3A2408; background: var(--or-k); }
+/* en bas : ta place (hors des dix), la semaine d'avant */
+.vs-pied { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 20px; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--trait); }
+.vs-toi { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; margin: 0; padding: 8px 14px; border-radius: 16px; font-size: 15.5px; font-weight: 600; color: #FFF3D6;
+  background: rgba(255, 207, 90, .12); border: 1px solid rgba(255, 207, 90, .38); }
+.vs-toi b { font-family: var(--police-bouton); font-weight: 400; font-size: 19px; color: var(--or-k); white-space: nowrap; }
+.vs-toi .vs-un { white-space: nowrap; }
+.vs-toi .bouton { min-height: 36px; padding: 6px 14px 7px; font-size: 14px; }
+.vs-toi a.vs-lien { color: var(--or-k); font-weight: 700; }
+.vs-avant { margin: 0; font-size: 14.5px; color: #D9CBEE; }
+.vs-avant b { color: #fff; font-weight: 700; }
+.vs-avant .vs-un { white-space: nowrap; }
+
+@media (max-width: 900px) {
+  .vs-corps { grid-template-columns: minmax(0, 1fr); }
+  .vs-entete { grid-template-columns: minmax(0, 1fr); }
+  .vs-chrono { justify-self: start; }
+}
+@media (max-width: 600px) {
+  .vote-semaine { padding: 40px 0 44px; }
+  .vs-cadre { padding: 18px 14px 16px; border-radius: 20px; }
+  .vs-chrono { justify-self: stretch; }
+  .vs-chrono-temps { font-size: 24px; }
+  .vs-sous { font-size: 15px; }
+  .vs-podium { padding: 30px 8px 0; gap: 0 6px; }
+  .vs-podium::after { margin: 0 -8px; }
+  .vs-joueur .tete-pixel, .vs-vide { width: 44px; height: 44px; }
+  .vs-p1 .vs-joueur .tete-pixel { width: 54px; height: 54px; }
+  .vs-couronne { width: 30px; margin-left: -15px; top: -22px; }
+  .vs-pseudo { font-size: 15px; }
+  .vs-votes { font-size: 12.5px; }
+  .vs-libre { font-size: 13px; }
+  .vs-p1 .vs-socle { min-height: 112px; } .vs-p2 .vs-socle { min-height: 94px; } .vs-p3 .vs-socle { min-height: 80px; }
+  /* au téléphone : le socle garde l'image et le nombre de chaque gain ; les lots du podium s'écrivent en entier dessous */
+  .vs-socle .vs-lot .vs-mot { display: none; }
+  .vs-socle .vs-lot li { font-size: 14px; }
+  .vs-lots-podium { display: grid; gap: 4px; list-style: none; margin: 10px 0 0; padding: 0; font-size: 14px; line-height: 1.4; color: #EADFFA; }
+  .vs-lots-podium b { color: var(--or-k); }
+  .vs-ligne { grid-template-columns: 34px 30px minmax(0, 1fr); grid-template-areas: "r t q" "r t l"; gap: 2px 10px; padding: 6px 10px; }
+  .vs-ligne .vs-rang { grid-area: r; }
+  .vs-ligne .tete-pixel, .vs-ligne .vs-vide { grid-area: t; width: 30px; height: 30px; }
+  .vs-ligne .vs-qui { grid-area: q; }
+  .vs-ligne .vs-lot { grid-area: l; justify-content: flex-start; }
+  .vs-toi { font-size: 14.5px; }
+}
+@media (prefers-reduced-motion: reduce) { .vs-couronne { animation: none; } }
+html.photo .vs-couronne { animation: none; }

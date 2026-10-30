@@ -49,6 +49,9 @@
     exploits: function (n) { return demander('/api/exploits' + requete({ n: Math.max(1, Math.min(50, Number(n) || 10)) })) },
     // (af, 29/10 : l'accueil) la carte vivante des iles (API.md 2.6)
     carte: function (zone) { return demander('/api/carte' + requete({ zone: zone === 'mer' ? 'mer' : 'iles' })) },
+    // (ag, 30/10 ; la 156) les voteurs de la semaine (le top 10, les lots, la fin) ; ta place, seulement avec l'indice de connexion
+    votesSemaine: function () { return demander('/api/votes/semaine') },
+    moiVoteSemaine: function () { return /(?:^|;\s*)casteria_connecte=1(?:;|$)/.test(document.cookie || '') ? demander('/api/moi/vote-semaine') : refus(401, 'non_connecte') },
     connexion: function (pseudo, mdp) { return demander('/api/connexion', { methode: 'POST', corps: { pseudo: pseudo, mot_de_passe: mdp } }) },
     deconnexion: function () { return demander('/api/deconnexion', { methode: 'POST', corps: {} }) },
     admin: function (quoi, params) { return ADMIN[quoi] ? demander('/api/admin/' + quoi + requete(params)) : refus(404, 'inconnu') },
@@ -94,6 +97,8 @@
     enLigne: function () { return fichier('en-ligne.json') },
     exploits: function () { return fichier('exploits.json') },
     carte: function (zone) { return fichier('carte-' + (zone === 'mer' ? 'mer' : 'iles') + '.json') },
+    votesSemaine: function () { return fichier('votes-semaine.json') },
+    moiVoteSemaine: function () { var s = sessionEssai(); return s ? fichier('vote-semaine/' + s + '.json') : refus(401, 'non_connecte') },
     classement: function (theme, categorie, taille) {
       if (THEMES.indexOf(theme) < 0) return refus(400, 'theme_inconnu')
       if (categorie && !/^[a-z0-9_]{1,48}$/.test(categorie)) return refus(404, 'categorie_inconnue')
@@ -232,7 +237,7 @@
   var api = ESSAI ? essai : vraie
   window.CasteriaApi = {
     essai: ESSAI, motDePasseEssai: ESSAI ? MDP_ESSAI : '',
-    enLigne: api.enLigne, carte: api.carte, classement: api.classement, joueur: api.joueur, moi: api.moi, exploits: api.exploits, connexion: api.connexion, deconnexion: api.deconnexion,
+    enLigne: api.enLigne, carte: api.carte, votesSemaine: api.votesSemaine, moiVoteSemaine: api.moiVoteSemaine, classement: api.classement, joueur: api.joueur, moi: api.moi, exploits: api.exploits, connexion: api.connexion, deconnexion: api.deconnexion,
     admin: api.admin, adminJoueur: api.adminJoueur, adminRecherche: api.adminRecherche, tchat: api.tchat,
     PSEUDO: PSEUDO, THEMES: THEMES, nombre: nombre, texte: texte, euros: euros, pourcent: pourcent, rang: rang, ilYa: ilYa, date: date, heure: heure,
     peau: peau, el: el, vider: vider, retourSur: retourSur

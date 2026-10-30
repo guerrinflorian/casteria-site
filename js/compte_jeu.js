@@ -44,6 +44,12 @@
         var p = el('p', 'vote-astuce', 'Écris ton pseudo exact sur sa page : ')
         p.appendChild(el('b', '', pseudo))
         li.appendChild(p)
+      } else if (s.id === 'serveurminecraftvote') {
+        // (ag, 30/10 ; la 156) le troisième site : le pseudo sur sa page, puis « J'ai voté » dans /vote
+        var w = el('p', 'vote-astuce', 'Écris ton pseudo exact sur sa page, puis tape ')
+        w.appendChild(el('code', '', '/vote'))
+        w.appendChild(document.createTextNode(' en jeu et clique sur « J\'ai voté ».'))
+        li.appendChild(w)
       } else if (s.id === 'serveursminecraft') {
         var q = el('p', 'vote-astuce', 'Puis, en jeu et depuis la même connexion, tape ')
         q.appendChild(el('code', '', '/vote jaivote'))
@@ -56,6 +62,8 @@
       ? 'Tes ' + v.cles_max + ' clés du jour sont prises : tes votes comptent encore pour le mois, les clés reviennent demain.'
       : 'Clés de vote aujourd\'hui : ' + v.cles_jour + ' sur ' + v.cles_max
     $('votes-compte').textContent = c + ' · Votes ce mois : ' + A.nombre(v.votes_mois)
+    // le plafond du jour vient de l'API (5 depuis la 156)
+    if ($('votes-max') && v.cles_max > 0) $('votes-max').textContent = v.cles_max + ' par jour au plus.'
   }
 
   function temps() {
