@@ -890,6 +890,13 @@ console.log('js/classement.js (la bulle du bouton de l\'île : jamais coupée, j
 // (37, la 157 ; le propriétaire : « la carte de la mer du site et la carte de la mer du jeu [...] faut en être sûr, pas de
 // différence ») LA MER DU SITE = LA CARTE MARINE DU JEU : le décor de casteria-mer 1.0.57 (804 lieux, le terrain du Gouffre compris),
 // le terrain des zones de combat caché aux vues larges comme le jeu, et les trois îles des boss de mer à leur boîte, avec leur image
+// (37, la 158 ; a8) LA RÈGLE DE L'EAU SUR HIJACKED : la page des événements la dit sous sa carte (le jeu : « Tombé à l'eau »)
+console.log('js/evenements_classements.js (la règle propre à une carte du Rayon)')
+{
+  const c = fs.readFileSync(path.join(RACINE, 'js', 'evenements_classements.js'), 'utf8')
+  if (!c.includes("var REGLES_CARTE = { hijacked: 'Qui tombe à l\\'eau revient ailleurs : une mort, aucun point à personne.' }")) faute('js/evenements_classements.js : la règle de l\'eau sur Hijacked manque (REGLES_CARTE)')
+  if (!c.includes("if (REGLES_CARTE[c.id]) li.appendChild(el('span', 'rayon-carte-regle', REGLES_CARTE[c.id]))")) faute('js/evenements_classements.js : la règle d\'une carte ne s\'écrit plus sous elle')
+}
 console.log('js/carte.js et assets/mer (la mer du site, celle de la Carte marine du jeu)')
 {
   const c = fs.readFileSync(path.join(RACINE, 'js', 'carte.js'), 'utf8')

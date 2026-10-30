@@ -34,6 +34,8 @@
     if (/^ev_rayon_record_/.test(String(x.id))) return 'Record' + (x.court ? ' ' + x.court : '')
     return x.court || x.titre || ''
   }
+  // (37, la 158 ; a8 : ai_evt_rayon.js, « Tombé à l'eau ») LA RÈGLE PROPRE À UNE CARTE DU RAYON, par son id (CI_RAYON_CARTES)
+  var REGLES_CARTE = { hijacked: 'Qui tombe à l\'eau revient ailleurs : une mort, aucun point à personne.' }
   var MEDAILLES = ['assets/classement/medaille_1.png', 'assets/classement/medaille_2.png', 'assets/classement/medaille_3.png']
   var donnees = {}, moi = null, jeu = 'eclair', critere = 0
 
@@ -103,6 +105,8 @@
       if (c.max && c.salles) mots.push(c.max + ' par salle, jusqu\'à ' + c.salles + ' salles (' + A.nombre(c.max * c.salles) + ' places)')
       else if (c.max) mots.push(c.max + ' joueurs au plus')
       if (mots.length) li.appendChild(document.createTextNode(mots.join(' ; ').replace(/^./, function (x) { return x.toUpperCase() }) + '.'))
+      // (37, la 158 ; a8 : le yacht en pleine mer) la règle propre à une carte, sous elle
+      if (REGLES_CARTE[c.id]) li.appendChild(el('span', 'rayon-carte-regle', REGLES_CARTE[c.id]))
       ul.appendChild(li)
     })
     $('rayon-cartes-bloc').hidden = !(F.cartes && F.cartes.length)

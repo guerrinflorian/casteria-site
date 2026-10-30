@@ -278,5 +278,6 @@ a.evc-pseudo:hover { color: var(--or-clair); text-decoration: underline; }
 .rayon-cartes, .rayon-lots { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
 .rayon-cartes li, .rayon-lots li { padding: 9px 12px; font-size: 15.5px; line-height: 1.4; background: rgba(0, 0, 0, .28); border-radius: 12px; }
 .rayon-cartes b, .rayon-lots b { display: block; font: 400 19px var(--police-titre, "Chewy"), sans-serif; color: #7FE6FF; }
+.rayon-cartes .rayon-carte-regle { display: block; margin-top: 4px; font-size: 14.5px; color: #FFD9A8; }
 @media (max-width: 860px) { .rayon-grille { grid-template-columns: minmax(0, 1fr); } .rayon-heures { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
 @media (max-width: 420px) { .rayon-heures li { font-size: 14px; } .rayon-bloc { padding: 14px; } }
