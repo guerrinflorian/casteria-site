@@ -109,7 +109,8 @@
     A.vider(lo)
     var tous = el('li', '')
     tous.appendChild(el('b', '', 'Pour chacun'))
-    tous.appendChild(document.createTextNode('Des jetons et de l\'XP à chaque partie.'))
+    // (la 157, f1f403b17) les jetons de participation seulement a qui a tire au moins une fois (le cadre, def.actif) ; l'XP a tous
+    tous.appendChild(document.createTextNode('Des jetons si tu tires au moins une fois, et de l\'XP à chaque partie.'))
     lo.appendChild(tous)
     // deux paliers de suite au meme lot (dès 3 et dès 4 : la Clé de Vote au 1er) : le premier seul
     var avant = ''
