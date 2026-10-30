@@ -62,6 +62,9 @@
 .zone-compte { padding: 108px 0 56px; }
 .compte-section { padding: 48px 0 56px; }
 .compte-section[hidden] { display: none; }
+/* (2c, 30/10 ; le propriétaire : une bande vide de 200 px sous « Ce qui t'attend sur ton île ») une frise porte compte-section pour
+   être montrée avec les sections, jamais leur rembourrage : sans cette ligne, chaque frise du compte faisait 104 px vides */
+.frise.compte-section { padding: 0; }
 .compte-section h2 { font-size: 24px; color: var(--or-clair); margin: 0 0 12px; }
 .compte-tete { display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 20px 44px; align-items: center; }
 .compte-statue { position: relative; width: 100%; aspect-ratio: 2 / 3; background: radial-gradient(closest-side, rgba(255, 215, 94, .22), rgba(255, 215, 94, 0)); }
