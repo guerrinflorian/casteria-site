@@ -341,8 +341,23 @@
     else aide = 'Le premier relevé se fait cette nuit, à 3 h 30 ; les hausses arrivent après le suivant, la nuit d\'après, puis sur 7 jours glissants.'
     var b2 = carte('Les jetons qui montent le plus vite', aide, d, 'jeu', false, g)
     if (hv) lignesListe(b2, hv.map(function (x) { return ['', lienJoueur(x.pseudo), '', '+' + A.nombre(x.jetons) + NBSP + 'jetons'] }), '')
-    var b3 = carte('Les jetons créés et détruits', 'Le jeu ne publie pas encore le journal de ses jetons : ce bloc arrivera avec lui.', null, null, true)
-    void b3
+    // (dc, 30/10, la 156) le journal des jetons du jeu : créés, détruits, par source, sur 7 jours ; les transferts entre joueurs
+    // à part (ni créés ni détruits : leur écart, ce que les taxes ont détruit)
+    var jc = valeurDe(d.jetons_crees_detruits)
+    var b3 = carte('Les jetons créés et détruits', jc ? 'Sur 7 jours, du ' + A.date(jc.du) + ' au ' + A.date(jc.au) + ', tout le réseau : ce qui entre dans les soldes et ce qui en sort.' : 'Le jeu publie ce journal depuis sa mise à jour de la 156 : les premiers chiffres arrivent dans la minute qui suit un jeton gagné ou dépensé.', d, 'jeu', true)
+    if (jc) {
+      var ecart = num(jc.solde) || 0
+      b3.appendChild(el('p', 'a-eco-bilan', A.nombre(jc.crees) + NBSP + 'jetons créés · ' + A.nombre(jc.detruits) + NBSP + 'détruits · ' + (ecart >= 0 ? '+' : '-') + A.nombre(Math.abs(ecart)) + NBSP + (ecart >= 0 ? 'de plus en circulation' : 'de moins en circulation')))
+      if (num(jc.transferts)) b3.appendChild(el('p', 'a-aide', 'Entre joueurs (/pay, /echange, l\'hôtel des ventes, les paris, la loterie) : ' + A.nombre(jc.transferts) + NBSP + 'jetons ont changé de main ; leurs taxes en ont détruit ' + A.nombre(jc.detruits_par_transferts) + '.'))
+      var deux = el('div', 'a-eco-deux')
+      var cs = el('div'), cp = el('div')
+      cs.appendChild(el('h3', '', 'D\'où ils viennent')); cp.appendChild(el('h3', '', 'Où ils partent'))
+      lignesListe(cs, liste(jc.sources).map(function (x) { return ['', el('span', '', texte(x.nom)), '', '+' + A.nombre(x.jetons)] }), '')
+      lignesListe(cp, liste(jc.puits).map(function (x) { return ['', el('span', '', texte(x.nom)), '', '-' + A.nombre(x.jetons)] }), '')
+      if (!liste(jc.sources).length) cs.appendChild(el('p', 'a-aide', 'Aucun jeton créé sur ces 7 jours.'))
+      if (!liste(jc.puits).length) cp.appendChild(el('p', 'a-aide', 'Aucun jeton détruit sur ces 7 jours.'))
+      deux.appendChild(cs); deux.appendChild(cp); b3.appendChild(deux)
+    }
   }
 
   function vueJoueurs() {

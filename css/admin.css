@@ -273,3 +273,8 @@ html.photo .a-etat::before { animation: none; }
   .a-riches td { border: 0; padding: 1px 6px; }
   .a-riches .rg { grid-area: rg; } .a-riches td.qui-td { grid-area: qui; } .a-riches td.fortune { grid-area: fortune; } .a-riches td.jetons { grid-area: jetons; font-size: 13px; color: #CDB8E6; }
 }
+/* (dc, 30/10, la 156) les jetons créés et détruits : le bilan, puis les sources et les puits côte à côte (l'un sous l'autre au téléphone) */
+.a-eco-bilan { margin: 6px 0 8px; font-weight: 700; font-size: 16px; color: #fff; }
+.a-eco-deux { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 28px; margin-top: 8px; }
+.a-eco-deux h3 { margin: 0 0 4px; font-size: 15px; color: var(--or-clair, #FFD75E); }
+@media (max-width: 760px) { .a-eco-deux { grid-template-columns: minmax(0, 1fr); } }
