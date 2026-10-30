@@ -1040,7 +1040,8 @@
       var rj = [en[0] - wn / 2 - 4, yn - 1, en[0] + wn / 2 + 4, yn + 16]
       if (!chevauche(rj, prisesLieux)) { prisesLieux.push(rj); etiquette(n.pseudo, en[0], yn, 12, '#FFD75E') }
       // sa marque après son nom : le nom d'un événement ne s'écrit pas sur lui
-      prisesLieux.push([en[0] - 14, en[1] - 14, en[0] + 14, en[1] + 12])
+      var rm = Math.max(14, rayonNavire(n.coque, false))
+      prisesLieux.push([en[0] - rm, en[1] - rm, en[0] + rm, en[1] + rm])
     }
   }
   // les pirates : un navire rouge (le jeu les publiera ; API.md 2.7, la forme proposée : { type, nom, x, z, cap })
