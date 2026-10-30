@@ -16,7 +16,7 @@
   var A = window.CasteriaApi, V = window.CasteriaVivant, P = window.IlePixel
   var vue = document.getElementById('carte-vue'), toile = document.getElementById('carte-canvas')
   if (!vue || !toile || !A || !V || !P || !window.Tete) return
-  var NAVIRES = false
+  var NAVIRES = true        // (2c, 30/10) les navires des joueurs, en direct (/api/navires répond, vide ou non)
   var PAVE = 16, VIE_PAVE = 120000, ATTENTE = 220
   var ZOOM_MIN = 2.5, ZOOM_MAX = 140, MER_MIN = 0.03, MER_MAX = 1.6, DEPART_S = 26
   var COULEURS = P.COULEURS
@@ -108,7 +108,7 @@
     if (!note) return
     note.textContent = zone === 'iles'
       ? (total ? A.nombre(total) + ' îles sur la mer de Casteria. ' : '') + 'Relue toutes les 2 minutes.'
-      : 'Les lieux de la mer que tout le monde connaît.' + (NAVIRES ? ' Les navires des joueurs, toutes les 10 secondes.' : '')
+      : 'La mer de Casteria : plus tu t\'éloignes du palais, plus les pirates sont forts et les cargaisons riches. Touche une zone ou un lieu pour sa fiche. Les navires des joueurs, toutes les 10 secondes.'
   }
 
   // (af, 22:4x ; avant : le point 0,0 au zoom 26, les îles minuscules dans un coin d'une mer vide) LE CADRE DES ÎLES : toute
@@ -462,65 +462,291 @@
     }
   }
 
-  // ---------------------------------------------------------------- la mer
+  // ---------------------------------------------------------------- LA MER (2c, 30/10/2026 ; le propriétaire : « je comprends
+  // pas c'est quoi, y'a juste des phares ? », puis « fais toute la carte de la mer ») : on la comprend au premier regard.
+  // LES ZONES sont des BANDES autour de la ligne (le mur du palais : la boîte de la ligne), comme le jeu les compte
+  // (casinomer Carte.distanceLigne) : la Rade, les Hauts-Fonds, le Large, la Mer Noire, les Abysses, coupées par le disque de la
+  // mer ; chacune son nom, son niveau et ses lieux à découvrir. LA FOSSE AUX CORSAIRES (le combat entre joueurs) : son secteur,
+  // vu de (0, 0) (Carte.dansFosse), et ses récifs (son terrain). LE PALAIS de haut, ses murs, le port et ses quais. LES LIEUX DE
+  // L'ATLAS à leur place (phares, îles, épaves, ruines). LES NAVIRES des joueurs (/api/navires, toutes les 10 s), et dès que le
+  // jeu les publie, LES PIRATES et LES ÉVÉNEMENTS en mer. Un clic : la fiche d'un lieu ou d'une zone.
+  // La forme vient de l'API (/api/carte?zone=mer : ligne, rayon, zones, port, atlas) ; tant qu'elle ne la donne pas : MER_DEFAUT,
+  // les valeurs du jeu (ai_mer_table.js, reglages.mer ; Carte.java, BOITE_*), jamais une autre forme.
+  var MER_DEFAUT = { ligne: { xMin: -55, xMax: 245, zMin: -143, zMax: 157 }, rayon: 5000, rade: 150,
+    fosse: { id: 'fosse', nom: 'La Fosse aux Corsaires', de: 700, a: 1900, cap: 90, largeur: 38, niveau: 25, pvp: true, terrain: { de: 700, a: 1200, largeur: 30 } } }
+  var mer = null       // { ligne, rayon, anneaux (rangés par a), rade, fosse, port, lieux, atlas, parZone }
+  var pirates = [], evenements = []
+  var ZONES_TEINTES = { rade: '#3C9BCB', hauts_fonds: '#2373AA', large: '#164F7E', mer_noire: '#0D3157', abysses: '#061A33' }
+  var GENRES = { phare: 'Phare', ile: 'Île sauvage', epave: 'Épave', ruine: 'Ruine', port: 'Port', repaire: 'Repaire de pirates', recif: 'Récif' }
   function ecranM(x, z) { return [(x - M.cx) * M.s + L / 2, (z - M.cy) * M.s + H / 2] }
+  function monde(mx, my) { return [M.cx + (mx - L / 2) / M.s, M.cy + (my - H / 2) / M.s] }
+  // la distance à la ligne (Carte.distanceLigne : 0 dans la boîte)
+  function distLigne(x, z) {
+    var b = mer.ligne, dx = Math.max(0, b.xMin - x, x - b.xMax), dz = Math.max(0, b.zMin - z, z - b.zMax)
+    return Math.sqrt(dx * dx + dz * dz)
+  }
+  // le cap de (x, z) vu de (0, 0), comme le jeu (0 = +z, 90 = -x) ; l'écart entre deux caps dans [-180, 180]
+  function capDe(x, z) { var c = Math.atan2(-x, z) * 180 / Math.PI; return c < 0 ? c + 360 : c }
+  function ecart(a, b) { var d = (a - b) % 360; if (d > 180) d -= 360; else if (d < -180) d += 360; return d }
+  function dansFosse(x, z) {
+    var f = mer.fosse
+    if (!f || x * x + z * z > mer.rayon * mer.rayon) return false
+    var d = distLigne(x, z)
+    return d >= f.de && d < f.a && Math.abs(ecart(capDe(x, z), f.cap)) <= f.largeur / 2
+  }
+  // la zone en (x, z), comme Carte.zoneEn : la Rade, puis la Fosse, puis l'anneau ; hors du disque : null
+  function zoneEn(x, z) {
+    if (x * x + z * z > mer.rayon * mer.rayon) return null
+    var d = distLigne(x, z)
+    if (d <= mer.rade.a) return mer.rade
+    if (dansFosse(x, z)) return mer.fosse
+    for (var k = 0; k < mer.anneaux.length; k++) if (d >= mer.anneaux[k].de && d < mer.anneaux[k].a) return mer.anneaux[k]
+    return mer.anneaux.length ? mer.anneaux[mer.anneaux.length - 1] : null
+  }
+  function lireMer(c) {
+    var zs = c.zones || [], ligne = c.ligne || MER_DEFAUT.ligne, rayon = Number(c.rayon) || MER_DEFAUT.rayon
+    var anneaux = [], rade = null, fosse = null, k
+    for (k = 0; k < zs.length; k++) {
+      var z = zs[k]
+      if (z.id === 'rade') rade = Object.assign({}, z, { a: Number(z.a) > 0 ? Number(z.a) : MER_DEFAUT.rade })
+      else if (z.id === 'fosse' || z.secteur) fosse = z
+      else if (Number(z.rang) > 0) anneaux.push(z)
+    }
+    anneaux.sort(function (p, q) { return p.de - q.de })
+    if (!rade) rade = { id: 'rade', nom: 'La Rade', niveau: 0, de: 0, a: MER_DEFAUT.rade }
+    if (!fosse) fosse = MER_DEFAUT.fosse
+    if (!fosse.terrain) fosse.terrain = MER_DEFAUT.fosse.terrain
+    var lieux = (c.lieux || []).slice(), atlas = (c.atlas || []).filter(function (a) { return isFinite(a.x) && isFinite(a.z) })
+    var parZone = {}
+    ;(c.atlas || []).concat(lieux.filter(function (l) { return l.sorte === 'phare' })).forEach(function (a) { if (a.zone) parZone[a.zone] = (parZone[a.zone] || 0) + 1 })
+    mer = { ligne: ligne, rayon: rayon, anneaux: anneaux, rade: rade, fosse: fosse, port: c.port || null, lieux: lieux, atlas: atlas, parZone: parZone }
+  }
+
+  // ---------- le dessin ----------
+  // un rectangle à coins ronds autour de la ligne, à la distance d (la frontière d'une zone)
+  function bande(d) {
+    var b = mer.ligne, a = ecranM(b.xMin - d, b.zMin - d), c = ecranM(b.xMax + d, b.zMax + d), r = d * M.s
+    var x0 = a[0], y0 = a[1], x1 = c[0], y1 = c[1]
+    g.beginPath()
+    g.moveTo(x0 + r, y0); g.lineTo(x1 - r, y0); g.arcTo(x1, y0, x1, y0 + r, r); g.lineTo(x1, y1 - r); g.arcTo(x1, y1, x1 - r, y1, r)
+    g.lineTo(x0 + r, y1); g.arcTo(x0, y1, x0, y1 - r, r); g.lineTo(x0, y0 + r); g.arcTo(x0, y0, x0 + r, y0, r); g.closePath()
+  }
+  // le secteur de la Fosse (ou de son terrain) : pour chaque cap, l'entrée et la sortie le long du rayon (une dichotomie sur la
+  // distance à la ligne, qui croît le long du rayon hors de la boîte) ; gardé tant que la forme ne change pas
+  var fosseForme = null
+  function rayonA(cap, d) {
+    var dx = -Math.sin(cap * Math.PI / 180), dz = Math.cos(cap * Math.PI / 180), a = 0, b = mer.rayon
+    for (var k = 0; k < 40; k++) { var m = (a + b) / 2; if (distLigne(dx * m, dz * m) < d) a = m; else b = m }
+    return [dx * b, dz * b]
+  }
+  function secteur(de, a, cap, largeur) {
+    var pts = [], k, n = 24
+    for (k = 0; k <= n; k++) pts.push(rayonA(cap - largeur / 2 + largeur * k / n, Math.min(a, mer.rayon)))
+    for (k = n; k >= 0; k--) pts.push(rayonA(cap - largeur / 2 + largeur * k / n, de))
+    return pts
+  }
+  function tracer(pts) {
+    g.beginPath()
+    for (var k = 0; k < pts.length; k++) { var e = ecranM(pts[k][0], pts[k][1]); if (k) g.lineTo(e[0], e[1]); else g.moveTo(e[0], e[1]) }
+    g.closePath()
+  }
   function dessinerMer() {
     var o = ecranM(0, 0)
     fondMer(500 * M.s, o[0], o[1])
+    if (!mer) { houle(); return }
+    var R = mer.rayon * M.s, k, z
+    // hors du disque : la brume du bout du monde
+    g.fillStyle = 'rgba(4,10,20,.55)'; g.fillRect(0, 0, L, H)
+    g.save()
+    g.beginPath(); g.arc(o[0], o[1], R, 0, Math.PI * 2); g.clip()
+    // les anneaux, du plus loin au plus proche
+    for (k = mer.anneaux.length - 1; k >= 0; k--) { z = mer.anneaux[k]; bande(z.a); g.fillStyle = ZONES_TEINTES[z.id] || '#134870'; g.fill() }
+    bande(mer.rade.a); g.fillStyle = ZONES_TEINTES.rade; g.fill()
     houle()
-    if (!lieux) return
-    g.textAlign = 'center'; g.textBaseline = 'top'
-    var k, l, e
-    // les phares balaient : un pinceau de lumière qui tourne (la nuit, plus fort)
-    if (!calme) for (k = 0; k < lieux.length; k++) {
-      l = lieux[k]
+    // la Fosse : son secteur rouge, ses récifs plus sombres
+    if (!fosseForme) fosseForme = { zone: secteur(mer.fosse.de, mer.fosse.a, mer.fosse.cap, mer.fosse.largeur),
+      terrain: mer.fosse.terrain ? secteur(mer.fosse.terrain.de, mer.fosse.terrain.a, mer.fosse.cap, mer.fosse.terrain.largeur) : null }
+    tracer(fosseForme.zone); g.fillStyle = 'rgba(214,64,52,.30)'; g.fill()
+    g.strokeStyle = 'rgba(255,120,100,.85)'; g.lineWidth = 2; if (g.setLineDash) g.setLineDash([6, 4]); g.stroke(); if (g.setLineDash) g.setLineDash([])
+    if (fosseForme.terrain) { tracer(fosseForme.terrain); g.fillStyle = 'rgba(120,30,30,.35)'; g.fill() }
+    // les frontières des zones
+    g.strokeStyle = 'rgba(255,255,255,.28)'; g.lineWidth = 1.5
+    if (g.setLineDash) g.setLineDash([5, 5])
+    for (k = 0; k < mer.anneaux.length; k++) { bande(mer.anneaux[k].a); g.stroke() }
+    bande(mer.rade.a); g.stroke()
+    if (g.setLineDash) g.setLineDash([])
+    g.restore()
+    // le bord de la mer
+    g.strokeStyle = 'rgba(255,215,94,.55)'; g.lineWidth = 2
+    g.beginPath(); g.arc(o[0], o[1], R, 0, Math.PI * 2); g.stroke()
+    palais()
+    // les phares balaient (la nuit, plus fort)
+    var l, e
+    if (!calme) for (k = 0; k < mer.lieux.length; k++) {
+      l = mer.lieux[k]
       if (l.sorte !== 'phare') continue
       e = ecranM(l.x, l.z)
-      var an = t * 0.9 + k, lg = 140, ouv = 0.22
-      var gr = g.createRadialGradient(e[0], e[1], 4, e[0], e[1], lg)
+      var an = t * 0.9 + k, lg = 120, ouv = 0.22, gr = g.createRadialGradient(e[0], e[1], 4, e[0], e[1], lg)
       gr.addColorStop(0, amb.nuit ? 'rgba(255,230,150,0.35)' : 'rgba(255,240,190,0.18)'); gr.addColorStop(1, 'rgba(255,230,150,0)')
       g.fillStyle = gr
       g.beginPath(); g.moveTo(e[0], e[1]); g.arc(e[0], e[1], lg, an - ouv, an + ouv); g.closePath(); g.fill()
     }
+    // les lieux de l'Atlas, puis les phares et le port (au-dessus)
+    g.textAlign = 'center'; g.textBaseline = 'top'
+    g.font = '600 12px Fredoka, system-ui, sans-serif'
+    var noms = M.s >= 0.14
+    for (k = 0; k < mer.atlas.length; k++) {
+      l = mer.atlas[k]; e = ecranM(l.x, l.z)
+      if (e[0] < -40 || e[0] > L + 40 || e[1] < -40 || e[1] > H + 40) continue
+      icone(l.genre, e[0], e[1], choisieMer === l)
+      if (noms) etiquette(l.nom, e[0], e[1] + 12, 12, '#F4EAFF')
+    }
     g.font = '600 13px Fredoka, system-ui, sans-serif'
-    for (k = 0; k < lieux.length; k++) {
-      l = lieux[k]; e = ecranM(l.x, l.z)
-      if (e[0] < -80 || e[0] > L + 80 || e[1] < -40 || e[1] > H + 40) continue
-      icone(l.sorte, e[0], e[1])
-      if (M.s >= 0.07 || l.sorte === 'port') etiquette(l.nom, e[0], e[1] + 12, 13, l.sorte === 'repaire' ? '#FFB4A8' : '#fff')
+    for (k = 0; k < mer.lieux.length; k++) {
+      l = mer.lieux[k]; e = ecranM(l.x, l.z)
+      if (l.sorte === 'port' || e[0] < -80 || e[0] > L + 80 || e[1] < -40 || e[1] > H + 40) continue
+      icone(l.sorte, e[0], e[1], choisieMer === l)
+      if (M.s >= 0.1) etiquette(l.nom, e[0], e[1] + 12, 13, '#FFE9A8')
     }
-    if (!NAVIRES) return
-    var f = Math.min(1, (Date.now() - releveDernier) / Math.max(1000, releveDernier - relevePrec || 10000))
-    for (var p in navires) {
-      var n = navires[p], x = n.ax + (n.x - n.ax) * f, z = n.az + (n.z - n.az) * f, en = ecranM(x, z)
-      if (en[0] < -40 || en[0] > L + 40 || en[1] < -40 || en[1] > H + 40) continue
-      navire(en[0], en[1], n.cap, n.en_combat, n.pseudo)
-      if (M.s >= 0.09) etiquette(n.pseudo, en[0], en[1] + 11, 12, '#FFD75E')
+    // les événements, les pirates, les navires des joueurs : au-dessus de tout
+    evenementsEnMer()
+    piratesEnMer()
+    naviresEnMer()
+    // les noms des zones par-dessus : on les lit toujours
+    nomsDesZones()
+  }
+  // LE PALAIS DE HAUT : la terre de la boîte, ses murs, la place ; le port et ses quais (de près) ; son nom
+  function palais() {
+    var b = mer.ligne, a = ecranM(b.xMin, b.zMin), c = ecranM(b.xMax, b.zMax), w = c[0] - a[0], h = c[1] - a[1]
+    g.fillStyle = '#5E8F43'; g.fillRect(a[0], a[1], w, h)
+    if (w > 18) {
+      g.fillStyle = '#D9C38A'; g.fillRect(a[0] + w * .3, a[1] + h * .3, w * .4, h * .4)                 // la place
+      g.fillStyle = '#8E7CB8'; g.fillRect(a[0] + w * .42, a[1] + h * .4, w * .16, h * .2)               // le palais
+      g.fillStyle = '#C9A55A'; g.fillRect(a[0] + w * .47, a[1] + h * .34, w * .06, h * .08)
     }
+    g.strokeStyle = '#E8DDBF'; g.lineWidth = Math.max(1.5, 4 * M.s); g.strokeRect(a[0], a[1], w, h)  // les murs : la ligne
+    var P = mer.port
+    if (P && M.s >= 0.25) {
+      g.fillStyle = '#8C5A2E'
+      for (var k = 0; k < (P.quais || []).length; k++) { var q = ecranM(P.quais[k].x - 6, P.quais[k].z - 2); g.fillRect(q[0], q[1], Math.max(3, 12 * M.s), Math.max(2, 4 * M.s)) }
+    }
+    var pt = P ? ecranM(P.x, P.z) : ecranM(196, -3)
+    icone('port', pt[0], pt[1], choisieMer && choisieMer.sorte === 'port')
+    g.textAlign = 'center'; g.textBaseline = 'top'
+    g.font = '700 13px Fredoka, system-ui, sans-serif'
+    etiquette('Le palais et son port', (a[0] + c[0]) / 2, Math.max(c[1], pt[1] + 12) + 4, 13, '#FFD75E')
+  }
+  // LE NOM DE CHAQUE ZONE, sur sa bande, au nord du palais (et la Fosse sur son secteur) : le nom, le niveau, ses lieux
+  // LE NOM DE CHAQUE ZONE, sur sa bande (le nom, le niveau, ses lieux) : chaque plaque cherche une place LIBRE autour du palais
+  // (le nord, le sud, l'est, puis les diagonales), jamais sur une autre plaque ni hors de l'écran ; la Fosse : au milieu de son
+  // secteur, d'abord. Une bande trop fine à ce zoom : pas de plaque (on zoome pour la lire).
+  var DIRECTIONS = [270, 90, 0, 315, 45, 135, 225]
+  function pointA(angle, d) {
+    var b = mer.ligne, cx = (b.xMin + b.xMax) / 2, cz = (b.zMin + b.zMax) / 2, dx = Math.cos(angle * Math.PI / 180), dz = Math.sin(angle * Math.PI / 180), lo = 0, hi = mer.rayon * 2
+    for (var k = 0; k < 40; k++) { var m = (lo + hi) / 2; if (distLigne(cx + dx * m, cz + dz * m) < d) lo = m; else hi = m }
+    return [cx + dx * hi, cz + dz * hi]
+  }
+  function chevauche(r, l) { for (var k = 0; k < l.length; k++) if (r[0] < l[k][2] && r[2] > l[k][0] && r[1] < l[k][3] && r[3] > l[k][1]) return true; return false }
+  function nomsDesZones() {
+    var prises = [], k, z, e, j
+    // la Fosse : au bout de son secteur, du côté du large (le centre est plein de lieux)
+    var f = mer.fosse, m = rayonA(f.cap, f.a * 0.92)
+    e = ecranM(m[0], m[1])
+    if ((f.a - f.de) * M.s >= 30) prises.push(plaque(e[0], e[1], f.nom, 'Combat entre joueurs · niveau ' + f.niveau, true, true))
+    var l = [mer.rade].concat(mer.anneaux)
+    for (k = 0; k < l.length; k++) {
+      z = l[k]
+      var de = z.id === 'rade' ? 0 : z.de, a = Math.min(z.a, mer.rayon), hb = (a - de) * M.s
+      if (hb < 22) continue
+      for (j = 0; j < DIRECTIONS.length; j++) {
+        var p = pointA(DIRECTIONS[j], (de + a) / 2)
+        if (p[0] * p[0] + p[1] * p[1] > mer.rayon * mer.rayon * 0.96) continue
+        e = ecranM(p[0], p[1])
+        var r = mesurePlaque(e[0], e[1], z.nom, sousTitre(z), hb >= 44)
+        if (r[0] < 4 || r[1] < 4 || r[2] > L - 4 || r[3] > H - 4 || chevauche(r, prises)) continue
+        prises.push(plaque(e[0], e[1], z.nom, sousTitre(z), hb >= 44))
+        break
+      }
+    }
+  }
+  function sousTitre(z) {
+    var n = mer.parZone[z.id] || 0
+    return (z.niveau ? 'Niveau ' + z.niveau : 'Sans pirate') + (n ? ' · ' + n + ' lieu' + (n > 1 ? 'x' : '') + ' à découvrir' : '')
+  }
+  function mesurePlaque(px, py, nom, sous, deux) {
+    g.font = '400 16px "Lilita One", Fredoka, sans-serif'
+    var w1 = g.measureText(nom).width
+    g.font = '600 12px Fredoka, system-ui, sans-serif'
+    var w2 = deux ? g.measureText(sous).width : 0, w = Math.max(w1, w2) + 18, h = deux ? 40 : 24
+    return [px - w / 2, py - h / 2, px + w / 2, py + h / 2]
+  }
+  function plaque(px, py, nom, sous, deux, rouge) {
+    g.font = '400 16px "Lilita One", Fredoka, sans-serif'
+    var w1 = g.measureText(nom).width
+    g.font = '600 12px Fredoka, system-ui, sans-serif'
+    var w2 = deux ? g.measureText(sous).width : 0, w = Math.max(w1, w2) + 18, h = deux ? 40 : 24
+    g.fillStyle = rouge ? 'rgba(70,14,14,.82)' : 'rgba(14,8,24,.72)'
+    g.beginPath(); if (g.roundRect) g.roundRect(px - w / 2, py - h / 2, w, h, 10); else g.rect(px - w / 2, py - h / 2, w, h); g.fill()
+    g.fillStyle = rouge ? '#FFB4A8' : '#FFF6DC'
+    g.font = '400 16px "Lilita One", Fredoka, sans-serif'
+    g.fillText(nom, px, py - (deux ? 8 : 0))
+    if (deux) { g.fillStyle = rouge ? '#FFD0C6' : '#CBB8E6'; g.font = '600 12px Fredoka, system-ui, sans-serif'; g.fillText(sous, px, py + 11) }
+    return [px - w / 2, py - h / 2, px + w / 2, py + h / 2]
   }
   var FORMES = {
     port: ['..XX..', '..XX..', 'XXXXXX', '..XX..', 'X.XX.X', '.XXXX.'],
     phare: ['..YY..', '.YYYY.', '..XX..', '..RR..', '..XX..', '.XXXX.'],
     ile: ['..GG..', '.GGGG.', 'GGGGGG', 'SSSSSS', '.SSSS.', '......'],
     epave: ['...X..', '..XX..', '.X.X..', 'XXXXXX', '.XXXX.', '......'],
+    ruine: ['X.X.X.', 'XXXXX.', 'X...X.', 'X.X.X.', 'XXXXX.', '......'],
     recif: ['R...R.', 'RR.RR.', '.RRR..', '..R...', '.RRR..', '......'],
     repaire: ['.XXXX.', 'X.XX.X', 'XXXXXX', '.X..X.', '.XXXX.', 'X....X']
   }
   var TEINTES = { X: '#F4EAFF', Y: '#FFD75E', R: '#E8604C', G: '#6CC04A', S: '#E3CF8E' }
-  function icone(sorte, px, py) {
+  function icone(sorte, px, py, choisi) {
     var f = FORMES[sorte] || FORMES.ile, u = 3, a = Math.round(px - 9), b = Math.round(py - 9)
-    g.fillStyle = 'rgba(14,8,24,.6)'
+    g.fillStyle = choisi ? 'rgba(255,215,94,.9)' : 'rgba(14,8,24,.6)'
     g.fillRect(a - 2, b - 2, 22, 22)
     for (var y = 0; y < 6; y++) for (var x = 0; x < 6; x++) {
       var c = f[y][x]
       if (c === '.') continue
-      g.fillStyle = sorte === 'repaire' && c === 'X' ? '#FFB4A8' : TEINTES[c]
+      g.fillStyle = sorte === 'repaire' && c === 'X' ? '#FFB4A8' : sorte === 'ruine' && c === 'X' ? '#C9C2B4' : TEINTES[c]
       g.fillRect(a + x * u, b + y * u, u, u)
     }
   }
-  // un navire : sa coque qui tangue un peu, et son SILLAGE (deux traînées qui s'ouvrent et s'effacent derrière lui)
-  function navire(px, py, cap, combat, pseudo) {
-    var r = cap * Math.PI / 180, tangue = calme ? 0 : Math.sin(t * 2 + pseudo.length) * 0.06
+  // ---------- ce qui vit en mer ----------
+  function naviresEnMer() {
+    var f = Math.min(1, (Date.now() - releveDernier) / Math.max(1000, releveDernier - relevePrec || 10000))
+    for (var p in navires) {
+      var n = navires[p], x = n.ax + (n.x - n.ax) * f, z = n.az + (n.z - n.az) * f, en = ecranM(x, z)
+      if (en[0] < -40 || en[0] > L + 40 || en[1] < -40 || en[1] > H + 40) continue
+      navire(en[0], en[1], n.cap, n.en_combat, n.pseudo, false)
+      etiquette(n.pseudo, en[0], en[1] + 11, 12, '#FFD75E')
+    }
+  }
+  // les pirates : un navire rouge (le jeu les publiera ; API.md 2.7, la forme proposée : { type, nom, x, z, cap })
+  function piratesEnMer() {
+    for (var k = 0; k < pirates.length; k++) {
+      var n = pirates[k], en = ecranM(n.x, n.z)
+      if (en[0] < -40 || en[0] > L + 40 || en[1] < -40 || en[1] > H + 40) continue
+      navire(en[0], en[1], n.cap || 0, true, String(n.nom || n.type || 'pirate'), true)
+      if (M.s >= 0.09) etiquette(String(n.nom || 'Pirate'), en[0], en[1] + 11, 11, '#FFB4A8')
+    }
+  }
+  // les événements en mer (une cargaison, un trésor...) : un cercle qui pulse, son nom ({ sorte, nom, x, z })
+  function evenementsEnMer() {
+    for (var k = 0; k < evenements.length; k++) {
+      var v = evenements[k], en = ecranM(v.x, v.z), r = 10 + (calme ? 0 : Math.sin(t * 3 + k) * 3)
+      if (en[0] < -40 || en[0] > L + 40 || en[1] < -40 || en[1] > H + 40) continue
+      g.strokeStyle = 'rgba(126,232,255,.9)'; g.lineWidth = 2
+      g.beginPath(); g.arc(en[0], en[1], r, 0, Math.PI * 2); g.stroke()
+      g.fillStyle = 'rgba(126,232,255,.25)'; g.fill()
+      etiquette(String(v.nom || 'Un événement'), en[0], en[1] + 14, 12, '#BFF5FF')
+    }
+  }
+  // un navire : sa coque qui tangue un peu, et son SILLAGE
+  function navire(px, py, cap, combat, nom, pirate) {
+    var r = cap * Math.PI / 180, tangue = calme ? 0 : Math.sin(t * 2 + nom.length) * 0.06
     g.save()
     g.translate(px, py)
     g.rotate(r + tangue)
@@ -531,26 +757,78 @@
         g.fillRect(-ec - 1, dz, 2, 2); g.fillRect(ec - 1, dz, 2, 2)
       }
     }
-    g.fillStyle = combat ? '#E8604C' : '#FFD75E'
+    g.fillStyle = pirate ? '#2B1A1A' : (combat ? '#E8604C' : '#FFD75E')
     g.beginPath(); g.moveTo(0, -9); g.lineTo(6, 6); g.lineTo(0, 3); g.lineTo(-6, 6); g.closePath(); g.fill()
-    g.strokeStyle = 'rgba(14,8,24,.8)'; g.lineWidth = 1.5; g.stroke()
+    g.strokeStyle = pirate ? '#E8604C' : 'rgba(14,8,24,.8)'; g.lineWidth = 1.5; g.stroke()
     g.restore()
   }
   function chargerMer() {
-    if (lieux) { sale = true; return }
+    if (mer) { sale = true; return }
     ecrire('La mer se charge...')
     V.carte('mer').then(function (r) {
       if (r.statut !== 200) { ecrire('La mer ne répond pas pour l\'instant.'); return }
-      lieux = r.corps.lieux || []
-      cadrerMer(); ecrire(''); sale = true
+      lireMer(r.corps)
+      fosseForme = null
+      legendeMer()
+      cadrerMer(); ecrire(''); dire(); sale = true
     })
   }
+  // le cadre : toute la mer (le disque), le palais au milieu
   function cadrerMer() {
-    if (!lieux || !lieux.length) return
-    var x0 = 1e9, x1 = -1e9, z0 = 1e9, z1 = -1e9
-    for (var k = 0; k < lieux.length; k++) { x0 = Math.min(x0, lieux[k].x); x1 = Math.max(x1, lieux[k].x); z0 = Math.min(z0, lieux[k].z); z1 = Math.max(z1, lieux[k].z) }
-    M.cx = (x0 + x1) / 2; M.cy = (z0 + z1) / 2
-    M.s = Math.max(MER_MIN, Math.min(MER_MAX, Math.min((L - 160) / Math.max(1, x1 - x0), (H - 120) / Math.max(1, z1 - z0))))
+    if (!mer) return
+    M.cx = 0; M.cy = 0
+    // un écran en hauteur (le téléphone) : la mer remplit la hauteur (ses bords coupés), pas seulement la largeur
+    var cote = H > L * 1.3 ? H * 0.82 : Math.min(L, H)
+    M.s = Math.max(MER_MIN, Math.min(MER_MAX, cote / (mer.rayon * 2 * 1.04)))
+  }
+  // ---------- la fiche d'un lieu ou d'une zone (un clic) ----------
+  var choisieMer = null
+  function lieuSousMer(mx, my) {
+    var best = null, bd = 16 * 16, l = mer.atlas.concat(mer.lieux), k
+    for (k = 0; k < l.length; k++) {
+      var e = ecranM(l[k].x, l[k].z), d = (e[0] - mx) * (e[0] - mx) + (e[1] - my) * (e[1] - my)
+      if (d < bd) { bd = d; best = l[k] }
+    }
+    if (!best && mer.port) { var ep = ecranM(mer.port.x, mer.port.z); if ((ep[0] - mx) * (ep[0] - mx) + (ep[1] - my) * (ep[1] - my) < bd) best = { id: 'port', nom: 'Le port', sorte: 'port', x: mer.port.x, z: mer.port.z } }
+    return best
+  }
+  function nomZone(id) {
+    if (id === 'rade') return mer.rade.nom
+    if (id === 'fosse') return mer.fosse.nom
+    for (var k = 0; k < mer.anneaux.length; k++) if (mer.anneaux[k].id === id) return mer.anneaux[k].nom
+    return ''
+  }
+  function montrerMer(mx, my) {
+    if (!mer) return
+    var l = lieuSousMer(mx, my), w = monde(mx, my)
+    choisieMer = l; sale = true
+    if (l) {
+      var genre = l.sorte === 'port' ? 'port' : (l.sorte === 'phare' ? 'phare' : l.genre)
+      ficheCorps.innerHTML = '<h2>' + echapper(l.nom) + '</h2><p class="hote">' + echapper(GENRES[genre] || 'Un lieu') + (l.zone ? ' · ' + echapper(nomZone(l.zone)) : '') + '</p>' +
+        (genre === 'port' ? '<p>Le quai du palais : c\'est d\'ici que partent les navires. La Borne du port appelle le tien.</p>'
+          : '<p>Un lieu de l\'Atlas : passe tout près en navire pour le découvrir. Le premier du serveur à le trouver voit son nom gravé.</p>')
+      fiche.hidden = false
+      return
+    }
+    var z = zoneEn(w[0], w[1])
+    if (!z) { fiche.hidden = true; return }
+    var n = mer.parZone[z.id] || 0
+    ficheCorps.innerHTML = '<h2>' + echapper(z.nom) + '</h2><p class="hote">' + (z.niveau ? 'Niveau conseillé : ' + z.niveau : 'Le port et ses abords') + '</p>' +
+      '<p>' + echapper(z.guide || (z.id === 'rade' ? 'Les eaux du port : ni pirate ni butin, on y prend la mer en sécurité.' : '')) + '</p>' +
+      (n ? '<p class="hote">' + n + ' lieu' + (n > 1 ? 'x' : '') + ' de l\'Atlas à découvrir ici.</p>' : '')
+    fiche.hidden = false
+  }
+  function legendeMer() {
+    var l = document.getElementById('legende-mer-zones')
+    if (!l || !mer) return
+    l.textContent = ''
+    ;[mer.rade].concat(mer.anneaux).concat([mer.fosse]).forEach(function (z) {
+      var li = document.createElement('li'), p = document.createElement('span')
+      p.className = 'pastille zone-' + z.id
+      li.appendChild(p)
+      li.appendChild(document.createTextNode(z.nom + (z.niveau ? ' (niveau ' + z.niveau + ')' : '')))
+      l.appendChild(li)
+    })
   }
   function relireNavires() {
     if (!NAVIRES || zone !== 'mer' || document.hidden) return
@@ -564,6 +842,9 @@
         navires[n.pseudo] = { pseudo: n.pseudo, x: n.x, z: n.z, ax: ax, az: az, cap: n.cap, en_combat: n.en_combat }
       }
       for (var p in navires) if (!vus[p]) delete navires[p]
+      // (2c) ce qui vit en mer, quand le jeu le publie : les pirates et les événements (sinon : rien)
+      pirates = Array.isArray(r.corps.pirates) ? r.corps.pirates.filter(function (n) { return isFinite(n.x) && isFinite(n.z) }) : []
+      evenements = Array.isArray(r.corps.evenements) ? r.corps.evenements.filter(function (n) { return isFinite(n.x) && isFinite(n.z) }) : []
       relevePrec = releveDernier || tl - 10000; releveDernier = tl
       sale = true
     })
@@ -635,7 +916,7 @@
       '<p class="petit">Le launcher installe tout. En jeu : <b>/ile</b>.</p></div>'
     fiche.hidden = false
   }
-  document.getElementById('fiche-fermer').addEventListener('click', function () { montrer(null); libreChoisie = null })
+  document.getElementById('fiche-fermer').addEventListener('click', function () { montrer(null); libreChoisie = null; choisieMer = null })
 
   // ---------------------------------------------------------------- les gestes : glisser, zoomer, cliquer
   var doigts = {}, depart = null, bouge = false
@@ -680,6 +961,7 @@
       if (!bouge && p && e.type === 'pointerup') {
         var x = trouverSous(p[0], p[1])
         if (x) montrer(x, false)
+        else if (zone === 'mer') montrerMer(p[0], p[1])
         else { var lb = libreSous(p[0], p[1]); if (lb) montrerLibre(lb); else if (zone === 'iles') { montrer(null); libreChoisie = null } }
       }
       depart = null
@@ -785,7 +1067,7 @@
     el.replaceWith(c)
   })
   ;[].forEach.call(document.querySelectorAll('#legende-mer .lieu-icone'), function (el) {
-    var sorte = ['port', 'phare', 'ile', 'epave', 'recif', 'repaire'].filter(function (x) { return el.classList.contains(x) })[0]
+    var sorte = ['port', 'phare', 'ile', 'epave', 'ruine', 'recif', 'repaire'].filter(function (x) { return el.classList.contains(x) })[0]
     if (!sorte) return
     var c = document.createElement('canvas'), garde = g
     c.width = 22; c.height = 22; c.className = 'lieu-icone-dessin'; c.setAttribute('aria-hidden', 'true')

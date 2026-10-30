@@ -133,3 +133,14 @@
 .legende li { padding: 4px 12px 4px 6px; border-radius: 999px; background: rgba(255, 255, 255, .05); border: 1px solid var(--trait); }
 .pastille.libre { border-radius: 4px; }
 .carte-fil .fil-ligne { border-radius: 12px; }
+
+/* (2c, 30/10/2026) LA LÉGENDE DE LA MER : les zones à leurs couleurs (js/carte.js, ZONES_TEINTES ; la Fosse en rouge), puis les
+   lieux et ce qui vit en mer */
+.legende-mer[hidden] { display: none; }
+.legende-mer .legende + .legende { margin-top: 10px; }
+.pastille.zone-rade { background: #3C9BCB; } .pastille.zone-hauts_fonds { background: #2373AA; } .pastille.zone-large { background: #164F7E; }
+.pastille.zone-mer_noire { background: #0D3157; } .pastille.zone-abysses { background: #061A33; }
+.pastille[class*="zone-"] { width: 16px; height: 16px; border-radius: 5px; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .3); }
+.pastille.zone-fosse { background: rgba(214, 64, 52, .55); box-shadow: inset 0 0 0 1px rgba(255, 120, 100, .9); }
+.pastille.pirate { width: 12px; height: 12px; border-radius: 3px; background: #2B1A1A; box-shadow: inset 0 0 0 2px #E8604C; }
+.pastille.evenement { width: 14px; height: 14px; border-radius: 50%; background: rgba(126, 232, 255, .25); box-shadow: inset 0 0 0 2px rgba(126, 232, 255, .9); }

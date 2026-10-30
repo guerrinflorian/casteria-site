@@ -119,15 +119,19 @@
       <li><span class="pastille ponton"></span>Ouverte aux visites</li>
       <li><span class="pastille libre"></span>Place libre</li>
     </ul>
-    <ul class="legende" id="legende-mer" hidden aria-label="La légende de la mer">
-      <li><span class="lieu-icone port"></span>Port</li>
-      <li><span class="lieu-icone phare"></span>Phare</li>
-      <li><span class="lieu-icone ile"></span>Île sauvage</li>
-      <li><span class="lieu-icone epave"></span>Épave</li>
-      <li><span class="lieu-icone recif"></span>Récif</li>
-      <li><span class="lieu-icone repaire"></span>Repaire de pirates</li>
-      <li class="si-navires" hidden><span class="lieu-icone navire"></span>Navire d'un joueur</li>
-    </ul>
+    <div class="legende-mer" id="legende-mer" hidden>
+      <ul class="legende" id="legende-mer-zones" aria-label="Les zones de la mer"></ul>
+      <ul class="legende" aria-label="Les lieux de la mer">
+        <li><span class="lieu-icone port"></span>Le port du palais</li>
+        <li><span class="lieu-icone phare"></span>Phare</li>
+        <li><span class="lieu-icone ile"></span>Île sauvage</li>
+        <li><span class="lieu-icone epave"></span>Épave</li>
+        <li><span class="lieu-icone ruine"></span>Ruine</li>
+        <li class="si-navires" hidden><span class="lieu-icone navire"></span>Navire d'un joueur</li>
+        <li><span class="pastille pirate"></span>Pirate</li>
+        <li><span class="pastille evenement"></span>Événement en cours</li>
+      </ul>
+    </div>
     <p class="note carte-note" id="carte-note"></p>
   </div>
 </section>
