@@ -7,14 +7,24 @@
 .vote-gestes { padding: 96px 0 92px; }
 /* LES SITES DE VOTE : des cartes d'or, une par site ; la liste vide (aucun site inscrit) se cache, et la phrase « tape
    /vote » prend sa place */
-.sites-vote { list-style: none; margin: 56px auto 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; max-width: 920px; }
+/* (37, le 30/10 ; le proprietaire : « un plus petit, l'autre plus gros, pas alignés ») DEUX CARTES JUMELLES : une grille de
+   deux colonnes egales (une seule au telephone), chaque carte de toute la hauteur de sa rangee, le bouton tout en bas */
+.sites-vote { list-style: none; margin: 56px auto 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; max-width: 760px; }
+.sites-vote > li { display: flex; }
 .sites-vote:empty { display: none; }
 .sites-vote:not(:empty) + .sites-vides { display: none; }
-.site-vote { display: flex; flex-direction: column; gap: 4px; min-width: 240px; padding: 14px 20px 15px; text-decoration: none; color: #FFF4DA;
-  background: linear-gradient(180deg, #3A1D57, #24103A); border: 3px solid var(--or-clair); box-shadow: inset -4px -4px 0 rgba(0, 0, 0, .3), 0 10px 22px rgba(58, 38, 20, .3); transition: transform .2s ease, box-shadow .2s ease; }
-.site-vote b { font-family: "Lilita One", sans-serif; font-weight: 400; font-size: 22px; line-height: 1.1; color: #fff; }
-.site-vote span { font-size: 14px; font-weight: 600; color: var(--or-clair); }
-.site-vote:hover, .site-vote:focus-visible { transform: translateY(-3px); box-shadow: inset -4px -4px 0 rgba(0, 0, 0, .3), 0 0 26px rgba(255, 215, 94, .5); }
+.site-vote { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; min-width: 0; padding: 22px 22px 24px; text-align: center; text-decoration: none;
+  color: var(--encre); background: linear-gradient(180deg, #FFFBF2, #F7ECD6); border: 1px solid rgba(155, 112, 52, .28); border-radius: 20px;
+  box-shadow: 0 6px 0 rgba(155, 112, 52, .25), 0 14px 26px rgba(58, 38, 20, .14); transition: transform .2s ease, box-shadow .2s ease; }
+.site-nom { font-family: var(--police-titre, "Lilita One", sans-serif); font-weight: 400; font-size: 26px; line-height: 1.1; color: var(--bois-fonce, #4A2B12); }
+.site-rythme { font-size: 13px; font-weight: 800; letter-spacing: .3px; padding: 3px 12px; border-radius: 999px; color: #4A2B07; background: linear-gradient(180deg, #FFE08A, var(--or-k, #FFCF5A)); }
+.site-geste { margin-bottom: 10px; font-size: 16px; font-weight: 700; line-height: 1.35; white-space: nowrap; }
+.site-vote .site-bouton { margin-top: auto; align-self: stretch; justify-content: center; pointer-events: none; }
+.site-vote:hover, .site-vote:focus-visible { transform: translateY(-3px); box-shadow: 0 9px 0 rgba(155, 112, 52, .25), 0 0 26px rgba(255, 215, 94, .55); }
+/* la note sous les cartes (le second site reconnait le vote a la connexion) : cachee avec sa carte, et avec une liste vide */
+.vote-note { margin: 18px auto 0; max-width: 620px; text-align: center; font-size: 16px; font-weight: 600; line-height: 1.45; color: var(--encre); opacity: .85; }
+.sites-vote[data-serveursminecraft="eteint"] ~ .vote-note, .sites-vote:empty ~ .vote-note { display: none; }
+@media (max-width: 680px) { .sites-vote { grid-template-columns: minmax(0, 1fr); max-width: 440px; } .vote-note { font-size: 15px; } }
 .sites-vides { margin: 58px auto 0; max-width: 680px; padding: 16px 22px; text-align: center; font-size: 19px; font-weight: 600; line-height: 1.45; color: var(--encre);
   background: rgba(255, 248, 231, .7); border: 3px dashed var(--or); }
 .sites-vides code { color: var(--bois-fonce); font-weight: 700; }
@@ -71,14 +81,7 @@
 }
 html.photo .vote-caisse .cle, html.photo .champ-exemple b::after { animation: none; }
 
-/* (23/10/2026) la consigne au-dessus des sites de vote : ce qu'on écrit sur la page du site, et quand la clé arrive */
-.vote-consigne { margin: 52px auto 0; max-width: 680px; text-align: center; font-size: 19px; font-weight: 600; line-height: 1.45; color: var(--encre); }
-.vote-consigne + .sites-vote { margin-top: 20px; }
-@media (max-width: 600px) { .vote-consigne { font-size: 17px; } }
-/* une liste vide (aucun site inscrit) : la consigne se tait avec elle */
-.vote-consigne:has(+ .sites-vote:empty) { display: none; }
 /* (b5, le 29/10/2026) le second site de vote (serveursminecraft.org) reste cache tant que le drapeau de la liste vaut « eteint »
-   (vote.html, data-serveursminecraft) ; sa carte porte une phrase plus longue : elle prend la largeur d'une carte */
+   (vote.html, data-serveursminecraft) ; (37, le 30/10) la carte qui reste, seule et au milieu */
 .sites-vote[data-serveursminecraft="eteint"] .site-sm { display: none; }
-.site-sm .site-vote { max-width: 440px; }
-.site-sm .site-vote span { line-height: 1.35; }
+.sites-vote[data-serveursminecraft="eteint"] { grid-template-columns: minmax(0, 1fr); max-width: 380px; }

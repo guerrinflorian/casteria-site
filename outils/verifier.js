@@ -448,7 +448,10 @@ function verifierVote(faute) {
   if (!/<p class="sites-vides[^"]*">(?:(?!<\/p>)[\s\S])*\/vote/.test(nu)) faute('vote.html : la phrase qui remplace une liste vide (<p class="sites-vides">, « tape /vote ») manque')
   // (23/10/2026, le propriétaire : « j'ai mis sur Serveur Privé que ça demande le pseudo ») un site dans la liste : la
   // consigne juste au-dessus dit d'écrire son pseudo du jeu (<p class="vote-consigne">, collée à la liste)
-  if (sitesDeVote().liens.length && !/<p class="vote-consigne[^"]*">(?:(?!<\/p>)[\s\S])*pseudo(?:(?!<\/p>)[\s\S])*<\/p>\s*<ul class="sites-vote"/.test(nu)) faute('vote.html : la consigne au-dessus des sites (<p class="vote-consigne">, « écris ton pseudo du jeu ») manque')
+  // (37, le 30/10/2026 ; le proprietaire : les deux cartes jumelles) la consigne est DANS la carte de Serveur Privé (son geste,
+  // « Écris ton pseudo exact »), plus jamais repetee au-dessus
+  if (sitesDeVote().liens.length && !/<li class="site-sp"><a class="site-vote" href="https:\/\/serveur-prive\.net\/[^"]*"[^>]*>(?:(?!<\/li>)[\s\S])*<span class="site-geste">[^<]*pseudo[^<]*<\/span>/.test(nu)) faute('vote.html : la carte de Serveur Privé (<li class="site-sp">) dit son geste, « écris ton pseudo exact » (<span class="site-geste">)')
+  if (/class="vote-consigne/.test(nu)) faute('vote.html : la consigne au-dessus des sites répète la carte de Serveur Privé (le propriétaire : rien en double)')
   for (const a of sitesDeVote().liens) {
     const href = (a.match(/\shref="([^"]*)"/) || [])[1] || ''
     if (!/^https:\/\/[a-z0-9-]+(\.[a-z0-9-]+)+(\/[^\s"<>]*)?$/i.test(href)) faute('vote.html : un site de vote sans adresse https complète : ' + a.slice(0, 80))
@@ -463,7 +466,9 @@ function verifierVote(faute) {
     if (drapeau !== 'eteint' && drapeau !== 'allume') faute('vote.html : le drapeau du second site de vote (data-serveursminecraft="eteint" ou "allume") sur la liste')
     const sm = sitesDeVote().liste || ''
     if (!/<li class="site-sm"><a class="site-vote" href="https:\/\/www\.serveursminecraft\.org\/serveur\/7794\/" target="_blank" rel="noopener">/.test(sm)) faute('vote.html : la carte de serveursminecraft.org (<li class="site-sm">, https://www.serveursminecraft.org/serveur/7794/) dans la liste des sites')
-    else if (!/Un vote toutes les 24 heures\.[^<]*même connexion que le jeu[^<]*\/vote[^<]*J'ai voté/.test(sm)) faute('vote.html : la carte de serveursminecraft.org dit un vote toutes les 24 heures (un vrai vote : 86 380 s), la même connexion que le jeu, puis /vote et « J\'ai voté »')
+    else if (!/<li class="site-sm">(?:(?!<\/li>)[\s\S])*<span class="site-rythme">Un vote toutes les 24 heures<\/span><span class="site-geste">[^<]*\/vote[^<]*J'ai voté[^<]*<\/span>/.test(sm)) faute('vote.html : la carte de serveursminecraft.org dit un vote toutes les 24 heures (un vrai vote : 86 380 s), puis /vote en jeu et « J\'ai voté »')
+    // (37, le 30/10) la meme connexion que le jeu : la note juste sous la liste (elle ne tient pas sur la ligne du geste)
+    else if (!/<p class="vote-note[^"]*">[^<]*ServeursMinecraft[^<]*même connexion que le jeu[^<]*<\/p>/.test(nu)) faute('vote.html : la note sous les sites dit de voter sur ServeursMinecraft.org depuis la même connexion que le jeu (<p class="vote-note">)')
     for (const p of fs.readdirSync(RACINE).filter(n => /\.(html|js|json)$/.test(n)).concat(fs.readdirSync(path.join(RACINE, 'js')).map(n => 'js/' + n))) if (/serveur-minecraft\.com/i.test(lire(p) || '')) faute(p + ' : serveur-minecraft.com (le propriétaire n\'en veut pas)')
   }
   const css = lire('css/vote.css')

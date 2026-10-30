@@ -248,9 +248,14 @@ const MUTANTS = [
   ['un site de vote sans rel="noopener"', 'vote.html', s => s.replace('href="https://serveur-prive.net/minecraft/casteria/vote" target="_blank" rel="noopener"', 'href="https://serveur-prive.net/minecraft/casteria/vote" target="_blank"')],
   ['un site de vote qui ne s ouvre pas a part', 'vote.html', s => s.replace('href="https://serveur-prive.net/minecraft/casteria/vote" target="_blank" rel="noopener"', 'href="https://serveur-prive.net/minecraft/casteria/vote" rel="noopener"')],
   ['un site de vote en http', 'vote.html', s => s.replace('href="https://serveur-prive.net/minecraft/casteria/vote"', 'href="http://serveur-prive.net/minecraft/casteria/vote"')],
-  ['la liste des sites de vote avec une espace (vide, elle ne se cache plus)', 'vote.html', s => s.replace('aria-label="Les sites où voter pour Casteria"><li>', 'aria-label="Les sites où voter pour Casteria">\n    <li>')],
-  ['la consigne du pseudo retiree au-dessus des sites de vote', 'vote.html', s => s.replace(/<p class="vote-consigne[^\n]*<\/p>\n/, '')],
-  ['la consigne sans le mot pseudo', 'vote.html', s => s.replace('écris ton pseudo du jeu, exactement', 'écris ton nom')],
+  ['la liste des sites de vote avec une espace (vide, elle ne se cache plus)', 'vote.html', s => s.replace('aria-label="Les sites où voter pour Casteria"><li class="site-sp">', 'aria-label="Les sites où voter pour Casteria">\n    <li class="site-sp">')],
+  // (37, le 30/10) les cartes jumelles : le geste de Serveur Prive dans sa carte, la consigne en double jamais revenue, la note
+  // de la connexion, le geste de ServeursMinecraft
+  ['le geste du pseudo retire de la carte de Serveur Prive', 'vote.html', s => s.replace('<span class="site-geste">Écris ton pseudo exact</span>', '')],
+  ['le geste de Serveur Prive sans le mot pseudo', 'vote.html', s => s.replace('Écris ton pseudo exact', 'Écris ton nom')],
+  ['la consigne en double revenue au-dessus des cartes', 'vote.html', s => s.replace('<ul class="sites-vote"', '<p class="vote-consigne">Sur Serveur Privé, écris ton pseudo du jeu.</p>\n    <ul class="sites-vote"')],
+  ['la note de la connexion retiree', 'vote.html', s => s.replace(/<p class="vote-note[^\n]*<\/p>\n/, '')],
+  ['le geste de ServeursMinecraft sans J ai vote', 'vote.html', s => s.replace('Puis /vote en jeu, « J\'ai voté »', 'Puis /vote en jeu')],
   ['la phrase « tape /vote » retiree de la page du vote', 'vote.html', s => s.replace(/<p class="sites-vides[^\n]*<\/p>\n/, '')],
   ['la liste vide des sites de vote plus cachee', 'css/vote.css', s => s.replace('.sites-vote:empty { display: none; }', '')],
   ['une image trop haute dans la feuille du vote', 'css/vote.css', s => s + '\n.vote-caisse img.photo { height: 1200px; }\n'],

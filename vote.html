@@ -116,9 +116,11 @@
          de la connexion, pas par le pseudo : sa carte le dit. ELLE RESTE CACHEE tant que le drapeau de la liste vaut « eteint »
          (data-serveursminecraft, css/vote.css) : la tete l'allume (« allume ») avec le jeu, apres un vrai vote vu. Jamais
          l'autre site de listes que le proprietaire refuse (son nom n'est ecrit nulle part : outils/verifier.js le refuse). -->
-    <p class="vote-consigne apparait">Sur Serveur Privé, écris ton pseudo du jeu, exactement. Ta Clé de Vote arrive en jeu quelques secondes après ton vote.</p>
-    <ul class="sites-vote" id="sites-vote" data-serveursminecraft="allume" aria-label="Les sites où voter pour Casteria"><li><a class="site-vote" href="https://serveur-prive.net/minecraft/casteria/vote" target="_blank" rel="noopener"><b>Voter sur Serveur Privé</b><span>un vote toutes les 1 h 30</span></a></li><li class="site-sm"><a class="site-vote" href="https://www.serveursminecraft.org/serveur/7794/" target="_blank" rel="noopener"><b>Voter sur ServeursMinecraft.org</b><span>Un vote toutes les 24 heures. Vote depuis la même connexion que le jeu, puis tape /vote en jeu et clique « J'ai voté » : ta Clé arrive en quelques secondes.</span></a></li></ul>
+    <!-- (37, le 30/10/2026 ; le proprietaire : « un plus petit, l'autre plus gros, pas alignés, même taille ? ») DEUX CARTES
+         JUMELLES : le nom du site, son rythme, son geste en une ligne, et le meme bouton « Voter » en bas, a la meme hauteur -->
+    <ul class="sites-vote" id="sites-vote" data-serveursminecraft="allume" aria-label="Les sites où voter pour Casteria"><li class="site-sp"><a class="site-vote" href="https://serveur-prive.net/minecraft/casteria/vote" target="_blank" rel="noopener"><b class="site-nom">Serveur Privé</b><span class="site-rythme">Un vote toutes les 1 h 30</span><span class="site-geste">Écris ton pseudo exact</span><span class="bouton bouton-orange site-bouton">Voter</span></a></li><li class="site-sm"><a class="site-vote" href="https://www.serveursminecraft.org/serveur/7794/" target="_blank" rel="noopener"><b class="site-nom">ServeursMinecraft.org</b><span class="site-rythme">Un vote toutes les 24 heures</span><span class="site-geste">Puis /vote en jeu, « J'ai voté »</span><span class="bouton bouton-orange site-bouton">Voter</span></a></li></ul>
     <p class="sites-vides apparait">La liste des sites où voter est dans le jeu : tape <code>/vote</code>, clique sur un site, et vote.</p>
+    <p class="vote-note apparait">Sur ServeursMinecraft.org, vote depuis la même connexion que le jeu : c'est à elle que le site reconnaît ton vote.</p>
   </div>
 </section>
 <div class="frise frise-etoiles" aria-hidden="true"></div>
