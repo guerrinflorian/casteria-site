@@ -422,6 +422,10 @@ html body .vitrine-tete.banniere .banniere-texte .en-ligne { flex-basis: 100%; w
 /* (la barre est plafonnée à 1 240 px : jamais la place dans sa ligne) dans la barre : un petit onglet qui pend sous elle, à gauche ; au téléphone, dans le tiroir seul */
 .barre > .barre-etat { position: absolute; left: 18px; top: calc(100% + 6px); margin: 0; min-height: 26px; padding: 2px 11px 2px 9px; font-size: 12px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); background: rgba(22, 15, 38, .82); }
 @media (max-width: 960px) { .barre > .barre-etat { display: none; } }
+/* (37, le 30/10) la page qui defile : l'onglet pendu sous la barre passait sur le contenu (les onglets de la carte) : il ne se
+   montre qu'en haut de page */
+.barre > .barre-etat { transition: opacity .2s ease, visibility .2s ease; }
+.barre.posee > .barre-etat { opacity: 0; visibility: hidden; }
 .menu-tiroir .tiroir-etat { align-self: flex-start; margin: -2px 0 10px; }
 /* (5c, l audit) « après /login . » : le fond arrondi de <code> écartait le point ; dans la consigne, la commande en or seul */
 #connexion .consigne code { padding: 0; background: none; font-weight: 700; }
