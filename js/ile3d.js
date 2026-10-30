@@ -94,6 +94,80 @@
     b.hidden = false
     $('geste').hidden = true
   }
+  // (a8, 30/10) WEBGL2, comme BlueMap le teste (WebGL.isWebGL2Available) : un contexte webgl2, rien d'autre
+  function webgl2() {
+    try { var cv = document.createElement('canvas'); return !!(window.WebGL2RenderingContext && cv.getContext('webgl2')) } catch (e) { return false }
+  }
+  // (a8, 30/10) OUVRIR LA VUE (et la rouvrir : « Réessayer ») : WebGL2 d'abord (BlueMap l'exige : sans lui, notre phrase,
+  // jamais sa page), puis une iframe neuve ; « L'île se charge... » jusqu'à son chargement
+  function ouvrirVue() {
+    if (!fiche || typeof fiche.vue !== 'string' || !fiche.vue) return
+    if (!webgl2()) { sans3D(); return }
+    if (iframe && iframe.parentNode) iframe.parentNode.removeChild(iframe)
+    var b = $('message')
+    A.vider(b)
+    b.appendChild(A.el('p', '', 'L\'île se charge...'))
+    b.hidden = false
+    iframe = document.createElement('iframe')
+    iframe.title = fiche.nom + ' en 3D'
+    iframe.setAttribute('allow', 'fullscreen')
+    var f = iframe
+    iframe.addEventListener('load', function () {
+      if (f !== iframe) return
+      $('message').hidden = true
+      $('geste').hidden = false
+      reappliquer()
+      guetter()
+    })
+    iframe.src = fiche.vue + hashDe(choisi)
+    $('vue').appendChild(iframe)
+    $('regards').hidden = false
+  }
+  // (a8, 30/10) LA VUE 3D NE S'OUVRE PAS (pas de WebGL2, ou BlueMap qui échoue dans sa vue : un contexte WebGL perdu, le
+  // processeur graphique du navigateur après un plantage) : la vue part (l'iframe, les regards), notre phrase, la petite île en
+  // pixels et « Réessayer » (une vue neuve, jamais toute la page) ; le reste de la fiche (le nom, les chiffres, les bêtes) reste
+  function sans3D() {
+    if (iframe && iframe.parentNode) iframe.parentNode.removeChild(iframe)
+    iframe = null
+    $('regards').hidden = true
+    var b = $('message')
+    A.vider(b)
+    var c = document.createElement('canvas')
+    c.className = 'ile-berce'; c.setAttribute('aria-hidden', 'true')
+    peindre(c, i, j, 5, true)
+    b.appendChild(c)
+    b.appendChild(A.el('p', 'ile-se-dessine', 'La vue 3D n\'a pas pu s\'ouvrir.'))
+    b.appendChild(A.el('p', 'note', 'Réessaie. Si elle ne s\'ouvre toujours pas : sur ordinateur, active l\'accélération matérielle dans les réglages du navigateur, puis recharge la page.'))
+    var r = A.el('button', 'bouton bouton-or petit', 'Réessayer')
+    r.type = 'button'
+    r.addEventListener('click', ouvrirVue)
+    b.appendChild(r)
+    b.hidden = false
+    $('geste').hidden = true
+  }
+  // (a8, 30/10) par sécurité : BlueMap a chargé mais échoue quand même (son « Failed to load BlueMap webapp! » remplace sa
+  // page : #bm-app-err ; « does not seem to support WebGL » : #webglmessage), ou son contexte WebGL se perd sans revenir
+  // (3 s) : la même phrase. Regardé deux fois par seconde pendant 20 s après le chargement (même origine)
+  function guetter() {
+    var n = 0, f = iframe, perdu = false
+    var t = setInterval(function () {
+      n++
+      if (f !== iframe || !f) { clearInterval(t); return }
+      var d = null
+      try { d = f.contentDocument } catch (e) { d = null }
+      if (d && (d.getElementById('bm-app-err') || d.getElementById('webglmessage'))) { clearInterval(t); sans3D(); return }
+      var cv = d && d.querySelector('canvas')
+      if (cv && !cv.dataset.casteriaGuet) {
+        cv.dataset.casteriaGuet = '1'
+        cv.addEventListener('webglcontextlost', function () {
+          perdu = true
+          setTimeout(function () { if (perdu && f === iframe) sans3D() }, 3000)
+        })
+        cv.addEventListener('webglcontextrestored', function () { perdu = false })
+      }
+      if (n >= 40) clearInterval(t)
+    }, 500)
+  }
   // sans île sur cette case : une place libre
   function libre() {
     document.title = 'Une place libre de Casteria'
@@ -163,21 +237,14 @@
       $('geste').hidden = true
       return
     }
-    // sans WebGL : la petite île en pixels, et la phrase
-    var ok = false
-    try { var cv = document.createElement('canvas'); ok = !!(window.WebGLRenderingContext && (cv.getContext('webgl2') || cv.getContext('webgl'))) } catch (e) { ok = false }
-    if (!ok) { message('La vue 3D ne s\'ouvre pas sur cet appareil : il lui faut WebGL.', false); return }
+    // (a8, 30/10 ; le propriétaire voyait le logo de BlueMap et « Failed to load BlueMap webapp! ») BlueMap exige WEBGL2 (son
+    // WebGL.isWebGL2Available) : WebGL1 seul ne suffit pas ; sans lui, notre phrase et la petite île en pixels, jamais sa page
     // (67, 29/10 ; l'audit du site, 1) pas encore dessinee (le premier rendu, une ile neuve) : jamais un cadre vide ni une
     // date fausse ; « se dessine », une petite ile qui berce
     if (typeof f.vue !== 'string' || !f.vue || !f.carte) { seDessine(); return }
     // (67, 30/10 ; b5, Lighthouse au téléphone : 4,8 s de fil bloqué) la vue BlueMap part APRÈS la page (son évènement load,
     // puis un moment calme) : le reste se dessine et répond d'abord ; « L'île se charge... » reste jusqu'au premier dessin
-    iframe = document.createElement('iframe')
-    iframe.title = f.nom + ' en 3D'
-    iframe.setAttribute('allow', 'fullscreen')
-    iframe.addEventListener('load', function () { $('message').hidden = true; reappliquer() })
-    apresLaPage(function () { iframe.src = f.vue + hashDe(choisi); v.appendChild(iframe) })
-    $('regards').hidden = false
+    apresLaPage(ouvrirVue)
     $('pied').hidden = false
     var quand = f.rendu ? Date.parse(f.rendu) : NaN
     $('dessinee').textContent = isFinite(quand) && quand > 0 ? 'Dessinée ' + A.date(f.rendu, true) : ''
