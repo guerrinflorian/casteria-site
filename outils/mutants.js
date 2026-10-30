@@ -252,7 +252,7 @@ const MUTANTS = [
   // (37, le 30/10) les cartes jumelles : le geste de Serveur Prive dans sa carte, la consigne en double jamais revenue, la note
   // de la connexion, le geste de ServeursMinecraft
   ['le geste du pseudo retire de la carte de Serveur Prive', 'vote.html', s => s.replace('<span class="site-geste">Écris ton pseudo exact</span>', '')],
-  ['le geste de Serveur Prive sans le mot pseudo', 'vote.html', s => s.replace('Écris ton pseudo exact', 'Écris ton nom')],
+  ['le geste de Serveur Prive sans le mot pseudo', 'vote.html', s => s.replace('<span class="site-geste">Écris ton pseudo exact</span>', '<span class="site-geste">Écris ton nom</span>')],
   ['la consigne en double revenue au-dessus des cartes', 'vote.html', s => s.replace('<ul class="sites-vote"', '<p class="vote-consigne">Sur Serveur Privé, écris ton pseudo du jeu.</p>\n    <ul class="sites-vote"')],
   ['la note de la connexion retiree', 'vote.html', s => s.replace(/<p class="vote-note[^\n]*<\/p>\n/, '')],
   ['le geste de ServeursMinecraft sans J ai vote', 'vote.html', s => s.replace('Puis /vote en jeu, « J\'ai voté »', 'Puis /vote en jeu')],
