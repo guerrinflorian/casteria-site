@@ -325,6 +325,8 @@ html.photo .a-etat::before { animation: none; }
 .i-ligne > b.vide { font-size: 14px; font-weight: 600; color: #A994C4; }
 .i-ligne > .i-pastille { justify-self: end; }
 .i-ligne > .i-sous { grid-column: 1 / -1; }
+.i-ligne.i-long { grid-template-columns: minmax(0, 1fr); gap: 3px 0; }
+.i-ligne.i-long > b { text-align: left; font-size: 14px; font-weight: 600; line-height: 1.35; }
 .i-ligne > b.i-tps { font-family: var(--police-titre, "Chewy"), sans-serif; font-weight: 400; font-size: 30px; line-height: 1; }
 b.i-tps.i-vert { color: var(--i-vert); }
 b.i-tps.i-rouge { color: var(--i-rouge); }

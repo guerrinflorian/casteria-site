@@ -344,7 +344,8 @@
       if (sv.etat === 'ne_repond_pas') ligne(c, 'Ne répond plus', num(sv.ko_s) === null ? VIDE : 'depuis ' + dureeInfra(sv.ko_s), sv.dernier_ok ? 'dernière réponse ' + de(sv.dernier_ok) : '')
       ligne(c, 'Joueurs', j && num(j.n) !== null ? A.nombre(j.n) + (num(j.max) !== null ? ' sur ' + A.nombre(j.max) : '') : VIDE)
       ligne(c, 'Temps de réponse', num(sv.latence_ms) === null ? VIDE : A.nombre(sv.latence_ms) + NBSP + 'ms')
-      if (sv.motd) ligne(c, 'Ce que lit le joueur', texte(sv.motd))
+      // (dc) un texte long : sous son nom, sur toute la largeur (à côté, le nom se tassait un mot par ligne)
+      if (sv.motd) ligne(c, 'Ce que lit le joueur', texte(sv.motd)).classList.add('i-long')
       ligne(c, 'Processeur, mémoire', VIDE, 'le proxy ne les publie pas')
       pied(c, sv.source, sv.lu)
       return c
