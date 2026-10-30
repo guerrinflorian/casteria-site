@@ -13,10 +13,11 @@
   // les trois caméras (le hash de BlueMap : carte:x:y:z:distance:rotation:angle:inclinaison:ortho:mode) autour du centre de
   // l'emprise (36 blocs à l'est du centre de la case, comme la démo de l'agent)
   var REGARDS = {
-    trois_quarts: function (x, z) { return [x, 63, z + 2, 145, 0.75, 0.92, 0, 0, 'perspective'] },
+    // (a8, 30/10 ; l'audit : l'ile petite au milieu d'un grand fond bleu) la camera plus pres : l'ile remplit le cadre
+    trois_quarts: function (x, z) { return [x - 8, 63, z + 22, 110, 0.75, 0.92, 0, 0, 'perspective'] },
     // (67, 29/10 ; le proprietaire : « Du ciel » montrait un cadre bleu vide : la vue a plat, orthographique, de BlueMap ne
     // dessine rien ici) d'en haut EN PERSPECTIVE, presque a la verticale : l'ile entiere au centre
-    ciel: function (x, z) { return [x, 63, z + 2, 230, 0, 0.01, 0, 0, 'perspective'] },
+    ciel: function (x, z) { return [x, 63, z + 2, 140, 0, 0.01, 0, 0, 'perspective'] },
     promenade: function (x, z) { return [x, 66, z + 20, 56, 0.35, 1.32, 0, 0, 'perspective'] }
   }
   var iframe = null, fiche = null, i = 0, j = 0, choisi = 'trois_quarts'
@@ -54,6 +55,20 @@
     if (!iframe.parentNode) { marquer(nom); return }
     try { iframe.contentWindow.location.hash = h } catch (e) { iframe.src = fiche.vue + h }
     marquer(nom)
+  }
+  // (a8, 30/10 ; l'audit : une fois sur deux, BlueMap gardait SA vue de départ, de loin et à plat, et demandait plus de 300 tuiles
+  // de la mer autour) la caméra REPOSÉE après le chargement de la vue : BlueMap lit son adresse quand sa carte est prête, la même
+  // adresse ne déclenche rien ; on passe donc par la caméra un rien plus loin, puis par la vraie (deux changements d'adresse)
+  function reappliquer() {
+    var essais = [900, 2600]
+    essais.forEach(function (ms, k) {
+      setTimeout(function () {
+        if (!iframe || !iframe.contentWindow) return
+        var h = hashDe(choisi)
+        if (k === 0) { var p = h.split(':'); p[4] = String(Number(p[4]) + 0.5); h = p.join(':') }
+        try { iframe.contentWindow.location.hash = h } catch (e) { /* une autre origine : l'adresse de départ reste */ }
+      }, ms)
+    })
   }
   function marquer(nom) { ;[].forEach.call(document.querySelectorAll('.regard'), function (b) { b.setAttribute('aria-pressed', b.dataset.regard === nom ? 'true' : 'false') }) }
   ;[].forEach.call(document.querySelectorAll('.regard'), function (b) { b.addEventListener('click', function () { regarder(b.dataset.regard) }) })
@@ -160,7 +175,7 @@
     iframe = document.createElement('iframe')
     iframe.title = f.nom + ' en 3D'
     iframe.setAttribute('allow', 'fullscreen')
-    iframe.addEventListener('load', function () { $('message').hidden = true })
+    iframe.addEventListener('load', function () { $('message').hidden = true; reappliquer() })
     apresLaPage(function () { iframe.src = f.vue + hashDe(choisi); v.appendChild(iframe) })
     $('regards').hidden = false
     $('pied').hidden = false
