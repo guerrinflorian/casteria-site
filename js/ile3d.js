@@ -19,7 +19,7 @@
     ciel: function (x, z) { return [x, 63, z + 2, 230, 0, 0.01, 0, 0, 'perspective'] },
     promenade: function (x, z) { return [x, 66, z + 20, 56, 0.35, 1.32, 0, 0, 'perspective'] }
   }
-  var iframe = null, fiche = null, i = 0, j = 0
+  var iframe = null, fiche = null, i = 0, j = 0, choisi = 'trois_quarts'
 
   // (une ile : « la 1re », comme sa fiche)
   function rang(r) { return r === 1 ? '1re' : A.nombre(r) + 'e' }
@@ -41,12 +41,21 @@
     if (l > 0 && hh > 0 && l / hh < 1.4) r[3] = Math.round(r[3] * Math.min(2, 1.4 / (l / hh)))
     return '#' + [fiche.carte || 'iles'].concat(r).join(':')
   }
+  // (67, 30/10) apres la page : son evenement load, puis un moment calme (2 s au plus)
+  function apresLaPage(fn) {
+    function calme() { if (window.requestIdleCallback) requestIdleCallback(fn, { timeout: 2000 }); else setTimeout(fn, 200) }
+    if (document.readyState === 'complete') calme(); else window.addEventListener('load', calme)
+  }
   function regarder(nom) {
     if (!iframe || !REGARDS[nom]) return
+    choisi = nom
     var h = hashDe(nom)
+    // la vue pas encore partie (apres la page) : elle partira sur ce regard
+    if (!iframe.parentNode) { marquer(nom); return }
     try { iframe.contentWindow.location.hash = h } catch (e) { iframe.src = fiche.vue + h }
-    ;[].forEach.call(document.querySelectorAll('.regard'), function (b) { b.setAttribute('aria-pressed', b.dataset.regard === nom ? 'true' : 'false') })
+    marquer(nom)
   }
+  function marquer(nom) { ;[].forEach.call(document.querySelectorAll('.regard'), function (b) { b.setAttribute('aria-pressed', b.dataset.regard === nom ? 'true' : 'false') }) }
   ;[].forEach.call(document.querySelectorAll('.regard'), function (b) { b.addEventListener('click', function () { regarder(b.dataset.regard) }) })
 
   // (67, 29/10 ; l'audit du site, 12) une ile en pixels, la GRANDE d'af (js/ile.js : chaque pixel plein, a sa taille), sinon
@@ -113,6 +122,8 @@
     A.vider(b)
     b.appendChild(A.el('span', 'badge ' + (f.ouverte ? 'ouverte' : 'fermee'), f.ouverte ? 'Ouverte aux visites' : 'Fermée aux visites'))
     if (x && x.en_ligne > 0) b.appendChild(A.el('span', 'badge vivante', x.en_ligne + ' joueur' + (x.en_ligne > 1 ? 's' : '') + ' dessus'))
+    // (67, 30/10 ; b5 : la vue sautait de 0,43 au chargement) la place des etoiles est gardee des le depart ; sans elles, elle part
+    if (!x) $('haut').classList.add('sans-chiffres')
     if (x) {
       $('chiffres').hidden = false
       var e = $('etoiles'), n = Math.max(0, Math.min(5, Math.floor(Number(x.etoiles) || 0)))
@@ -144,12 +155,13 @@
     // (67, 29/10 ; l'audit du site, 1) pas encore dessinee (le premier rendu, une ile neuve) : jamais un cadre vide ni une
     // date fausse ; « se dessine », une petite ile qui berce
     if (typeof f.vue !== 'string' || !f.vue || !f.carte) { seDessine(); return }
-    $('message').hidden = true
+    // (67, 30/10 ; b5, Lighthouse au téléphone : 4,8 s de fil bloqué) la vue BlueMap part APRÈS la page (son évènement load,
+    // puis un moment calme) : le reste se dessine et répond d'abord ; « L'île se charge... » reste jusqu'au premier dessin
     iframe = document.createElement('iframe')
     iframe.title = f.nom + ' en 3D'
     iframe.setAttribute('allow', 'fullscreen')
-    iframe.src = f.vue + hashDe('trois_quarts')
-    v.appendChild(iframe)
+    iframe.addEventListener('load', function () { $('message').hidden = true })
+    apresLaPage(function () { iframe.src = f.vue + hashDe(choisi); v.appendChild(iframe) })
     $('regards').hidden = false
     $('pied').hidden = false
     var quand = f.rendu ? Date.parse(f.rendu) : NaN
@@ -170,10 +182,11 @@
     }
   }
 
-  if (!m) { $('nom').textContent = 'Quelle île ?'; message('Choisis une île sur la carte.', false); $('appel').hidden = false; return }
+  if (!m) { $('haut').classList.add('sans-chiffres'); $('nom').textContent = 'Quelle île ?'; message('Choisis une île sur la carte.', false); $('appel').hidden = false; return }
   i = Number(m[1]); j = Number(m[2])
   Promise.all([V.ile3d(i, j), A.moi()]).then(function (rs) {
     var r = rs[0]
+    if (r.statut !== 200) $('haut').classList.add('sans-chiffres')
     if (r.statut === 404) { libreOuHors(); return }
     if (r.statut !== 200) { message('L\'île ne répond pas pour l\'instant. Réessaie dans une minute.', false); return }
     fiche = r.corps

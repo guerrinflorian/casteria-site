@@ -379,3 +379,13 @@ a.cl-apercu:hover, a.cl-apercu:focus-visible { transform: translateY(-2px); box-
   .cl-themes { gap: 8px; }
   .cl-theme { font-size: 14px; padding: 8px 12px 9px; min-height: 40px; border-radius: 12px; }
 }
+
+/* (67, le 30/10 ; l'auditeur : « les coins et les lèvres partout pareils ») LA LISTE AU KIT : la carte de la liste, ses lignes,
+   la recherche, les barres et les têtes arrondies comme les onglets ; plus de cadre d'or carré */
+.cl-liste-carte { border-radius: var(--r-panneau, 22px); border: 1px solid var(--trait, rgba(255, 255, 255, .09)); background: linear-gradient(180deg, var(--carte-2, #2D2247), var(--carte, #241A3A)); }
+.cl-ligne { border-radius: 14px; }
+.cl-cherche input { border: 0; border-radius: var(--r-champ, 14px); background: rgba(10, 6, 16, .55); box-shadow: inset 0 0 0 1px rgba(255, 207, 90, .45); }
+.cl-cherche input:focus { outline: 0; box-shadow: inset 0 0 0 2px var(--or-k, #FFCF5A), 0 0 0 4px rgba(255, 207, 90, .2); }
+.cl-barre { border-radius: 999px; overflow: hidden; }
+.cl-tete { border-radius: 10px; overflow: hidden; box-shadow: 0 0 0 2px rgba(255, 255, 255, .16); }
+.cl-encart { border-radius: var(--r-panneau, 22px); }

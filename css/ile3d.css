@@ -203,3 +203,12 @@
   .ile-chiffres .lien-or { font-size: 14px; }
   .ile-vue-section { padding-top: 14px; }
 }
+
+/* (67, le 30/10 ; b5, Lighthouse : la vue sautait de 0,43 quand l'île arrivait) LE HAUT GARDE SA PLACE DÈS LE DÉPART : la ligne du
+   chef, celle des pastilles et la carte des étoiles ont leur hauteur avant les données ; la carte part seulement quand la page
+   sait qu'il n'y en aura pas (sans-chiffres) */
+.ile-hote { min-height: 36px; }
+.ile-badges:empty { display: flex; min-height: 31px; }
+.ile-chiffres[hidden] { display: block; visibility: hidden; }
+.ile-tete.sans-chiffres .ile-chiffres[hidden] { display: none; }
+.ile-chiffres { min-height: 118px; }
