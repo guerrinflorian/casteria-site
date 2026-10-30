@@ -397,3 +397,7 @@ html body .volet summary { padding: 14px 18px; }
 html body .volet > *:not(summary) { padding-left: 18px; padding-right: 18px; }
 /* les carrousels des Événements, du casino et des donjons : leurs règles (« … [data-carrousel] > .vue.jeu ») remettaient les angles droits */
 html body .defi-jeux [data-carrousel] > .vue.jeu, html body .casino-frise [data-carrousel] > .vue, html body .donjon-dedans [data-carrousel] > .vue { border-radius: var(--r-carte); border: 1px solid rgba(255, 207, 90, .45); overflow: hidden; }
+/* (5c, l audit) le pseudo du podium et le bouton « Voir son profil » de la fiche du classement mènent au profil */
+html body a.marche-pseudo { text-decoration: none; color: #fff; }
+html body a.marche-pseudo:hover, html body a.marche-pseudo:focus-visible { color: var(--or-k); text-decoration: underline; text-underline-offset: 3px; outline: none; }
+.fiche-profil-ligne { margin: 14px 0 4px; }

@@ -691,8 +691,8 @@
       i.style.setProperty('--part', (f.niveau.max ? 100 : Math.round((Number(f.niveau.part) || 0) * 100)) + '%'); b.appendChild(i); b.setAttribute('aria-hidden', 'true'); nv.appendChild(b)
       infos.appendChild(nv)
     }
-    if (f.hors_classement) infos.appendChild(bloc('Le classement', el('p', '', 'L\'équipe du serveur est hors des classements.')))
-    else if (f.general) {
+    // (la tête, 29/10 : l'équipe se voit « comme un joueur mais sans nous ») l'équipe : aucun bloc du classement ; un rang 0 : rien non plus
+    if (!f.hors_classement && f.general && Number(f.general.rang) >= 1) {
       var gen = el('div')
       gen.appendChild(el('p', '', (f.general.rang ? A.rang(f.general.rang) + ' au classement général, ' : '') + A.nombre(f.general.points) + ' points sur ' + A.nombre(f.general.sur)))
       if (Array.isArray(f.general.aspects) && f.general.aspects.length) {
@@ -729,6 +729,11 @@
     if (f.collections) { ligneStat(stats, 'Familiers', A.nombre(f.collections.familiers)); ligneStat(stats, 'Montures', A.nombre(f.collections.montures)) }
     if (f.temps_de_jeu_min) ligneStat(stats, 'Temps de jeu', A.nombre(Math.floor(f.temps_de_jeu_min / 60)) + String.fromCharCode(160) + 'h')
     if (stats.children.length) infos.appendChild(bloc('Ses exploits', stats))
+    // (5c, l'audit du 30/10 : un pseudo du classement ne menait jamais à sa page) SON PROFIL ENTIER : joueur/<pseudo>
+    if (/^[A-Za-z0-9_]{3,16}$/.test(String(f.pseudo))) {
+      var profil = el('a', 'bouton bouton-sombre fiche-profil', 'Voir son profil'); profil.href = 'joueur/' + String(f.pseudo)
+      var lp = el('p', 'fiche-profil-ligne'); lp.appendChild(profil); infos.appendChild(lp)
+    }
     // (le propriétaire, 29/10 : « donner envie [...] d'avoir leur île ») LA FICHE MÈNE AU JEU : un visiteur y lit « Toi aussi,
     // construis ton île » ; un joueur connecté, sa place à lui au classement général, pour se comparer
     var m = etat.moi
