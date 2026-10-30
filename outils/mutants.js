@@ -340,6 +340,10 @@ const MUTANTS = [
   ['les îles des boss sans leur image', 'js/carte.js', s => s.replace('g.drawImage(il.img, il.x, il.z, il.w, il.h)', '')],
   ['les îles des boss hors des lieux de la carte', 'js/carte.js', s => s.replace("pts.push({ l: lieuIleBoss(decor.iles[k]), genre: 'ile_boss' })", '0')],
   ['le nom d\'une île de boss sans le filtre', 'js/carte.js', s => s.replace('nom: nomPublic(String(il.nom), NEUTRES.ile)', 'nom: String(il.nom)')],
+  ['les îles sans marque de loin', 'js/carte.js', s => s.replace('      marquesIles()\n      atlasLisible()\n      return', '      atlasLisible()\n      return')],
+  ['les îles sans marque de près', 'js/carte.js', s => s.replace('    marquesIles()\n    atlasLisible()\n  }', '    atlasLisible()\n  }')],
+  ['les îles à bêtes sans marque', 'js/carte.js', s => s.replace("if (l[4] !== 'ile' && l[4] !== 'ile_betes') continue", "if (l[4] !== 'ile') continue")],
+  ['la marque d\'une île jamais remplacée par son image', 'js/carte.js', s => s.replace('if (gb.w * M.s >= MARQUE_ILE) continue', '')],
   ['les noms des pirates sans le filtre', 'js/carte.js', s => s.replace(".map(function (n) { return Object.assign({}, n, { nom: nomPublic(n.nom, 'Un navire pirate') }) })", '')]
 ]
 

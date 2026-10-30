@@ -898,7 +898,13 @@ console.log('js/carte.js et assets/mer (la mer du site, celle de la Carte marine
     ['le terrain de combat caché aux vues larges', 'if (l[5] === 1 ? cache : deLoin) continue'],
     ['les îles des boss dessinées', 'g.drawImage(il.img, il.x, il.z, il.w, il.h)'],
     ['les îles des boss en lieux de la carte', "pts.push({ l: lieuIleBoss(decor.iles[k]), genre: 'ile_boss' })"],
-    ['le nom d\'une île de boss filtré', 'nom: nomPublic(String(il.nom), NEUTRES.ile)']]
+    ['le nom d\'une île de boss filtré', 'nom: nomPublic(String(il.nom), NEUTRES.ile)'],
+    // (la tête : « les îles ») chaque île en petite marque tant que sa vraie image est plus petite, aux vues larges comme moyennes
+    ['les îles du décor en marque', "if (l[4] !== 'ile' && l[4] !== 'ile_betes') continue"],
+    ['la marque tant que l\'image est plus petite', 'if (gb.w * M.s >= MARQUE_ILE) continue'],
+    ['les îles des boss en marque', 'if (Math.max(il.w, il.h) * M.s >= MARQUE_ILE) continue'],
+    ['les marques de loin', '      marquesIles()\n      atlasLisible()\n      return'],
+    ['les marques de près', '    marquesIles()\n    atlasLisible()\n  }']]
   for (const [quoi, t] of exige) if (!c.includes(t)) faute('js/carte.js : la mer du site n\'est plus celle du jeu (' + quoi + ' : « ' + t.slice(0, 60) + ' » absent)')
   let d = null
   try { d = JSON.parse(fs.readFileSync(path.join(RACINE, 'assets', 'mer', 'decor.json'), 'utf8')) } catch (e) { faute('assets/mer/decor.json illisible : ' + e.message) }

@@ -585,6 +585,7 @@
       // (37) l'image de loin n'a ni le terrain des zones de combat (il se montre, ou non : combatCache) ni les îles des boss
       poserDansLaVue(true)
       g.imageSmoothingEnabled = false
+      marquesIles()
       atlasLisible()
       return
     }
@@ -592,7 +593,41 @@
     g.imageSmoothingEnabled = M.s < 1
     poserDansLaVue(false)
     g.imageSmoothingEnabled = false
+    marquesIles()
     atlasLisible()
+  }
+  // (37, la 157 ; le propriétaire : « pareil niveau îles », la tête : « les îles ») LES ÎLES EN PETITE MARQUE, comme la Carte marine du
+  // jeu (une marque par île du décor, sans nom ni regroupement : dessinerLieux ; le jeu donne aux îles et aux îles à bêtes le MÊME
+  // dessin, dessinDe) : chaque île du décor et chaque île de boss dont la vraie image est plus petite que la marque (MARQUE_ILE px)
+  // a la sienne à sa place ; de près, sa vraie image la remplace. Sous les marques de l'Atlas (lieuxEnMer, dessiné après)
+  var MARQUE_ILE = 8
+  function marquesIles() {
+    var k, l, gb, e, il, u = MARQUE_ILE / 6
+    for (k = 0; k < decor.lieux.length; k++) {
+      l = decor.lieux[k]
+      if (l[4] !== 'ile' && l[4] !== 'ile_betes') continue
+      gb = decor.gab[l[0]]
+      if (gb.w * M.s >= MARQUE_ILE) continue
+      e = ecranM(l[1] + 0.5, l[2] + 0.5)
+      if (e[0] < -MARQUE_ILE || e[0] > L + MARQUE_ILE || e[1] < -MARQUE_ILE || e[1] > H + MARQUE_ILE) continue
+      marqueIle(e[0], e[1], u)
+    }
+    for (k = 0; k < decor.iles.length; k++) {
+      il = decor.iles[k]
+      if (Math.max(il.w, il.h) * M.s >= MARQUE_ILE) continue
+      e = ecranM(il.x + il.w / 2, il.z + il.h / 2)
+      marqueIle(e[0], e[1], u)
+    }
+  }
+  // la marque d'une île : le dessin « île » des icônes (FORMES.ile : l'herbe sur le sable), sans fond, centrée en (px, py)
+  function marqueIle(px, py, u) {
+    var f = FORMES.ile, a = px - 3 * u, b = py - 3 * u, x, y, c
+    for (y = 0; y < 6; y++) for (x = 0; x < 6; x++) {
+      c = f[y][x]
+      if (c === '.') continue
+      g.fillStyle = TEINTES[c]
+      g.fillRect(a + x * u, b + y * u, u, u)
+    }
   }
   // (37, la 157) LES LIEUX DU DÉCOR DANS LA VUE, au monde : tous (deLoin faux), ou seulement ceux d'un terrain de combat (deLoin
   // vrai : les autres sont dans l'image de loin) ; le terrain de combat jamais quand il se cache ; puis les îles des boss ; puis
