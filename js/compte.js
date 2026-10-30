@@ -1,7 +1,7 @@
 // LE COMPTE DU JOUEUR (compte.html ; le prototype du 29/10/2026) : sa peau en 3D (js/peau.js), son grade, ses jetons et
 // ses crédits, son niveau, sa place au classement général et dans chaque thème, son île, ses boss, ses achats ; « La
-// boutique » ouvre la boutique du site avec SON pseudo déjà rempli (js/boutique.js le reprend de sessionStorage, comme
-// après un premier achat ; la case « C'est bien mon pseudo » reste à cocher). Tout vient de CasteriaApi.moi (GET /api/moi,
+// boutique » ouvre la boutique du site, où l'on achète connecté, pour le compte de la session (js/boutique.js, le 30/10 :
+// plus aucun pseudo à taper ni case à cocher). Tout vient de CasteriaApi.moi (GET /api/moi,
 // API.md 3.1), écrit en texte. Sans session : la connexion, puis le retour ici.
 (function () {
   'use strict'
@@ -104,7 +104,7 @@
     var dec = el('button', 'bouton bouton-bois', 'Se déconnecter'); dec.type = 'button'
     dec.addEventListener('click', function () { dec.disabled = true; A.deconnexion().then(function () { location.assign('connexion.html') }) })
     gestes.appendChild(dec)
-    gestes.appendChild(el('p', 'note', 'La boutique remplit ton pseudo toute seule : relis-le, puis coche « C\'est bien mon pseudo ».'))
+    gestes.appendChild(el('p', 'note', 'Dans la boutique, tes achats vont sur ce compte : rien à taper.'))
 
     // les tuiles : les jetons, les crédits, le temps de jeu, les boss
     vider(tuiles)

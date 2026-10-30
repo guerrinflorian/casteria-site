@@ -150,9 +150,13 @@
       tx.appendChild(el('p', 'sur-ligne', 'Son île'))
       tx.appendChild(el('h2', '', ile.nom))
       var e = el('p', 'ile-etoiles'), et = Math.max(0, Math.min(5, Math.floor(Number(ile.etoiles) || 0)))
-      for (var k = 0; k < 5; k++) e.appendChild(el('span', 'etoile' + (k < et ? ' pleine' : ''), '★'))
-      e.appendChild(el('b', 'etoiles-nb', etoiles(ile.etoiles)))
-      e.setAttribute('aria-label', etoiles(ile.etoiles) + ' étoiles sur 5')
+      // (dc, 30/10, la tournée) sans étoile : la phrase, jamais cinq étoiles grises et un « 0 » (comme la page d'une île)
+      if (!(Number(ile.etoiles) >= 0.05)) e.appendChild(el('span', 'etoiles-aucune', 'Pas encore d\'étoile de beauté'))
+      else {
+        for (var k = 0; k < 5; k++) e.appendChild(el('span', 'etoile' + (k < et ? ' pleine' : ''), '★'))
+        e.appendChild(el('b', 'etoiles-nb', etoiles(ile.etoiles)))
+        e.setAttribute('aria-label', etoiles(ile.etoiles) + ' étoiles sur 5')
+      }
       tx.appendChild(e)
       var faits = el('ul', 'ile-faits')
       if (!j.hors_classement && ile.classement && ile.classement.rang >= 1) faits.appendChild(el('li', '', rang(ile.classement.rang) + ' au Classement des îles · ' + nombre(ile.classement.points) + ' / ' + nombre(ile.classement.sur || 400) + ' points'))
