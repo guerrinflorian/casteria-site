@@ -1,0 +1,42 @@
+/* LE TABLEAU DE BORD DE L'ÎLE (compte.html, #mon-ile ; js/ile_tableau.js ; 2c, 30/10/2026) : le style neuf du site (css/kit.css :
+   les cartes arrondies, l'or, la nuit) ; une machine par ligne cliquable en entier nulle part (rien n'y est un bouton) : le compte qui
+   monte, sa barre jusqu'au plafond de l'Entrepôt, son état ; les enclos en cartes. Immobile pour qui demande moins de mouvement. */
+.mon-ile[hidden] { display: none; }
+.mon-ile .ile-tableau { padding: 22px 22px 18px; }
+.mon-ile h2 { margin: 0 0 6px; }
+.ile-photo { margin: 0 0 14px; color: #E6DAF7; font-size: 15.5px; }
+.ile-lue { color: #B9A8D6; }
+.ile-vide { margin: 6px 0; padding: 14px 16px; border-radius: 14px; background: rgba(255, 255, 255, .05); border: 1px dashed rgba(255, 207, 90, .35); color: #E6DAF7; }
+.ile-onglets { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 14px; padding: 5px; border-radius: 16px; background: rgba(22, 15, 38, .7); box-shadow: inset 0 0 0 1px rgba(255, 207, 90, .25); }
+.ile-onglets[hidden] { display: none; }
+.ile-onglet { min-height: 42px; padding: 8px 14px; border: 0; border-radius: 12px; cursor: pointer; background: transparent; color: #F3E7FF;
+  font: 400 15px var(--police-bouton, "Lilita One", sans-serif); letter-spacing: .4px; text-transform: uppercase; }
+.ile-onglet:hover { color: var(--or-k, #FFCF5A); }
+.ile-onglet[aria-selected="true"] { color: #4A2B07; background: linear-gradient(180deg, #FFE08A, var(--or-k, #FFCF5A) 50%, var(--or-k2, #F3A93A)); box-shadow: 0 3px 0 var(--or-k-fonce, #B9741F); }
+.ile-onglet:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+.ile-bloc { margin: 0 0 16px; }
+.ile-titre { margin: 0 0 8px; font-size: 22px; color: var(--titre-creme, #FFF6DC); text-shadow: 0 2px 0 #3A1F12; }
+.ile-machines, .ile-enclos { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.ile-machines { grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); }
+.ile-machine { padding: 12px 14px 11px; border-radius: 16px; background: rgba(255, 255, 255, .05); border: 1px solid var(--trait, rgba(255, 255, 255, .09)); }
+.im-haut { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.im-nom { font-weight: 700; color: #F4EAFF; min-width: 0; }
+.im-attente { flex: none; font-family: var(--police-bouton, "Lilita One", sans-serif); font-weight: 400; font-size: 18px; color: var(--or-k, #FFCF5A); font-variant-numeric: tabular-nums; }
+.im-barre { display: block; height: 8px; margin: 8px 0 6px; border-radius: 999px; background: rgba(0, 0, 0, .35); overflow: hidden; }
+.im-barre i { display: block; height: 100%; width: 0; border-radius: 999px; background: linear-gradient(90deg, #46D27A, #9BE86A); transition: width .9s linear; }
+.ile-machine.pleine .im-barre i { background: linear-gradient(90deg, #F3A93A, #FFCF5A); }
+.im-etat { display: block; min-height: 1.3em; font-size: 14px; color: #CBB8E6; }
+.ile-machine.pleine .im-etat { color: #FFD9A0; }
+.ile-machine.a-nourrir { border-color: rgba(255, 138, 61, .55); }
+.ile-machine.a-nourrir .im-etat { color: #FFB37A; }
+.ile-enclos { grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); }
+.ile-enclo { padding: 12px 14px; border-radius: 16px; background: rgba(255, 255, 255, .05); border: 1px solid var(--trait, rgba(255, 255, 255, .09)); }
+.ie-nom { margin: 0 0 6px; font-weight: 700; color: #F4EAFF; }
+.ie-lignes { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; font-size: 14.5px; color: #DCCDF2; }
+.ie-lignes li:empty { display: none; }
+.ie-auge.a-jeun { color: #FFB37A; }
+.ie-surplus { color: var(--or-k, #FFCF5A); }
+.ie-vu { color: #B9A8D6; }
+.ile-conseil { margin: 6px 0 0; font-size: 14.5px; color: #CBB8E6; }
+@media (max-width: 520px) { .mon-ile .ile-tableau { padding: 16px 14px 14px; } .im-attente { font-size: 16px; } }
+@media (prefers-reduced-motion: reduce) { .im-barre i { transition: none; } }
