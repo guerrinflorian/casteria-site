@@ -319,6 +319,9 @@ const MUTANTS = [
   ['la legende des marchands visible au depart', 'carte.html', s => s.replace('<li class="si-marchands" hidden>', '<li class="si-marchands">')],
   ['le marchand compte comme pirate', 'js/carte.js', s => s.replace("pirates.some(function (x) { return String(x.type) !== 'marchand' })", 'pirates.length > 0')],
   ['la legende des evenements jamais basculee', 'js/carte.js', s => s.replace("bascule('#legende-mer .si-evenements', evenements.length > 0)", '')],
+  ["le nom d'un secteur a une seule place", 'js/carte.js', s => s.replace('var PLACES_AXE = [0.5, 0.36, 0.64, 0.24, 0.76]', 'var PLACES_AXE = [0.5]')],
+  ["le nom d'un secteur hors de son secteur", 'js/carte.js', s => s.replace('if (d - demi < f.de || d + demi > f.a) continue', '')],
+  ["le nom d'un secteur tu au premier lieu", 'js/carte.js', s => s.replace('if (chevauche(r, prises)) continue', 'if (chevauche(r, prises)) return')],
   ['les noms des pirates sans le filtre', 'js/carte.js', s => s.replace(".map(function (n) { return Object.assign({}, n, { nom: nomPublic(n.nom, 'Un navire pirate') }) })", '')]
 ]
 

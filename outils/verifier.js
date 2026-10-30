@@ -836,6 +836,16 @@ console.log('carte.html et js/carte.js (la légende du vivant)')
   }
   if (!c.includes("bascule('#legende-mer .si-pirates', pirates.some(function (x) { return String(x.type) !== 'marchand' }))")) faute('js/carte.js : « Pirate » compte aussi les navires marchands (une proie, pas un pirate)')
 }
+// LE NOM D'UNE ZONE EN SECTEUR (la Fosse, le Gouffre) : jamais tu pour un lieu posé sur le milieu de son axe (la 156 en ligne : le
+// nom du Gouffre tu sous « Le Gouvernail Perdu ») : plusieurs places le long de l'axe, le milieu d'abord, le nom entier dans le secteur
+console.log("js/carte.js (le nom d'une zone en secteur)")
+{
+  const c = fs.readFileSync(path.join(RACINE, 'js', 'carte.js'), 'utf8'), m = /var PLACES_AXE = \[([^\]]*)\]/.exec(c)
+  const places = m ? m[1].split(',').map(Number) : []
+  if (places.length < 3 || places[0] !== 0.5 || places.some(p => !(p > 0 && p < 1))) faute("js/carte.js : PLACES_AXE doit essayer au moins trois places le long de l'axe, le milieu (0.5) d'abord")
+  for (const t of ['for (k = 0; k < PLACES_AXE.length; k++)', 'if (d - demi < f.de || d + demi > f.a) continue', 'if (chevauche(r, prises)) continue'])
+    if (!c.includes(t)) faute('js/carte.js : nomSecteur, « ' + t + " » absent (le nom d'une zone en secteur tu ou hors de son secteur)")
+}
 console.log('js/carte.js (les noms venus des données : jamais un nom de SPOILERS)')
 verifierNomsDesDonnees(faute)
 function verifierNomsDesDonnees(faute) {

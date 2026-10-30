@@ -993,16 +993,25 @@
     var ta2 = Math.round(Math.max(11, Math.min(18, hf * 0.03))), txt = f.nom.toUpperCase() + (pvp ? '  ·  COMBAT ENTRE JOUEURS' : '')
     if (largeurLe(txt, ta2) > hf * 0.85) txt = f.nom.toUpperCase()
     if (largeurLe(txt, ta2) > hf * 0.85) return
-    var m = rayonA(f.cap, f.de + (f.a - f.de) * 0.5), em = ecranM(m[0], m[1])
     var ang = Math.atan2(Math.cos(f.cap * Math.PI / 180), -Math.sin(f.cap * Math.PI / 180)) * 180 / Math.PI
     if (ang > 90 || ang < -90) ang += 180
-    if (em[0] < -50 || em[0] > L + 50 || em[1] < -50 || em[1] > H + 50) return
     var wf = largeurLe(txt, ta2), ca = Math.abs(Math.cos(ang * Math.PI / 180)), sa = Math.abs(Math.sin(ang * Math.PI / 180))
-    var bw = (wf * ca + ta2 * sa) / 2 + 2, bh = (wf * sa + ta2 * ca) / 2 + 2
-    if (chevauche([em[0] - bw, em[1] - bh, em[0] + bw, em[1] + bh], prises)) return
-    prises.push([em[0] - bw, em[1] - bh, em[0] + bw, em[1] + bh])
-    ecrireLe(txt, em[0], em[1], ang, ta2, couleur)
+    var bw = (wf * ca + ta2 * sa) / 2 + 2, bh = (wf * sa + ta2 * ca) / 2 + 2, demi = wf / 2 / M.s, k, d, m, em, r
+    // (la 156 en ligne : le nom du Gouffre tu, son milieu sous « Le Gouvernail Perdu ») le milieu de l'axe d'abord, puis d'autres
+    // places le long de lui, le nom entier toujours dans le secteur ; la première libre
+    for (k = 0; k < PLACES_AXE.length; k++) {
+      d = f.de + (f.a - f.de) * PLACES_AXE[k]
+      if (d - demi < f.de || d + demi > f.a) continue
+      m = rayonA(f.cap, d); em = ecranM(m[0], m[1])
+      if (em[0] < -50 || em[0] > L + 50 || em[1] < -50 || em[1] > H + 50) continue
+      r = [em[0] - bw, em[1] - bh, em[0] + bw, em[1] + bh]
+      if (chevauche(r, prises)) continue
+      prises.push(r)
+      ecrireLe(txt, em[0], em[1], ang, ta2, couleur)
+      return
+    }
   }
+  var PLACES_AXE = [0.5, 0.36, 0.64, 0.24, 0.76]
   var FORMES = {
     port: ['..XX..', '..XX..', 'XXXXXX', '..XX..', 'X.XX.X', '.XXXX.'],
     phare: ['..YY..', '.YYYY.', '..XX..', '..RR..', '..XX..', '.XXXX.'],
