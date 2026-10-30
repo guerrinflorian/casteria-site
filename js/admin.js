@@ -377,7 +377,9 @@
     // L'ÉTAT D'ENSEMBLE : tout va bien, ou les alertes (les rouges d'abord : l'API les range)
     var b = el('div', 'i-bandeau i-' + (!al.length ? 'vert' : al.some(function (a) { return a.niveau === 'rouge' }) ? 'rouge' : 'orange')), bt = el('div', 'i-bandeau-tete')
     bt.appendChild(el('h2', '', !al.length ? 'Tout va bien' : pluriel(al.length, 'alerte')))
-    bt.appendChild(el('span', 'i-releve', 'Relevé ' + de(d.lu) + ' · relu toutes les 30' + NBSP + 's'))
+    // (dc, en vrai : « 7 min » dans l'alerte, « 6 min » sur la carte) UNE heure : celle du calcul de l'API (maintenant) ; chaque âge
+    // de la vue vient de la même réponse, dit comme l'API le dit (dureeInfra = dureeTexte de src/infra.js, jamais arrondi vers le haut)
+    bt.appendChild(el('span', 'i-releve', 'Relevé ' + de(d.maintenant || d.lu) + ' · relu toutes les 30' + NBSP + 's'))
     b.appendChild(bt)
     if (!al.length) b.appendChild(el('p', 'i-aide', 'Aucun seuil franchi. Les seuils : un disque à plus de ' + S.disque_pct + NBSP + '%, moins de ' + S.tps_min + ' TPS, un serveur absent plus de ' + Math.round(S.absent_s / 60) + NBSP + 'min, un certificat à moins de ' + S.certificat_jours + ' jours.'))
     else {
