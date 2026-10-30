@@ -1,0 +1,36 @@
+/* (a8, 30/10) TES VOTES ET TON TEMPS DE JEU (compte.html, js/compte_jeu.js) : au style du kit, chaque site de vote une carte arrondie,
+   « Prêt » en vert, l'attente en crème ; le temps de jeu en trois tuiles à lèvre. */
+.compte-jeu[hidden], #compte-jeu-frise[hidden] { display: none; }
+.compte-jeu-grille { align-items: start; }
+.compte-jeu-gain { margin: 0 0 14px; font-size: 16px; color: #E8DAFF; }
+.compte-jeu-gain b { color: var(--or-k); }
+.votes-sites { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.vote-site { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 6px 14px; padding: 12px 14px; border-radius: 16px;
+  background: rgba(255, 255, 255, .05); border: 1px solid var(--trait); }
+.vote-site.est-pret { background: linear-gradient(180deg, rgba(70, 210, 122, .12), rgba(70, 210, 122, .05)); border-color: rgba(70, 210, 122, .35); }
+.vote-tete { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; min-width: 0; }
+.vote-nom { font: 700 17px "Fredoka", sans-serif; color: #fff; overflow-wrap: anywhere; }
+.vote-etat { display: inline-flex; align-items: center; padding: 3px 10px 4px; border-radius: 999px; font: 600 14px "Fredoka", sans-serif; white-space: nowrap; }
+.est-pret .vote-etat { color: #0E3B1F; background: var(--vert-k); box-shadow: 0 2px 0 #1E6E3C; }
+.attend .vote-etat { color: var(--brun); background: var(--creme-2); box-shadow: 0 2px 0 #B9741F; }
+.vote-site .bouton { justify-self: end; }
+.vote-astuce { grid-column: 1 / -1; margin: 0; font-size: 14px; color: #CDBAEB; }
+.vote-astuce b { color: var(--or-k); }
+.vote-astuce code { font: 600 14px "Fredoka", sans-serif; padding: 1px 7px; border-radius: 8px; background: rgba(0, 0, 0, .35); color: #FFF1B8; }
+.vote-vide { font-size: 16px; color: #E8DAFF; }
+.votes-compte { margin: 14px 0 0; font-size: 15px; color: #FFF1B8; }
+.temps-tuiles { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.temps-tuile { display: flex; flex-direction: column; gap: 4px; padding: 14px 12px 12px; border-radius: 18px; text-align: center;
+  background: linear-gradient(180deg, var(--creme), var(--creme-2)); box-shadow: 0 5px 0 var(--or-k-fonce), 0 12px 22px rgba(0, 0, 0, .25); }
+.temps-tuile b { font: 400 clamp(22px, 2.6vw, 30px) "Lilita One", "Fredoka", sans-serif; color: var(--brun); white-space: nowrap; }
+.temps-tuile span { font: 700 14px "Fredoka", sans-serif; color: #7A5536; white-space: nowrap; }
+.temps-note { margin: 16px 0 0; font-size: 14px; color: #CDBAEB; }
+.temps-note[hidden] { display: none; }
+@media (max-width: 430px) {
+  .vote-site { grid-template-columns: minmax(0, 1fr); }
+  .vote-site .bouton { justify-self: stretch; justify-content: center; }
+  .temps-tuiles { gap: 8px; }
+  .temps-tuile { padding: 12px 4px 10px; }
+  .temps-tuile span { font-size: 12px; }
+  .temps-tuile b { font-size: 22px; }
+}

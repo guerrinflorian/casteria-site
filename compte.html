@@ -18,6 +18,7 @@
 <link rel="stylesheet" href="css/kit.css">
 <link rel="stylesheet" href="css/classement.css">
 <link rel="stylesheet" href="css/compte.css">
+<link rel="stylesheet" href="css/compte_jeu.css">
 </head>
 <body>
 <div class="progres" aria-hidden="true"></div>
@@ -88,6 +89,23 @@
   </div>
 </section>
 <div class="frise frise-etoiles compte-section" aria-hidden="true" hidden></div>
+<!-- (a8, 30/10) TES VOTES ET TON TEMPS DE JEU : GET /api/moi/jeu, lu par js/compte_jeu.js ; cachée sans session -->
+<section class="fond-ciel relief compte-jeu" id="compte-jeu" hidden>
+  <div class="dedans une-grande compte-jeu-grille">
+    <div class="compte-bloc panneau-nuit coins-or">
+      <h2>Tes votes</h2>
+      <p class="compte-jeu-gain">Chaque vote : <b>1 Clé de Vote</b>, qui ouvre la Caisse de Vote du palais. Trois par jour au plus.</p>
+      <ul class="votes-sites" id="votes-sites"></ul>
+      <p class="votes-compte" id="votes-compte"></p>
+    </div>
+    <div class="compte-bloc panneau-nuit">
+      <h2>Ton temps de jeu</h2>
+      <ul class="temps-tuiles" id="temps-tuiles"></ul>
+      <p class="note temps-note" id="temps-note" hidden></p>
+    </div>
+  </div>
+</section>
+<div class="frise frise-corde" id="compte-jeu-frise" aria-hidden="true" hidden></div>
 <section class="fond-carte relief compte-section" hidden>
   <div class="dedans">
     <div class="compte-bloc panneau-nuit coins-or">
@@ -130,6 +148,7 @@
 <script src="js/api.js" defer></script>
 <script src="js/peau.js" defer></script>
 <script src="js/compte.js" defer></script>
+<script src="js/compte_jeu.js" defer></script>
 <script src="js/ancres.js" defer></script>
 </body>
 </html>
