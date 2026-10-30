@@ -9,6 +9,8 @@
   var A = window.CasteriaApi, K = window.IleCalcul
   var racine = document.getElementById('mon-ile')
   if (!racine || !A || !K) return
+  // (2c, 30/10 ; la tournée de dc) SANS SESSION, rien : ni appel, ni message (le témoin de connexion de js/api.js, comme A.moi)
+  if (!/(?:^|;\s*)casteria_connecte=1(?:;|$)/.test(document.cookie || '')) return
   var NBSP = String.fromCharCode(160), RELIRE_MS = 120000
   var corps = racine.querySelector('[data-ile-corps]'), onglets = racine.querySelector('[data-ile-onglets]')
   var etat = { donnees: null, ecart: 0, choix: 'moi', vivants: [], minuteur: 0, relu: 0, visible: true }
@@ -39,12 +41,14 @@
   }
 
   function lire() {
-    if (!window.fetch) return
+    if (!window.fetch || etat.fini) return
     etat.relu = Date.now()
     fetch('/api/moi/ile', { credentials: 'same-origin', cache: 'no-store', headers: { Accept: 'application/json' } }).then(function (r) {
-      if (r.status === 401) { racine.hidden = true; return null }
+      // une session finie (le témoin est resté) : la section se cache, et plus aucun appel
+      if (r.status === 401) { racine.hidden = true; etat.fini = true; return null }
       return r.ok ? r.json() : null
     }).then(function (j) {
+      if (etat.fini) return
       if (!j) { if (!etat.donnees) dire('Ton île ne se lit pas pour l\'instant. Réessaie dans une minute.'); return }
       var t = Date.parse(j.lu)
       if (isFinite(t)) etat.ecart = t - Date.now()

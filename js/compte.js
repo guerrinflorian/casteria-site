@@ -200,6 +200,13 @@
     if (!ac.children.length) ac.appendChild(el('li', 'rien', 'Aucune dépense en crédits pour l\'instant.'))
     // les parties du compte et leurs frises, d'un coup (cachées tant qu'il n'y a rien à montrer)
     Array.prototype.forEach.call(parties, function (x) { x.hidden = false })
+    // (2c, 30/10 ; la tournée de dc) L'ÉQUIPE HORS CLASSEMENT (le Fondateur, l'Admin, le Responsable : dans AUCUN classement, sans
+    // ligne « Toi ») : sa partie des classements (sa place au général, sa place par thème) ne se montre pas, ni sa frise d'avant
+    var cl = $('compte-themes') ? $('compte-themes').closest('section') : null
+    if (cl && m.hors_classement) {
+      cl.hidden = true
+      if (cl.previousElementSibling && cl.previousElementSibling.classList.contains('frise')) cl.previousElementSibling.hidden = true
+    }
   }
   function tuile(icone, titre, valeur, sous) {
     var li = el('li', icone ? '' : 'sans-icone')
