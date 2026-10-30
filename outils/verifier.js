@@ -870,6 +870,23 @@ console.log("js/admin.js et js/connexion.js (la reconnexion de l'équipe)")
   for (const t of exige) if (!cx.includes(t)) faute("js/connexion.js : la reconnexion de l'équipe, « " + t.slice(0, 60) + ' » absent')
   if (cx.indexOf('if (equipe) {') < 0 || cx.indexOf('if (equipe) {') > cx.indexOf('form.hidden = true')) faute("js/connexion.js : avec equipe=1, le formulaire doit rester (le cas de l'équipe AVANT « form.hidden = true »)")
 }
+// LA BULLE DU BOUTON DE L'ÎLE (le propriétaire, 30/10 : « ... visites » passait SOUS la fiche du survol, un calque fixe au-dessus
+// de toute la page, et le cadre qui défile coupait son haut) : un calque fixe à elle, au-dessus de la fiche, gardé dans l'écran ;
+// sur le bouton, la fiche se tait ; revenu sur la ligne, elle revient
+console.log('js/classement.js (la bulle du bouton de l\'île : jamais coupée, jamais sous la fiche du survol)')
+{
+  const c = fs.readFileSync(path.join(RACINE, 'js', 'classement.js'), 'utf8'), css = fs.readFileSync(path.join(RACINE, 'css', 'classement.css'), 'utf8')
+  const exige = [['la bulle en calque fixe', "b.classList.add('bulle-js')"],
+    ['la bulle au focus (le doigt)', "b.addEventListener('focus', function () { montrerBulle(b) })"],
+    ['la bulle dans la largeur de l\'écran', 'x = Math.max(8, Math.min(window.innerWidth - w - 8, r.left + r.width / 2 - w / 2))'],
+    ['la bulle dessous sans place au-dessus', 'if (y < 8) y = r.bottom + 8'],
+    ['la fiche se tait sur le bouton', "b.addEventListener('pointerenter', cacherSurvol)"],
+    ['elle revient sur la ligne', "b.addEventListener('pointerleave', function (ev) { var li = b.closest('li'); if (li && li.contains(document.elementFromPoint(ev.clientX, ev.clientY))) survoler(qui, li, ev) })"]]
+  for (const [quoi, t] of exige) if (!c.includes(t)) faute('js/classement.js : la bulle du bouton de l\'île se lit mal (' + quoi + ' : « ' + t.slice(0, 60) + ' » absent)')
+  const z = (css.match(/\.cl-bulle \{ position: fixed; z-index: (\d+);/) || [])[1], zf = (css.match(/\.cl-survol \{ position: fixed; z-index: (\d+);/) || [])[1]
+  if (!z || !zf || Number(z) <= Number(zf)) faute('css/classement.css : la bulle (.cl-bulle) doit être un calque fixe AU-DESSUS de la fiche du survol (.cl-survol)')
+  if (!css.includes('.cl-apercu.bulle-js[data-bulle]:hover::before, .cl-apercu.bulle-js[data-bulle]:focus::before { content: none; }')) faute('css/classement.css : la vieille bulle (::before) revient à côté du calque fixe : deux bulles')
+}
 console.log('js/carte.js (les noms venus des données : jamais un nom de SPOILERS)')
 verifierNomsDesDonnees(faute)
 function verifierNomsDesDonnees(faute) {

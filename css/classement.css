@@ -347,6 +347,12 @@ a.cl-apercu:hover, a.cl-apercu:focus-visible { transform: translateY(-2px); box-
 .cl-apercu.fermee::after { content: ""; position: absolute; left: 2px; right: 2px; top: 50%; height: 3px; margin-top: -1px; background: #E0504A; box-shadow: 0 1px 0 #6E1E1B; transform: rotate(-32deg); }
 .cl-apercu[data-bulle]:hover::before, .cl-apercu[data-bulle]:focus::before { content: attr(data-bulle); position: absolute; left: 50%; bottom: calc(100% + 8px); transform: translateX(-50%); white-space: nowrap; padding: 4px 10px; font: 700 13px/1.2 "Fredoka", sans-serif; color: #FFF4D6; background: #1B1028; box-shadow: 0 0 0 2px #D7A421; pointer-events: none; z-index: 5; }
 .cl-apercu.fermee:focus { outline: none; box-shadow: 0 0 0 2px #E0504A, 0 3px 0 2px #120A1E; }
+/* (37, 30/10 ; le propriétaire : « ... visites » ne se lisait pas : sous la fiche du survol, et coupée par le cadre qui défile)
+   LA BULLE EST UN CALQUE FIXE (js/classement.js, montrerBulle) : au-dessus de la fiche (70), sous le voile du menu (75) ; le
+   ::before ne sert plus que sans le script */
+.cl-apercu.bulle-js[data-bulle]:hover::before, .cl-apercu.bulle-js[data-bulle]:focus::before { content: none; }
+.cl-bulle { position: fixed; z-index: 72; white-space: nowrap; padding: 4px 10px; font: 700 13px/1.2 "Fredoka", sans-serif; color: #FFF4D6; background: #1B1028; box-shadow: 0 0 0 2px #D7A421; border-radius: 10px; pointer-events: none; }
+.cl-bulle[hidden] { display: none; }
 /* au podium : sous la valeur, au milieu du socle */
 .cl-socle .cl-apercu { margin-top: 8px; }
 @media (prefers-reduced-motion: reduce) { .cl-apercu { transition: none; } }

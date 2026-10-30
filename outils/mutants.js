@@ -328,6 +328,12 @@ const MUTANTS = [
   ["la reconnexion de l'équipe sans equipe=1", 'js/admin.js', s => s.replace("'connexion.html?retour=admin.html&equipe=1'", "'connexion.html?retour=admin.html'")],
   ["equipe=1 jamais lu", 'js/connexion.js', s => s.replace("get('equipe') === '1'", "get('equipe') === 'jamais'")],
   ["avec equipe=1, le formulaire caché quand même", 'js/connexion.js', s => s.replace('      mdp.focus()\n      return\n    }\n', '      mdp.focus()\n    }\n')],
+  ['la fiche du survol par-dessus la bulle du bouton de l\'île', 'js/classement.js', s => s.replace("      b.addEventListener('pointerenter', cacherSurvol)\n", '')],
+  ['la fiche du survol jamais revenue apres le bouton de l\'île', 'js/classement.js', s => s.replace(' survoler(qui, li, ev) })', ' })')],
+  ['la bulle du bouton de l\'île redevient un ::before coupé', 'js/classement.js', s => s.replace("    b.classList.add('bulle-js')\n", '')],
+  ['la bulle du bouton de l\'île hors de l\'écran', 'js/classement.js', s => s.replace('x = Math.max(8, Math.min(window.innerWidth - w - 8, r.left + r.width / 2 - w / 2))', 'x = r.left + r.width / 2 - w / 2')],
+  ['la bulle du bouton de l\'île sous la fiche', 'css/classement.css', s => s.replace('.cl-bulle { position: fixed; z-index: 72;', '.cl-bulle { position: fixed; z-index: 60;')],
+  ['deux bulles sur le bouton de l\'île', 'css/classement.css', s => s.replace('.cl-apercu.bulle-js[data-bulle]:hover::before, .cl-apercu.bulle-js[data-bulle]:focus::before { content: none; }\n', '')],
   ['les noms des pirates sans le filtre', 'js/carte.js', s => s.replace(".map(function (n) { return Object.assign({}, n, { nom: nomPublic(n.nom, 'Un navire pirate') }) })", '')]
 ]
 

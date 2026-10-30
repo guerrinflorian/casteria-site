@@ -375,8 +375,43 @@
     b.appendChild(el('span', 'cl-apercu-ile'))
     // le geste reste au bouton : jamais la fiche du joueur derrière lui
     b.addEventListener('click', function (ev) { ev.stopPropagation(); if (!a.ouverte) { ev.preventDefault(); b.focus() } })
+    // (37, 30/10 ; le propriétaire : « ... visites » passait SOUS la fiche du survol, et le cadre qui défile coupait son haut) LA
+    // BULLE est un calque fixe à elle (bulleDe, au-dessus de la fiche), jamais coupée ; sur le bouton, la fiche se tait ; revenu
+    // sur la ligne, elle revient
+    // (au doigt, il quitte le bouton dès qu'il se lève : la souris seule au survol, le doigt par le focus du toucher)
+    b.classList.add('bulle-js')
+    b.addEventListener('pointerenter', function (ev) { if (ev.pointerType === 'mouse') montrerBulle(b) })
+    b.addEventListener('pointerleave', function (ev) { if (ev.pointerType === 'mouse' && document.activeElement !== b) cacherBulle() })
+    b.addEventListener('focus', function () { montrerBulle(b) })
+    b.addEventListener('blur', cacherBulle)
+    if (survolPossible) {
+      b.addEventListener('pointerenter', cacherSurvol)
+      b.addEventListener('pointerleave', function (ev) { var li = b.closest('li'); if (li && li.contains(document.elementFromPoint(ev.clientX, ev.clientY))) survoler(qui, li, ev) })
+    }
     return b
   }
+  // la bulle d'un bouton : au-dessus de lui (dessous s'il n'y a pas la place), toujours dans la largeur de l'écran ; cachée dès
+  // que quelque chose défile (elle ne suit pas)
+  var bulle = null
+  function bulleDe() {
+    if (bulle) return bulle
+    bulle = el('div', 'cl-bulle'); bulle.hidden = true; bulle.setAttribute('aria-hidden', 'true')
+    document.body.appendChild(bulle)
+    window.addEventListener('scroll', cacherBulle, true)
+    return bulle
+  }
+  function montrerBulle(b) {
+    var s = bulleDe(), r = b.getBoundingClientRect(), w = 0, h = 0, x = 0, y = 0
+    s.textContent = String(b.getAttribute('data-bulle') || '')
+    s.hidden = false
+    w = s.offsetWidth; h = s.offsetHeight
+    x = Math.max(8, Math.min(window.innerWidth - w - 8, r.left + r.width / 2 - w / 2))
+    y = r.top - h - 8
+    if (y < 8) y = r.bottom + 8
+    s.style.left = Math.round(x) + 'px'
+    s.style.top = Math.round(y) + 'px'
+  }
+  function cacherBulle() { if (bulle) bulle.hidden = true }
   function avecApercu(conteneur, nom, l) {
     var ap = apercuDe(l)
     if (!ap) return
