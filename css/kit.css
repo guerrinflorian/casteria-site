@@ -333,8 +333,10 @@ html body .pan-parchemin, html body .clair { background: linear-gradient(180deg,
    le badge des joueurs en ligne : une pilule, son point rond */
 html body .ouverture { left: 10px; right: 10px; bottom: 10px; padding: 10px 16px; border: 1px solid rgba(255, 207, 90, .45); border-top-width: 1px; border-radius: 18px;
   background: rgba(22, 15, 38, .9); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); box-shadow: 0 14px 34px rgba(0, 0, 0, .45); color: #F4ECFF; }
-html.avec-ouverture body { padding-bottom: 84px; }
-@media (max-width: 600px) { html body .ouverture { left: 8px; right: 8px; bottom: 8px; padding: 8px 12px; border-radius: 16px; } html.avec-ouverture body { padding-bottom: 104px; } }
+/* (37, le 30/10) le bas de la page s'arrete au-dessus du bandeau : sa place mesuree par js/site.js (--ouverture-h), plus un
+   souffle ; sans mesure (le script pas encore passe), les anciennes valeurs */
+html.avec-ouverture body { padding-bottom: calc(var(--ouverture-h, 74px) + 16px); }
+@media (max-width: 600px) { html body .ouverture { left: 8px; right: 8px; bottom: 8px; padding: 8px 12px; border-radius: 16px; } html.avec-ouverture body { padding-bottom: calc(var(--ouverture-h, 92px) + 12px); } }
 html body .en-ligne { border-radius: 999px; border-width: 1px; }
 html body .en-ligne::before { border-radius: 50%; }
 /* (af, lot 4 : les ancres) le secours sans JavaScript : un titre visé arrive sous la barre flottante (js/ancres.js fait le reste) */

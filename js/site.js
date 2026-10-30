@@ -25,6 +25,16 @@
     b.appendChild(t)
     document.body.appendChild(b)
     document.documentElement.classList.add('avec-ouverture')
+    // (37, le 30/10/2026 ; la tournée de dc : le bandeau cachait la dernière ligne d'une page) LA PLACE DU BANDEAU, MESURÉE :
+    // sa hauteur et son écart au bas de l'écran, relues à chaque changement de taille (une, deux ou trois lignes selon la
+    // largeur, un texte agrandi) ; le bas de chaque page s'arrête au-dessus de lui (css/kit.css, --ouverture-h)
+    var placeBandeau = function () {
+      var r = b.getBoundingClientRect()
+      if (r.height) document.documentElement.style.setProperty('--ouverture-h', Math.ceil(r.height + Math.max(0, window.innerHeight - r.bottom)) + 'px')
+    }
+    placeBandeau()
+    window.addEventListener('resize', placeBandeau)
+    if ('ResizeObserver' in window) new ResizeObserver(placeBandeau).observe(b)
     // (27/10/2026 ; le propriétaire : « c'est encore écrit sur le site serveur en ligne… ça devrait mettre ouverture bientôt
     // partout ») LE BADGE DU HAUT (data-en-ligne) dit l'ouverture tant que le serveur est fermé, jamais « en ligne » ni un
     // nombre de joueurs (les comptes de test) ; son carré passe à l'or (css/style.css, .en-ligne.ferme). Le jour de
