@@ -15,7 +15,7 @@
   function ouvertureTexte() { var m = Math.floor(OUVERTURE_S / 60), r = OUVERTURE_S % 60; return m === 0 ? OUVERTURE_S + ' s' : (r ? m + ' min ' + (r < 10 ? '0' : '') + r : m + (m > 1 ? ' minutes' : ' minute')); }
   var EVTS = [
     { id: 'eclair', nom: 'Le Défi Éclair', ancre: '#defi', creneaux: [{ jours: SEMAINE, min: 20 * 60 + 15 }, { jours: WEEKEND, min: 11 * 60 }, { jours: WEEKEND, min: 14 * 60 + 30 }, { jours: WEEKEND, min: 20 * 60 + 15 }],
-      duree: 0, participer: true, phrase: 'Cinq jeux rapides tirés parmi quatorze, environ six minutes. Personne n\'est éliminé.',
+      duree: 0, participer: true, phrase: 'Cinq jeux rapides tirés parmi treize, environ six minutes. Personne n\'est éliminé.',
       gain: 'La Clé Royale au 1er', plus: 'la Clé de l\'Aventurier au 2e et la Clé de Vote au 3e dès 5 joueurs ; des jetons dès ta première réponse' },
     { id: 'sol', nom: 'Le Sol qui lâche', ancre: '#mini-jeux', creneaux: [{ jours: TOUS, min: 18 * 60 + 30 }],
       duree: 0, participer: true, phrase: 'Chaque bloc où tu restes disparaît : le dernier debout gagne.',
